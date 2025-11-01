@@ -27,10 +27,11 @@ h1{
 #loader{
   position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
   align-items:center;justify-content:center;z-index:10;transition:opacity 700ms ease;
+  cursor:pointer;
 }
 #logo{
   font-size:3rem;font-weight:900;text-transform:uppercase;color:var(--accent);
-  letter-spacing:3px;animation:glow 2s infinite alternate;cursor:pointer;
+  letter-spacing:3px;animation:glow 2s infinite alternate;
 }
 @keyframes glow{
   from{text-shadow:0 0 10px var(--accent);opacity:.8}
@@ -61,19 +62,20 @@ tr:hover{
 footer{margin-top:40px;text-align:center;font-size:.85rem;color:var(--muted)}
 footer a{color:var(--muted);text-decoration:underline}
 .hidden{display:none}
+#loading{color:#aaa;margin:30px;font-size:1.1rem;text-align:center}
 </style>
 </head>
 <body>
 
-<!-- LOADER -->
-<div id="loader">
+<!-- LOADER (Click or Press Enter) -->
+<div id="loader" tabindex="0">
   <div id="logo">GOONING</div>
-  <div style="margin-top:16px;color:#777;font-size:1.1rem;">Click to enter</div>
+  <div style="margin-top:16px;color:#777;font-size:1.1rem;">Click or press Enter</div>
 </div>
 
 <!-- PUBLIC LEADERBOARD -->
 <h1>GOONING LEADERBOARD</h1>
-<div id="loading" style="color:#aaa;margin:30px;font-size:1.1rem">Loading leaderboard...</div>
+<div id="loading">Loading leaderboard...</div>
 
 <table id="board" class="hidden">
   <thead>
@@ -94,28 +96,51 @@ const REPO = 'projectZ678/gooning-leaderboard';
 const FILE = 'leaderboard.json';
 const API = 'https://api.github.com';
 
-async function load() {
+const $ = id => document.getElementById(id);
+const loader = $('#loader');
+const loading = $('#loading');
+const board = $('#board');
+const rows = $('#rows');
+const updated = $('#updated');
+
+// === ENTER THE VOID ===
+function enter() {
+  loader.style.opacity = '0';
+  setTimeout(() => {
+    loader.style.display = 'none';
+    loadLeaderboard();
+  }, 700);
+}
+
+// Click OR Press Enter
+loader.onclick = enter;
+loader.onkeydown = e => { if (e.key === 'Enter') enter(); };
+loader.focus(); // Auto-focus for Enter key
+
+// === LOAD LEADERBOARD ===
+async function loadLeaderboard() {
   try {
     const res = await fetch(`${API}/repos/${REPO}/contents/${FILE}`);
     if (!res.ok) {
-      $('#loading').textContent = 'Leaderboard not ready yet.';
+      loading.textContent = 'Leaderboard not ready yet.';
       return;
     }
     const data = await res.json();
-    const { leaderboard, updated } = JSON.parse(atob(data.content));
-    render(leaderboard || []);
-    const time = updated ? new Date(updated).toLocaleTimeString() : 'never';
-    $('#updated').textContent = `Last updated: ${time}`;
+    const { leaderboard = [], updated = 'never' } = JSON.parse(atob(data.content));
+    render(leaderboard);
+    const time = updated !== 'never' ? new Date(updated).toLocaleTimeString() : 'never';
+    updated.textContent = `Last updated: ${time}`;
   } catch (e) {
-    $('#loading').textContent = 'Failed to load.';
+    loading.textContent = 'Failed to load.';
   }
 }
 
+// === RENDER TABLE ===
 function render(players) {
   const sorted = [...players].sort((a, b) => (b.score || 0) - (a.score || 0));
-  $('#loading').classList.add('hidden');
-  $('#board').classList.remove('hidden');
-  const rows = $('#rows');
+  loading.classList.add('hidden');
+  board.classList.remove('hidden');
+
   rows.innerHTML = sorted.length ? sorted.map((p, i) => `
     <tr>
       <td class="rank">#${i + 1}</td>
@@ -140,17 +165,8 @@ function escape(t) {
   return div.innerHTML;
 }
 
-$('#loader').onclick = () => {
-  $('#loader').style.opacity = '0';
-  setTimeout(() => {
-    $('#loader').style.display = 'none';
-    load();
-  }, 700);
-};
-
 // Auto-refresh every 30 seconds
-load();
-setInterval(load, 30000);
+setInterval(loadLeaderboard, 30000);
 </script>
 </body>
 </html>
