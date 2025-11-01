@@ -20,7 +20,7 @@ body{
     var(--bg);
   color:var(--text);display:flex;align-items:center;justify-content:center;
 }
-#app,#auth-page,#token-setup{max-width:800px;width:100%;padding:24px}
+#app,#auth-page{max-width:800px;width:100%;padding:24px}
 h1{
   text-align:center;font-weight:800;font-size:2rem;letter-spacing:1px;
   color:var(--accent);text-shadow:0 0 20px var(--glow);margin-bottom:16px;
@@ -62,32 +62,44 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
 .last-updated{font-size:.75rem;color:var(--muted);text-align:center;margin-top:10px}
 
 /* Forms */
-.auth-form,.token-form{max-width:360px;margin:0 auto;background:var(--panel);padding:28px;border-radius:12px;box-shadow:0 0 30px rgba(0,0,0,.6)}
-.auth-form h2,.token-form h2{font-size:1.5rem;margin-bottom:20px;text-align:center}
-.auth-form input,.token-form input{
+.auth-form{max-width:360px;margin:0 auto;background:var(--panel);padding:28px;border-radius:12px;box-shadow:0 0 30px rgba(0,0,0,.6)}
+.auth-form h2{font-size:1.5rem;margin-bottom:20px;text-align:center}
+.auth-form input{
   width:100%;padding:12px;margin:10px 0;border:none;border-radius:8px;
   background:rgba(255,255,255,.08);color:var(--text);font-size:1rem;
 }
-.auth-form button,.token-form button{
+.auth-form button{
   width:100%;padding:14px;margin-top:16px;background:var(--accent);color:#000;
   border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:background .2s;
 }
-.auth-form button:hover,.token-form button:hover{background:#ccc}
-.auth-form .error,.token-form .error{color:var(--red);margin-top:8px;text-align:center;font-size:.9rem}
+.auth-form button:hover{background:#ccc}
+.auth-form .error{color:var(--red);margin-top:8px;text-align:center;font-size:.9rem}
 .auth-form .switch{text-align:center;margin-top:16px;font-size:.9rem}
 .auth-form .switch a{color:var(--accent);text-decoration:underline;cursor:pointer}
 
-/* Admin */
-#admin-badge{background:var(--discord);color:#fff;padding:4px 8px;border-radius:6px;font-size:.7rem;margin-left:8px}
-#edit-panel{margin-top:24px;background:var(--panel);padding:20px;border-radius:12px}
-#json-editor{width:100%;height:200px;background:#1a1a1a;color:#0f0;font-family:monospace;padding:12px;border-radius:8px;border:1px solid #333}
-#save-btn{margin-top:12px;background:var(--green);color:#fff}
-#save-msg{margin-top:8px;font-size:.9rem}
+/* Admin Panel */
+#admin-panel{margin-top:24px;background:var(--panel);padding:20px;border-radius:12px}
+#admin-panel h3{margin-bottom:12px}
+.input-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.input-row input{
+  flex:1;min-width:120px;padding:10px;background:rgba(255,255,255,.08);border:none;border-radius:6px;color:var(--text);font-size:.9rem;
+}
+#player-list{margin-top:16px}
+.player-item{
+  display:flex;align-items:center;gap:12px;padding:10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:8px;
+  font-size:.9rem;
+}
+.player-item .actions button{
+  background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:4px;
+}
+.player-item .actions button:hover{color:var(--accent)}
+#save-status{margin-top:12px;font-size:.9rem}
 #logout-btn{float:right;background:transparent;color:var(--muted);border:none;cursor:pointer;font-size:.9rem}
 
 /* Responsive */
 @media (max-width:600px){
-  #app,#auth-page,#token-setup{padding:16px}
+  #app,#auth-page{padding:16px}
+  .input-row{flex-direction:column}
   table{font-size:.9rem}
   th,td{padding:10px 8px}
 }
@@ -99,17 +111,6 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
 <div id="loader">
   <div id="logo">GOONING</div>
   <div style="margin-top:12px;color:#777;">Click to enter</div>
-</div>
-
-<!-- TOKEN SETUP -->
-<div id="token-setup" class="hidden">
-  <div class="token-form">
-    <h2>Setup GitHub Token</h2>
-    <p>Paste your <strong>Personal Access Token</strong> (with repo write access):</p>
-    <input type="password" id="token-input" placeholder="github_pat_...">
-    <button id="save-token-btn">Save & Continue</button>
-    <div class="error" id="token-error"></div>
-  </div>
 </div>
 
 <!-- AUTH PAGE -->
@@ -147,19 +148,18 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
     <tbody id="rows"></tbody>
   </table>
 
-  <!-- ADMIN EDITOR -->
-  <div id="edit-panel" class="hidden">
-    <h3>Edit Leaderboard (JSON)</h3>
-    <textarea id="json-editor" spellcheck="false" placeholder='[
-  {
-    "name": "XEN",
-    "score": 999999,
-    "discord": "xen#0001",
-    "avatar": "https://cdn.discordapp.com/avatars/..."
-  }
-]'></textarea>
-    <button id="save-btn">Save & Update</button>
-    <div id="save-msg"></div>
+  <!-- ADMIN PANEL -->
+  <div id="admin-panel" class="hidden">
+    <h3>Add / Edit Players</h3>
+    <div class="input-row">
+      <input type="text" id="new-name" placeholder="Name">
+      <input type="number" id="new-score" placeholder="Score" min="0">
+      <input type="text" id="new-discord" placeholder="Discord (xen#0001)">
+      <input type="url" id="new-avatar" placeholder="Avatar URL">
+      <button id="add-btn" style="background:var(--green);color:#fff;padding:0 16px;border-radius:6px;">Add</button>
+    </div>
+    <div id="player-list"></div>
+    <div id="save-status"></div>
   </div>
 
   <div class="last-updated" id="updated"></div>
@@ -174,8 +174,12 @@ const USERS_FILE = 'users.json';
 const BOARD_FILE = 'leaderboard.json';
 const API = 'https://api.github.com';
 
-let TOKEN = localStorage.getItem('gh_token');
+// Obfuscated token (hard-coded, hidden)
+const _0x4a3f=['Z2l0aHViX3BhdF8xMUJMQkhIUUkwcDA0RHE4YnRTaHQ5X2dxR0FBTGlGSUN1U0tvYUFVTWM3TXNPSkNSWmNqdWJFUWVlc2FUaWhSdnJIN0FXUVlTQzNVOEZaQzg2']; 
+const TOKEN = atob(_0x4a3f[0]);
+
 let currentUser = null;
+let leaderboard = [];
 
 // === HELPERS ===
 const $ = id => document.getElementById(id);
@@ -209,7 +213,7 @@ async function getFile(path) {
 }
 
 async function saveFile(path, content, sha = null) {
-  const message = `Update ${path} via Gooning Leaderboard`;
+  const message = `Update ${path}`;
   const res = await gh(path, {
     method: 'PUT',
     body: JSON.stringify({
@@ -222,110 +226,84 @@ async function saveFile(path, content, sha = null) {
   return res.ok;
 }
 
-// === TOKEN SETUP (ONLY ONCE) ===
-if (!TOKEN) {
-  $('logo').onclick = () => {
-    hide($('loader'));
-    show($('token-setup'));
-  };
-
-  $('save-token-btn').onclick = async () => {
-    const input = $('token-input').value.trim();
-    const err = $('token-error');
-    err.textContent = '';
-
-    if (!input) return err.textContent = 'Enter your token';
-    if (!input.startsWith('github_pat_') && !input.startsWith('ghp_')) {
-      return err.textContent = 'Invalid token format';
-    }
-
-    const testRes = await fetch(`${API}/user`, {
-      headers: { 'Authorization': `token ${input}` }
-    });
-    if (!testRes.ok) return err.textContent = 'Invalid token — regenerate';
-
-    TOKEN = input;
-    localStorage.setItem('gh_token', TOKEN);
-    hide($('token-setup'));
-    show($('auth-page'));
-    initAuth();
-  };
-} else {
-  // Token exists — go to login
-  $('logo').onclick = () => {
+// === START ===
+$('logo').onclick = () => {
+  $('loader').style.opacity = '0';
+  setTimeout(() => {
     hide($('loader'));
     show($('auth-page'));
     initAuth();
-  };
-}
+  }, 700);
+};
 
-// === AUTH SYSTEM ===
-async function initAuth() {
+// === AUTH SWITCH ===
+$('show-signup').onclick = () => { hide($('login-form')); show($('signup-form')); };
+$('show-login').onclick = () => { hide($('signup-form')); show($('login-form')); };
+
+// === SIGNUP ===
+$('signup-btn').onclick = async () => {
+  const username = $('signup-username').value.trim();
+  const password = $('signup-password').value;
+  const err = $('signup-error');
+  err.textContent = '';
+
+  if (!username || !password) return err.textContent = 'Fill all fields';
+  if (username.length < 3) return err.textContent = 'Username too short';
+
   let usersData = await getFile(USERS_FILE);
   if (!usersData) {
-    await saveFile(USERS_FILE, { users: [] });
-    usersData = { content: { users: [] }, sha: null };
+    usersData = { content: { users: [] } };
   }
 
-  $('show-signup').onclick = () => { hide($('login-form')); show($('signup-form')); };
-  $('show-login').onclick = () => { hide($('signup-form')); show($('login-form')); };
+  if (usersData.content.users.find(u => u.username === username)) {
+    return err.textContent = 'Username taken';
+  }
 
-  $('signup-btn').onclick = async () => {
-    const username = $('signup-username').value.trim();
-    const password = $('signup-password').value;
-    const err = $('signup-error');
-    err.textContent = '';
+  const hash = btoa(password);
+  const isAdmin = username.toLowerCase() === 'xen';
+  usersData.content.users.push({ username, password: hash, role: isAdmin ? 'admin' : 'user' });
 
-    if (!username || !password) return err.textContent = 'Fill all fields';
-    if (username.length < 3) return err.textContent = 'Username too short';
+  const saved = await saveFile(USERS_FILE, usersData.content, usersData.sha);
+  if (!saved) return err.textContent = 'Network error — try again';
 
-    if (usersData.content.users.find(u => u.username === username)) {
-      return err.textContent = 'Username taken';
-    }
+  loginUser(username, isAdmin ? 'admin' : 'user');
+};
 
-    const hash = btoa(password);
-    const isAdmin = username.toLowerCase() === 'xen';
-    usersData.content.users.push({ username, password: hash, role: isAdmin ? 'admin' : 'user' });
+// === LOGIN ===
+$('login-btn').onclick = async () => {
+  const username = $('login-username').value.trim();
+  const password = $('login-password').value;
+  const err = $('login-error');
+  err.textContent = '';
 
-    const saved = await saveFile(USERS_FILE, usersData.content, usersData.sha);
-    if (!saved) return err.textContent = 'Save failed';
+  if (!username || !password) return err.textContent = 'Fill all fields';
 
-    loginUser(username, isAdmin ? 'admin' : 'user');
-  };
+  const usersData = await getFile(USERS_FILE);
+  if (!usersData) return err.textContent = 'No users — sign up first';
 
-  $('login-btn').onclick = async () => {
-    const username = $('login-username').value.trim();
-    const password = $('login-password').value;
-    const err = $('login-error');
-    err.textContent = '';
+  const user = usersData.content.users.find(u => u.username === username && atob(u.password) === password);
+  if (!user) return err.textContent = 'Wrong username or password';
 
-    if (!username || !password) return err.textContent = 'Fill all fields';
+  loginUser(username, user.role);
+};
 
-    const user = usersData.content.users.find(u => u.username === username && atob(u.password) === password);
-    if (!user) return err.textContent = 'Invalid credentials';
-
-    loginUser(username, user.role);
-  };
-}
-
+// === LOGIN SUCCESS ===
 function loginUser(username, role) {
   currentUser = { username, role };
   hide($('auth-page'));
   show($('app'));
   if (role === 'admin') {
     show($('admin-badge'));
-    show($('edit-panel'));
+    show($('admin-panel'));
   }
   show($('logout-btn'));
   fetchLeaderboard();
   setInterval(fetchLeaderboard, 30_000);
 }
 
-$('logout-btn').onclick = () => {
-  location.reload();
-};
+$('logout-btn').onclick = () => location.reload();
 
-// === LEADERBOARD ===
+// === FETCH LEADERBOARD ===
 async function fetchLeaderboard() {
   const loading = $('loading');
   const board = $('board');
@@ -337,27 +315,24 @@ async function fetchLeaderboard() {
     data = { content: { leaderboard: [], updated: 'never' } };
   }
 
-  const list = data.content.leaderboard.map((p, i) => ({ ...p, rank: i + 1 }));
-  render(list);
+  leaderboard = data.content.leaderboard.map((p, i) => ({ ...p, id: i }));
+  renderLeaderboard();
+  renderAdminPanel();
   $('updated').textContent = `Last updated: ${data.content.updated}`;
   hide(loading); show(board);
-
-  if (currentUser?.role === 'admin') {
-    $('json-editor').value = JSON.stringify(list.map(p => ({
-      name: p.name, score: p.score, discord: p.discord, avatar: p.avatar
-    })), null, 2);
-  }
 }
 
-function render(list) {
+// === RENDER TABLE ===
+function renderLeaderboard() {
   const rows = $('rows');
-  if (!list.length) {
+  const sorted = [...leaderboard].sort((a, b) => b.score - a.score);
+  if (!sorted.length) {
     rows.innerHTML = `<tr><td colspan="3" style="text-align:center;color:#aaa;">No players yet.</td></tr>`;
     return;
   }
-  rows.innerHTML = list.map(p => `
+  rows.innerHTML = sorted.map((p, i) => `
     <tr>
-      <td class="rank">#${p.rank}</td>
+      <td class="rank">#${i + 1}</td>
       <td class="name">
         <div class="avatar"><img src="${e(p.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png')}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"></div>
         <div>
@@ -369,27 +344,76 @@ function render(list) {
     </tr>`).join('');
 }
 
-$('save-btn').onclick = async () => {
-  const msg = $('save-msg');
-  let data;
-  try { data = JSON.parse($('json-editor').value); } catch {
-    return msg.textContent = 'Invalid JSON', msg.style.color = '#f66';
-  }
-  if (!Array.isArray(data)) return msg.textContent = 'Must be array', msg.style.color = '#f66';
+// === ADMIN PANEL ===
+function renderAdminPanel() {
+  const list = $('player-list');
+  list.innerHTML = '';
+  leaderboard.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'player-item';
+    item.innerHTML = `
+      <span><strong>${e(p.name)}</strong> — ${p.score.toLocaleString()} pts</span>
+      <span style="flex:1;"></span>
+      <div class="actions">
+        <button data-id="${p.id}" class="edit-btn"><i class="fas fa-edit"></i></button>
+        <button data-id="${p.id}" class="delete-btn"><i class="fas fa-trash"></i></button>
+      </div>
+    `;
+    list.appendChild(item);
+  });
 
+  // Add player
+  $('add-btn').onclick = async () => {
+    const name = $('new-name').value.trim();
+    const score = parseInt($('new-score').value) || 0;
+    const discord = $('new-discord').value.trim();
+    const avatar = $('new-avatar').value.trim();
+
+    if (!name) return $('save-status').textContent = 'Name required', $('save-status').style.color = '#f66';
+
+    leaderboard.push({ name, score, discord: discord || null, avatar: avatar || null, id: Date.now() });
+    await saveLeaderboard();
+    $('new-name').value = $('new-score').value = $('new-discord').value = $('new-avatar').value = '';
+  };
+
+  // Edit / Delete
+  list.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.onclick = () => editPlayer(btn.dataset.id);
+  });
+  list.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.onclick = () => deletePlayer(btn.dataset.id);
+  });
+}
+
+function editPlayer(id) {
+  const p = leaderboard.find(x => x.id == id);
+  $('new-name').value = p.name;
+  $('new-score').value = p.score;
+  $('new-discord').value = p.discord || '';
+  $('new-avatar').value = p.avatar || '';
+  deletePlayer(id);
+}
+
+async function deletePlayer(id) {
+  leaderboard = leaderboard.filter(x => x.id != id);
+  await saveLeaderboard();
+}
+
+async function saveLeaderboard() {
+  const status = $('save-status');
   const now = new Date().toISOString();
-  const payload = { leaderboard: data, updated: now };
+  const payload = { leaderboard: leaderboard.map(({id, ...p}) => p), updated: now };
   const file = await getFile(BOARD_FILE);
   const saved = await saveFile(BOARD_FILE, payload, file?.sha);
   if (saved) {
-    msg.textContent = `Saved! ${now}`;
-    msg.style.color = '#6f6';
+    status.textContent = `Saved! ${now.split('T')[1].split('.')[0]}`;
+    status.style.color = '#6f6';
     fetchLeaderboard();
   } else {
-    msg.textContent = 'Save failed';
-    msg.style.color = '#f66';
+    status.textContent = 'Save failed';
+    status.style.color = '#f66';
   }
-};
+}
 </script>
 </body>
 </html>
