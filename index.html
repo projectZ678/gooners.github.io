@@ -84,7 +84,25 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
 #save-btn{margin-top:12px;background:var(--green);color:#fff}
 #save-msg{margin-top:8px;font-size:.9rem}
 #logout-btn{float:right;background:transparent;color:var(--muted);border:none;cursor:pointer;font-size:.9rem}
-#token-setup{margin:20px auto;max-width:500px;background:var(--panel);padding:20px;border-radius:12px;text-align:center}
+
+/* Token Modal - NEW DESIGN */
+#token-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:100}
+#token-content{background:var(--panel);padding:32px;border-radius:16px;max-width:500px;width:90%;text-align:center;box-shadow:0 0 40px rgba(0,0,0,.8)}
+#token-content h2{font-size:1.8rem;margin-bottom:16px;color:var(--accent)}
+#token-content p{font-size:1rem;margin-bottom:16px;color:var(--text);line-height:1.4}
+#token-input{width:100%;padding:14px;margin:16px 0;border:none;border-radius:8px;background:rgba(255,255,255,.08);color:var(--text);font-size:1rem;font-family:monospace}
+#token-btn{width:100%;padding:14px;margin-top:16px;background:var(--accent);color:#000;border:none;border-radius:8px;font-weight:600;cursor:pointer}
+#token-btn:hover{background:#ccc}
+#token-error{color:var(--red);margin-top:12px;padding:8px;background:rgba(255,102,102,.1);border-radius:6px;display:none}
+#token-instructions{font-size:.85rem;color:var(--muted);margin-top:16px;padding:12px;background:rgba(255,255,255,.05);border-radius:8px}
+#token-close{position:absolute;top:16px;right:16px;color:var(--muted);font-size:1.5rem;cursor:pointer}
+
+/* Responsive */
+@media (max-width:600px){
+  #app,#auth-page{padding:16px}
+  table{font-size:.9rem}
+  th,td{padding:10px 8px}
+}
 </style>
 </head>
 <body>
@@ -95,13 +113,23 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
   <div style="margin-top:12px;color:#777;">Click to enter</div>
 </div>
 
-<!-- TOKEN SETUP -->
-<div id="token-setup" class="hidden">
-  <h2>Setup GitHub Token</h2>
-  <p>Paste your <strong>Personal Access Token</strong> (with repo write access):</p>
-  <input type="password" id="github-token" placeholder="ghp_..." style="width:100%;padding:12px;margin:12px 0;">
-  <button id="save-token">Save & Continue</button>
-  <p style="font-size:.8rem;margin-top:12px;">This is stored in your browser only. Never share it.</p>
+<!-- TOKEN MODAL (NEW) -->
+<div id="token-modal" class="hidden">
+  <div id="token-content">
+    <span id="token-close">&times;</span>
+    <h2><i class="fab fa-github"></i> Setup GitHub Access</h2>
+    <p>To save edits, paste your <strong>Personal Access Token</strong> (PAT) below.</p>
+    <p style="font-size:.9rem;color:var(--muted);">Example: <code>github_pat_... </code> or <code>ghp_...</code></p>
+    <input type="password" id="token-input" placeholder="Paste your token here...">
+    <button id="token-btn">Test & Save</button>
+    <div id="token-error"></div>
+    <div id="token-instructions">
+      <strong>How to get one:</strong><br>
+      1. Go to <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--accent);">github.com/settings/tokens</a><br>
+      2. Generate new (fine-grained) → Select your repo → Contents: Read & write<br>
+      3. Copy & paste here. <em>Stored in your browser only.</em>
+    </div>
+  </div>
 </div>
 
 <!-- AUTH PAGE -->
@@ -142,7 +170,7 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
   <!-- ADMIN EDITOR -->
   <div id="edit-panel" class="hidden">
     <h3>Edit Leaderboard (JSON)</h3>
-    <textarea id="json-editor" spellcheck="false"></textarea>
+    <textarea id="json-editor" spellcheck="false" placeholder='[{"name":"XEN","score":999999,"discord":"xen#0001","avatar":"https://cdn.discordapp.com/avatars/123/abc.png"}]'></textarea>
     <button id="save-btn">Save & Update</button>
     <div id="save-msg"></div>
   </div>
@@ -152,8 +180,8 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
 </div>
 
 <script>
-// === CONFIG (CHANGE THESE) ===
-const REPO = 'YOURNAME/gooning-leaderboard'; // ← CHANGE TO YOUR REPO
+// === CONFIG (CHANGE THIS) ===
+const REPO = 'YOURNAME/gooning-leaderboard'; // ← YOUR USERNAME/REPO
 const BRANCH = 'main';
 const USERS_FILE = 'users.json';
 const BOARD_FILE = 'leaderboard.json';
@@ -207,21 +235,54 @@ async function saveFile(path, content, sha = null) {
   return res.ok;
 }
 
-// === TOKEN SETUP ===
+// === TOKEN SETUP (IMPROVED) ===
+async function testToken(token) {
+  const res = await fetch(`${API}/user`, {
+    headers: { 'Authorization': `token ${token}` }
+  });
+  return res.ok;
+}
+
 if (!TOKEN) {
   $('logo').onclick = () => {
     hide($('loader'));
-    show($('token-setup'));
+    show($('token-modal'));
   };
-  $('save-token').onclick = () => {
-    TOKEN = $('github-token').value.trim();
-    if (!TOKEN.startsWith('ghp_')) return alert('Invalid token');
+  $('token-close').onclick = () => hide($('token-modal'));
+  $('token-btn').onclick = async () => {
+    const input = $('token-input').value.trim();
+    const err = $('token-error');
+    hide(err);
+
+    if (!input) return err.innerHTML = 'Enter your token!'; show(err);
+    if (!input.startsWith('ghp_') && !input.startsWith('github_pat_')) return err.innerHTML = 'Invalid format — must start with <code>ghp_</code> or <code>github_pat_</code>'; show(err);
+
+    const valid = await testToken(input);
+    if (!valid) {
+      return err.innerHTML = `
+        <strong>Token invalid!</strong><br>
+        <small>Common fixes:<br>
+        • Regenerate at <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--accent);">github.com/settings/tokens</a><br>
+        • Ensure "Contents: Read & write" for your repo.<br>
+        • Not expired/revoked/deleted.</small>
+      `; show(err);
+    }
+
+    TOKEN = input;
     localStorage.setItem('gh_token', TOKEN);
-    hide($('token-setup'));
+    hide($('token-modal'));
     show($('auth-page'));
     initAuth();
   };
 } else {
+  // Test saved token on load
+  const valid = await testToken(TOKEN);
+  if (!valid) {
+    localStorage.removeItem('gh_token');
+    alert('Saved token invalid — clear cache or regenerate.');
+    location.reload();
+    return;
+  }
   $('logo').onclick = () => {
     hide($('loader'));
     show($('auth-page'));
@@ -240,17 +301,21 @@ async function initAuth() {
   $('signup-btn').onclick = async () => {
     const username = $('signup-username').value.trim();
     const password = $('signup-password').value;
-    if (!username || !password) return $('signup-error').textContent = 'Fill all';
+    const errEl = $('signup-error');
+    errEl.textContent = ''; 
+
+    if (!username || !password) return errEl.textContent = 'Fill all fields';
 
     const { content } = await getFile(USERS_FILE);
     if (content.users.find(u => u.username === username)) {
-      return $('signup-error').textContent = 'Username taken';
+      return errEl.textContent = 'Username taken';
     }
 
-    const hash = btoa(password); // simple hash (not secure, but works for demo)
+    const hash = btoa(password); // Simple hash for demo
     const isAdmin = username.toLowerCase() === 'xen';
     content.users.push({ username, password: hash, role: isAdmin ? 'admin' : 'user' });
-    await saveFile(USERS_FILE, content);
+    const saved = await saveFile(USERS_FILE, content);
+    if (!saved) return errEl.textContent = 'Save failed — check token';
 
     loginUser(username, isAdmin ? 'admin' : 'user');
   };
@@ -258,9 +323,14 @@ async function initAuth() {
   $('login-btn').onclick = async () => {
     const username = $('login-username').value.trim();
     const password = $('login-password').value;
+    const errEl = $('login-error');
+    errEl.textContent = '';
+
+    if (!username || !password) return errEl.textContent = 'Fill all fields';
+
     const { content } = await getFile(USERS_FILE);
     const user = content.users.find(u => u.username === username && atob(u.password) === password);
-    if (!user) return $('login-error').textContent = 'Invalid credentials';
+    if (!user) return errEl.textContent = 'Invalid credentials';
 
     loginUser(username, user.role);
   };
@@ -281,6 +351,7 @@ function loginUser(username, role) {
 
 $('logout-btn').onclick = () => {
   currentUser = null;
+  localStorage.removeItem('gh_token'); // Optional: clear token on logout
   location.reload();
 };
 
@@ -345,7 +416,7 @@ $('save-btn').onclick = async () => {
     msg.style.color = '#6f6';
     fetchLeaderboard();
   } else {
-    msg.textContent = 'Save failed';
+    msg.textContent = 'Save failed — check token/repo';
     msg.style.color = '#f66';
   }
 };
