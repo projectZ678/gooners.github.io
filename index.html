@@ -9,7 +9,7 @@
 <style>
 :root{
   --bg:#0a0a0a;--panel:#111;--text:#eee;--muted:#888;--glow:rgba(255,255,255,.2);
-  --accent:#fff;--discord:#5865F2;--green:#4caf50;--red:#f66;--transition:300ms ease;
+  --accent:#fff;--discord:#5865F2;--transition:300ms ease;
   font-family:'Inter',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -18,91 +18,49 @@ body{
     radial-gradient(circle at 30% 20%,rgba(255,255,255,.04),transparent 30%),
     radial-gradient(circle at 80% 80%,rgba(255,255,255,.03),transparent 40%),
     var(--bg);
-  color:var(--text);display:flex;align-items:center;justify-content:center;
+  color:var(--text);display:flex;flex-direction:column;align-items:center;padding:40px 20px;
 }
-#app,#auth-page{max-width:800px;width:100%;padding:24px}
 h1{
-  text-align:center;font-weight:800;font-size:2rem;letter-spacing:1px;
-  color:var(--accent);text-shadow:0 0 20px var(--glow);margin-bottom:16px;
+  font-size:2.8rem;font-weight:900;text-align:center;margin-bottom:30px;
+  color:var(--accent);text-shadow:0 0 20px var(--glow);letter-spacing:2px;
 }
-table{
-  width:100%;border-collapse:collapse;margin-top:24px;border-radius:12px;
-  overflow:hidden;box-shadow:0 0 40px rgba(0,0,0,.6),0 0 20px rgba(255,255,255,.02) inset;
-}
-thead{
-  background:rgba(255,255,255,.05);text-transform:uppercase;
-  font-size:.8rem;letter-spacing:1px;color:var(--muted);
-}
-th,td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);text-align:left}
-tr:hover{
-  background:rgba(255,255,255,.03);transform:translateY(-2px);
-  box-shadow:0 6px 16px rgba(255,255,255,.03);
-  transition:transform var(--transition),box-shadow var(--transition);
-}
-.rank{font-weight:700;color:var(--accent)}
-.name{display:flex;align-items:center;gap:12px}
-.avatar{width:40px;height:40px;border-radius:10px;overflow:hidden;box-shadow:0 0 10px rgba(255,255,255,.05)}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.discord-tag{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--discord);font-weight:500}
-.score{text-align:right;font-weight:600}
 #loader{
   position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;transition:opacity 700ms ease;z-index:10;
+  align-items:center;justify-content:center;z-index:10;transition:opacity 700ms ease;
 }
 #logo{
-  font-size:2.5rem;font-weight:900;text-transform:uppercase;color:var(--accent);
-  letter-spacing:2px;animation:glow 2s infinite alternate;cursor:pointer;
+  font-size:3rem;font-weight:900;text-transform:uppercase;color:var(--accent);
+  letter-spacing:3px;animation:glow 2s infinite alternate;cursor:pointer;
 }
 @keyframes glow{
-  from{text-shadow:0 0 5px var(--accent);opacity:.7}
-  to{text-shadow:0 0 25px var(--accent),0 0 50px var(--accent);opacity:1}
+  from{text-shadow:0 0 10px var(--accent);opacity:.8}
+  to{text-shadow:0 0 40px var(--accent),0 0 80px var(--accent);opacity:1}
 }
-.hidden{opacity:0;pointer-events:none;display:none !important}
-footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
-.last-updated{font-size:.75rem;color:var(--muted);text-align:center;margin-top:10px}
-
-/* Forms */
-.auth-form{max-width:360px;margin:0 auto;background:var(--panel);padding:28px;border-radius:12px;box-shadow:0 0 30px rgba(0,0,0,.6)}
-.auth-form h2{font-size:1.5rem;margin-bottom:20px;text-align:center}
-.auth-form input{
-  width:100%;padding:12px;margin:10px 0;border:none;border-radius:8px;
-  background:rgba(255,255,255,.08);color:var(--text);font-size:1rem;
+table{
+  width:100%;max-width:900px;border-collapse:collapse;margin-top:24px;
+  background:var(--panel);border-radius:16px;overflow:hidden;
+  box-shadow:0 0 60px rgba(0,0,0,.7),0 0 30px rgba(255,255,255,.03) inset;
 }
-.auth-form button{
-  width:100%;padding:14px;margin-top:16px;background:var(--accent);color:#000;
-  border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:background .2s;
+thead{
+  background:rgba(255,255,255,.08);text-transform:uppercase;
+  font-size:.85rem;letter-spacing:1.5px;color:var(--muted);
 }
-.auth-form button:hover{background:#ccc}
-.auth-form .error{color:var(--red);margin-top:8px;text-align:center;font-size:.9rem}
-.auth-form .switch{text-align:center;margin-top:16px;font-size:.9rem}
-.auth-form .switch a{color:var(--accent);text-decoration:underline;cursor:pointer}
-
-/* Admin Panel */
-#admin-panel{margin-top:24px;background:var(--panel);padding:20px;border-radius:12px}
-#admin-panel h3{margin-bottom:12px}
-.input-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.input-row input{
-  flex:1;min-width:120px;padding:10px;background:rgba(255,255,255,.08);border:none;border-radius:6px;color:var(--text);font-size:.9rem;
+th,td{padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+tr:hover{
+  background:rgba(255,255,255,.04);transform:translateY(-3px);
+  box-shadow:0 8px 20px rgba(255,255,255,.05);
+  transition:transform var(--transition),box-shadow var(--transition);
 }
-#player-list{margin-top:16px}
-.player-item{
-  display:flex;align-items:center;gap:12px;padding:10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:8px;
-  font-size:.9rem;
-}
-.player-item .actions button{
-  background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:4px;
-}
-.player-item .actions button:hover{color:var(--accent)}
-#save-status{margin-top:12px;font-size:.9rem}
-#logout-btn{float:right;background:transparent;color:var(--muted);border:none;cursor:pointer;font-size:.9rem}
-
-/* Responsive */
-@media (max-width:600px){
-  #app,#auth-page{padding:16px}
-  .input-row{flex-direction:column}
-  table{font-size:.9rem}
-  th,td{padding:10px 8px}
-}
+.rank{font-weight:800;color:var(--accent);font-size:1.3rem}
+.name{display:flex;align-items:center;gap:14px}
+.avatar{width:48px;height:48px;border-radius:12px;overflow:hidden;box-shadow:0 0 15px rgba(255,255,255,.1)}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.discord-tag{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--discord);font-weight:600}
+.score{text-align:right;font-weight:700;font-size:1.1rem}
+.last-updated{font-size:.8rem;color:var(--muted);text-align:center;margin:20px 0}
+footer{margin-top:40px;text-align:center;font-size:.85rem;color:var(--muted)}
+footer a{color:var(--muted);text-decoration:underline}
+.hidden{display:none}
 </style>
 </head>
 <body>
@@ -110,310 +68,89 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
 <!-- LOADER -->
 <div id="loader">
   <div id="logo">GOONING</div>
-  <div style="margin-top:12px;color:#777;">Click to enter</div>
+  <div style="margin-top:16px;color:#777;font-size:1.1rem;">Click to enter</div>
 </div>
 
-<!-- AUTH PAGE -->
-<div id="auth-page" class="hidden">
-  <div id="login-form" class="auth-form">
-    <h2>Login</h2>
-    <input type="text" id="login-username" placeholder="Username" autocomplete="username">
-    <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
-    <button id="login-btn">Login</button>
-    <div class="error" id="login-error"></div>
-    <div class="switch">No account? <a id="show-signup">Sign up</a></div>
-  </div>
+<!-- PUBLIC LEADERBOARD -->
+<h1>GOONING LEADERBOARD</h1>
+<div id="loading" style="color:#aaa;margin:30px;font-size:1.1rem">Loading leaderboard...</div>
 
-  <div id="signup-form" class="auth-form hidden">
-    <h2>Sign Up</h2>
-    <input type="text" id="signup-username" placeholder="Username" autocomplete="username">
-    <input type="password" id="signup-password" placeholder="Password" autocomplete="new-password">
-    <button id="signup-btn">Create Account</button>
-    <div class="error" id="signup-error"></div>
-    <div class="switch">Have account? <a id="show-login">Login</a></div>
-  </div>
-</div>
+<table id="board" class="hidden">
+  <thead>
+    <tr><th>Rank</th><th>Player</th><th class="score">Score</th></tr>
+  </thead>
+  <tbody id="rows"></tbody>
+</table>
 
-<!-- MAIN APP -->
-<div id="app" class="hidden">
-  <div style="display:flex;justify-content:space-between;align-items:center;">
-    <h1>Leaderboard <span id="admin-badge" class="hidden">ADMIN</span></h1>
-    <button id="logout-btn" class="hidden">Logout</button>
-  </div>
+<div class="last-updated" id="updated"></div>
 
-  <div id="loading" style="text-align:center;color:#aaa;margin:20px 0;">Loading leaderboard...</div>
-
-  <table id="board" class="hidden">
-    <thead><tr><th>Rank</th><th>Player</th><th class="score">Score</th></tr></thead>
-    <tbody id="rows"></tbody>
-  </table>
-
-  <!-- ADMIN PANEL -->
-  <div id="admin-panel" class="hidden">
-    <h3>Add / Edit Players</h3>
-    <div class="input-row">
-      <input type="text" id="new-name" placeholder="Name">
-      <input type="number" id="new-score" placeholder="Score" min="0">
-      <input type="text" id="new-discord" placeholder="Discord (xen#0001)">
-      <input type="url" id="new-avatar" placeholder="Avatar URL">
-      <button id="add-btn" style="background:var(--green);color:#fff;padding:0 16px;border-radius:6px;">Add</button>
-    </div>
-    <div id="player-list"></div>
-    <div id="save-status"></div>
-  </div>
-
-  <div class="last-updated" id="updated"></div>
-  <footer>Auto-updated • <a href="leaderboard.json" target="_blank" style="color:var(--muted)">view raw JSON</a></footer>
-</div>
+<footer>
+  Public View • <a href="leaderboard.json" target="_blank">view raw JSON</a><br>
+  <small>Only XEN can edit via <a href="admin.html" target="_blank">admin.html</a></small>
+</footer>
 
 <script>
-// === CONFIG ===
 const REPO = 'projectZ678/gooning-leaderboard';
-const BRANCH = 'main';
-const USERS_FILE = 'users.json';
-const BOARD_FILE = 'leaderboard.json';
+const FILE = 'leaderboard.json';
 const API = 'https://api.github.com';
 
-// Obfuscated token (hard-coded, hidden)
-const _0x4a3f=['Z2l0aHViX3BhdF8xMUJMQkhIUUkwcDA0RHE4YnRTaHQ5X2dxR0FBTGlGSUN1U0tvYUFVTWM3TXNPSkNSWmNqdWJFUWVlc2FUaWhSdnJIN0FXUVlTQzNVOEZaQzg2']; 
-const TOKEN = atob(_0x4a3f[0]);
-
-let currentUser = null;
-let leaderboard = [];
-
-// === HELPERS ===
-const $ = id => document.getElementById(id);
-const show = el => el.classList.remove('hidden');
-const hide = el => el.classList.add('hidden');
-const e = t => {
-  const div = document.createElement('div');
-  div.textContent = t;
-  return div.innerHTML;
-};
-
-// === GITHUB API ===
-async function gh(path, opts = {}) {
-  const headers = {
-    'Authorization': `token ${TOKEN}`,
-    'Accept': 'application/vnd.github.v3+json'
-  };
-  if (opts.body) headers['Content-Type'] = 'application/json';
-  const res = await fetch(`${API}/repos/${REPO}/contents/${path}`, {
-    ...opts,
-    headers: { ...headers, ...opts.headers }
-  });
-  return res;
+async function load() {
+  try {
+    const res = await fetch(`${API}/repos/${REPO}/contents/${FILE}`);
+    if (!res.ok) {
+      $('#loading').textContent = 'Leaderboard not ready yet.';
+      return;
+    }
+    const data = await res.json();
+    const { leaderboard, updated } = JSON.parse(atob(data.content));
+    render(leaderboard || []);
+    const time = updated ? new Date(updated).toLocaleTimeString() : 'never';
+    $('#updated').textContent = `Last updated: ${time}`;
+  } catch (e) {
+    $('#loading').textContent = 'Failed to load.';
+  }
 }
 
-async function getFile(path) {
-  const res = await gh(path);
-  if (!res.ok) return null;
-  const data = await res.json();
-  return { content: JSON.parse(atob(data.content)), sha: data.sha };
-}
-
-async function saveFile(path, content, sha = null) {
-  const message = `Update ${path}`;
-  const res = await gh(path, {
-    method: 'PUT',
-    body: JSON.stringify({
-      message,
-      content: btoa(JSON.stringify(content, null, 2)),
-      sha,
-      branch: BRANCH
-    })
-  });
-  return res.ok;
-}
-
-// === START ===
-$('logo').onclick = () => {
-  $('loader').style.opacity = '0';
-  setTimeout(() => {
-    hide($('loader'));
-    show($('auth-page'));
-    initAuth();
-  }, 700);
-};
-
-// === AUTH SWITCH ===
-$('show-signup').onclick = () => { hide($('login-form')); show($('signup-form')); };
-$('show-login').onclick = () => { hide($('signup-form')); show($('login-form')); };
-
-// === SIGNUP ===
-$('signup-btn').onclick = async () => {
-  const username = $('signup-username').value.trim();
-  const password = $('signup-password').value;
-  const err = $('signup-error');
-  err.textContent = '';
-
-  if (!username || !password) return err.textContent = 'Fill all fields';
-  if (username.length < 3) return err.textContent = 'Username too short';
-
-  let usersData = await getFile(USERS_FILE);
-  if (!usersData) {
-    usersData = { content: { users: [] } };
-  }
-
-  if (usersData.content.users.find(u => u.username === username)) {
-    return err.textContent = 'Username taken';
-  }
-
-  const hash = btoa(password);
-  const isAdmin = username.toLowerCase() === 'xen';
-  usersData.content.users.push({ username, password: hash, role: isAdmin ? 'admin' : 'user' });
-
-  const saved = await saveFile(USERS_FILE, usersData.content, usersData.sha);
-  if (!saved) return err.textContent = 'Network error — try again';
-
-  loginUser(username, isAdmin ? 'admin' : 'user');
-};
-
-// === LOGIN ===
-$('login-btn').onclick = async () => {
-  const username = $('login-username').value.trim();
-  const password = $('login-password').value;
-  const err = $('login-error');
-  err.textContent = '';
-
-  if (!username || !password) return err.textContent = 'Fill all fields';
-
-  const usersData = await getFile(USERS_FILE);
-  if (!usersData) return err.textContent = 'No users — sign up first';
-
-  const user = usersData.content.users.find(u => u.username === username && atob(u.password) === password);
-  if (!user) return err.textContent = 'Wrong username or password';
-
-  loginUser(username, user.role);
-};
-
-// === LOGIN SUCCESS ===
-function loginUser(username, role) {
-  currentUser = { username, role };
-  hide($('auth-page'));
-  show($('app'));
-  if (role === 'admin') {
-    show($('admin-badge'));
-    show($('admin-panel'));
-  }
-  show($('logout-btn'));
-  fetchLeaderboard();
-  setInterval(fetchLeaderboard, 30_000);
-}
-
-$('logout-btn').onclick = () => location.reload();
-
-// === FETCH LEADERBOARD ===
-async function fetchLeaderboard() {
-  const loading = $('loading');
-  const board = $('board');
-  show(loading); hide(board);
-
-  let data = await getFile(BOARD_FILE);
-  if (!data) {
-    await saveFile(BOARD_FILE, { leaderboard: [], updated: 'never' });
-    data = { content: { leaderboard: [], updated: 'never' } };
-  }
-
-  leaderboard = data.content.leaderboard.map((p, i) => ({ ...p, id: i }));
-  renderLeaderboard();
-  renderAdminPanel();
-  $('updated').textContent = `Last updated: ${data.content.updated}`;
-  hide(loading); show(board);
-}
-
-// === RENDER TABLE ===
-function renderLeaderboard() {
-  const rows = $('rows');
-  const sorted = [...leaderboard].sort((a, b) => b.score - a.score);
-  if (!sorted.length) {
-    rows.innerHTML = `<tr><td colspan="3" style="text-align:center;color:#aaa;">No players yet.</td></tr>`;
-    return;
-  }
-  rows.innerHTML = sorted.map((p, i) => `
+function render(players) {
+  const sorted = [...players].sort((a, b) => (b.score || 0) - (a.score || 0));
+  $('#loading').classList.add('hidden');
+  $('#board').classList.remove('hidden');
+  const rows = $('#rows');
+  rows.innerHTML = sorted.length ? sorted.map((p, i) => `
     <tr>
       <td class="rank">#${i + 1}</td>
       <td class="name">
-        <div class="avatar"><img src="${e(p.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png')}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"></div>
+        <div class="avatar">
+          <img src="${p.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'}"
+               onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
+        </div>
         <div>
-          <div>${e(p.name)}</div>
-          ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
+          <div style="font-weight:700">${escape(p.name || 'Unknown')}</div>
+          ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${escape(p.discord)}</div>` : ''}
         </div>
       </td>
-      <td class="score">${p.score.toLocaleString()}</td>
-    </tr>`).join('');
+      <td class="score">${(p.score || 0).toLocaleString()}</td>
+    </tr>
+  `).join('') : '<tr><td colspan="3" style="text-align:center;padding:40px;color:#666;font-size:1.1rem;">No gooners yet.<br>Check back soon!</td></tr>';
 }
 
-// === ADMIN PANEL ===
-function renderAdminPanel() {
-  const list = $('player-list');
-  list.innerHTML = '';
-  leaderboard.forEach(p => {
-    const item = document.createElement('div');
-    item.className = 'player-item';
-    item.innerHTML = `
-      <span><strong>${e(p.name)}</strong> — ${p.score.toLocaleString()} pts</span>
-      <span style="flex:1;"></span>
-      <div class="actions">
-        <button data-id="${p.id}" class="edit-btn"><i class="fas fa-edit"></i></button>
-        <button data-id="${p.id}" class="delete-btn"><i class="fas fa-trash"></i></button>
-      </div>
-    `;
-    list.appendChild(item);
-  });
-
-  // Add player
-  $('add-btn').onclick = async () => {
-    const name = $('new-name').value.trim();
-    const score = parseInt($('new-score').value) || 0;
-    const discord = $('new-discord').value.trim();
-    const avatar = $('new-avatar').value.trim();
-
-    if (!name) return $('save-status').textContent = 'Name required', $('save-status').style.color = '#f66';
-
-    leaderboard.push({ name, score, discord: discord || null, avatar: avatar || null, id: Date.now() });
-    await saveLeaderboard();
-    $('new-name').value = $('new-score').value = $('new-discord').value = $('new-avatar').value = '';
-  };
-
-  // Edit / Delete
-  list.querySelectorAll('.edit-btn').forEach(btn => {
-    btn.onclick = () => editPlayer(btn.dataset.id);
-  });
-  list.querySelectorAll('.delete-btn').forEach(btn => {
-    btn.onclick = () => deletePlayer(btn.dataset.id);
-  });
+function escape(t) {
+  const div = document.createElement('div');
+  div.textContent = t;
+  return div.innerHTML;
 }
 
-function editPlayer(id) {
-  const p = leaderboard.find(x => x.id == id);
-  $('new-name').value = p.name;
-  $('new-score').value = p.score;
-  $('new-discord').value = p.discord || '';
-  $('new-avatar').value = p.avatar || '';
-  deletePlayer(id);
-}
+$('#loader').onclick = () => {
+  $('#loader').style.opacity = '0';
+  setTimeout(() => {
+    $('#loader').style.display = 'none';
+    load();
+  }, 700);
+};
 
-async function deletePlayer(id) {
-  leaderboard = leaderboard.filter(x => x.id != id);
-  await saveLeaderboard();
-}
-
-async function saveLeaderboard() {
-  const status = $('save-status');
-  const now = new Date().toISOString();
-  const payload = { leaderboard: leaderboard.map(({id, ...p}) => p), updated: now };
-  const file = await getFile(BOARD_FILE);
-  const saved = await saveFile(BOARD_FILE, payload, file?.sha);
-  if (saved) {
-    status.textContent = `Saved! ${now.split('T')[1].split('.')[0]}`;
-    status.style.color = '#6f6';
-    fetchLeaderboard();
-  } else {
-    status.textContent = 'Save failed';
-    status.style.color = '#f66';
-  }
-}
+// Auto-refresh every 30 seconds
+load();
+setInterval(load, 30000);
 </script>
 </body>
 </html>
