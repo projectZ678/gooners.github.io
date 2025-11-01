@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gooning Leaderboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;--panel:#111;--text:#eee;--muted:#888;--glow:rgba(255,255,255,.2);
+  --accent:#fff;--discord:#5865F2;--green:#4caf50;--red:#f66;--transition:300ms ease;
+  font-family:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.04),transparent 30%),
+    radial-gradient(circle at 80% 80%,rgba(255,255,255,.03),transparent 40%),
+    var(--bg);
+  color:var(--text);display:flex;align-items:center;justify-content:center;
+}
+#app,#auth-page{max-width:800px;width:100%;padding:24px}
+h1{
+  text-align:center;font-weight:800;font-size:2rem;letter-spacing:1px;
+  color:var(--accent);text-shadow:0 0 20px var(--glow);margin-bottom:16px;
+}
+table{
+  width:100%;border-collapse:collapse;margin-top:24px;border-radius:12px;
+  overflow:hidden;box-shadow:0 0 40px rgba(0,0,0,.6),0 0 20px rgba(255,255,255,.02) inset;
+}
+thead{
+  background:rgba(255,255,255,.05);text-transform:uppercase;
+  font-size:.8rem;letter-spacing:1px;color:var(--muted);
+}
+th,td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);text-align:left}
+tr:hover{
+  background:rgba(255,255,255,.03);transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(255,255,255,.03);
+  transition:transform var(--transition),box-shadow var(--transition);
+}
+.rank{font-weight:700;color:var(--accent)}
+.name{display:flex;align-items:center;gap:12px}
+.avatar{width:40px;height:40px;border-radius:10px;overflow:hidden;box-shadow:0 0 10px rgba(255,255,255,.05)}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.discord-tag{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--discord);font-weight:500}
+.score{text-align:right;font-weight:600}
+#loader{
+  position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;transition:opacity 700ms ease;z-index:10;
+}
+#logo{
+  font-size:2.5rem;font-weight:900;text-transform:uppercase;color:var(--accent);
+  letter-spacing:2px;animation:glow 2s infinite alternate;cursor:pointer;
+}
+@keyframes glow{
+  from{text-shadow:0 0 5px var(--accent);opacity:.7}
+  to{text-shadow:0 0 25px var(--accent),0 0 50px var(--accent);opacity:1}
+}
+.hidden{opacity:0;pointer-events:none;display:none !important}
+footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
+.last-updated{font-size:.75rem;color:var(--muted);text-align:center;margin-top:10px}
+
+/* Forms */
+.auth-form{max-width:360px;margin:0 auto;background:var(--panel);padding:28px;border-radius:12px;box-shadow:0 0 30px rgba(0,0,0,.6)}
+.auth-form h2{font-size:1.5rem;margin-bottom:20px;text-align:center}
+.auth-form input{
+  width:100%;padding:12px;margin:10px 0;border:none;border-radius:8px;
+  background:rgba(255,255,255,.08);color:var(--text);font-size:1rem;
+}
+.auth-form button{
+  width:100%;padding:14px;margin-top:16px;background:var(--accent);color:#000;
+  border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:background .2s;
+}
+.auth-form button:hover{background:#ccc}
+.auth-form .error{color:var(--red);margin-top:8px;text-align:center;font-size:.9rem}
+.auth-form .switch{text-align:center;margin-top:16px;font-size:.9rem}
+.auth-form .switch a{color:var(--accent);text-decoration:underline;cursor:pointer}
+
+/* Admin */
+#admin-badge{background:var(--discord);color:#fff;padding:4px 8px;border-radius:6px;font-size:.7rem;margin-left:8px}
+#edit-panel{margin-top:24px;background:var(--panel);padding:20px;border-radius:12px}
+#json-editor{width:100%;height:200px;background:#1a1a1a;color:#0f0;font-family:monospace;padding:12px;border-radius:8px;border:1px solid #333}
+#save-btn{margin-top:12px;background:var(--green);color:#fff}
+#save-msg{margin-top:8px;font-size:.9rem}
+#logout-btn{float:right;background:transparent;color:var(--muted);border:none;cursor:pointer;font-size:.9rem}
+
+/* Responsive */
+@media (max-width:600px){
+  #app,#auth-page{padding:16px}
+  table{font-size:.9rem}
+  th,td{padding:10px 8px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div id="logo">GOONING</div>
+  <div style="margin-top:12px;color:#777;">Click to enter</div>
+</div>
+
+<!-- AUTH PAGE -->
+<div id="auth-page" class="hidden">
+  <div id="login-form" class="auth-form">
+    <h2>Login</h2>
+    <input type="text" id="login-username" placeholder="Username" autocomplete="username">
+    <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
+    <button id="login-btn">Login</button>
+    <div class="error" id="login-error"></div>
+    <div class="switch">No account? <a id="show-signup">Sign up</a></div>
+  </div>
+
+  <div id="signup-form" class="auth-form hidden">
+    <h2>Sign Up</h2>
+    <input type="text" id="signup-username" placeholder="Username" autocomplete="username">
+    <input type="password" id="signup-password" placeholder="Password" autocomplete="new-password">
+    <button id="signup-btn">Create Account</button>
+    <div class="error" id="signup-error"></div>
+    <div class="switch">Have account? <a id="show-login">Login</a></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h1>Leaderboard <span id="admin-badge" class="hidden">ADMIN</span></h1>
+    <button id="logout-btn" class="hidden">Logout</button>
+  </div>
+
+  <div id="loading" style="text-align:center;color:#aaa;margin:20px 0;">Loading leaderboard...</div>
+
+  <table id="board" class="hidden">
+    <thead><tr><th>Rank</th><th>Player</th><th class="score">Score</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <!-- ADMIN EDITOR -->
+  <div id="edit-panel" class="hidden">
+    <h3>Edit Leaderboard (JSON)</h3>
+    <textarea id="json-editor" spellcheck="false"></textarea>
+    <button id="save-btn">Save & Update</button>
+    <div id="save-msg"></div>
+  </div>
+
+  <div class="last-updated" id="updated"></div>
+  <footer>Auto-updated • <a href="leaderboard.json" target="_blank" style="color:var(--muted)">view raw JSON</a></footer>
+</div>
+
+<script>
+const API = '/api';
+const $ = id => document.getElementById(id);
+let currentUser = null;
+
+// === UI HELPERS ===
+const show = el => { el.classList.remove('hidden'); el.style.display = ''; }
+const hide = el => el.classList.add('hidden');
+const clearError = id => $(id).textContent = '';
+
+// === LOADER → AUTH ===
+$('logo').onclick = () => {
+  $('loader').style.opacity = '0';
+  setTimeout(() => {
+    hide($('loader'));
+    show($('auth-page'));
+    checkSession();
+  }, 700);
+};
+
+// === AUTH SWITCH ===
+$('show-signup').onclick = () => { hide($('login-form')); show($('signup-form')); }
+$('show-login').onclick = () => { hide($('signup-form')); show($('login-form')); }
+
+// === SIGNUP ===
+$('signup-btn').onclick = async () => {
+  const username = $('signup-username').value.trim();
+  const password = $('signup-password').value;
+  clearError('signup-error');
+  if (!username || !password) return $('signup-error').textContent = 'Fill all fields';
+
+  const res = await fetch(`${API}/signup`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({username, password})
+  });
+  const data = await res.json();
+  if (data.success) {
+    currentUser = data.user;
+    finishLogin();
+  } else {
+    $('signup-error').textContent = data.error;
+  }
+};
+
+// === LOGIN ===
+$('login-btn').onclick = async () => {
+  const username = $('login-username').value.trim();
+  const password = $('login-password').value;
+  clearError('login-error');
+  if (!username || !password) return $('login-error').textContent = 'Fill all fields';
+
+  const res = await fetch(`${API}/login`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({username, password})
+  });
+  const data = await res.json();
+  if (data.success) {
+    currentUser = data.user;
+    finishLogin();
+  } else {
+    $('login-error').textContent = data.error;
+  }
+};
+
+// === CHECK SESSION ON LOAD ===
+async function checkSession() {
+  const res = await fetch(`${API}/me`);
+  if (res.ok) {
+    const data = await res.json();
+    currentUser = data.user;
+    finishLogin();
+  }
+}
+
+// === AFTER LOGIN ===
+function finishLogin() {
+  hide($('auth-page'));
+  show($('app'));
+  if (currentUser.role === 'admin') {
+    show($('admin-badge'));
+    show($('edit-panel'));
+  }
+  show($('logout-btn'));
+  fetchLeaderboard();
+  setInterval(fetchLeaderboard, 30_000);
+}
+
+// === LOGOUT ===
+$('logout-btn').onclick = async () => {
+  await fetch(`${API}/logout`, {method: 'POST'});
+  location.reload();
+};
+
+// === FETCH LEADERBOARD ===
+async function fetchLeaderboard() {
+  const loading = $('loading');
+  const board = $('board');
+  show(loading); hide(board);
+
+  try {
+    const res = await fetch(`${API}/leaderboard`);
+    const { leaderboard, updated } = await res.json();
+    render(leaderboard || []);
+    $('updated').textContent = `Last updated: ${updated}`;
+    hide(loading); show(board);
+
+    // Auto-fill editor for admin
+    if (currentUser?.role === 'admin') {
+      $('json-editor').value = JSON.stringify(leaderboard.map(p => ({
+        name: p.name, score: p.score, discord: p.discord, avatar: p.avatar
+      })), null, 2);
+    }
+  } catch (e) {
+    loading.textContent = 'Failed to load.';
+    loading.style.color = '#f66';
+  }
+}
+
+// === RENDER ===
+function render(list) {
+  const rows = $('rows');
+  if (!list.length) {
+    rows.innerHTML = `<tr><td colspan="3" style="text-align:center;color:#aaa;">No players yet.</td></tr>`;
+    return;
+  }
+  rows.innerHTML = list.map(p => `
+    <tr>
+      <td class="rank">#${p.rank || "?"}</td>
+      <td class="name">
+        <div class="avatar"><img src="${e(p.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png')}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"></div>
+        <div>
+          <div>${e(p.name || "Unknown")}</div>
+          ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
+        </div>
+      </td>
+      <td class="score">${(p.score || 0).toLocaleString()}</td>
+    </tr>`).join('');
+}
+function e(t) {
+  const div = document.createElement('div');
+  div.textContent = t;
+  return div.innerHTML;
+}
+
+// === SAVE LEADERBOARD (ADMIN) ===
+$('save-btn').onclick = async () => {
+  const msg = $('save-msg');
+  let data;
+  try { data = JSON.parse($('json-editor').value); } catch {
+    return msg.textContent = 'Invalid JSON', msg.style.color = '#f66';
+  }
+  if (!Array.isArray(data)) return msg.textContent = 'Must be array', msg.style.color = '#f66';
+
+  const res = await fetch(`${API}/leaderboard`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ leaderboard: data })
+  });
+  const result = await res.json();
+  if (result.success) {
+    msg.textContent = `Saved! ${result.updated}`;
+    msg.style.color = '#6f6';
+    fetchLeaderboard();
+  } else {
+    msg.textContent = result.error;
+    msg.style.color = '#f66';
+  }
+};
+</script>
+</body>
+</html>
