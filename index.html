@@ -84,13 +84,7 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
 #save-btn{margin-top:12px;background:var(--green);color:#fff}
 #save-msg{margin-top:8px;font-size:.9rem}
 #logout-btn{float:right;background:transparent;color:var(--muted);border:none;cursor:pointer;font-size:.9rem}
-
-/* Responsive */
-@media (max-width:600px){
-  #app,#auth-page{padding:16px}
-  table{font-size:.9rem}
-  th,td{padding:10px 8px}
-}
+#token-setup{margin:20px auto;max-width:500px;background:var(--panel);padding:20px;border-radius:12px;text-align:center}
 </style>
 </head>
 <body>
@@ -101,12 +95,21 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
   <div style="margin-top:12px;color:#777;">Click to enter</div>
 </div>
 
+<!-- TOKEN SETUP -->
+<div id="token-setup" class="hidden">
+  <h2>Setup GitHub Token</h2>
+  <p>Paste your <strong>Personal Access Token</strong> (with repo write access):</p>
+  <input type="password" id="github-token" placeholder="ghp_..." style="width:100%;padding:12px;margin:12px 0;">
+  <button id="save-token">Save & Continue</button>
+  <p style="font-size:.8rem;margin-top:12px;">This is stored in your browser only. Never share it.</p>
+</div>
+
 <!-- AUTH PAGE -->
 <div id="auth-page" class="hidden">
   <div id="login-form" class="auth-form">
     <h2>Login</h2>
-    <input type="text" id="login-username" placeholder="Username" autocomplete="username">
-    <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
+    <input type="text" id="login-username" placeholder="Username">
+    <input type="password" id="login-password" placeholder="Password">
     <button id="login-btn">Login</button>
     <div class="error" id="login-error"></div>
     <div class="switch">No account? <a id="show-signup">Sign up</a></div>
@@ -114,8 +117,8 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
 
   <div id="signup-form" class="auth-form hidden">
     <h2>Sign Up</h2>
-    <input type="text" id="signup-username" placeholder="Username" autocomplete="username">
-    <input type="password" id="signup-password" placeholder="Password" autocomplete="new-password">
+    <input type="text" id="signup-username" placeholder="Username">
+    <input type="password" id="signup-password" placeholder="Password">
     <button id="signup-btn">Create Account</button>
     <div class="error" id="signup-error"></div>
     <div class="switch">Have account? <a id="show-login">Login</a></div>
@@ -149,86 +152,125 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
 </div>
 
 <script>
-const API = '/api';
-const $ = id => document.getElementById(id);
+// === CONFIG (CHANGE THESE) ===
+const REPO = 'YOURNAME/gooning-leaderboard'; // ← CHANGE TO YOUR REPO
+const BRANCH = 'main';
+const USERS_FILE = 'users.json';
+const BOARD_FILE = 'leaderboard.json';
+
+const API = 'https://api.github.com';
+let TOKEN = localStorage.getItem('gh_token');
 let currentUser = null;
 
-// === UI HELPERS ===
-const show = el => { el.classList.remove('hidden'); el.style.display = ''; }
+// === HELPERS ===
+const $ = id => document.getElementById(id);
+const show = el => el.classList.remove('hidden');
 const hide = el => el.classList.add('hidden');
-const clearError = id => $(id).textContent = '';
-
-// === LOADER → AUTH ===
-$('logo').onclick = () => {
-  $('loader').style.opacity = '0';
-  setTimeout(() => {
-    hide($('loader'));
-    show($('auth-page'));
-    checkSession();
-  }, 700);
+const e = t => {
+  const div = document.createElement('div');
+  div.textContent = t;
+  return div.innerHTML;
 };
 
-// === AUTH SWITCH ===
-$('show-signup').onclick = () => { hide($('login-form')); show($('signup-form')); }
-$('show-login').onclick = () => { hide($('signup-form')); show($('login-form')); }
-
-// === SIGNUP ===
-$('signup-btn').onclick = async () => {
-  const username = $('signup-username').value.trim();
-  const password = $('signup-password').value;
-  clearError('signup-error');
-  if (!username || !password) return $('signup-error').textContent = 'Fill all fields';
-
-  const res = await fetch(`${API}/signup`, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({username, password})
+// === GITHUB API ===
+async function gh(path, opts = {}) {
+  const headers = {
+    'Authorization': `token ${TOKEN}`,
+    'Accept': 'application/vnd.github.v3+json'
+  };
+  if (opts.body) headers['Content-Type'] = 'application/json';
+  const res = await fetch(`${API}/repos/${REPO}/contents/${path}`, {
+    ...opts,
+    headers: { ...headers, ...opts.headers }
   });
-  const data = await res.json();
-  if (data.success) {
-    currentUser = data.user;
-    finishLogin();
-  } else {
-    $('signup-error').textContent = data.error;
-  }
-};
-
-// === LOGIN ===
-$('login-btn').onclick = async () => {
-  const username = $('login-username').value.trim();
-  const password = $('login-password').value;
-  clearError('login-error');
-  if (!username || !password) return $('login-error').textContent = 'Fill all fields';
-
-  const res = await fetch(`${API}/login`, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({username, password})
-  });
-  const data = await res.json();
-  if (data.success) {
-    currentUser = data.user;
-    finishLogin();
-  } else {
-    $('login-error').textContent = data.error;
-  }
-};
-
-// === CHECK SESSION ON LOAD ===
-async function checkSession() {
-  const res = await fetch(`${API}/me`);
-  if (res.ok) {
-    const data = await res.json();
-    currentUser = data.user;
-    finishLogin();
-  }
+  return res;
 }
 
-// === AFTER LOGIN ===
-function finishLogin() {
+async function getFile(path) {
+  const res = await gh(path);
+  if (!res.ok) return null;
+  const data = await res.json();
+  return { content: JSON.parse(atob(data.content)), sha: data.sha };
+}
+
+async function saveFile(path, content, sha = null) {
+  const message = `Update ${path} via Gooning Leaderboard`;
+  const res = await gh(path, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message,
+      content: btoa(JSON.stringify(content, null, 2)),
+      sha,
+      branch: BRANCH
+    })
+  });
+  return res.ok;
+}
+
+// === TOKEN SETUP ===
+if (!TOKEN) {
+  $('logo').onclick = () => {
+    hide($('loader'));
+    show($('token-setup'));
+  };
+  $('save-token').onclick = () => {
+    TOKEN = $('github-token').value.trim();
+    if (!TOKEN.startsWith('ghp_')) return alert('Invalid token');
+    localStorage.setItem('gh_token', TOKEN);
+    hide($('token-setup'));
+    show($('auth-page'));
+    initAuth();
+  };
+} else {
+  $('logo').onclick = () => {
+    hide($('loader'));
+    show($('auth-page'));
+    initAuth();
+  };
+}
+
+// === AUTH SYSTEM ===
+async function initAuth() {
+  const usersData = await getFile(USERS_FILE);
+  if (!usersData) await saveFile(USERS_FILE, { users: [] });
+
+  $('show-signup').onclick = () => { hide($('login-form')); show($('signup-form')); };
+  $('show-login').onclick = () => { hide($('signup-form')); show($('login-form')); };
+
+  $('signup-btn').onclick = async () => {
+    const username = $('signup-username').value.trim();
+    const password = $('signup-password').value;
+    if (!username || !password) return $('signup-error').textContent = 'Fill all';
+
+    const { content } = await getFile(USERS_FILE);
+    if (content.users.find(u => u.username === username)) {
+      return $('signup-error').textContent = 'Username taken';
+    }
+
+    const hash = btoa(password); // simple hash (not secure, but works for demo)
+    const isAdmin = username.toLowerCase() === 'xen';
+    content.users.push({ username, password: hash, role: isAdmin ? 'admin' : 'user' });
+    await saveFile(USERS_FILE, content);
+
+    loginUser(username, isAdmin ? 'admin' : 'user');
+  };
+
+  $('login-btn').onclick = async () => {
+    const username = $('login-username').value.trim();
+    const password = $('login-password').value;
+    const { content } = await getFile(USERS_FILE);
+    const user = content.users.find(u => u.username === username && atob(u.password) === password);
+    if (!user) return $('login-error').textContent = 'Invalid credentials';
+
+    loginUser(username, user.role);
+  };
+}
+
+function loginUser(username, role) {
+  currentUser = { username, role };
   hide($('auth-page'));
   show($('app'));
-  if (currentUser.role === 'admin') {
+  if (role === 'admin') {
     show($('admin-badge'));
     show($('edit-panel'));
   }
@@ -237,38 +279,35 @@ function finishLogin() {
   setInterval(fetchLeaderboard, 30_000);
 }
 
-// === LOGOUT ===
-$('logout-btn').onclick = async () => {
-  await fetch(`${API}/logout`, {method: 'POST'});
+$('logout-btn').onclick = () => {
+  currentUser = null;
   location.reload();
 };
 
-// === FETCH LEADERBOARD ===
+// === LEADERBOARD ===
 async function fetchLeaderboard() {
   const loading = $('loading');
   const board = $('board');
   show(loading); hide(board);
 
-  try {
-    const res = await fetch(`${API}/leaderboard`);
-    const { leaderboard, updated } = await res.json();
-    render(leaderboard || []);
-    $('updated').textContent = `Last updated: ${updated}`;
-    hide(loading); show(board);
+  const data = await getFile(BOARD_FILE);
+  if (!data) {
+    await saveFile(BOARD_FILE, { leaderboard: [], updated: 'never' });
+    return fetchLeaderboard();
+  }
 
-    // Auto-fill editor for admin
-    if (currentUser?.role === 'admin') {
-      $('json-editor').value = JSON.stringify(leaderboard.map(p => ({
-        name: p.name, score: p.score, discord: p.discord, avatar: p.avatar
-      })), null, 2);
-    }
-  } catch (e) {
-    loading.textContent = 'Failed to load.';
-    loading.style.color = '#f66';
+  const list = data.content.leaderboard.map((p, i) => ({ ...p, rank: i + 1 }));
+  render(list);
+  $('updated').textContent = `Last updated: ${data.content.updated}`;
+  hide(loading); show(board);
+
+  if (currentUser?.role === 'admin') {
+    $('json-editor').value = JSON.stringify(list.map(p => ({
+      name: p.name, score: p.score, discord: p.discord, avatar: p.avatar
+    })), null, 2);
   }
 }
 
-// === RENDER ===
 function render(list) {
   const rows = $('rows');
   if (!list.length) {
@@ -277,24 +316,18 @@ function render(list) {
   }
   rows.innerHTML = list.map(p => `
     <tr>
-      <td class="rank">#${p.rank || "?"}</td>
+      <td class="rank">#${p.rank}</td>
       <td class="name">
         <div class="avatar"><img src="${e(p.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png')}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"></div>
         <div>
-          <div>${e(p.name || "Unknown")}</div>
+          <div>${e(p.name)}</div>
           ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
         </div>
       </td>
-      <td class="score">${(p.score || 0).toLocaleString()}</td>
+      <td class="score">${p.score.toLocaleString()}</td>
     </tr>`).join('');
 }
-function e(t) {
-  const div = document.createElement('div');
-  div.textContent = t;
-  return div.innerHTML;
-}
 
-// === SAVE LEADERBOARD (ADMIN) ===
 $('save-btn').onclick = async () => {
   const msg = $('save-msg');
   let data;
@@ -303,18 +336,16 @@ $('save-btn').onclick = async () => {
   }
   if (!Array.isArray(data)) return msg.textContent = 'Must be array', msg.style.color = '#f66';
 
-  const res = await fetch(`${API}/leaderboard`, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ leaderboard: data })
-  });
-  const result = await res.json();
-  if (result.success) {
-    msg.textContent = `Saved! ${result.updated}`;
+  const now = new Date().toISOString();
+  const payload = { leaderboard: data, updated: now };
+  const file = await getFile(BOARD_FILE);
+  const saved = await saveFile(BOARD_FILE, payload, file?.sha);
+  if (saved) {
+    msg.textContent = `Saved! ${now}`;
     msg.style.color = '#6f6';
     fetchLeaderboard();
   } else {
-    msg.textContent = result.error;
+    msg.textContent = 'Save failed';
     msg.style.color = '#f66';
   }
 };
