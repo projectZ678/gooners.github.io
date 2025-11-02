@@ -8,26 +8,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0a0a;--panel:#111;--text:#eee;--muted:#888;--glow:rgba(255,255,255,.2);
-  --accent:#fff;--discord:#5865F2;--transition:300ms ease;
+  --bg:#0a0a0a;--text:#eee;--accent:#fff;--discord:#5865F2;--muted:#888;
   font-family:'Inter',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  min-height:100vh;background:
-    radial-gradient(circle at 30% 20%,rgba(255,255,255,.04),transparent 30%),
-    radial-gradient(circle at 80% 80%,rgba(255,255,255,.03),transparent 40%),
-    var(--bg);
-  color:var(--text);display:flex;flex-direction:column;align-items:center;padding:40px 20px;
+  min-height:100vh;background:var(--bg);color:var(--text);
+  display:flex;flex-direction:column;align-items:center;padding:40px 20px;
 }
 h1{
   font-size:2.8rem;font-weight:900;text-align:center;margin-bottom:30px;
-  color:var(--accent);text-shadow:0 0 20px var(--glow);letter-spacing:2px;
+  color:var(--accent);text-shadow:0 0 20px rgba(255,255,255,.2);letter-spacing:2px;
 }
 #loader{
   position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;z-index:10;transition:opacity 700ms ease;
-  cursor:pointer;
+  align-items:center;justify-content:center;z-index:10;transition:opacity 700ms ease;cursor:pointer;
 }
 #logo{
   font-size:3rem;font-weight:900;text-transform:uppercase;color:var(--accent);
@@ -38,23 +33,18 @@ h1{
   to{text-shadow:0 0 40px var(--accent),0 0 80px var(--accent);opacity:1}
 }
 table{
-  width:100%;max-width:900px;border-collapse:collapse;margin-top:24px;
-  background:var(--panel);border-radius:16px;overflow:hidden;
-  box-shadow:0 0 60px rgba(0,0,0,.7),0 0 30px rgba(255,255,255,.03) inset;
+  width:100%;max-width:900px;border-collapse:collapse;background:#111;
+  border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,.7);
 }
 thead{
   background:rgba(255,255,255,.08);text-transform:uppercase;
   font-size:.85rem;letter-spacing:1.5px;color:var(--muted);
 }
 th,td{padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
-tr:hover{
-  background:rgba(255,255,255,.04);transform:translateY(-3px);
-  box-shadow:0 8px 20px rgba(255,255,255,.05);
-  transition:transform var(--transition),box-shadow var(--transition);
-}
+tr:hover{background:rgba(255,255,255,.04)}
 .rank{font-weight:800;color:var(--accent);font-size:1.3rem}
 .name{display:flex;align-items:center;gap:14px}
-.avatar{width:48px;height:48px;border-radius:12px;overflow:hidden;box-shadow:0 0 15px rgba(255,255,255,.1)}
+.avatar{width:48px;height:48px;border-radius:12px;overflow:hidden}
 .avatar img{width:100%;height:100%;object-fit:cover}
 .discord-tag{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--discord);font-weight:600}
 .score{text-align:right;font-weight:700;font-size:1.1rem}
@@ -67,28 +57,22 @@ footer a{color:var(--muted);text-decoration:underline}
 </head>
 <body>
 
-<!-- LOADER (Click or Press Enter) -->
+<!-- LOADER -->
 <div id="loader" tabindex="0">
   <div id="logo">GOONING</div>
   <div style="margin-top:16px;color:#777;font-size:1.1rem;">Click or press Enter</div>
 </div>
 
-<!-- PUBLIC LEADERBOARD -->
+<!-- LEADERBOARD -->
 <h1>GOONING LEADERBOARD</h1>
-<div id="loading">Loading leaderboard...</div>
-
+<div id="loading">Loading...</div>
 <table id="board" class="hidden">
-  <thead>
-    <tr><th>Rank</th><th>Player</th><th class="score">Score</th></tr>
-  </thead>
+  <thead><tr><th>Rank</th><th>Player</th><th class="score">Score</th></tr></thead>
   <tbody id="rows"></tbody>
 </table>
-
 <div class="last-updated" id="updated"></div>
-
 <footer>
-  Public View • <a href="leaderboard.json" target="_blank">view raw JSON</a><br>
-  <small>Only XEN can edit via <a href="admin.html" target="_blank">admin.html</a></small>
+  Public View • <a href="leaderboard.json" target="_blank">view JSON</a>
 </footer>
 
 <script>
@@ -96,6 +80,7 @@ const REPO = 'projectZ678/gooning-leaderboard';
 const FILE = 'leaderboard.json';
 const API = 'https://api.github.com';
 
+// Elements
 const $ = id => document.getElementById(id);
 const loader = $('#loader');
 const loading = $('#loading');
@@ -103,7 +88,12 @@ const board = $('#board');
 const rows = $('#rows');
 const updated = $('#updated');
 
-// === ENTER THE VOID ===
+// Enter on click or Enter key
+loader.onclick = enter;
+loader.onkeydown = e => { if (e.key === 'Enter') enter(); };
+loader.focus();
+
+// Enter animation
 function enter() {
   loader.style.opacity = '0';
   setTimeout(() => {
@@ -112,12 +102,7 @@ function enter() {
   }, 700);
 }
 
-// Click OR Press Enter
-loader.onclick = enter;
-loader.onkeydown = e => { if (e.key === 'Enter') enter(); };
-loader.focus(); // Auto-focus for Enter key
-
-// === LOAD LEADERBOARD ===
+// Load leaderboard
 async function loadLeaderboard() {
   try {
     const res = await fetch(`${API}/repos/${REPO}/contents/${FILE}`);
@@ -135,12 +120,11 @@ async function loadLeaderboard() {
   }
 }
 
-// === RENDER TABLE ===
+// Render table
 function render(players) {
   const sorted = [...players].sort((a, b) => (b.score || 0) - (a.score || 0));
   loading.classList.add('hidden');
   board.classList.remove('hidden');
-
   rows.innerHTML = sorted.length ? sorted.map((p, i) => `
     <tr>
       <td class="rank">#${i + 1}</td>
@@ -156,7 +140,7 @@ function render(players) {
       </td>
       <td class="score">${(p.score || 0).toLocaleString()}</td>
     </tr>
-  `).join('') : '<tr><td colspan="3" style="text-align:center;padding:40px;color:#666;font-size:1.1rem;">No gooners yet.<br>Check back soon!</td></tr>';
+  `).join('') : '<tr><td colspan="3" style="text-align:center;padding:40px;color:#666;">No players yet.</td></tr>';
 }
 
 function escape(t) {
@@ -165,7 +149,7 @@ function escape(t) {
   return div.innerHTML;
 }
 
-// Auto-refresh every 30 seconds
+// Auto-refresh
 setInterval(loadLeaderboard, 30000);
 </script>
 </body>
