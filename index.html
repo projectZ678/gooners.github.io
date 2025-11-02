@@ -309,8 +309,8 @@
     </div>
 
     <footer>
-      Auto‑refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
-      <div class="credit">Site made by Xen • Goon Clicker v4.0</div>
+      Auto-refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
+      <div class="credit">Site made by Xen • Goon Clicker v5.0</div>
     </footer>
   </div>
 
@@ -319,7 +319,7 @@
 
   <script>
     const $ = id => document.getElementById(id);
-    const SAVE_KEY = 'goonhub_v18';
+    const SAVE_KEY = 'goonhub_v19';
     let goons = 0, gps = 0, prestige = 0, rankedGPS = 0, threshold = 3000, clickPower = 1;
     let lastClick = 0, clickerInited = false;
 
@@ -429,14 +429,14 @@
         buildings:buildings.map(b=>({id:b.id,owned:b.owned,cost:b.cost})),
         cosmetics:cosmetics.map(c=>({id:c.id,owned:c.owned})),
         rankedCosmetics:rankedCosmetics.map(c=>({id:c.id,unlocked:c.unlocked})),
-        version:18}));
+        version:19}));
     }
     function load(){
       const s=localStorage.getItem(SAVE_KEY);
       if(!s) return;
       try{
         const d=JSON.parse(s);
-        if(d.version!==18) return;
+        if(d.version!==19) return;
         goons=+d.goons||0; prestige=+d.prestige||0; rankedGPS=+d.rankedGPS||0;
         threshold=+d.threshold||calcThreshold();
         (d.upgrades||[]).forEach(u=>{const x=upgrades.find(v=>v.id===u.id);if(x) x.owned=!!u.owned;});
