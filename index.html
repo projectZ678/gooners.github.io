@@ -58,7 +58,7 @@ tr:hover{
   from{text-shadow:0 0 5px var(--accent);opacity:.7}
   to{text-shadow:0 0 25px var(--accent),0 0 50px var(--accent);opacity:1}
 }
-.hidden{opacity:0;pointer-events:none;display:none !important}
+.hidden{display:none !important}
 footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
 .last-updated{font-size:.75rem;color:var(--muted);text-align:center;margin-top:10px}
 
@@ -90,11 +90,10 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
   </table>
 
   <div class="last-updated" id="updated"></div>
-  <footer>Auto-updated • <a href="/api/leaderboard" target="_blank" style="color:var(--muted)">view raw JSON</a></footer>
+  <footer>Auto-updated • <a href="leaderboard.json" target="_blank" style="color:var(--muted)">view raw JSON</a></footer>
 </div>
 
 <script>
-const API = '/api';
 const $ = id => document.getElementById(id);
 
 // === ENTER ON CLICK OR ENTER KEY ===
@@ -105,71 +104,68 @@ function enterLeaderboard() {
     loader.classList.add('hidden');
     $('app').classList.remove('hidden');
     fetchLeaderboard();
-    setInterval(fetchLeaderboard, 30000); // Auto-refresh every 30s
+    setInterval(fetchLeaderboard, 30000);   // refresh every 30 s
   }, 700);
 }
-
-// Click & Enter key support
 $('loader').addEventListener('click', enterLeaderboard);
 $('loader').addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.key === ' ') {
-    e.preventDefault();
-    enterLeaderboard();
-  }
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterLeaderboard(); }
 });
 $('loader').focus();
 
-// === FETCH LEADERBOARD ===
+// === FETCH LEADERBOARD FROM leaderboard.json ===
 async function fetchLeaderboard() {
   const loading = $('loading');
-  const board = $('board');
-  const rows = $('rows');
+  const board   = $('board');
+  const rows    = $('rows');
   const updated = $('updated');
 
   try {
-    const res = await fetch(`${API}/leaderboard`);
-    if (!res.ok) throw new Error('Not ready');
-    const { leaderboard = [], updated: time } = await res.json();
+    const res = await fetch('leaderboard.json?' + Date.now());   // bust cache
+    if (!res.ok) throw new Error('File not found');
+    const data = await res.json();
 
-    // Sort by score descending
-    const sorted = [...leaderboard].sort((a, b) => (b.score || 0) - (a.score || 0));
+    // Expected shape: { leaderboard: [...], updated: "2:34 PM" }
+    const list = Array.isArray(data) ? data : (data.leaderboard || []);
+    const time = data.updated || new Date().toLocaleTimeString();
 
-    // Render rows
-    if (sorted.length === 0) {
+    // Sort descending by score
+    const sorted = [...list].sort((a,b) => (b.score||0) - (a.score||0));
+
+    if (!sorted.length) {
       rows.innerHTML = `<tr><td colspan="3" style="text-align:center;color:#aaa;padding:40px;">No players yet.</td></tr>`;
     } else {
-      rows.innerHTML = sorted.map((p, i) => `
+      rows.innerHTML = sorted.map((p,i) => `
         <tr>
-          <td class="rank">#${i + 1}</td>
+          <td class="rank">#${i+1}</td>
           <td class="name">
             <div class="avatar">
-              <img src="${e(p.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png')}"
+              <img src="${e(p.avatar||'https://cdn.discordapp.com/embed/avatars/0.png')}"
                    onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
             </div>
             <div>
-              <div style="font-weight:600">${e(p.name || 'Unknown')}</div>
+              <div style="font-weight:600">${e(p.name||'Unknown')}</div>
               ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
             </div>
           </td>
-          <td class="score">${(p.score || 0).toLocaleString()}</td>
-        </tr>
-      `).join('');
+          <td class="score">${(p.score||0).toLocaleString()}</td>
+        </tr>`).join('');
     }
 
-    updated.textContent = `Last updated: ${time || 'never'}`;
+    updated.textContent = `Last updated: ${time}`;
     loading.classList.add('hidden');
     board.classList.remove('hidden');
-  } catch (e) {
+  } catch (err) {
     loading.textContent = 'Failed to load leaderboard.';
     loading.style.color = '#f66';
   }
 }
 
-// === ESCAPE HTML ===
+// Simple HTML-escape
 function e(t) {
-  const div = document.createElement('div');
-  div.textContent = t;
-  return div.innerHTML;
+  const d = document.createElement('div');
+  d.textContent = t;
+  return d.innerHTML;
 }
 </script>
 </body>
