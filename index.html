@@ -3,522 +3,252 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gooning Leaderboard</title>
+  <title>Gooning Mini-Games</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    /* ────────────────────────────────── VARIABLES ────────────────────────────────── */
-    :root {
-      --bg: #050505;
-      --glass: #111111ee;
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text: #f5f5f5;
-      --muted: #aaaaaa;
-      --glow: #ffffff;
-      --accent: #ffffff;
-      --discord: #cccccc;
-      --transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-      --scrollbar: #444;
-      --scrollbar-hover: #666;
-      --goon: #ff4d8c;
-      --stamina: #4dff88;
-      font-family: 'Inter', system-ui, sans-serif;
+    :root{
+      --bg:#050505;--glass:#111111ee;--glass-border:rgba(255,255,255,.08);
+      --text:#f5f5f5;--muted:#aaaaaa;--goon:#ff4d8c;--stamina:#4dff88;
+      --transition:.35s cubic-bezier(.25,.8,.25,1);
+      font-family:'Inter',system-ui,sans-serif;
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{min-height:100vh;background:var(--bg);overflow:hidden;color:var(--text);
+      display:flex;justify-content:center;align-items:center;padding:12px}
+    .stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+    .star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:fall linear infinite}
+    @keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0}10%{opacity:1}90%{opacity:.3}100%{transform:translateY(100vh) scale(.8);opacity:0}}
 
-    /* ────────────────────────────────── CENTERED LAYOUT ────────────────────────────────── */
-    html, body {
-      min-height: 100vh;
-      background: var(--bg);
-      overflow: hidden;
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 12px;
+    #app{
+      max-width:900px;width:100%;position:relative;z-index:1;
+      backdrop-filter:blur(20px);background:var(--glass);
+      border:1px solid var(--glass-border);border-radius:22px;
+      padding:30px 26px;
+      box-shadow:0 16px 60px rgba(0,0,0,.8),inset 0 0 35px rgba(255,255,255,.05);
+      transition:all .5s var(--transition);transform:scale(1.04);margin:auto
     }
+    #app:hover{transform:scale(1.06) translateY(-6px);box-shadow:0 24px 80px rgba(0,0,0,.9),0 0 40px rgba(255,255,255,.12)}
 
-    /* ────────────────────────────────── STARFALL BACKGROUND ────────────────────────────────── */
-    .stars {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
+    h1{
+      text-align:center;font-weight:800;font-size:2.3rem;letter-spacing:2px;
+      background:linear-gradient(90deg,var(--goon),#ff8cb8);background-clip:text;-webkit-background-clip:text;color:transparent;
+      text-shadow:0 0 30px rgba(255,77,140,.4);margin-bottom:24px
     }
-    .star {
-      position: absolute;
-      background: #fff;
-      border-radius: 50%;
-      opacity: 0;
-      animation: fall linear infinite;
+    .back{
+      display:block;width:fit-content;margin:0 auto 20px;
+      padding:10px 20px;background:rgba(255,255,255,.08);border:1px solid var(--glass-border);
+      border-radius:12px;color:var(--muted);font-size:.9rem;text-decoration:none;
+      transition:.3s;backdrop-filter:blur(4px)
     }
-    @keyframes fall {
-      0% { transform: translateY(-100px) scale(0.2); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 0.3; }
-      100% { transform: translateY(100vh) scale(0.8); opacity: 0; }
+    .back:hover{background:rgba(255,255,255,.15);color:#fff;transform:translateY(-2px)}
+
+    .game{
+      background:rgba(0,0,0,.2);border:1px solid var(--glass-border);border-radius:18px;
+      padding:24px;margin:20px 0;text-align:center;backdrop-filter:blur(8px)
+    }
+    .game h3{
+      font-size:1.4rem;margin-bottom:12px;color:var(--goon);text-shadow:0 0 12px var(--goon)
     }
 
-    /* ────────────────────────────────── MAIN APP (ZOOMED IN & CENTERED) ────────────────────────────────── */
-    #app {
-      max-width: 720px;
-      width: 100%;
-      position: relative;
-      z-index: 1;
-      backdrop-filter: blur(20px);
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 24px 20px;
-      box-shadow: 0 14px 50px rgba(0,0,0,.8), inset 0 0 30px rgba(255,255,255,.05);
-      transition: all .5s var(--transition);
-      transform: scale(1.05);
-      transform-origin: center;
-      margin: auto;
+    /* ── GOON CLICKER (Cookie-Clicker style) ── */
+    #goon-clicker{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+    #goon-big{
+      width:180px;height:180px;margin:auto;cursor:pointer;
+      background:radial-gradient(circle,var(--goon),#ff2a6d);border-radius:50%;
+      box-shadow:0 0 30px var(--goon);transition:transform .15s
     }
-    #app:hover {
-      transform: scale(1.07) translateY(-6px);
-      box-shadow: 0 20px 70px rgba(0,0,0,.9), 0 0 35px rgba(255,255,255,.12);
+    #goon-big:active{transform:scale(.9)}
+    #goon-stats{font-size:1.1rem;margin:10px 0}
+    .upgrade{
+      background:rgba(255,255,255,.07);border:1px solid var(--glass-border);
+      border-radius:12px;padding:12px;margin:8px 0;cursor:pointer;
+      transition:.3s;display:flex;justify-content:space-between;align-items:center
+    }
+    .upgrade:hover{background:rgba(255,255,255,.14);transform:translateY(-2px)}
+    .upgrade.disabled{opacity:.5;cursor:not-allowed}
+    #prestige-btn{margin-top:20px;padding:12px 30px;background:#ffd700;color:#000;border:none;border-radius:12px;font-weight:600;cursor:pointer}
+    #prestige-btn:hover{background:#ffea80}
+
+    /* ── STAMINA HOLD (Rhythm) ── */
+    #stamina-zone{
+      width:100%;height:60px;background:#222;border-radius:12px;position:relative;overflow:hidden;
+      margin:20px 0;border:2px solid var(--stamina)
+    }
+    #stamina-bar{
+      height:100%;width:0%;background:var(--stamina);transition:width .05s linear;
+      box-shadow:0 0 20px var(--stamina)
+    }
+    #stamina-target{
+      position:absolute;top:0;left:40%;width:20%;height:100%;background:rgba(255,255,255,.2);
+      border-left:2px solid #fff;border-right:2px solid #fff
     }
 
-    /* ────────────────────────────────── TABS ────────────────────────────────── */
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .tab {
-      padding: 10px 20px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.3s var(--transition);
-      color: var(--muted);
-    }
-    .tab.active {
-      background: rgba(255,255,255,0.15);
-      color: var(--accent);
-      border-color: rgba(255,255,255,0.2);
-      box-shadow: 0 0 15px rgba(255,255,255,0.1);
-    }
-    .tab:hover:not(.active) {
-      background: rgba(255,255,255,0.1);
-      transform: translateY(-2px);
-    }
+    /* ── EDGE TIMER (Dodge) ── */
+    #edge-canvas{width:100%;height:300px;background:#111;border-radius:12px;margin:20px 0}
+    #edge-score{font-size:1.2rem;margin-top:8px}
 
-    /* ────────────────────────────────── PANELS ────────────────────────────────── */
-    .panel {
-      display: none;
-      animation: fadeIn 0.6s ease;
+    .btn{
+      padding:13px 32px;margin:10px;background:rgba(255,77,140,.25);border:1px solid rgba(255,77,140,.5);
+      border-radius:14px;color:#ff4d8c;font-weight:600;cursor:pointer;transition:.3s;
+      backdrop-filter:blur(6px);box-shadow:0 0 20px rgba(255,77,140,.2)
     }
-    .panel.active { display: block; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ────────────────────────────────── TITLE ────────────────────────────────── */
-    h1 {
-      text-align: center;
-      font-weight: 800;
-      font-size: 2rem;
-      letter-spacing: 1.8px;
-      background: linear-gradient(90deg, #fff, #ccc);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 25px rgba(255,255,255,.3);
-      margin-bottom: 18px;
-      animation: titleGlow 3s ease-in-out infinite alternate;
-    }
-    @keyframes titleGlow {
-      from { text-shadow: 0 0 20px rgba(255,255,255,.3); }
-      to { text-shadow: 0 0 40px rgba(255,255,255,.5), 0 0 80px rgba(255,255,255,.2); }
-    }
-
-    /* ────────────────────────────────── LEADERBOARD TABLE ────────────────────────────────── */
-    .table-container {
-      max-height: 62vh;
-      overflow-y: auto;
-      border-radius: 14px;
-      margin-top: 12px;
-      border: 1px solid var(--glass-border);
-      background: rgba(0,0,0,.2);
-      box-shadow: inset 0 5px 12px rgba(0,0,0,.4);
-      scrollbar-width: thin;
-    }
-    .table-container::-webkit-scrollbar { width: 9px; }
-    .table-container::-webkit-scrollbar-track { background: transparent; }
-    .table-container::-webkit-scrollbar-thumb {
-      background: var(--scrollbar); border-radius: 5px;
-      border: 2px solid transparent; background-clip: content-box;
-    }
-    .table-container::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); background-clip: content-box; }
-
-    table { width: 100%; border-collapse: collapse; }
-    thead {
-      position: sticky; top: 0; z-index: 10;
-      background: linear-gradient(180deg, rgba(25,25,25,.98), rgba(15,15,15,.95));
-      backdrop-filter: blur(12px);
-      text-transform: uppercase; font-size: .7rem; letter-spacing: 1.5px;
-      color: var(--muted); border-bottom: 1px solid var(--glass-border);
-    }
-    th, td { padding: 11px 13px; }
-    tr:hover {
-      background: rgba(255,255,255,.09);
-      transform: translateX(5px);
-      box-shadow: 0 7px 18px rgba(255,255,255,.08);
-    }
-    .rank { font-weight: 800; color: var(--accent); font-size: 1.2rem; text-align: center; text-shadow: 0 0 9px rgba(255,255,255,.4); }
-    .rank:nth-of-type(1) { color: #ffd700; font-size: 1.35rem; text-shadow: 0 0 18px #ffd700; }
-    .rank:nth-of-type(2) { color: #c0c0c0; font-size: 1.3rem; text-shadow: 0 0 16px #c0c0c0; }
-    .rank:nth-of-type(3) { color: #cd7f32; font-size: 1.28rem; text-shadow: 0 0 14px #cd7f32; }
-    .name { display: flex; align-items: center; gap: 12px; font-size: .94rem; }
-    .avatar { width: 36px; height: 36px; border-radius: 10px; overflow: hidden; box-shadow: 0 0 14px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.15); flex-shrink: 0; }
-    tr:hover .avatar { transform: scale(1.1) rotate(5deg); transition: .3s; }
-    .avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .discord-tag { display: flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--discord); margin-top: 2px; }
-    .discord-tag i { filter: drop-shadow(0 0 5px #5865f2); animation: discordPulse 2.5s infinite alternate; }
-    @keyframes discordPulse { from { filter: drop-shadow(0 0 5px #5865f2); } to { filter: drop-shadow(0 0 12px #5865f2); } }
-    .empty-slot { color: #666; font-style: italic; font-size: .92rem; }
-
-    /* ────────────────────────────────── MINI GAMES ────────────────────────────────── */
-    .game {
-      text-align: center;
-      padding: 20px;
-      background: rgba(0,0,0,0.2);
-      border-radius: 16px;
-      border: 1px solid var(--glass-border);
-      margin: 16px 0;
-    }
-    .game h3 {
-      font-size: 1.3rem;
-      margin-bottom: 12px;
-      color: var(--goon);
-      text-shadow: 0 0 10px var(--goon);
-    }
-    .progress-container {
-      height: 20px;
-      background: #222;
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 14px 0;
-      border: 1px solid #444;
-    }
-    .progress {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--goon), #ff8cb8);
-      border-radius: 10px;
-      transition: width 0.1s ease;
-      box-shadow: 0 0 15px var(--goon);
-    }
-    .btn {
-      padding: 12px 24px;
-      background: var(--goon);
-      color: #000;
-      border: none;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      margin: 8px;
-      transition: .25s;
-    }
-    .btn:hover { background: #ff6ba0; transform: translateY(-2px); }
-    .btn:active { transform: translateY(0); }
-
-    .stamina-bar { background: linear-gradient(90deg, #333, var(--stamina)); }
-    .stamina-fill { background: var(--stamina); box-shadow: 0 0 20px var(--stamina); }
-
-    .edge-timer {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #ff4d4d;
-      text-shadow: 0 0 20px #ff4d4d;
-    }
-
-    /* ────────────────────────────────── LOADER & FOOTER ────────────────────────────────── */
-    #loader {
-      position: fixed; inset: 0; background: var(--bg);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      transition: opacity 1s ease; z-index: 100; cursor: pointer;
-    }
-    #logo {
-      font-size: 3.2rem; font-weight: 900; text-transform: uppercase;
-      color: var(--accent); letter-spacing: 4.5px;
-      background: linear-gradient(45deg, #fff, #aaa);
-      background-clip: text; -webkit-background-clip: text; color: transparent;
-      animation: glow 2.5s ease-in-out infinite alternate;
-    }
-    @keyframes glow {
-      from { text-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent); opacity: .9; }
-      to { text-shadow: 0 0 50px var(--accent), 0 0 100px var(--accent); opacity: 1; }
-    }
-
-    .last-updated { font-size: .76rem; color: var(--muted); text-align: center; margin: 14px 0 8px; opacity: .8; }
-    footer { margin-top: 8px; text-align: center; font-size: .74rem; color: var(--muted); }
-    footer a { color: var(--muted); text-decoration: none; transition: .2s; }
-    footer a:hover { color: #ccc; text-decoration: underline; }
-    .credit { font-size: .68rem; color: #777; margin-top: 6px; opacity: .6; font-style: italic; }
-
-    .hidden { display: none !important; }
-
-    @media (max-width: 600px) {
-      #app { padding: 18px; border-radius: 18px; }
-      h1 { font-size: 1.8rem; }
-      .name { gap: 10px; font-size: .9rem; }
-      .avatar { width: 32px; height: 32px; }
-      .table-container { max-height: 58vh; }
-      th, td { padding: 9px 10px; }
-      .tabs { flex-direction: column; }
-      .tab { text-align: center; }
-    }
+    .btn:hover{background:rgba(255,77,140,.4);color:#fff;transform:translateY(-3px);box-shadow:0 0 30px rgba(255,77,140,.4)}
   </style>
 </head>
 <body>
-
-  <!-- STARFALL -->
   <div class="stars" id="stars"></div>
 
-  <!-- LOADER -->
-  <div id="loader" tabindex="0" role="button" aria-label="Enter">
-    <div id="logo">GOONING</div>
-    <div style="margin-top:18px;color:#999;font-size:1.15rem;">Click or press Enter</div>
-  </div>
+  <div id="app">
+    <h1>Gooning Mini-Games</h1>
+    <a href="index.html" class="back">Back to Leaderboard</a>
 
-  <!-- MAIN APP -->
-  <div id="app" class="hidden">
-    <h1>Gooning Hub</h1>
-
-    <!-- TABS -->
-    <div class="tabs">
-      <div class="tab active" data-tab="leaderboard">Leaderboard</div>
-      <div class="tab" data-tab="games">Mini-Games</div>
+    <!-- GOON CLICKER -->
+    <div class="game" id="goon-clicker">
+      <h3>Goon Clicker</h3>
+      <div id="goon-big"></div>
+      <div id="goon-stats">Goons: <span id="goons">0</span> | GPS: <span id="gps">0</span></div>
+      <div id="upgrades"></div>
+      <button id="prestige-btn" class="btn">Prestige (0)</button>
     </div>
 
-    <!-- PANELS -->
-    <div id="leaderboard" class="panel active">
-      <div id="loading" style="text-align:center;color:#bbb;margin:20px 0;font-size:.96rem;">
-        Loading leaderboard...
-      </div>
-      <div class="table-container">
-        <table id="board" class="hidden">
-          <thead><tr><th style="width:60px">Rank</th><th>Player</th></tr></thead>
-          <tbody id="rows"></tbody>
-        </table>
-      </div>
-      <div class="last-updated" id="updated"></div>
+    <!-- STAMINA HOLD -->
+    <div class="game">
+      <h3>Stamina Hold</h3>
+      <p>Hold <kbd>SPACE</kbd> when the bar is in the green zone!</p>
+      <div id="stamina-zone"><div id="stamina-bar"></div><div id="stamina-target"></div></div>
+      <p>Score: <span id="stamina-score">0</span> | Combo: <span id="stamina-combo">0</span></p>
     </div>
 
-    <div id="games" class="panel">
-      <!-- GOON CLICKER -->
-      <div class="game">
-        <h3>Goon Clicker</h3>
-        <p>Click to fill the goon meter!</p>
-        <div class="progress-container"><div id="goon-progress" class="progress"></div></div>
-        <button class="btn" id="goon-btn">GOON!</button>
-        <p id="goon-count">0 clicks</p>
-      </div>
-
-      <!-- STAMINA HOLD -->
-      <div class="game">
-        <h3>Stamina Hold</h3>
-        <p>Hold <kbd>SPACE</kbd> to build stamina!</p>
-        <div class="progress-container"><div id="stamina-progress" class="progress stamina-fill"></div></div>
-        <p id="stamina-text">Hold SPACE...</p>
-      </div>
-
-      <!-- EDGE TIMER -->
-      <div class="game">
-        <h3>Edge Timer</h3>
-        <p>Don't finish too early!</p>
-        <div id="edge-timer" class="edge-timer">30</div>
-        <button class="btn" id="edge-start">Start Edge</button>
-        <p id="edge-result"></p>
-      </div>
+    <!-- EDGE TIMER -->
+    <div class="game">
+      <h3>Edge Timer</h3>
+      <p>Use arrow keys to dodge the waves!</p>
+      <canvas id="edge-canvas"></canvas>
+      <p id="edge-score">Score: 0</p>
     </div>
-
-    <footer>
-      Auto-refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
-      <div class="credit">Site made by Xen</div>
-    </footer>
   </div>
 
   <script>
     const $ = id => document.getElementById(id);
-
-    // ────── STARFALL ──────
-    function createStar() {
-      const s = document.createElement('div'); s.className = 'star';
-      const sz = Math.random() * 3 + 1;
-      s.style.width = s.style.height = `${sz}px`;
-      s.style.left = `${Math.random() * 100}vw`;
-      s.style.animationDuration = `${Math.random() * 8 + 5}s`;
-      s.style.animationDelay = `${Math.random() * 5}s`;
-      s.style.opacity = Math.random() * 0.6 + 0.3;
+    function createStar(){
+      const s=document.createElement('div');s.className='star';
+      const sz=Math.random()*3+1;
+      s.style.width=s.style.height=`${sz}px`;
+      s.style.left=`${Math.random()*100}vw`;
+      s.style.animationDuration=`${Math.random()*8+5}s`;
+      s.style.animationDelay=`${Math.random()*5}s`;
+      s.style.opacity=Math.random()*0.6+0.3;
       $('#stars').appendChild(s);
-      setTimeout(() => s.remove(), 15000);
+      setTimeout(()=>s.remove(),15000);
     }
-    setInterval(createStar, 300);
-    for (let i = 0; i < 40; i++) setTimeout(createStar, i * 100);
+    setInterval(createStar,300);
+    for(let i=0;i<40;i++)setTimeout(createStar,i*100);
 
-    // ────── TABS ──────
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        tab.classList.add('active');
-        $(tab.dataset.tab).classList.add('active');
+    /* ─────────────────────── GOON CLICKER (Cookie-Clicker) ─────────────────────── */
+    let goons = 0, gps = 0, prestige = 0;
+    const upgrades = [
+      {id:'auto',name:'Auto-Gooner',cost:15,inc:0.1,owned:0},
+      {id:'factory',name:'Goon Factory',cost:100,inc:1,owned:0},
+      {id:'portal',name:'Goon Portal',cost:1000,inc:10,owned:0}
+    ];
+    const big = $('goon-big'), goonDisp = $('goons'), gpsDisp = $('gps'), upDiv = $('upgrades'), prestigeBtn = $('prestige-btn');
+
+    big.addEventListener('click',()=>{ goons++; update(); });
+    function update(){
+      goonDisp.textContent = Math.floor(goons).toLocaleString();
+      gpsDisp.textContent = gps.toFixed(1);
+      prestigeBtn.textContent = `Prestige (${prestige})`;
+      upgrades.forEach(u=>{
+        const el = $(u.id);
+        el.querySelector('.cost').textContent = u.cost;
+        el.classList.toggle('disabled', goons < u.cost);
       });
-    });
-
-    // ────── DISCORD AVATAR ──────
-    function getDiscordAvatar(uid, hash, size = 80) {
-      if (!uid || !hash) return 'https://cdn.discordapp.com/embed/avatars/0.png';
-      const ext = hash.startsWith('a_') ? 'gif' : 'webp';
-      return `https://cdn.discordapp.com/avatars/${uid}/${hash}.${ext}?size=${size}`;
     }
-
-    // ────── LOADER ──────
-    function enterLeaderboard() {
-      const l = $('loader'); l.style.opacity = '0';
-      setTimeout(() => {
-        l.classList.add('hidden');
-        $('app').classList.remove('hidden');
-        fetchLeaderboard();
-        setInterval(fetchLeaderboard, 90000);
-      }, 1000);
-    }
-    $('loader').addEventListener('click', enterLeaderboard);
-    $('loader').addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterLeaderboard(); }
-    });
-    setTimeout(() => $('loader').focus(), 100);
-
-    // ────── LEADERBOARD FETCH ──────
-    async function fetchLeaderboard() {
-      const loading = $('loading'), board = $('board'), rows = $('rows'), updated = $('updated');
-      try {
-        const res = await fetch('leaderboard.json?' + Date.now());
-        if (!res.ok) throw '';
-        const data = await res.json();
-        let list = Array.isArray(data) ? data : (data.leaderboard || []);
-        const time = data.updated || new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-
-        const padded = [];
-        for (let i = 0; i < 100; i++) padded.push(list[i] || {rank: i+1});
-
-        rows.innerHTML = padded.map((p, idx) => {
-          const has = p.name || p.discord;
-          const av = getDiscordAvatar(p.discordId, p.avatar);
-          const rank = p.rank || idx + 1;
-          return `<tr>
-            <td class="rank">${rank}</td>
-            <td class="name">
-              ${has ? `
-              <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name||'User')}"></div>
-              <div>
-                <div style="font-weight:600;font-size:.98rem;">${e(p.name||'Unknown')}</div>
-                ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
-              </div>` : `<div class="empty-slot">— Empty Slot —</div>`}
-            </td>
-          </tr>`;
-        }).join('');
-
-        updated.textContent = `Last updated: ${time}`;
-        loading.classList.add('hidden'); board.classList.remove('hidden');
-      } catch {
-        loading.textContent = 'Failed to load leaderboard.';
-        loading.style.color = '#f88';
+    function buy(id){
+      const u = upgrades.find(x=>x.id===id);
+      if(goons >= u.cost){
+        goons -= u.cost; u.owned++; u.cost = Math.ceil(u.cost*1.15);
+        gps += u.inc;
+        update();
       }
     }
-
-    // ────── MINI GAMES ──────
-    // 1. Goon Clicker
-    let goonClicks = 0;
-    $('goon-btn').addEventListener('click', () => {
-      goonClicks++;
-      const progress = Math.min((goonClicks / 50) * 100, 100);
-      $('goon-progress').style.width = progress + '%';
-      $('goon-count').textContent = `${goonClicks} click${goonClicks !== 1 ? 's' : ''}`;
-      if (progress >= 100) {
-        setTimeout(() => {
-          alert('MAX GOON ACHIEVED');
-          goonClicks = 0;
-          $('goon-progress').style.width = '0%';
-          $('goon-count').textContent = '0 clicks';
-        }, 300);
+    upgrades.forEach(u=>{
+      const div = document.createElement('div'); div.className='upgrade'; div.id=u.id;
+      div.innerHTML = `<span>${u.name} (${u.owned})</span><span class="cost">${u.cost}</span>`;
+      div.addEventListener('click',()=>buy(u.id));
+      upDiv.appendChild(div);
+    });
+    prestigeBtn.addEventListener('click',()=>{
+      if(goons >= 1e6){
+        prestige++; goons = 0; gps = 0;
+        upgrades.forEach(u=>{u.owned=0;u.cost=[15,100,1000][upgrades.indexOf(u)];});
+        update();
       }
     });
+    setInterval(()=>{ goons += gps/10; update(); },100);
+    update();
 
-    // 2. Stamina Hold
-    let staminaInterval;
-    document.addEventListener('keydown', e => {
-      if (e.key === ' ' && !staminaInterval) {
-        e.preventDefault();
-        let stamina = 0;
-        $('stamina-text').textContent = 'Holding...';
-        staminaInterval = setInterval(() => {
-          stamina = Math.min(stamina + 2, 100);
-          $('stamina-progress').style.width = stamina + '%';
-          if (stamina >= 100) {
-            clearInterval(staminaInterval);
-            staminaInterval = null;
-            $('stamina-text').textContent = 'MAX STAMINA!';
-            setTimeout(() => $('stamina-progress').style.width = '0%', 1500);
-          }
-        }, 50);
+    /* ─────────────────────── STAMINA HOLD (Rhythm) ─────────────────────── */
+    let staminaScore = 0, combo = 0, holding = false, barSpeed = 2;
+    const bar = $('stamina-bar'), zone = $('stamina-zone'), scoreEl = $('stamina-score'), comboEl = $('stamina-combo');
+    function resetStamina(){
+      bar.style.width = '0%'; barSpeed = 1 + Math.random()*2;
+      setTimeout(startStamina, 800 + Math.random()*1200);
+    }
+    function startStamina(){
+      let w = 0;
+      const int = setInterval(()=>{
+        w += barSpeed;
+        bar.style.width = w + '%';
+        if(w >= 100){ clearInterval(int); checkStamina(); }
+      },20);
+    }
+    function checkStamina(){
+      const pos = parseFloat(bar.style.width);
+      if(pos >= 40 && pos <= 60){
+        const points = 100 + combo*10;
+        staminaScore += points; combo++;
+        scoreEl.textContent = staminaScore;
+        comboEl.textContent = combo;
+      }else{
+        combo = 0; comboEl.textContent = 0;
       }
+      resetStamina();
+    }
+    document.addEventListener('keydown',e=>{ if(e.key===' ' && !holding){ e.preventDefault(); holding=true; startStamina(); } });
+    document.addEventListener('keyup',e=>{ if(e.key===' ' && holding){ holding=false; } });
+    resetStamina();
+
+    /* ─────────────────────── EDGE TIMER (Dodge) ─────────────────────── */
+    const canvas = $('edge-canvas'), ctx = canvas.getContext('2d');
+    canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
+    let playerY = canvas.height/2, waves = [], edgeScore = 0, gameOver = false;
+    function Wave(){ this.x = canvas.width; this.y = Math.random()*canvas.height; this.speed = 2+Math.random()*3; }
+    function spawnWave(){ waves.push(new Wave()); }
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // player
+      ctx.fillStyle = '#ff4d8c';
+      ctx.beginPath(); ctx.arc(80, playerY, 20, 0, Math.PI*2); ctx.fill();
+      // waves
+      ctx.fillStyle = '#ff1a1a';
+      waves.forEach((w,i)=>{
+        ctx.beginPath(); ctx.arc(w.x, w.y, 25, 0, Math.PI*2); ctx.fill();
+        w.x -= w.speed;
+        if(w.x < -50) waves.splice(i,1);
+        if(Math.hypot(w.x-80, w.y-playerY) < 45){ gameOver=true; }
+      });
+      if(!gameOver) requestAnimationFrame(draw);
+      else { $('edge-score').textContent = `Game Over! Score: ${edgeScore}`; }
+    }
+    document.addEventListener('keydown',e=>{
+      if(e.key==='ArrowUp' && playerY>30) playerY-=15;
+      if(e.key==='ArrowDown' && playerY<canvas.height-30) playerY+=15;
     });
-    document.addEventListener('keyup', e => {
-      if (e.key === ' ' && staminaInterval) {
-        clearInterval(staminaInterval);
-        staminaInterval = null;
-        $('stamina-text').textContent = 'Released early!';
-        setTimeout(() => {
-          $('stamina-progress').style.width = '0%';
-          $('stamina-text').textContent = 'Hold SPACE...';
-        }, 1000);
-      }
-    });
-
-    // 3. Edge Timer
-    let edgeTimer;
-    $('edge-start').addEventListener('click', () => {
-      if (edgeTimer) return;
-      let time = 30;
-      $('edge-timer').textContent = time;
-      $('edge-result').textContent = '';
-      $('edge-start').disabled = true;
-
-      edgeTimer = setInterval(() => {
-        time--;
-        $('edge-timer').textContent = time;
-        if (time <= 0) {
-          clearInterval(edgeTimer);
-          edgeTimer = null;
-          $('edge-result').textContent = 'You edged successfully!';
-          $('edge-start').disabled = false;
-        }
-      }, 1000);
-
-      setTimeout(() => {
-        if (edgeTimer) {
-          clearInterval(edgeTimer);
-          edgeTimer = null;
-          $('edge-result').textContent = 'You failed! Too early.';
-          $('edge-start').disabled = false;
-        }
-      }, Math.random() * 20000 + 10000); // Random "finish" trigger
-    });
-
-    // ────── ESCAPE HTML ──────
-    function e(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+    setInterval(spawnWave,1200);
+    setInterval(()=>{ if(!gameOver) edgeScore++; $('edge-score').textContent = `Score: ${edgeScore}`; },100);
+    draw();
   </script>
 </body>
 </html>
