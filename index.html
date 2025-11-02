@@ -44,7 +44,6 @@ tr:hover{
 .avatar{width:40px;height:40px;border-radius:10px;overflow:hidden;box-shadow:0 0 10px rgba(255,255,255,.05)}
 .avatar img{width:100%;height:100%;object-fit:cover}
 .discord-tag{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--discord);font-weight:500}
-.score{text-align:right;font-weight:600}
 #loader{
   position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
   align-items:center;justify-content:center;transition:opacity 700ms ease;z-index:10;
@@ -85,7 +84,7 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
   <div id="loading" style="text-align:center;color:#aaa;margin:20px 0;">Loading leaderboard...</div>
 
   <table id="board" class="hidden">
-    <thead><tr><th>Rank</th><th>Player</th><th class="score">Score</th></tr></thead>
+    <thead><tr><th>Rank</th><th>Player</th></tr></thead>
     <tbody id="rows"></tbody>
   </table>
 
@@ -121,23 +120,20 @@ async function fetchLeaderboard() {
   const updated = $('updated');
 
   try {
-    const res = await fetch('leaderboard.json?' + Date.now());   // bust cache
+    const res = await fetch('leaderboard.json?' + Date.now()); // cache-bust
     if (!res.ok) throw new Error('File not found');
     const data = await res.json();
 
-    // Expected shape: { leaderboard: [...], updated: "2:34 PM" }
+    // Accept plain array or { leaderboard: [...], updated: "…" }
     const list = Array.isArray(data) ? data : (data.leaderboard || []);
     const time = data.updated || new Date().toLocaleTimeString();
 
-    // Sort descending by score
-    const sorted = [...list].sort((a,b) => (b.score||0) - (a.score||0));
-
-    if (!sorted.length) {
-      rows.innerHTML = `<tr><td colspan="3" style="text-align:center;color:#aaa;padding:40px;">No players yet.</td></tr>`;
+    if (!list.length) {
+      rows.innerHTML = `<tr><td colspan="2" style="text-align:center;color:#aaa;padding:40px;">No players yet.</td></tr>`;
     } else {
-      rows.innerHTML = sorted.map((p,i) => `
+      rows.innerHTML = list.map(p => `
         <tr>
-          <td class="rank">#${i+1}</td>
+          <td class="rank">${e(p.rank || '?')}</td>
           <td class="name">
             <div class="avatar">
               <img src="${e(p.avatar||'https://cdn.discordapp.com/embed/avatars/0.png')}"
@@ -148,7 +144,6 @@ async function fetchLeaderboard() {
               ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
             </div>
           </td>
-          <td class="score">${(p.score||0).toLocaleString()}</td>
         </tr>`).join('');
     }
 
