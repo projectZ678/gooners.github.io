@@ -154,7 +154,7 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
   <div id="sidebar">
     <div id="pfp"><img src="https://i.pinimg.com/1200x/65/ce/74/65ce749c9a83c75ee8f49bd698097a09.jpg" alt="PFP"></div>
     <div class="sidebar-title">GOONING</div>
-    <div class="nav-btn" data-panel="home">Leaderboard</div>
+    <div class="nav-btn active" data-panel="home">Leaderboard</div>
     <div class="nav-btn" data-panel="clicker">GOON CLICKER</div>
     <div class="nav-btn" data-panel="promo">Vault 13</div>
     <div class="nav-btn" data-panel="credits">Credits</div>
@@ -163,14 +163,14 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
   <!-- MAIN -->
   <div id="main">
     <!-- LEADERBOARD (DEFAULT) -->
-    <div id="home" class="panel">
+    <div id="home" class="panel active">
       <h1>Gooning Leaderboard</h1>
       <div class="zoom-controls">
         <button id="zoomOut">-</button><span id="zoomPercent">50%</span><button id="zoomIn">+</button><button id="zoomReset">Reset</button>
       </div>
       <div id="loading" style="text-align:center;color:#bbb;margin:32px 0;">Loading…</div>
       <div id="error" class="hidden" style="color:#f88;text-align:center;padding:40px;">
-        Failed to load leaderboard.<br><button class="retry-btn" onclick="fetchLeaderboard()">Retry</button>
+        Using offline leaderboard.<br><button class="retry-btn" onclick="fetchLeaderboard()">Retry</button>
       </div>
       <div class="table-container"><table id="board" class="hidden"><thead><tr><th>Rank</th><th>Player</th></tr></thead><tbody id="rows"></tbody></table></div>
       <div class="last-updated" id="updated"></div>
@@ -247,12 +247,9 @@ function enterHub(){
   setTimeout(()=>{
     l.classList.add('hidden');
     $('app').classList.remove('hidden');
-    // Start on Leaderboard
-    document.querySelector('.nav-btn[data-panel="home"]').classList.add('active');
-    $('#home').classList.add('active');
+    initClicker();
     fetchLeaderboard();
     setInterval(fetchLeaderboard,60000);
-    initClicker();
   },800);
 }
 $('loader').addEventListener('click',enterHub);
@@ -326,9 +323,9 @@ function initClicker(){
   setInterval(renderNextBadgeBar,500);
   setInterval(renderPrestigeBar,500);
 
-  // Click entire gooner
-  $('#gooner').addEventListener('mousedown',goonClick);
-  $('#gooner').addEventListener('touchstart',e=>{e.preventDefault();goonClick();});
+  // Click entire147 gooner
+  $('#gooner').addEventListener('mousedown', goonClick);
+  $('#gooner').addEventListener('touchstart', e => { e.preventDefault(); goonClick(); });
 }
 
 /* ---------- CLICK (ARM SWING) ---------- */
@@ -537,10 +534,10 @@ function saveGame(){
     upgrades:upgrades.map(u=>({id:u.id,owned:u.owned})),
     badges:Object.keys(badges),
     shardUpgrades:shardUpgrades.map(u=>({id:u.id,owned:u.owned}))};
-  localStorage.setItem('goonSaveV7',JSON.stringify(save));
+  localStorage.setItem('goonSaveV8',JSON.stringify(save));
 }
 function loadGame(){
-  const raw=localStorage.getItem('goonSaveV7')||localStorage.getItem('goonSaveV6')||localStorage.getItem('goonSaveV5')||localStorage.getItem('goonSaveV4')||localStorage.getItem('goonSaveV3')||localStorage.getItem('goonSaveV2')||localStorage.getItem('goonSave');
+  const raw=localStorage.getItem('goonSaveV8')||localStorage.getItem('goonSaveV7')||localStorage.getItem('goonSaveV6')||localStorage.getItem('goonSaveV5')||localStorage.getItem('goonSaveV4')||localStorage.getItem('goonSaveV3')||localStorage.getItem('goonSaveV2')||localStorage.getItem('goonSave');
   if(!raw) return;
   const s=JSON.parse(raw);
   points=s.points??0; gps=s.gps??0; clickPower=s.clickPower??1; prestige=s.prestige??1; shards=s.shards??0; globalMult=s.globalMult??1;
@@ -553,35 +550,56 @@ function loadGame(){
   upgrades.forEach(u=>{for(let i=0;i<u.owned;i++){if(u.type==='gps')gps+=u.effect;else if(u.type==='click')clickPower+=u.effect;else if(u.type==='mult')prestige+=u.effect;}});
 }
 
-/* ---------- LEADERBOARD (GITHUB) ---------- */
+/* ---------- LEADERBOARD (WITH FALLBACK) ---------- */
+const fallbackLeaderboard = [
+  { rank: 1, name: "Xen", points: 987654321 },
+  { rank: 2, name: "GoonKing", points: 876543210 },
+  { rank: 3, name: "EdgeLord", points: 765432109 },
+  { rank: 4, name: "StrokerPro", points: 654321098 },
+  { rank: 5, name: "LubeMaster", points: 543210987 },
+].concat(Array(95).fill().map((_, i) => ({ rank: i + 6, name: `Player${i + 6}`, points: Math.floor(Math.random() * 1000000) })));
+
 async function fetchLeaderboard(){
   const loading=$('loading'),error=$('error'),board=$('board'),rows=$('rows'),updated=$('updated');
-  loading.classList.remove('hidden');error.classList.add('hidden');board.classList.add('hidden');
-  try{
-    const r=await fetch('https://raw.githubusercontent.com/projectZ678/goon-clicker/main/leaderboard.json?'+Date.now());
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const data=await r.json();
-    const list=Array.isArray(data)?data:(data.leaderboard||[]);
-    const time=data.updated||new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    const padded=Array(100).fill().map((_,i)=>list[i]||{rank:i+1});
-    rows.innerHTML=padded.map((p,idx)=>{
-      const av=p.discordId&&p.avatar?`https://cdn.discordapp.com/avatars/${p.discordId}/${p.avatar}.${p.avatar.startsWith('a_')?'gif':'webp'}?size=80`:'https://cdn.discordapp.com/embed/avatars/0.png';
-      const rank=p.rank||idx+1;
-      return `<tr><td class="rank">${rank}</td><td class="name">
-        ${p.name?`<div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"></div><div style="font-weight:600;">${e(p.name)}</div>`:
-        `<div class="empty-slot">— Empty Slot —</div>`}
-      </td></tr>`;
-    }).join('');
-    updated.textContent=`Last updated: ${time}`;
-    loading.classList.add('hidden');board.classList.remove('hidden');
-  }catch(err){
-    console.error(err);
-    loading.classList.add('hidden');error.classList.remove('hidden');
+  loading.classList.remove('hidden'); error.classList.add('hidden'); board.classList.add('hidden');
+  try {
+    const r = await fetch('https://raw.githubusercontent.com/projectZ678/goon-clicker/main/leaderboard.json?t=' + Date.now(), { cache: "no-store" });
+    let data = [];
+    if (r.ok) {
+      data = await r.json();
+    } else {
+      throw new Error("HTTP " + r.status);
+    }
+    const list = Array.isArray(data) ? data : (data.leaderboard || []);
+    renderLeaderboard(list.length > 0 ? list : fallbackLeaderboard);
+  } catch (err) {
+    console.warn("Leaderboard failed, using fallback:", err);
+    renderLeaderboard(fallbackLeaderboard);
+    error.classList.remove('hidden');
+  } finally {
+    loading.classList.add('hidden');
   }
 }
-function e(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
-const board=$('board'),zoomPercent=$('#zoomPercent');let scale=0.5;
-function updateZoom(){board.style.transform=`scale(${scale})`;zoomPercent.textContent=`${Math.round(scale*100)}%`;}
+
+function renderLeaderboard(list) {
+  const rows = $('rows'), board = $('board'), updated = $('updated');
+  const padded = Array(100).fill().map((_, i) => list[i] || { rank: i + 1, name: "— Empty —", points: 0 });
+  rows.innerHTML = padded.map(p => `
+    <tr>
+      <td class="rank">#${p.rank}</td>
+      <td class="name">
+        <div style="font-weight:600;">${e(p.name || "— Empty —")}</div>
+        <div style="font-size:0.8rem;color:#ff99cc;">${p.points?.toLocaleString() || 0} pts</div>
+      </td>
+    </tr>
+  `).join('');
+  updated.textContent = `Last updated: ${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}`;
+  board.classList.remove('hidden');
+}
+function e(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+
+const board=$('board'),zoomPercent=$('#zoomPercent'); let scale=0.5;
+function updateZoom(){ board.style.transform=`scale(${scale})`; zoomPercent.textContent=`${Math.round(scale*100)}%`; }
 $('#zoomIn').onclick=()=>{scale=Math.min(scale+0.1,2);updateZoom();};
 $('#zoomOut').onclick=()=>{scale=Math.max(scale-0.1,0.3);updateZoom();};
 $('#zoomReset').onclick=()=>{scale=0.5;updateZoom();};
