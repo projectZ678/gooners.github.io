@@ -1,12 +1,19 @@
 {
+  "updated": "10:45 PM",
   "leaderboard": [
-    { "rank": "#1", "name": "Uzi", "discord": "fvhc", "avatar": "https://cdn.discordapp.com/avatars/123456789/abc.png" },
-    { "rank": "#2", "name": "SILVER", "discord": "mrd3d" },
-    { "rank": "#3", "name": "Not taken", "discord": "" },
-    { "rank": "#4", "name": "Not taken" },
-    { "rank": "#5", "name": "Not taken" },
-    { "rank": "#6", "name": "Not taken" },
-    { "rank": "#7", "name": "Not taken" }
-  ],
-  "updated": "7:22 PM"
+    {
+      "rank": 1,
+      "name": "MEV",
+      "discord": ".stoplarping",
+      "discordId": "1268444840983527425",
+      "avatar": "a_7d8f9e1c2b3a4d5e6f7g8h9i0j1k2l3m4"
+    },
+    {
+      "rank": 2,
+      "name": "UZI",
+      "discord": "fvhc",
+      "discordId": "1356370565341909053",
+      "avatar": "b1a2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+    }
+  ]
 }
