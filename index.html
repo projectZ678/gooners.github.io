@@ -156,7 +156,7 @@ footer{margin-top:32px;text-align:center;font-size:.78rem;color:var(--muted)}
 
 <!-- MAIN APP -->
 <div id="app" class="hidden">
-  <button id="edit-btn">Edit JSON</button>
+  <button id="edit-btn" class="hidden">Edit JSON</button>
   <h1>Gooning Leaderboard</h1>
 
   <div id="loading" style="text-align:center;color:#aaa;margin:22px 0;">Loading…</div>
@@ -184,6 +184,30 @@ footer{margin-top:32px;text-align:center;font-size:.78rem;color:var(--muted)}
 <script>
 const $ = id => document.getElementById(id);
 
+// ────── CHECK IP & SHOW EDIT BUTTON ──────
+async function checkIPAndShowEdit() {
+  try {
+    const res = await fetch('https://api.ipify.org?format=json');
+    const data = await res.json();
+    const userIP = data.ip;
+
+    if (userIP === '192.168.1.136') {
+      $('edit-btn').classList.remove('hidden');
+    }
+  } catch (err) {
+    console.warn('Could not check IP (CORS or offline). Edit button hidden.');
+  }
+}
+
+// ────── DISCORD PFP HELPER ──────
+function getDiscordAvatar(userId, avatarHash, size = 64) {
+  if (!userId || !avatarHash) {
+    return `https://cdn.discordapp.com/embed/avatars/0.png`;
+  }
+  const ext = avatarHash.startsWith('a_') ? 'gif' : 'webp';
+  return `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.${ext}?size=${size}`;
+}
+
 // ────── LOADER ──────
 function enterLeaderboard() {
   const loader = $('loader');
@@ -191,6 +215,7 @@ function enterLeaderboard() {
   setTimeout(() => {
     loader.classList.add('hidden');
     $('app').classList.remove('hidden');
+    checkIPAndShowEdit();
     fetchLeaderboard();
     setInterval(fetchLeaderboard, 30000);
   }, 700);
@@ -219,20 +244,24 @@ async function fetchLeaderboard() {
     if (!list.length) {
       rows.innerHTML = `<tr><td colspan="2" style="text-align:center;color:#aaa;padding:40px;">No players yet.</td></tr>`;
     } else {
-      rows.innerHTML = list.map(p => `
-        <tr>
-          <td class="rank">${e(p.rank || '?')}</td>
-          <td class="name">
-            <div class="avatar">
-              <img src="${e(p.avatar||'https://cdn.discordapp.com/embed/avatars/0.png')}"
-                   onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
-            </div>
-            <div>
-              <div style="font-weight:600">${e(p.name||'Unknown')}</div>
-              ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
-            </div>
-          </td>
-        </tr>`).join('');
+      rows.innerHTML = list.map(p => {
+        const avatarUrl = getDiscordAvatar(p.discordId, p.avatar);
+        return `
+          <tr>
+            <td class="rank">${e(p.rank || '?')}</td>
+            <td class="name">
+              <div class="avatar">
+                <img src="${avatarUrl}"
+                     onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"
+                     alt="${e(p.name || 'User')} avatar">
+              </div>
+              <div>
+                <div style="font-weight:600">${e(p.name || 'Unknown')}</div>
+                ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
     }
 
     updated.textContent = `Last updated: ${time}`;
@@ -244,7 +273,7 @@ async function fetchLeaderboard() {
   }
 }
 
-// ────── EDITOR MODAL ──────
+// ────── EDITOR MODAL (READ-ONLY WARNING) ──────
 const modal = $('editor-modal');
 const jsonEditor = $('json-editor');
 
@@ -254,7 +283,9 @@ $('edit-btn').onclick = async () => {
     const txt = await res.text();
     jsonEditor.value = txt;
     modal.classList.add('show');
-  } catch (e) { alert('Could not read JSON'); }
+  } catch (e) {
+    alert('Could not read JSON file.');
+  }
 };
 
 $('cancel-btn').onclick = () => modal.classList.remove('show');
@@ -263,29 +294,14 @@ $('save-btn').onclick = async () => {
   const msg = $('save-msg');
   let obj;
   try { obj = JSON.parse(jsonEditor.value); } catch (e) {
-    msg.textContent = 'Invalid JSON'; msg.style.color = '#f66'; return;
+    msg.textContent = 'Invalid JSON format'; msg.style.color = '#f66'; return;
   }
 
-  const saveRes = await fetch('leaderboard.json', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(obj, null, 2)
-  });
-
-  if (saveRes.ok) {
-    msg.textContent = 'Saved! Refreshing…';
-    msg.style.color = '#6f6';
-    setTimeout(() => {
-      modal.classList.remove('show');
-      fetchLeaderboard();
-    }, 800);
-  } else {
-    msg.textContent = 'Save failed – run the tiny server below';
-    msg.style.color = '#f66';
-  }
+  msg.textContent = 'Saving is disabled. Run a backend server (Node.js/PHP) to enable editing.';
+  msg.style.color = '#ff9800';
 };
 
-// ────── UTILS ──────
+// ────── ESCAPE HTML ──────
 function e(t) {
   const d = document.createElement('div');
   d.textContent = t;
