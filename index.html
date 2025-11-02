@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gooning Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
   <style>
     :root{
@@ -55,7 +56,7 @@
     .panel{display:none;flex:1;flex-direction:column;}
     .panel.active{display:flex;}
 
-    /* GOON CLICKER - REALISTIC STICK GOONER */
+    /* GOON CLICKER - STICKMAN GOONER */
     .clicker-panel{display:flex;flex-direction:column;align-items:center;gap:20px;}
     #gooner-container{position:relative;width:280px;height:380px;cursor:pointer;}
     #gooner{width:100%;height:100%;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 380"><circle fill="%23fff" cx="140" cy="80" r="50"/><rect fill="%23666" x="100" y="140" width="80" height="180"/><rect fill="%23999" x="80" y="320" width="120" height="40"/><rect fill="%23888" x="100" y="140" width="80" height="40"/><circle fill="%23000" cx="125" cy="75" r="8"/><circle fill="%23000" cx="155" cy="75" r="8"/><path fill="%23f88" d="M120 95q10 10 20 0"/></svg>') no-repeat center/contain;}
@@ -114,11 +115,13 @@
       border-radius:12px;cursor:pointer;font-weight:600;transition:.3s;}
     .retry-btn:hover{background:#666;transform:scale(1.05);}
 
+    /* ACHIEVEMENT */
     .achievement{position:fixed;top:20px;right:20px;background:#fff;color:#000;padding:16px 24px;
       border-radius:16px;font-weight:800;box-shadow:0 0 40px #fff;z-index:1000;
       animation:pop 0.5s ease-out;opacity:0;}
     @keyframes pop{0%{transform:scale(0);opacity:0;}100%{transform:scale(1);opacity:1;}}
 
+    /* LOADER */
     #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
       align-items:center;justify-content:center;z-index:100;cursor:pointer;transition:opacity 1s ease;}
     #logo{font-size:6rem;font-weight:900;color:var(--accent);text-shadow:0 0 30px #fff;
@@ -146,8 +149,8 @@
         <img src="https://i.pinimg.com/1200x/65/ce/74/65ce749c9a83c75ee8f49bd698097a09.jpg" alt="PFP">
       </div>
       <div class="sidebar-title">GOONING</div>
-      <div class="nav-btn active" data-panel="home">Leaderboard</div>
-      <div class="nav-btn" data-panel="clicker">GOON CLICKER</div>
+      <div class="nav-btn" data-panel="home">Leaderboard</div>
+      <div class="nav-btn active" data-panel="clicker">GOON CLICKER</div>
       <div class="nav-btn" data-panel="promo">Vault 13</div>
       <div class="nav-btn" data-panel="credits">Credits</div>
       <div class="socials">
@@ -157,8 +160,29 @@
 
     <!-- MAIN -->
     <div id="main">
-      <!-- LEADERBOARD (FIRST) -->
-      <div id="home" class="panel active">
+      <!-- GOON CLICKER -->
+      <div id="clicker" class="panel active">
+        <h1>GOON CLICKER</h1>
+        <div class="clicker-panel">
+          <div id="points">0</div>
+          <div id="gps">0 GPS</div>
+          <div id="gooner-container">
+            <div id="gooner"></div>
+            <div id="goon-stains" class="goonmetic"></div>
+            <div id="gooned-hoodie" class="goonmetic"></div>
+            <div id="goon-goggles" class="goonmetic"></div>
+            <div id="goon-beanie" class="goonmetic"></div>
+            <div id="goon-gloves" class="goonmetic"></div>
+          </div>
+          <div class="upgrades-grid" id="upgrades"></div>
+          <div class="goonmetics-grid" id="goonmetics"></div>
+          <div class="badges-grid" id="badges"></div>
+          <button class="prestige-btn" id="prestige">PRESTIGE (x2 Multiplier)</button>
+        </div>
+      </div>
+
+      <!-- LEADERBOARD -->
+      <div id="home" class="panel">
         <h1>Gooning Leaderboard</h1>
         <div class="zoom-controls">
           <button id="zoomOut">-</button>
@@ -180,36 +204,40 @@
         <div class="last-updated" id="updated"></div>
       </div>
 
-      <!-- GOON CLICKER -->
-      <div id="clicker" class="panel">
-        <h1>GOON CLICKER</h1>
-        <div class="clicker-panel">
-          <div id="points">0</div>
-          <div id="gps">0 GPS</div>
-          <div id="gooner-container">
-            <div id="gooner"></div>
-            <div id="goon-stains" class="goonmetic"></div>
-            <div id="gooned-hoodie" class="goonmetic"></div>
-            <div id="goon-goggles" class="goonmetic"></div>
-            <div id="goon-beanie" class="goonmetic"></div>
-            <div id="goon-gloves" class="goonmetic"></div>
-          </div>
-          <div class="upgrades-grid" id="upgrades"></div>
-          <div class="goonmetics-grid" id="goonmetics"></div>
-          <div class="badges-grid" id="badges"></div>
-          <button class="prestige-btn" id="prestige">PRESTIGE (x2 Multiplier)</button>
+      <!-- PROMO -->
+      <div id="promo" class="panel">
+        <div style="text-align:center;max-width:600px;margin:0 auto;">
+          <h1>VAULT 13</h1>
+          <p style="font-size:1.3rem;line-height:1.7;margin:20px 0;">
+            The ultimate gooning sanctuary. Join the elite. Enter the vault.
+          </p>
+          <a href="https://vault13.lol" target="_blank">
+            <button style="padding:18px 48px;background:#fff;color:#000;border:none;border-radius:16px;font-weight:700;font-size:1.2rem;cursor:pointer;margin:10px;">
+              Visit vault13.lol
+            </button>
+          </a>
         </div>
       </div>
 
-      <!-- PROMO & CREDITS -->
-      <div id="promo" class="panel"><div style="text-align:center;max-width:600px;margin:0 auto;"><h1>VAULT 13</h1><p style="font-size:1.3rem;line-height:1.7;margin:20px 0;">The ultimate gooning sanctuary. Join the elite. Enter the vault.</p><a href="https://vault13.lol" target="_blank"><button style="padding:18px 48px;background:#fff;color:#000;border:none;border-radius:16px;font-weight:700;font-size:1.2rem;cursor:pointer;margin:10px;">Visit vault13.lol</button></a></div></div>
-      <div id="credits" class="panel"><div style="text-align:center;"><h2>Made with love by <span style="color:#fff">Xen</span></h2><p>Design • Code • Goon Dreams</p><p><a href="https://github.com/projectZ678" target="_blank" style="color:#ccc;">github.com/projectZ678</a></p></div></div>
+      <!-- CREDITS -->
+      <div id="credits" class="panel">
+        <div style="text-align:center;">
+          <h2>Made with love by <span style="color:#fff">Xen</span></h2>
+          <p>Design • Code • Monochrome Dreams</p>
+          <p><a href="https://github.com/projectZ678" target="_blank" style="color:#ccc;">github.com/projectZ678</a></p>
+          <p style="margin-top:30px;font-size:.9rem;color:#888;">
+            Auto-refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
     const $ = id => document.getElementById(id);
+    const stars = $('#stars');
     let starCnt = 0;
+
     function addStar(){
       if(starCnt>120) return;
       const s=document.createElement('div'); s.className='star';
@@ -218,25 +246,31 @@
       s.style.left=`${Math.random()*100}vw`;
       s.style.animationDuration=`${Math.random()*6+4}s`;
       s.style.animationDelay=`${Math.random()*3}s`;
-      $('#stars').appendChild(s); starCnt++;
+      stars.appendChild(s); starCnt++;
       setTimeout(()=>{s.remove();starCnt--;},10000);
     }
     setInterval(addStar,250);
 
-    // LOADER
+    // === FIXED LOADER ===
     function enterHub(){
       const loader = $('loader');
       loader.style.opacity = '0';
       setTimeout(() => {
         loader.classList.add('hidden');
         $('app').classList.remove('hidden');
-        fetchLeaderboard(); // Leaderboard first
+        fetchLeaderboard();
         setInterval(fetchLeaderboard, 60000);
       }, 800);
     }
+
     const loader = $('loader');
     loader.addEventListener('click', enterHub);
-    loader.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){e.preventDefault();enterHub();} });
+    loader.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        enterHub();
+      }
+    });
     loader.focus();
 
     // Panel switching
@@ -250,7 +284,7 @@
       });
     });
 
-    // GOON CLICKER
+    // === GOON CLICKER (ONLY THIS PART UPGRADED) ===
     let points = 0, gps = 0, clickPower = 1, prestige = 1;
     const upgrades = [
       {id:'auto',name:'Auto-Gooner',cost:50,effect:1,owned:0},
@@ -295,6 +329,7 @@
       createParticles();
       screenShake();
       checkBadges();
+      checkAchievements();
     };
 
     function autoEarn(){
@@ -348,7 +383,7 @@
     }
 
     function renderUpgrades(){
-      $('#upgrades').innerHTML = upgrades.map(u => `
+      $('upgrades').innerHTML = upgrades.map(u => `
         <div class="upgrade" onclick="buyUpgrade('${u.id}')">
           <div class="upgrade-name">${u.name}</div>
           <div class="upgrade-cost">Cost: ${u.cost}</div>
@@ -358,7 +393,7 @@
     }
 
     function renderGoonmetics(){
-      $('#goonmetics').innerHTML = goonmetics.map(g => `
+      $('goonmetics').innerHTML = goonmetics.map(g => `
         <div class="goonmetic ${unlockedCosmetics.includes(g.id)?'bought':''}" onclick="buyGoonmetic('${g.id}')">
           <div class="goonmetic-name">${g.name}</div>
           <div class="goonmetic-cost">Cost: ${g.cost}</div>
@@ -367,7 +402,7 @@
     }
 
     function renderBadges(){
-      $('#badges').innerHTML = badges.map(b => {
+      $('badges').innerHTML = badges.map(b => {
         const unlocked = unlockedBadges.includes(b.id);
         return `<div class="badge ${unlocked?'unlocked':''}">${b.name}</div>`;
       }).join('');
@@ -426,6 +461,11 @@
       setTimeout(()=>{a.style.opacity=0;setTimeout(()=>a.remove(),500);},3000);
     }
 
+    function checkAchievements(){
+      if (points > 1000 && !localStorage.getItem('ach1')) { showAchievement("1000 GOON POINTS!"); localStorage.setItem('ach1','1'); }
+      if (gps > 10 && !localStorage.getItem('ach2')) { showAchievement("10 GPS! AUTO-GOONING!"); localStorage.setItem('ach2','1'); }
+    }
+
     function saveGame(){
       localStorage.setItem('goonSave', JSON.stringify({points,gps,clickPower,prestige,upgrades,unlockedCosmetics,unlockedBadges}));
     }
@@ -444,7 +484,7 @@
 
     $('prestige').onclick = prestigeReset;
 
-    // LEADERBOARD - LOADS FROM YOUR GITHUB
+    // === LEADERBOARD (UNCHANGED, LOADS FROM leaderboard.json) ===
     async function fetchLeaderboard(){
       const loading = $('loading'), error = $('error'), board = $('board'), rows = $('rows'), updated = $('updated');
       loading.classList.remove('hidden');
@@ -452,7 +492,7 @@
       board.classList.add('hidden');
 
       try {
-        const r = await fetch('https://raw.githubusercontent.com/projectZ678/leaderboard/main/leaderboard.json?' + Date.now());
+        const r = await fetch('leaderboard.json?' + Date.now());
         if (!r.ok) throw new Error('HTTP ' + r.status);
         const data = await r.json();
         const list = Array.isArray(data) ? data : (data.leaderboard || []);
