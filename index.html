@@ -20,18 +20,25 @@
       --transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
       --scrollbar: #444;
       --scrollbar-hover: #666;
+      --goon: #ff4d8c;
+      --stamina: #4dff88;
       font-family: 'Inter', system-ui, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ────────────────────────────────── STARFALL BACKGROUND ────────────────────────────────── */
+    /* ────────────────────────────────── CENTERED LAYOUT ────────────────────────────────── */
     html, body {
       min-height: 100vh;
       background: var(--bg);
       overflow: hidden;
       color: var(--text);
-      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
     }
+
+    /* ────────────────────────────────── STARFALL BACKGROUND ────────────────────────────────── */
     .stars {
       position: fixed;
       top: 0; left: 0;
@@ -53,15 +60,9 @@
       100% { transform: translateY(100vh) scale(0.8); opacity: 0; }
     }
 
-    /* ────────────────────────────────── APP CONTAINER (ZOOMED IN) ────────────────────────────────── */
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
-    }
+    /* ────────────────────────────────── MAIN APP (ZOOMED IN & CENTERED) ────────────────────────────────── */
     #app {
-      max-width: 720px;                 /* ← Smaller width */
+      max-width: 720px;
       width: 100%;
       position: relative;
       z-index: 1;
@@ -69,113 +70,179 @@
       background: var(--glass);
       border: 1px solid var(--glass-border);
       border-radius: 20px;
-      padding: 24px 20px;               /* ← Tighter padding */
-      box-shadow:
-        0 14px 50px rgba(0, 0, 0, 0.8),
-        inset 0 0 30px rgba(255, 255, 255, 0.05);
-      transition: all 0.5s var(--transition);
-      transform: scale(1.05);           /* ← "Zoomed-in" feel */
+      padding: 24px 20px;
+      box-shadow: 0 14px 50px rgba(0,0,0,.8), inset 0 0 30px rgba(255,255,255,.05);
+      transition: all .5s var(--transition);
+      transform: scale(1.05);
       transform-origin: center;
+      margin: auto;
     }
     #app:hover {
       transform: scale(1.07) translateY(-6px);
-      box-shadow:
-        0 20px 70px rgba(0, 0, 0, 0.9),
-        0 0 35px rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 70px rgba(0,0,0,.9), 0 0 35px rgba(255,255,255,.12);
+    }
+
+    /* ────────────────────────────────── TABS ────────────────────────────────── */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s var(--transition);
+      color: var(--muted);
+    }
+    .tab.active {
+      background: rgba(255,255,255,0.15);
+      color: var(--accent);
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 0 15px rgba(255,255,255,0.1);
+    }
+    .tab:hover:not(.active) {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    /* ────────────────────────────────── PANELS ────────────────────────────────── */
+    .panel {
+      display: none;
+      animation: fadeIn 0.6s ease;
+    }
+    .panel.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ────────────────────────────────── TITLE ────────────────────────────────── */
     h1 {
       text-align: center;
       font-weight: 800;
-      font-size: 2rem;                  /* ← Smaller title */
+      font-size: 2rem;
       letter-spacing: 1.8px;
       background: linear-gradient(90deg, #fff, #ccc);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      text-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+      text-shadow: 0 0 25px rgba(255,255,255,.3);
       margin-bottom: 18px;
       animation: titleGlow 3s ease-in-out infinite alternate;
     }
     @keyframes titleGlow {
-      from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
-      to { text-shadow: 0 0 40px rgba(255, 255, 255, 0.5), 0 0 80px rgba(255, 255, 255, 0.2); }
+      from { text-shadow: 0 0 20px rgba(255,255,255,.3); }
+      to { text-shadow: 0 0 40px rgba(255,255,255,.5), 0 0 80px rgba(255,255,255,.2); }
     }
 
-    /* ────────────────────────────────── TABLE CONTAINER ────────────────────────────────── */
+    /* ────────────────────────────────── LEADERBOARD TABLE ────────────────────────────────── */
     .table-container {
-      max-height: 62vh;                 /* ← Less vertical space */
+      max-height: 62vh;
       overflow-y: auto;
       border-radius: 14px;
       margin-top: 12px;
       border: 1px solid var(--glass-border);
-      background: rgba(0, 0, 0, 0.2);
-      box-shadow: inset 0 5px 12px rgba(0, 0, 0, 0.4);
+      background: rgba(0,0,0,.2);
+      box-shadow: inset 0 5px 12px rgba(0,0,0,.4);
       scrollbar-width: thin;
-      scrollbar-color: var(--scrollbar) transparent;
     }
     .table-container::-webkit-scrollbar { width: 9px; }
     .table-container::-webkit-scrollbar-track { background: transparent; }
     .table-container::-webkit-scrollbar-thumb {
-      background: var(--scrollbar);
-      border-radius: 5px;
-      border: 2px solid transparent;
-      background-clip: content-box;
+      background: var(--scrollbar); border-radius: 5px;
+      border: 2px solid transparent; background-clip: content-box;
     }
-    .table-container::-webkit-scrollbar-thumb:hover {
-      background: var(--scrollbar-hover);
-      background-clip: content-box;
-    }
+    .table-container::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); background-clip: content-box; }
 
-    /* ────────────────────────────────── TABLE ────────────────────────────────── */
-    table { width: 100%; border-collapse: collapse; background: transparent; }
+    table { width: 100%; border-collapse: collapse; }
     thead {
       position: sticky; top: 0; z-index: 10;
       background: linear-gradient(180deg, rgba(25,25,25,.98), rgba(15,15,15,.95));
       backdrop-filter: blur(12px);
-      text-transform: uppercase;
-      font-size: .7rem; letter-spacing: 1.5px;
+      text-transform: uppercase; font-size: .7rem; letter-spacing: 1.5px;
       color: var(--muted); border-bottom: 1px solid var(--glass-border);
     }
-    th, td { padding: 11px 13px; transition: all .3s var(--transition); }
-    tr { transition: all .4s var(--transition); }
+    th, td { padding: 11px 13px; }
     tr:hover {
       background: rgba(255,255,255,.09);
       transform: translateX(5px);
       box-shadow: 0 7px 18px rgba(255,255,255,.08);
     }
-
-    .rank {
-      font-weight: 800; color: var(--accent); font-size: 1.2rem;
-      text-align: center; text-shadow: 0 0 9px rgba(255,255,255,.4);
-    }
+    .rank { font-weight: 800; color: var(--accent); font-size: 1.2rem; text-align: center; text-shadow: 0 0 9px rgba(255,255,255,.4); }
     .rank:nth-of-type(1) { color: #ffd700; font-size: 1.35rem; text-shadow: 0 0 18px #ffd700; }
     .rank:nth-of-type(2) { color: #c0c0c0; font-size: 1.3rem; text-shadow: 0 0 16px #c0c0c0; }
     .rank:nth-of-type(3) { color: #cd7f32; font-size: 1.28rem; text-shadow: 0 0 14px #cd7f32; }
-
     .name { display: flex; align-items: center; gap: 12px; font-size: .94rem; }
-    .avatar {
-      width: 36px; height: 36px; border-radius: 10px; overflow: hidden;
-      box-shadow: 0 0 14px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.15);
-      flex-shrink: 0; transition: transform .3s ease;
-    }
-    tr:hover .avatar { transform: scale(1.1) rotate(5deg); }
+    .avatar { width: 36px; height: 36px; border-radius: 10px; overflow: hidden; box-shadow: 0 0 14px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.15); flex-shrink: 0; }
+    tr:hover .avatar { transform: scale(1.1) rotate(5deg); transition: .3s; }
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
-
-    .discord-tag {
-      display: flex; align-items: center; gap: 6px; font-size: .78rem;
-      color: var(--discord); font-weight: 500; opacity: .9; margin-top: 2px;
-    }
+    .discord-tag { display: flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--discord); margin-top: 2px; }
     .discord-tag i { filter: drop-shadow(0 0 5px #5865f2); animation: discordPulse 2.5s infinite alternate; }
-    @keyframes discordPulse {
-      from { filter: drop-shadow(0 0 5px #5865f2); }
-      to { filter: drop-shadow(0 0 12px #5865f2); }
-    }
-
+    @keyframes discordPulse { from { filter: drop-shadow(0 0 5px #5865f2); } to { filter: drop-shadow(0 0 12px #5865f2); } }
     .empty-slot { color: #666; font-style: italic; font-size: .92rem; }
 
-    /* ────────────────────────────────── LOADER ────────────────────────────────── */
+    /* ────────────────────────────────── MINI GAMES ────────────────────────────────── */
+    .game {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 16px;
+      border: 1px solid var(--glass-border);
+      margin: 16px 0;
+    }
+    .game h3 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      color: var(--goon);
+      text-shadow: 0 0 10px var(--goon);
+    }
+    .progress-container {
+      height: 20px;
+      background: #222;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 14px 0;
+      border: 1px solid #444;
+    }
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--goon), #ff8cb8);
+      border-radius: 10px;
+      transition: width 0.1s ease;
+      box-shadow: 0 0 15px var(--goon);
+    }
+    .btn {
+      padding: 12px 24px;
+      background: var(--goon);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 8px;
+      transition: .25s;
+    }
+    .btn:hover { background: #ff6ba0; transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+
+    .stamina-bar { background: linear-gradient(90deg, #333, var(--stamina)); }
+    .stamina-fill { background: var(--stamina); box-shadow: 0 0 20px var(--stamina); }
+
+    .edge-timer {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ff4d4d;
+      text-shadow: 0 0 20px #ff4d4d;
+    }
+
+    /* ────────────────────────────────── LOADER & FOOTER ────────────────────────────────── */
     #loader {
       position: fixed; inset: 0; background: var(--bg);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -193,30 +260,14 @@
       to { text-shadow: 0 0 50px var(--accent), 0 0 100px var(--accent); opacity: 1; }
     }
 
-    /* ────────────────────────────────── FOOTER ────────────────────────────────── */
-    .last-updated {
-      font-size: .76rem; color: var(--muted); text-align: center;
-      margin: 14px 0 8px; opacity: .8;
-    }
-    footer {
-      margin-top: 8px; text-align: center; font-size: .74rem; color: var(--muted);
-    }
+    .last-updated { font-size: .76rem; color: var(--muted); text-align: center; margin: 14px 0 8px; opacity: .8; }
+    footer { margin-top: 8px; text-align: center; font-size: .74rem; color: var(--muted); }
     footer a { color: var(--muted); text-decoration: none; transition: .2s; }
     footer a:hover { color: #ccc; text-decoration: underline; }
+    .credit { font-size: .68rem; color: #777; margin-top: 6px; opacity: .6; font-style: italic; }
 
-    /* Subtle credit */
-    .credit {
-      font-size: .68rem;
-      color: #777;
-      margin-top: 6px;
-      opacity: .6;
-      font-style: italic;
-    }
-
-    /* ────────────────────────────────── HIDDEN ────────────────────────────────── */
     .hidden { display: none !important; }
 
-    /* ────────────────────────────────── RESPONSIVE ────────────────────────────────── */
     @media (max-width: 600px) {
       #app { padding: 18px; border-radius: 18px; }
       h1 { font-size: 1.8rem; }
@@ -224,41 +275,73 @@
       .avatar { width: 32px; height: 32px; }
       .table-container { max-height: 58vh; }
       th, td { padding: 9px 10px; }
+      .tabs { flex-direction: column; }
+      .tab { text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- STARFALL BACKGROUND -->
+  <!-- STARFALL -->
   <div class="stars" id="stars"></div>
 
   <!-- LOADER -->
-  <div id="loader" tabindex="0" role="button" aria-label="Enter leaderboard">
+  <div id="loader" tabindex="0" role="button" aria-label="Enter">
     <div id="logo">GOONING</div>
     <div style="margin-top:18px;color:#999;font-size:1.15rem;">Click or press Enter</div>
   </div>
 
   <!-- MAIN APP -->
   <div id="app" class="hidden">
-    <h1>Gooning Leaderboard</h1>
+    <h1>Gooning Hub</h1>
 
-    <div id="loading" style="text-align:center;color:#bbb;margin:20px 0;font-size:.96rem;">
-      Loading leaderboard...
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active" data-tab="leaderboard">Leaderboard</div>
+      <div class="tab" data-tab="games">Mini-Games</div>
     </div>
 
-    <div class="table-container">
-      <table id="board" class="hidden">
-        <thead>
-          <tr>
-            <th style="width:60px">Rank</th>
-            <th>Player</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
+    <!-- PANELS -->
+    <div id="leaderboard" class="panel active">
+      <div id="loading" style="text-align:center;color:#bbb;margin:20px 0;font-size:.96rem;">
+        Loading leaderboard...
+      </div>
+      <div class="table-container">
+        <table id="board" class="hidden">
+          <thead><tr><th style="width:60px">Rank</th><th>Player</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="last-updated" id="updated"></div>
     </div>
 
-    <div class="last-updated" id="updated"></div>
+    <div id="games" class="panel">
+      <!-- GOON CLICKER -->
+      <div class="game">
+        <h3>Goon Clicker</h3>
+        <p>Click to fill the goon meter!</p>
+        <div class="progress-container"><div id="goon-progress" class="progress"></div></div>
+        <button class="btn" id="goon-btn">GOON!</button>
+        <p id="goon-count">0 clicks</p>
+      </div>
+
+      <!-- STAMINA HOLD -->
+      <div class="game">
+        <h3>Stamina Hold</h3>
+        <p>Hold <kbd>SPACE</kbd> to build stamina!</p>
+        <div class="progress-container"><div id="stamina-progress" class="progress stamina-fill"></div></div>
+        <p id="stamina-text">Hold SPACE...</p>
+      </div>
+
+      <!-- EDGE TIMER -->
+      <div class="game">
+        <h3>Edge Timer</h3>
+        <p>Don't finish too early!</p>
+        <div id="edge-timer" class="edge-timer">30</div>
+        <button class="btn" id="edge-start">Start Edge</button>
+        <p id="edge-result"></p>
+      </div>
+    </div>
 
     <footer>
       Auto-refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
@@ -269,35 +352,43 @@
   <script>
     const $ = id => document.getElementById(id);
 
-    // ────── STARFALL ANIMATION ──────
+    // ────── STARFALL ──────
     function createStar() {
-      const star = document.createElement('div');
-      star.className = 'star';
-      const size = Math.random() * 3 + 1;
-      star.style.width = star.style.height = `${size}px`;
-      star.style.left = `${Math.random() * 100}vw`;
-      star.style.animationDuration = `${Math.random() * 8 + 5}s`;
-      star.style.animationDelay = `${Math.random() * 5}s`;
-      star.style.opacity = Math.random() * 0.6 + 0.3;
-      $('#stars').appendChild(star);
-      setTimeout(() => star.remove(), 15000);
+      const s = document.createElement('div'); s.className = 'star';
+      const sz = Math.random() * 3 + 1;
+      s.style.width = s.style.height = `${sz}px`;
+      s.style.left = `${Math.random() * 100}vw`;
+      s.style.animationDuration = `${Math.random() * 8 + 5}s`;
+      s.style.animationDelay = `${Math.random() * 5}s`;
+      s.style.opacity = Math.random() * 0.6 + 0.3;
+      $('#stars').appendChild(s);
+      setTimeout(() => s.remove(), 15000);
     }
     setInterval(createStar, 300);
     for (let i = 0; i < 40; i++) setTimeout(createStar, i * 100);
 
-    // ────── DISCORD PFP HELPER ──────
-    function getDiscordAvatar(userId, avatarHash, size = 80) {
-      if (!userId || !avatarHash) return `https://cdn.discordapp.com/embed/avatars/0.png`;
-      const ext = avatarHash.startsWith('a_') ? 'gif' : 'webp';
-      return `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.${ext}?size=${size}`;
+    // ────── TABS ──────
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        $(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ────── DISCORD AVATAR ──────
+    function getDiscordAvatar(uid, hash, size = 80) {
+      if (!uid || !hash) return 'https://cdn.discordapp.com/embed/avatars/0.png';
+      const ext = hash.startsWith('a_') ? 'gif' : 'webp';
+      return `https://cdn.discordapp.com/avatars/${uid}/${hash}.${ext}?size=${size}`;
     }
 
     // ────── LOADER ──────
     function enterLeaderboard() {
-      const loader = $('loader');
-      loader.style.opacity = '0';
+      const l = $('loader'); l.style.opacity = '0';
       setTimeout(() => {
-        loader.classList.add('hidden');
+        l.classList.add('hidden');
         $('app').classList.remove('hidden');
         fetchLeaderboard();
         setInterval(fetchLeaderboard, 90000);
@@ -305,69 +396,129 @@
     }
     $('loader').addEventListener('click', enterLeaderboard);
     $('loader').addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        enterLeaderboard();
-      }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterLeaderboard(); }
     });
     setTimeout(() => $('loader').focus(), 100);
 
-    // ────── FETCH LEADERBOARD ──────
+    // ────── LEADERBOARD FETCH ──────
     async function fetchLeaderboard() {
-      const loading = $('loading');
-      const board = $('board');
-      const rows = $('rows');
-      const updated = $('updated');
+      const loading = $('loading'), board = $('board'), rows = $('rows'), updated = $('updated');
       try {
         const res = await fetch('leaderboard.json?' + Date.now());
-        if (!res.ok) throw new Error('Not found');
+        if (!res.ok) throw '';
         const data = await res.json();
         let list = Array.isArray(data) ? data : (data.leaderboard || []);
-        const time = data.updated || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const time = data.updated || new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 
-        const paddedList = [];
-        for (let i = 0; i < 100; i++) {
-          paddedList.push(list[i] || { rank: i + 1 });
-        }
+        const padded = [];
+        for (let i = 0; i < 100; i++) padded.push(list[i] || {rank: i+1});
 
-        rows.innerHTML = paddedList.map((p, idx) => {
-          const hasData = p.name || p.discord;
-          const avatarUrl = getDiscordAvatar(p.discordId, p.avatar);
-          const rank = p.rank || (idx + 1);
-          return `
-            <tr>
-              <td class="rank">${rank}</td>
-              <td class="name">
-                ${hasData ? `
-                <div class="avatar">
-                  <img src="${avatarUrl}"
-                       onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"
-                       alt="${e(p.name || 'User')} avatar">
-                </div>
-                <div>
-                  <div style="font-weight:600;font-size:.98rem;">${e(p.name || 'Unknown')}</div>
-                  ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
-                </div>
-                ` : `<div class="empty-slot">— Empty Slot —</div>`}
-              </td>
-            </tr>`;
+        rows.innerHTML = padded.map((p, idx) => {
+          const has = p.name || p.discord;
+          const av = getDiscordAvatar(p.discordId, p.avatar);
+          const rank = p.rank || idx + 1;
+          return `<tr>
+            <td class="rank">${rank}</td>
+            <td class="name">
+              ${has ? `
+              <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name||'User')}"></div>
+              <div>
+                <div style="font-weight:600;font-size:.98rem;">${e(p.name||'Unknown')}</div>
+                ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
+              </div>` : `<div class="empty-slot">— Empty Slot —</div>`}
+            </td>
+          </tr>`;
         }).join('');
 
         updated.textContent = `Last updated: ${time}`;
-        loading.classList.add('hidden');
-        board.classList.remove('hidden');
-      } catch (err) {
+        loading.classList.add('hidden'); board.classList.remove('hidden');
+      } catch {
         loading.textContent = 'Failed to load leaderboard.';
         loading.style.color = '#f88';
       }
     }
 
+    // ────── MINI GAMES ──────
+    // 1. Goon Clicker
+    let goonClicks = 0;
+    $('goon-btn').addEventListener('click', () => {
+      goonClicks++;
+      const progress = Math.min((goonClicks / 50) * 100, 100);
+      $('goon-progress').style.width = progress + '%';
+      $('goon-count').textContent = `${goonClicks} click${goonClicks !== 1 ? 's' : ''}`;
+      if (progress >= 100) {
+        setTimeout(() => {
+          alert('MAX GOON ACHIEVED');
+          goonClicks = 0;
+          $('goon-progress').style.width = '0%';
+          $('goon-count').textContent = '0 clicks';
+        }, 300);
+      }
+    });
+
+    // 2. Stamina Hold
+    let staminaInterval;
+    document.addEventListener('keydown', e => {
+      if (e.key === ' ' && !staminaInterval) {
+        e.preventDefault();
+        let stamina = 0;
+        $('stamina-text').textContent = 'Holding...';
+        staminaInterval = setInterval(() => {
+          stamina = Math.min(stamina + 2, 100);
+          $('stamina-progress').style.width = stamina + '%';
+          if (stamina >= 100) {
+            clearInterval(staminaInterval);
+            staminaInterval = null;
+            $('stamina-text').textContent = 'MAX STAMINA!';
+            setTimeout(() => $('stamina-progress').style.width = '0%', 1500);
+          }
+        }, 50);
+      }
+    });
+    document.addEventListener('keyup', e => {
+      if (e.key === ' ' && staminaInterval) {
+        clearInterval(staminaInterval);
+        staminaInterval = null;
+        $('stamina-text').textContent = 'Released early!';
+        setTimeout(() => {
+          $('stamina-progress').style.width = '0%';
+          $('stamina-text').textContent = 'Hold SPACE...';
+        }, 1000);
+      }
+    });
+
+    // 3. Edge Timer
+    let edgeTimer;
+    $('edge-start').addEventListener('click', () => {
+      if (edgeTimer) return;
+      let time = 30;
+      $('edge-timer').textContent = time;
+      $('edge-result').textContent = '';
+      $('edge-start').disabled = true;
+
+      edgeTimer = setInterval(() => {
+        time--;
+        $('edge-timer').textContent = time;
+        if (time <= 0) {
+          clearInterval(edgeTimer);
+          edgeTimer = null;
+          $('edge-result').textContent = 'You edged successfully!';
+          $('edge-start').disabled = false;
+        }
+      }, 1000);
+
+      setTimeout(() => {
+        if (edgeTimer) {
+          clearInterval(edgeTimer);
+          edgeTimer = null;
+          $('edge-result').textContent = 'You failed! Too early.';
+          $('edge-start').disabled = false;
+        }
+      }, Math.random() * 20000 + 10000); // Random "finish" trigger
+    });
+
     // ────── ESCAPE HTML ──────
-    function e(t) {
-      const d = document.createElement('div');
-      d.textContent = t;
-      return d.innerHTML;
-    }
+    function e(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
   </script>
 </body>
 </html>
