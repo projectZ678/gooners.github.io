@@ -22,10 +22,9 @@
       --scrollbar-hover: #666;
       font-family: 'Inter', system-ui, sans-serif;
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ────────────────────────────────── BODY & STARFALL BACKGROUND ────────────────────────────────── */
+    /* ────────────────────────────────── STARFALL BACKGROUND ────────────────────────────────── */
     html, body {
       min-height: 100vh;
       background: var(--bg);
@@ -33,8 +32,6 @@
       color: var(--text);
       position: relative;
     }
-
-    /* Animated Falling Stars */
     .stars {
       position: fixed;
       top: 0; left: 0;
@@ -42,7 +39,6 @@
       pointer-events: none;
       z-index: 0;
     }
-
     .star {
       position: absolute;
       background: #fff;
@@ -50,67 +46,58 @@
       opacity: 0;
       animation: fall linear infinite;
     }
-
     @keyframes fall {
-      0% {
-        transform: translateY(-100px) scale(0.2);
-        opacity: 0;
-      }
+      0% { transform: translateY(-100px) scale(0.2); opacity: 0; }
       10% { opacity: 1; }
       90% { opacity: 0.3; }
-      100% {
-        transform: translateY(100vh) scale(0.8);
-        opacity: 0;
-      }
+      100% { transform: translateY(100vh) scale(0.8); opacity: 0; }
     }
 
-    /* ────────────────────────────────── APP CONTAINER ────────────────────────────────── */
+    /* ────────────────────────────────── APP CONTAINER (ZOOMED IN) ────────────────────────────────── */
     body {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 12px;
     }
-
     #app {
-      max-width: 860px;
+      max-width: 720px;                 /* ← Smaller width */
       width: 100%;
       position: relative;
       z-index: 1;
       backdrop-filter: blur(20px);
       background: var(--glass);
       border: 1px solid var(--glass-border);
-      border-radius: 24px;
-      padding: 32px 28px;
+      border-radius: 20px;
+      padding: 24px 20px;               /* ← Tighter padding */
       box-shadow:
-        0 16px 60px rgba(0, 0, 0, 0.8),
-        inset 0 0 40px rgba(255, 255, 255, 0.05);
+        0 14px 50px rgba(0, 0, 0, 0.8),
+        inset 0 0 30px rgba(255, 255, 255, 0.05);
       transition: all 0.5s var(--transition);
-      overflow: hidden;
+      transform: scale(1.05);           /* ← "Zoomed-in" feel */
+      transform-origin: center;
     }
-
     #app:hover {
-      transform: translateY(-8px);
+      transform: scale(1.07) translateY(-6px);
       box-shadow:
-        0 24px 80px rgba(0, 0, 0, 0.9),
-        0 0 40px rgba(255, 255, 255, 0.12);
+        0 20px 70px rgba(0, 0, 0, 0.9),
+        0 0 35px rgba(255, 255, 255, 0.12);
     }
 
     /* ────────────────────────────────── TITLE ────────────────────────────────── */
     h1 {
       text-align: center;
       font-weight: 800;
-      font-size: 2.5rem;
-      letter-spacing: 2px;
+      font-size: 2rem;                  /* ← Smaller title */
+      letter-spacing: 1.8px;
       background: linear-gradient(90deg, #fff, #ccc);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-      margin-bottom: 24px;
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+      margin-bottom: 18px;
       animation: titleGlow 3s ease-in-out infinite alternate;
     }
-
     @keyframes titleGlow {
       from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
       to { text-shadow: 0 0 40px rgba(255, 255, 255, 0.5), 0 0 80px rgba(255, 255, 255, 0.2); }
@@ -118,26 +105,21 @@
 
     /* ────────────────────────────────── TABLE CONTAINER ────────────────────────────────── */
     .table-container {
-      max-height: 68vh;
+      max-height: 62vh;                 /* ← Less vertical space */
       overflow-y: auto;
-      border-radius: 16px;
-      margin-top: 16px;
+      border-radius: 14px;
+      margin-top: 12px;
       border: 1px solid var(--glass-border);
       background: rgba(0, 0, 0, 0.2);
-      box-shadow: inset 0 6px 16px rgba(0, 0, 0, 0.4);
+      box-shadow: inset 0 5px 12px rgba(0, 0, 0, 0.4);
       scrollbar-width: thin;
       scrollbar-color: var(--scrollbar) transparent;
     }
-
-    .table-container::-webkit-scrollbar {
-      width: 10px;
-    }
-    .table-container::-webkit-scrollbar-track {
-      background: transparent;
-    }
+    .table-container::-webkit-scrollbar { width: 9px; }
+    .table-container::-webkit-scrollbar-track { background: transparent; }
     .table-container::-webkit-scrollbar-thumb {
       background: var(--scrollbar);
-      border-radius: 6px;
+      border-radius: 5px;
       border: 2px solid transparent;
       background-clip: content-box;
     }
@@ -147,181 +129,101 @@
     }
 
     /* ────────────────────────────────── TABLE ────────────────────────────────── */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: transparent;
-    }
-
+    table { width: 100%; border-collapse: collapse; background: transparent; }
     thead {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: linear-gradient(180deg, rgba(25, 25, 25, 0.98), rgba(15, 15, 15, 0.95));
+      position: sticky; top: 0; z-index: 10;
+      background: linear-gradient(180deg, rgba(25,25,25,.98), rgba(15,15,15,.95));
       backdrop-filter: blur(12px);
       text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 1.6px;
-      color: var(--muted);
-      border-bottom: 1px solid var(--glass-border);
+      font-size: .7rem; letter-spacing: 1.5px;
+      color: var(--muted); border-bottom: 1px solid var(--glass-border);
     }
-
-    th, td {
-      padding: 14px 16px;
-      text-align: left;
-      transition: all 0.3s var(--transition);
-    }
-
-    tr {
-      transition: all 0.4s var(--transition);
-    }
-
+    th, td { padding: 11px 13px; transition: all .3s var(--transition); }
+    tr { transition: all .4s var(--transition); }
     tr:hover {
-      background: rgba(255, 255, 255, 0.09);
-      transform: translateX(6px);
-      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.08);
+      background: rgba(255,255,255,.09);
+      transform: translateX(5px);
+      box-shadow: 0 7px 18px rgba(255,255,255,.08);
     }
 
-    /* Rank Styling */
     .rank {
-      font-weight: 800;
-      color: var(--accent);
-      font-size: 1.3rem;
-      text-align: center;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+      font-weight: 800; color: var(--accent); font-size: 1.2rem;
+      text-align: center; text-shadow: 0 0 9px rgba(255,255,255,.4);
     }
+    .rank:nth-of-type(1) { color: #ffd700; font-size: 1.35rem; text-shadow: 0 0 18px #ffd700; }
+    .rank:nth-of-type(2) { color: #c0c0c0; font-size: 1.3rem; text-shadow: 0 0 16px #c0c0c0; }
+    .rank:nth-of-type(3) { color: #cd7f32; font-size: 1.28rem; text-shadow: 0 0 14px #cd7f32; }
 
-    .rank:nth-of-type(1) { color: #ffd700; font-size: 1.5rem; text-shadow: 0 0 20px #ffd700; }
-    .rank:nth-of-type(2) { color: #c0c0c0; font-size: 1.45rem; text-shadow: 0 0 18px #c0c0c0; }
-    .rank:nth-of-type(3) { color: #cd7f32; font-size: 1.4rem; text-shadow: 0 0 16px #cd7f32; }
-
-    /* Player Name */
-    .name {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      font-size: 0.98rem;
-    }
-
+    .name { display: flex; align-items: center; gap: 12px; font-size: .94rem; }
     .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 0 16px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15);
-      flex-shrink: 0;
-      transition: transform 0.3s ease;
+      width: 36px; height: 36px; border-radius: 10px; overflow: hidden;
+      box-shadow: 0 0 14px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.15);
+      flex-shrink: 0; transition: transform .3s ease;
     }
+    tr:hover .avatar { transform: scale(1.1) rotate(5deg); }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-    tr:hover .avatar {
-      transform: scale(1.1) rotate(5deg);
-    }
-
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Discord Tag */
     .discord-tag {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      color: var(--discord);
-      font-weight: 500;
-      opacity: 0.9;
-      margin-top: 2px;
+      display: flex; align-items: center; gap: 6px; font-size: .78rem;
+      color: var(--discord); font-weight: 500; opacity: .9; margin-top: 2px;
     }
-
-    .discord-tag i {
-      filter: drop-shadow(0 0 5px #5865f2);
-      animation: discordPulse 2.5s infinite alternate;
-    }
-
+    .discord-tag i { filter: drop-shadow(0 0 5px #5865f2); animation: discordPulse 2.5s infinite alternate; }
     @keyframes discordPulse {
       from { filter: drop-shadow(0 0 5px #5865f2); }
       to { filter: drop-shadow(0 0 12px #5865f2); }
     }
 
-    /* Empty Slot */
-    .empty-slot {
-      color: #666;
-      font-style: italic;
-      font-size: 0.94rem;
-    }
+    .empty-slot { color: #666; font-style: italic; font-size: .92rem; }
 
     /* ────────────────────────────────── LOADER ────────────────────────────────── */
     #loader {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 1s ease;
-      z-index: 100;
-      cursor: pointer;
+      position: fixed; inset: 0; background: var(--bg);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 1s ease; z-index: 100; cursor: pointer;
     }
-
     #logo {
-      font-size: 3.6rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      color: var(--accent);
-      letter-spacing: 5px;
+      font-size: 3.2rem; font-weight: 900; text-transform: uppercase;
+      color: var(--accent); letter-spacing: 4.5px;
       background: linear-gradient(45deg, #fff, #aaa);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
+      background-clip: text; -webkit-background-clip: text; color: transparent;
       animation: glow 2.5s ease-in-out infinite alternate;
     }
-
     @keyframes glow {
-      from { text-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent); opacity: 0.9; }
+      from { text-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent); opacity: .9; }
       to { text-shadow: 0 0 50px var(--accent), 0 0 100px var(--accent); opacity: 1; }
     }
 
     /* ────────────────────────────────── FOOTER ────────────────────────────────── */
     .last-updated {
-      font-size: 0.78rem;
-      color: var(--muted);
-      text-align: center;
-      margin: 16px 0 10px;
-      opacity: 0.8;
+      font-size: .76rem; color: var(--muted); text-align: center;
+      margin: 14px 0 8px; opacity: .8;
     }
-
     footer {
-      margin-top: 10px;
-      text-align: center;
-      font-size: 0.76rem;
-      color: var(--muted);
+      margin-top: 8px; text-align: center; font-size: .74rem; color: var(--muted);
+    }
+    footer a { color: var(--muted); text-decoration: none; transition: .2s; }
+    footer a:hover { color: #ccc; text-decoration: underline; }
+
+    /* Subtle credit */
+    .credit {
+      font-size: .68rem;
+      color: #777;
+      margin-top: 6px;
+      opacity: .6;
+      font-style: italic;
     }
 
-    footer a {
-      color: var(--muted);
-      text-decoration: none;
-      transition: 0.2s;
-    }
-
-    footer a:hover {
-      color: #ccc;
-      text-decoration: underline;
-    }
-
-    /* ────────────────────────────────── HIDDEN UTILS ────────────────────────────────── */
+    /* ────────────────────────────────── HIDDEN ────────────────────────────────── */
     .hidden { display: none !important; }
 
     /* ────────────────────────────────── RESPONSIVE ────────────────────────────────── */
     @media (max-width: 600px) {
-      #app { padding: 20px; border-radius: 20px; }
-      h1 { font-size: 2rem; }
-      .name { gap: 10px; font-size: 0.92rem; }
-      .avatar { width: 36px; height: 36px; }
-      .table-container { max-height: 62vh; }
-      th, td { padding: 10px 12px; }
+      #app { padding: 18px; border-radius: 18px; }
+      h1 { font-size: 1.8rem; }
+      .name { gap: 10px; font-size: .9rem; }
+      .avatar { width: 32px; height: 32px; }
+      .table-container { max-height: 58vh; }
+      th, td { padding: 9px 10px; }
     }
   </style>
 </head>
@@ -340,7 +242,7 @@
   <div id="app" class="hidden">
     <h1>Gooning Leaderboard</h1>
 
-    <div id="loading" style="text-align:center;color:#bbb;margin:24px 0;font-size:1rem;">
+    <div id="loading" style="text-align:center;color:#bbb;margin:20px 0;font-size:.96rem;">
       Loading leaderboard...
     </div>
 
@@ -348,7 +250,7 @@
       <table id="board" class="hidden">
         <thead>
           <tr>
-            <th style="width:70px">Rank</th>
+            <th style="width:60px">Rank</th>
             <th>Player</th>
           </tr>
         </thead>
@@ -357,7 +259,11 @@
     </div>
 
     <div class="last-updated" id="updated"></div>
-    <footer>Auto-refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a></footer>
+
+    <footer>
+      Auto-refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
+      <div class="credit">Site made by Xen</div>
+    </footer>
   </div>
 
   <script>
@@ -368,18 +274,14 @@
       const star = document.createElement('div');
       star.className = 'star';
       const size = Math.random() * 3 + 1;
-      star.style.width = `${size}px`;
-      star.style.height = `${size}px`;
+      star.style.width = star.style.height = `${size}px`;
       star.style.left = `${Math.random() * 100}vw`;
-      star.style.top = `-10px`;
       star.style.animationDuration = `${Math.random() * 8 + 5}s`;
       star.style.animationDelay = `${Math.random() * 5}s`;
       star.style.opacity = Math.random() * 0.6 + 0.3;
       $('#stars').appendChild(star);
       setTimeout(() => star.remove(), 15000);
     }
-
-    // Generate stars continuously
     setInterval(createStar, 300);
     for (let i = 0; i < 40; i++) setTimeout(createStar, i * 100);
 
@@ -398,10 +300,9 @@
         loader.classList.add('hidden');
         $('app').classList.remove('hidden');
         fetchLeaderboard();
-        setInterval(fetchLeaderboard, 90000); // Refresh every 90s
+        setInterval(fetchLeaderboard, 90000);
       }, 1000);
     }
-
     $('loader').addEventListener('click', enterLeaderboard);
     $('loader').addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -417,16 +318,13 @@
       const board = $('board');
       const rows = $('rows');
       const updated = $('updated');
-
       try {
         const res = await fetch('leaderboard.json?' + Date.now());
         if (!res.ok) throw new Error('Not found');
         const data = await res.json();
-
         let list = Array.isArray(data) ? data : (data.leaderboard || []);
         const time = data.updated || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // Pad to 100 slots
         const paddedList = [];
         for (let i = 0; i < 100; i++) {
           paddedList.push(list[i] || { rank: i + 1 });
@@ -447,7 +345,7 @@
                        alt="${e(p.name || 'User')} avatar">
                 </div>
                 <div>
-                  <div style="font-weight:600;font-size:1rem;">${e(p.name || 'Unknown')}</div>
+                  <div style="font-weight:600;font-size:.98rem;">${e(p.name || 'Unknown')}</div>
                   ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
                 </div>
                 ` : `<div class="empty-slot">— Empty Slot —</div>`}
