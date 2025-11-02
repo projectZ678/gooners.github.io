@@ -10,7 +10,7 @@
     :root{
       --bg:#000;--glass:#111111ee;--glass-border:rgba(255,255,255,.1);
       --text:#fff;--muted:#aaa;--accent:#fff;--glow:#fff;
-      --goon:#ccc;--splat:#ddd;
+      --goon:#ccc;--splat:#ddd;--aura:#ff0;
       font-family:'Inter',system-ui,sans-serif;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;outline:none;user-select:none;}
@@ -31,7 +31,7 @@
       100%{box-shadow:0 0 60px var(--glow),0 0 120px rgba(255,255,255,.4);}}
     #pfp img{width:100%;height:100%;object-fit:cover;}
     .sidebar-title{font-size:1.8rem;font-weight:800;letter-spacing:4px;color:var(--accent);
-      margin-bottom:32px;text:text-shadow:0 0 20px rgba(255,255,255,.6);}
+      margin-bottom:32px;text-shadow:0 0 20px rgba(255,255,255,.6);}
     .nav-btn{display:flex;align-items:center;gap:14px;width:100%;padding:14px 18px;
       background:rgba(255,255,255,.08);border:1px solid var(--glass-border);border-radius:14px;
       font-weight:600;cursor:pointer;transition:.3s;color:var(--text);margin-bottom:10px;
@@ -66,23 +66,31 @@
     #gooner-container:active{
       transform:scale(0.95);
     }
-    #gooner{width:100%;height:100%;background:var(--character-svg) no-repeat center/contain;}
+    #gooner{
+      width:100%;height:100%;
+      background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 380"><g transform="translate(140,200)"><circle fill="%23fff" cx="0" cy="0" r="20"/><path fill="%23fff" d="M0 -20V-100"/><path fill="none" stroke="%23fff" stroke-width="4" d="M0 -100H40V-60H-40V-100Z"/><g id="goonArm"><path fill="none" stroke="%23fff" stroke-width="4" d="M0 -100V-160H40V-100Z"/></g></g></svg>') no-repeat center/contain;
+    }
     .goonmetic{position:absolute;pointer-events:none;opacity:0;transition:opacity .5s;}
     #goon-stains{top:50px;left:100px;width:80px;height:60px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 60"><path fill="%23ccc" d="M15 15c8-8 25-8 35 0s8 25 0 35-8 8-25 0-15-15-35-35z"/></svg>') no-repeat center/contain;}
     #gooned-hoodie{top:130px;left:100px;width:80px;height:180px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 180"><rect fill="%23888" width="80" height="180"/><path fill="%23aaa" d="M5 5h70v170H5z"/></svg>') no-repeat center/contain;}
     #goon-goggles{top:65px;left:105px;width:70px;height:30px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 30"><circle fill="%23000" cx="20" cy="15" r="12"/><circle fill="%23000" cx="50" cy="15" r="12"/></svg>') no-repeat center/contain;}
     #goon-beanie{top:30px;left:105px;width:70px;height:50px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 50"><path fill="%23444" d="M0 25h70v25H0z"/></svg>') no-repeat center/contain;}
     #goon-gloves{top:310px;left:80px;width:120px;height:40px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40"><rect fill="%23666" width="120" height="40"/></svg>') no-repeat center/contain;}
-
-    /* GOON SPLATS */
+    #goon-throne{
+      position:absolute;top:250px;left:50px;width:180px;height:180px;opacity:0;
+      background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect fill="%23333" width="180" height="180" rx="20"/><path fill="%23555" d="M30 30h120v120H30z"/><circle fill="%23ff0" cx="90" cy="90" r="40"/></svg>') no-repeat center/contain;
+      transition:opacity .8s;z-index:1;
+    }
+    .aura-particle{
+      position:absolute;width:8px;height:8px;background:var(--aura);border-radius:50%;
+      pointer-events:none;opacity:0;animation:auraPulse 2s infinite;
+    }
+    @keyframes auraPulse{0%,100%{transform:scale(0);opacity:0;}50%{transform:scale(2);opacity:1;}}
     .splat{position:absolute;width:30px;height:30px;background:var(--splat);border-radius:50%;opacity:.7;
       pointer-events:none;animation:splatFade 3s forwards;z-index:5;}
     @keyframes splatFade{0%{transform:scale(0);opacity:0;}30%{transform:scale(1.5);opacity:.9;}100%{transform:scale(1);opacity:0;}}
-
     #points{font-size:3.5rem;font-weight:800;color:#fff;text-shadow:0 0 30px #fff;}
     #gps{font-size:1.5rem;color:#aaa;margin-top:10px;}
-
-    /* PRESTIGE BAR */
     .prestige-bar-container{
       width:100%;max-width:600px;height:16px;background:rgba(255,255,255,.1);
       border-radius:8px;overflow:hidden;margin:20px 0;position:relative;
@@ -96,7 +104,6 @@
       font-size:.9rem;font-weight:700;color:#fff;text-shadow:0 0 10px #000;
       line-height:16px;
     }
-
     .upgrades-grid,.goonmetics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;width:100%;max-width:900px;margin-top:16px;}
     .upgrade,.goonmetic{background:rgba(255,255,255,.08);border:1px solid var(--glass-border);border-radius:16px;
       padding:16px;text-align:center;transition:.3s;cursor:pointer;}
@@ -104,8 +111,6 @@
     .upgrade.bought,.goonmetic.bought{opacity:0.6;pointer-events:none;}
     .upgrade-name,.goonmetic-name{font-weight:700;color:#fff;}
     .upgrade-cost,.goonmetic-cost{font-size:0.9rem;color:#ccc;margin-top:4px;}
-
-    /* BADGES — ONLY SHOW WHEN UNLOCKED */
     .badges-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:20px;min-height:60px;}
     .badge{
       background:rgba(255,255,255,.1);border:2px solid #555;border-radius:12px;padding:8px 16px;
@@ -118,7 +123,6 @@
       animation:pulseBadge 2s infinite;
     }
     @keyframes pulseBadge{0%,100%{box-shadow:0 0 20px #fff;}50%{box-shadow:0 0 40px #fff;}}
-
     .prestige-btn{
       margin-top:20px;padding:16px 40px;background:#fff;color:#000;border:none;
       border-radius:16px;font-weight:800;cursor:pointer;transition:.4s;box-shadow:0 0 40px #fff;
@@ -128,14 +132,11 @@
       opacity:1;pointer-events:all;transform:scale(1);
     }
     .prestige-btn:hover{transform:scale(1.1);box-shadow:0 0 80px #fff;}
-
-    /* LEADERBOARD */
     .zoom-controls{position:absolute;top:12px;right:12px;background:rgba(30,30,30,.9);border-radius:12px;
       padding:6px 12px;display:flex;gap:8px;align-items:center;font-size:.9rem;color:#ddd;}
     .zoom-controls button{background:rgba(255,255,255,.15);border:none;border-radius:8px;
       width:28px;height:28px;cursor:pointer;}
     .zoom-controls button:hover{background:rgba(255,255,255,.25);}
-
     .table-container{flex:1;width:100%;overflow-y:auto;border-radius:18px;
       border:1px solid var(--glass-border);background:rgba(0,0,0,.35);
       box-shadow:inset 0 10px 18px rgba(0,0,0,.6);}
@@ -151,24 +152,20 @@
       box-shadow:0 0 20px rgba(0,0,0,.8),0 0 0 2px #fff;}
     .avatar img{width:100%;height:100%;object-fit:cover;}
     .empty-slot{color:#666;font-style:italic;}
-
     .retry-btn{margin-top:16px;padding:12px 32px;background:#444;color:#fff;border:none;
       border-radius:12px;cursor:pointer;font-weight:600;transition:.3s;}
     .retry-btn:hover{background:#666;transform:scale(1.05);}
-
     .achievement{position:fixed;top:20px;right:20px;background:#fff;color:#000;padding:16px 24px;
       border-radius:16px;font-weight:800;box-shadow:0 0 40px #fff;z-index:1000;
       animation:pop 0.5s ease-out;opacity:0;}
     @keyframes pop{0%{transform:scale(0);opacity:0;}100%{transform:scale(1);opacity:1;}}
-
     #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
       align-items:center;justify-content:center;z-index:100;cursor:pointer;transition:opacity 1s ease;}
     #logo{font-size:6rem;font-weight:900;color:var(--accent);text-shadow:0 0 30px #fff;
       animation:glow 2.5s infinite alternate;}
     @keyframes glow{from{text-shadow:0 0 30px #fff;}to{text-shadow:0 0 80px #fff,0 0 160px #fff;}}
     .hidden{display:none!important;}
-
-    @keyframes goonArm{0%,100%{transform:rotate(0deg) translateX(0);}50%{transform:rotate(-60deg) translateX(-20px) translateY(20px);}}
+    @keyframes goonArm{0%,100%{transform:rotate(0deg);}50%{transform:rotate(-60deg);}}
   </style>
 </head>
 <body>
@@ -211,6 +208,7 @@
             <div id="goon-goggles" class="goonmetic"></div>
             <div id="goon-beanie" class="goonmetic"></div>
             <div id="goon-gloves" class="goonmetic"></div>
+            <div id="goon-throne"></div>
           </div>
 
           <!-- PRESTIGE BAR -->
@@ -278,379 +276,6 @@
     </div>
   </div>
 
-  <script>
-    const $ = id => document.getElementById(id);
-    let starCnt = 0;
-
-    function addStar(){
-      if(starCnt>120) return;
-      const s=document.createElement('div'); s.className='star';
-      const sz = Math.random()*2.5+0.8;
-      s.style.width=s.style.height=`${sz}px`;
-      s.style.left=`${Math.random()*100}vw`;
-      s.style.animationDuration=`${Math.random()*6+4}s`;
-      s.style.animationDelay=`${Math.random()*3}s`;
-      $('#stars').appendChild(s); starCnt++;
-      setTimeout(()=>{s.remove();starCnt--;},10000);
-    }
-    setInterval(addStar,250);
-
-    // LOADER
-    function enterHub(){
-      const loader = $('loader');
-      loader.style.opacity = '0';
-      setTimeout(() => {
-        loader.classList.add('hidden');
-        $('app').classList.remove('hidden');
-        fetchLeaderboard();
-        setInterval(fetchLeaderboard, 60000);
-      }, 800);
-    }
-    const loader = $('loader');
-    loader.addEventListener('click', enterHub);
-    loader.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){e.preventDefault();enterHub();} });
-    loader.focus();
-
-    // Panel switching
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        $(btn.dataset.panel).classList.add('active');
-        if (btn.dataset.panel === 'clicker') initClicker();
-      });
-    });
-
-    // === GOON CLICKER ===
-    let points = 0, gps = 0, clickPower = 1, prestige = 1, totalClicks = 0, goonStreak = 0;
-    const PRESTIGE_COST = 100000;
-
-    const upgrades = [
-      {id:'auto',name:'Auto-Gooner',cost:50,effect:1,owned:0},
-      {id:'double',name:'Double Click',cost:200,effect:1,owned:0},
-      {id:'neon',name:'Neon Boost',cost:1000,effect:5,owned:0},
-      {id:'vault',name:'Vault Pass',cost:5000,effect:10,owned:0},
-      {id:'hyper',name:'Hyper Goon',cost:20000,effect:50,owned:0},
-      {id:'mega',name:'Mega Goon',cost:100000,effect:200,owned:0},
-      {id:'ultra',name:'Ultra Goon',cost:500000,effect:1000,owned:0},
-      {id:'god',name:'GOD GOON',cost:5000000,effect:5000,owned:0}
-    ];
-
-    const goonmetics = [
-      {id:'stains',name:'Goon Stains',el:'goon-stains'},
-      {id:'hoodie',name:'Gooned Hoodie',el:'gooned-hoodie'},
-      {id:'goggles',name:'Goon Goggles',el:'goon-goggles'},
-      {id:'beanie',name:'Goon Beanie',el:'goon-beanie'},
-      {id:'gloves',name:'Goon Gloves',el:'goon-gloves'}
-    ];
-
-    const badges = [
-      {id:'novice',name:'Novice Gooner',req:1000,bonus:{gps:1.1}},
-      {id:'pro',name:'Pro Gooner',req:10000,bonus:{click:1.25}},
-      {id:'elite',name:'Elite Gooner',req:100000,bonus:{gps:1.5}},
-      {id:'legend',name:'Legend Gooner',req:1000000,bonus:{all:2}},
-      {id:'vault',name:'Vault Master',req:'prestige',bonus:{prestige:3}}
-    ];
-
-    const characters = [
-      {min:0, svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 380">
-        <circle fill="%23fdb" cx="140" cy="80" r="50"/>
-        <path fill="%23432" d="M100 50c0-20 40-20 40 0v30h-40z"/>
-        <circle fill="%23000" cx="125" cy="75" r="8"/>
-        <circle fill="%23000" cx="155" cy="75" r="8"/>
-        <circle fill="%23fff" cx="127" cy="73" r="3"/>
-        <circle fill="%23fff" cx="157" cy="73" r="3"/>
-        <path fill="%23f55" d="M120 95q10 10 20 0"/>
-        <rect fill="%23666" x="100" y="140" width="80" height="180"/>
-        <rect fill="%23999" x="80" y="320" width="120" height="40"/>
-        <g id="goonArm" transform="translate(180,180)">
-          <rect fill="%23fdb" x="0" y="0" width="30" height="100" rx="15"/>
-          <circle fill="%23fdb" cx="15" cy="100" r="15"/>
-        </g>
-      </svg>`},
-      {min:1, svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 380">
-        <circle fill="%23edb" cx="140" cy="80" r="50"/>
-        <path fill="%23321" d="M100 50c0-20 40-20 40 0v30h-40z"/>
-        <circle fill="%23000" cx="125" cy="75" r="8"/>
-        <circle fill="%23000" cx="155" cy="75" r="8"/>
-        <path fill="%23f55" d="M120 95q10 10 20 0"/>
-        <rect fill="%23555" x="100" y="140" width="80" height="180"/>
-        <rect fill="%23888" x="80" y="320" width="120" height="40"/>
-        <g id="goonArm" transform="translate(180,180)">
-          <rect fill="%23edb" x="0" y="0" width="30" height="100" rx="15"/>
-          <circle fill="%23edb" cx="15" cy="100" r="15"/>
-        </g>
-      </svg>`},
-      // Add more as needed...
-    ];
-
-    let unlockedBadges = [], unlockedCosmetics = [];
-
-    function initClicker(){
-      loadGame();
-      updateCharacter();
-      renderAll();
-      updateDisplay();
-      updatePrestigeBar();
-      setInterval(autoEarn, 1000);
-      setInterval(saveGame, 5000);
-    }
-
-    $('#gooner-container').addEventListener('click', () => {
-      points += clickPower * prestige * getBadgeMultiplier('click');
-      totalClicks++;
-      goonStreak++;
-      animateGoonArm();
-      addSplat();
-      if (goonStreak % 5 === 0) $('#goon-stains').style.opacity = '1';
-      updateDisplay();
-      updatePrestigeBar();
-      checkBadges();
-      checkAchievements();
-    });
-
-    function animateGoonArm(){
-      const arm = document.querySelector('#goonArm');
-      if (arm) {
-        arm.style.animation = 'goonArm 0.5s ease-in-out';
-        setTimeout(() => arm.style.animation = '', 500);
-      }
-    }
-
-    function addSplat(){
-      const container = document.querySelector('.clicker-panel');
-      const splat = document.createElement('div');
-      splat.className = 'splat';
-      const x = 140 + (Math.random() - 0.5) * 300;
-      const y = 190 + (Math.random() - 0.5) * 300;
-      splat.style.left = `${x}px`;
-      splat.style.top = `${y}px`;
-      container.appendChild(splat);
-      setTimeout(() => splat.remove(), 3000);
-    }
-
-    function autoEarn(){
-      points += gps * prestige * getBadgeMultiplier('gps');
-      updateDisplay();
-      updatePrestigeBar();
-    }
-
-    function updateCharacter(){
-      const char = characters.find(c => prestige >= c.min) || characters[0];
-      document.documentElement.style.setProperty('--character-svg', `url('data:image/svg+xml;utf8,${encodeURIComponent(char.svg)}')`);
-      goonmetics.forEach((g, i) => {
-        if (prestige > i) unlockCosmetic(g.id);
-      });
-    }
-
-    function unlockCosmetic(id){
-      if (!unlockedCosmetics.includes(id)) {
-        unlockedCosmetics.push(id);
-        const el = $(goonmetics.find(g => g.id === id).el);
-        if (el) el.style.opacity = 1;
-      }
-    }
-
-    function updatePrestigeBar(){
-      const progress = Math.min(points / PRESTIGE_COST, 1);
-      $('#prestigeBar').style.width = `${progress * 100}%`;
-      $('#prestigeText').textContent = `${Math.floor(points).toLocaleString()} / ${PRESTIGE_COST.toLocaleString()} GP`;
-      const btn = $('prestige');
-      if (points >= PRESTIGE_COST) {
-        btn.classList.add('ready');
-      } else {
-        btn.classList.remove('ready');
-      }
-    }
-
-    function prestigeReset(){
-      if (points >= PRESTIGE_COST) {
-        prestige *= 2;
-        points = 0; gps = 0; clickPower = 1; goonStreak = 0;
-        upgrades.forEach(u => { u.owned = 0; u.cost = [50,200,1000,5000,20000,100000,500000,5000000][upgrades.indexOf(u)]; });
-        updateCharacter();
-        checkBadges(true);
-        renderAll();
-        updateDisplay();
-        updatePrestigeBar();
-        showAchievement(`PRESTIGED! x${prestige} Multiplier`);
-        for(let i=0; i<50; i++) setTimeout(addSplat, i*50);
-      }
-    }
-
-    function renderAll(){
-      renderUpgrades();
-      renderGoonmetics();
-      renderBadges();
-    }
-
-    function renderUpgrades(){
-      $('upgrades').innerHTML = upgrades.map(u => `
-        <div class="upgrade" onclick="buyUpgrade('${u.id}')">
-          <div class="upgrade-name">${u.name}</div>
-          <div class="upgrade-cost">Cost: ${u.cost.toLocaleString()}</div>
-          <div class="upgrade-cost">Owned: ${u.owned}</div>
-        </div>
-      `).join('');
-    }
-
-    function renderGoonmetics(){
-      $('goonmetics').innerHTML = goonmetics.map(g => `
-        <div class="goonmetic ${unlockedCosmetics.includes(g.id)?'bought':''}">
-          <div class="goonmetic-name">${g.name}</div>
-          <div class="goonmetic-cost">Equipped</div>
-        </div>
-      `).join('');
-    }
-
-    function renderBadges(){
-      const unlocked = badges.filter(b => unlockedBadges.includes(b.id));
-      $('badges').innerHTML = unlocked.map(b => `
-        <div class="badge unlocked">${b.name}</div>
-      `).join('');
-    }
-
-    function buyUpgrade(id){
-      const u = upgrades.find(x => x.id === id);
-      if (points >= u.cost) {
-        points -= u.cost;
-        u.owned++;
-        u.cost = Math.floor(u.cost * 1.5);
-        if (['auto','neon','hyper','mega','ultra','god'].includes(u.id)) gps += u.effect;
-        if (u.id === 'double') clickPower += u.effect;
-        if (u.id === 'vault') prestige += 0.5;
-        renderUpgrades();
-        updateDisplay();
-        updatePrestigeBar();
-      }
-    }
-
-    function getBadgeMultiplier(type){
-      let mult = 1;
-      unlockedBadges.forEach(id => {
-        const b = badges.find(x => x.id === id);
-        if (b.bonus.all) mult *= b.bonus.all;
-        if (type === 'gps' && b.bonus.gps) mult *= b.bonus.gps;
-        if (type === 'click' && b.bonus.click) mult *= b.bonus.click;
-        if (type === 'prestige' && b.bonus.prestige) prestige *= b.bonus.prestige;
-      });
-      return mult;
-    }
-
-    function checkBadges(force = false){
-      badges.forEach(b => {
-        if (!unlockedBadges.includes(b.id)) {
-          const met = (b.req === 'prestige' && force) || points >= b.req;
-          if (met) {
-            unlockedBadges.push(b.id);
-            showAchievement(`BADGE UNLOCKED: ${b.name}`);
-            renderBadges();
-          }
-        }
-      });
-    }
-
-    function updateDisplay(){
-      $('points').textContent = Math.floor(points).toLocaleString();
-      $('gps').textContent = `${(gps * getBadgeMultiplier('gps')).toFixed(1)} GPS`;
-    }
-
-    function showAchievement(text){
-      const a=document.createElement('div');
-      a.className='achievement';
-      a.textContent=text;
-      document.body.appendChild(a);
-      setTimeout(()=>a.style.opacity=1,100);
-      setTimeout(()=>{a.style.opacity=0;setTimeout(()=>a.remove(),500);},3000);
-    }
-
-    function checkAchievements(){
-      if (points > 1000 && !localStorage.getItem('ach1')) { showAchievement("1000 GOON POINTS!"); localStorage.setItem('ach1','1'); }
-      if (gps > 10 && !localStorage.getItem('ach2')) { showAchievement("10 GPS! AUTO-GOONING!"); localStorage.setItem('ach2','1'); }
-    }
-
-    function saveGame(){
-      const save = { points, gps, clickPower, prestige, totalClicks, goonStreak,
-        upgrades: upgrades.map(u => ({...u})), unlockedCosmetics, unlockedBadges };
-      localStorage.setItem('goonSave', JSON.stringify(save));
-    }
-
-    function loadGame(){
-      const save = JSON.parse(localStorage.getItem('goonSave'));
-      if(save){
-        points = save.points||0; gps = save.gps||0; clickPower = save.clickPower||1; prestige = save.prestige||1;
-        totalClicks = save.totalClicks||0; goonStreak = save.goonStreak||0;
-        save.upgrades?.forEach((su,i)=>Object.assign(upgrades[i],su));
-        unlockedCosmetics = save.unlockedCosmetics||[];
-        unlockedBadges = save.unlockedBadges||[];
-        updateCharacter();
-        checkBadges();
-      }
-    }
-
-    $('prestige').onclick = prestigeReset;
-
-    // === LEADERBOARD (unchanged) ===
-    async function fetchLeaderboard(){
-      const loading = $('loading'), error = $('error'), board = $('board'), rows = $('rows'), updated = $('updated');
-      loading.classList.remove('hidden');
-      error.classList.add('hidden');
-      board.classList.add('hidden');
-
-      try {
-        const r = await fetch('leaderboard.json?' + Date.now());
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        const data = await r.json();
-        const list = Array.isArray(data) ? data : (data.leaderboard || []);
-        const time = data.updated || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        const padded = Array(100).fill().map((_, i) => list[i] || { rank: i + 1 });
-        rows.innerHTML = padded.map((p, idx) => {
-          const av = p.discordId && p.avatar
-            ? `https://cdn.discordapp.com/avatars/${p.discordId}/${p.avatar}.${p.avatar.startsWith('a_') ? 'gif' : 'webp'}?size=80`
-            : 'https://cdn.discordapp.com/embed/avatars/0.png';
-          const rank = p.rank || idx + 1;
-          return `<tr>
-            <td class="rank">${rank}</td>
-            <td class="name">
-              ${p.name ? `
-                <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name)}"></div>
-                <div style="font-weight:600;">${e(p.name)}</div>
-              ` : `<div class="empty-slot">— Empty Slot —</div>`}
-            </td>
-          </tr>`;
-        }).join('');
-
-        updated.textContent = `Last updated: ${time}`;
-        loading.classList.add('hidden');
-        board.classList.remove('hidden');
-      } catch (err) {
-        console.error(err);
-        loading.classList.add('hidden');
-        error.classList.remove('hidden');
-      }
-    }
-
-    function e(t){
-      const d = document.createElement('div');
-      d.textContent = t;
-      return d.innerHTML;
-    }
-
-    // Zoom
-    const board = $('board');
-    const zoomPercent = $('#zoomPercent');
-    let scale = 0.5;
-    function updateZoom(){
-      board.style.transform = `scale(${scale})`;
-      board.style.transformOrigin = 'top left';
-      zoomPercent.textContent = `${Math.round(scale*100)}%`;
-    }
-    $('#zoomIn').onclick = () => { scale = Math.min(scale + 0.1, 2); updateZoom(); };
-    $('#zoomOut').onclick = () => { scale = Math.max(scale - 0.1, 0.3); updateZoom(); };
-    $('#zoomReset').onclick = () => { scale = 0.5; updateZoom(); };
-    updateZoom();
-  </script>
-</body>
-</html>
+  <!-- GOON SOUND -->
+  <audio id="goonSound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRiQCAABXQVZFZm10IBAAAAABAAEAAQABAEAQB8AAAAAALAAAABAAgAZGF0YQAAAAAA//8AAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA//8AAAAD//wAAAP//AAA/////AAAA
