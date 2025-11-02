@@ -22,7 +22,8 @@ h1{
 }
 #loader{
   position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;z-index:10;transition:opacity 700ms ease;cursor:pointer;
+  align-items:center;justify-content:center;z-index:10;transition:opacity 700ms ease;
+  cursor:pointer;outline:none;
 }
 #logo{
   font-size:3rem;font-weight:900;text-transform:uppercase;color:var(--accent);
@@ -57,8 +58,8 @@ footer a{color:var(--muted);text-decoration:underline}
 </head>
 <body>
 
-<!-- LOADER -->
-<div id="loader" tabindex="0">
+<!-- CLICK TO ENTER (FIXED) -->
+<div id="loader" tabindex="0" role="button" aria-label="Enter leaderboard">
   <div id="logo">GOONING</div>
   <div style="margin-top:16px;color:#777;font-size:1.1rem;">Click or press Enter</div>
 </div>
@@ -80,7 +81,7 @@ const REPO = 'projectZ678/gooning-leaderboard';
 const FILE = 'leaderboard.json';
 const API = 'https://api.github.com';
 
-// Elements
+// DOM
 const $ = id => document.getElementById(id);
 const loader = $('#loader');
 const loading = $('#loading');
@@ -88,21 +89,30 @@ const board = $('#board');
 const rows = $('#rows');
 const updated = $('#updated');
 
-// Enter on click or Enter key
-loader.onclick = enter;
-loader.onkeydown = e => { if (e.key === 'Enter') enter(); };
-loader.focus();
-
-// Enter animation
-function enter() {
+// === ENTER ON CLICK OR ENTER KEY ===
+function enterLeaderboard() {
   loader.style.opacity = '0';
   setTimeout(() => {
-    loader.style.display = 'none';
+    loader.remove(); // Fully remove from DOM
     loadLeaderboard();
   }, 700);
 }
 
-// Load leaderboard
+// Click
+loader.addEventListener('click', enterLeaderboard);
+
+// Enter key
+loader.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    enterLeaderboard();
+  }
+});
+
+// Focus for keyboard
+loader.focus();
+
+// === LOAD DATA ===
 async function loadLeaderboard() {
   try {
     const res = await fetch(`${API}/repos/${REPO}/contents/${FILE}`);
@@ -120,7 +130,7 @@ async function loadLeaderboard() {
   }
 }
 
-// Render table
+// === RENDER ===
 function render(players) {
   const sorted = [...players].sort((a, b) => (b.score || 0) - (a.score || 0));
   loading.classList.add('hidden');
@@ -149,7 +159,7 @@ function escape(t) {
   return div.innerHTML;
 }
 
-// Auto-refresh
+// Auto-refresh every 30s
 setInterval(loadLeaderboard, 30000);
 </script>
 </body>
