@@ -8,159 +8,169 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0a0a;--text:#eee;--accent:#fff;--discord:#5865F2;--muted:#888;
+  --bg:#0a0a0a;--panel:#111;--text:#eee;--muted:#888;--glow:rgba(255,255,255,.2);
+  --accent:#fff;--discord:#5865F2;--transition:300ms ease;
   font-family:'Inter',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  min-height:100vh;background:var(--bg);color:var(--text);
-  display:flex;flex-direction:column;align-items:center;padding:40px 20px;
+  min-height:100vh;background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.04),transparent 30%),
+    radial-gradient(circle at 80% 80%,rgba(255,255,255,.03),transparent 40%),
+    var(--bg);
+  color:var(--text);display:flex;align-items:center;justify-content:center;
 }
+#app{max-width:800px;width:100%;padding:24px}
 h1{
-  font-size:2.8rem;font-weight:900;text-align:center;margin-bottom:30px;
-  color:var(--accent);text-shadow:0 0 20px rgba(255,255,255,.2);letter-spacing:2px;
-}
-#loader{
-  position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;z-index:10;transition:opacity 700ms ease;
-  cursor:pointer;outline:none;
-}
-#logo{
-  font-size:3rem;font-weight:900;text-transform:uppercase;color:var(--accent);
-  letter-spacing:3px;animation:glow 2s infinite alternate;
-}
-@keyframes glow{
-  from{text-shadow:0 0 10px var(--accent);opacity:.8}
-  to{text-shadow:0 0 40px var(--accent),0 0 80px var(--accent);opacity:1}
+  text-align:center;font-weight:800;font-size:2rem;letter-spacing:1px;
+  color:var(--accent);text-shadow:0 0 20px var(--glow);margin-bottom:16px;
 }
 table{
-  width:100%;max-width:900px;border-collapse:collapse;background:#111;
-  border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,.7);
+  width:100%;border-collapse:collapse;margin-top:24px;border-radius:12px;
+  overflow:hidden;box-shadow:0 0 40px rgba(0,0,0,.6),0 0 20px rgba(255,255,255,.02) inset;
 }
 thead{
-  background:rgba(255,255,255,.08);text-transform:uppercase;
-  font-size:.85rem;letter-spacing:1.5px;color:var(--muted);
+  background:rgba(255,255,255,.05);text-transform:uppercase;
+  font-size:.8rem;letter-spacing:1px;color:var(--muted);
 }
-th,td{padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
-tr:hover{background:rgba(255,255,255,.04)}
-.rank{font-weight:800;color:var(--accent);font-size:1.3rem}
-.name{display:flex;align-items:center;gap:14px}
-.avatar{width:48px;height:48px;border-radius:12px;overflow:hidden}
+th,td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);text-align:left}
+tr:hover{
+  background:rgba(255,255,255,.03);transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(255,255,255,.03);
+  transition:transform var(--transition),box-shadow var(--transition);
+}
+.rank{font-weight:700;color:var(--accent)}
+.name{display:flex;align-items:center;gap:12px}
+.avatar{width:40px;height:40px;border-radius:10px;overflow:hidden;box-shadow:0 0 10px rgba(255,255,255,.05)}
 .avatar img{width:100%;height:100%;object-fit:cover}
-.discord-tag{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--discord);font-weight:600}
-.score{text-align:right;font-weight:700;font-size:1.1rem}
-.last-updated{font-size:.8rem;color:var(--muted);text-align:center;margin:20px 0}
-footer{margin-top:40px;text-align:center;font-size:.85rem;color:var(--muted)}
-footer a{color:var(--muted);text-decoration:underline}
-.hidden{display:none}
-#loading{color:#aaa;margin:30px;font-size:1.1rem;text-align:center}
+.discord-tag{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--discord);font-weight:500}
+.score{text-align:right;font-weight:600}
+#loader{
+  position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;transition:opacity 700ms ease;z-index:10;
+  cursor:pointer;
+}
+#logo{
+  font-size:2.5rem;font-weight:900;text-transform:uppercase;color:var(--accent);
+  letter-spacing:2px;animation:glow 2s infinite alternate;
+}
+@keyframes glow{
+  from{text-shadow:0 0 5px var(--accent);opacity:.7}
+  to{text-shadow:0 0 25px var(--accent),0 0 50px var(--accent);opacity:1}
+}
+.hidden{opacity:0;pointer-events:none;display:none !important}
+footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
+.last-updated{font-size:.75rem;color:var(--muted);text-align:center;margin-top:10px}
+
+/* Responsive */
+@media (max-width:600px){
+  #app{padding:16px}
+  table{font-size:.9rem}
+  th,td{padding:10px 8px}
+}
 </style>
 </head>
 <body>
 
-<!-- CLICK TO ENTER (FIXED) -->
+<!-- LOADER -->
 <div id="loader" tabindex="0" role="button" aria-label="Enter leaderboard">
   <div id="logo">GOONING</div>
-  <div style="margin-top:16px;color:#777;font-size:1.1rem;">Click or press Enter</div>
+  <div style="margin-top:12px;color:#777;font-size:1rem;">Click to enter</div>
 </div>
 
-<!-- LEADERBOARD -->
-<h1>GOONING LEADERBOARD</h1>
-<div id="loading">Loading...</div>
-<table id="board" class="hidden">
-  <thead><tr><th>Rank</th><th>Player</th><th class="score">Score</th></tr></thead>
-  <tbody id="rows"></tbody>
-</table>
-<div class="last-updated" id="updated"></div>
-<footer>
-  Public View • <a href="leaderboard.json" target="_blank">view JSON</a>
-</footer>
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+  <h1>Gooning Leaderboard</h1>
+
+  <div id="loading" style="text-align:center;color:#aaa;margin:20px 0;">Loading leaderboard...</div>
+
+  <table id="board" class="hidden">
+    <thead><tr><th>Rank</th><th>Player</th><th class="score">Score</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div class="last-updated" id="updated"></div>
+  <footer>Auto-updated • <a href="/api/leaderboard" target="_blank" style="color:var(--muted)">view raw JSON</a></footer>
+</div>
 
 <script>
-const REPO = 'projectZ678/gooning-leaderboard';
-const FILE = 'leaderboard.json';
-const API = 'https://api.github.com';
-
-// DOM
+const API = '/api';
 const $ = id => document.getElementById(id);
-const loader = $('#loader');
-const loading = $('#loading');
-const board = $('#board');
-const rows = $('#rows');
-const updated = $('#updated');
 
 // === ENTER ON CLICK OR ENTER KEY ===
 function enterLeaderboard() {
+  const loader = $('loader');
   loader.style.opacity = '0';
   setTimeout(() => {
-    loader.remove(); // Fully remove from DOM
-    loadLeaderboard();
+    loader.classList.add('hidden');
+    $('app').classList.remove('hidden');
+    fetchLeaderboard();
+    setInterval(fetchLeaderboard, 30000); // Auto-refresh every 30s
   }, 700);
 }
 
-// Click
-loader.addEventListener('click', enterLeaderboard);
-
-// Enter key
-loader.addEventListener('keydown', e => {
+// Click & Enter key support
+$('loader').addEventListener('click', enterLeaderboard);
+$('loader').addEventListener('keydown', e => {
   if (e.key === 'Enter' || e.key === ' ') {
     e.preventDefault();
     enterLeaderboard();
   }
 });
+$('loader').focus();
 
-// Focus for keyboard
-loader.focus();
+// === FETCH LEADERBOARD ===
+async function fetchLeaderboard() {
+  const loading = $('loading');
+  const board = $('board');
+  const rows = $('rows');
+  const updated = $('updated');
 
-// === LOAD DATA ===
-async function loadLeaderboard() {
   try {
-    const res = await fetch(`${API}/repos/${REPO}/contents/${FILE}`);
-    if (!res.ok) {
-      loading.textContent = 'Leaderboard not ready yet.';
-      return;
+    const res = await fetch(`${API}/leaderboard`);
+    if (!res.ok) throw new Error('Not ready');
+    const { leaderboard = [], updated: time } = await res.json();
+
+    // Sort by score descending
+    const sorted = [...leaderboard].sort((a, b) => (b.score || 0) - (a.score || 0));
+
+    // Render rows
+    if (sorted.length === 0) {
+      rows.innerHTML = `<tr><td colspan="3" style="text-align:center;color:#aaa;padding:40px;">No players yet.</td></tr>`;
+    } else {
+      rows.innerHTML = sorted.map((p, i) => `
+        <tr>
+          <td class="rank">#${i + 1}</td>
+          <td class="name">
+            <div class="avatar">
+              <img src="${e(p.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png')}"
+                   onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
+            </div>
+            <div>
+              <div style="font-weight:600">${e(p.name || 'Unknown')}</div>
+              ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
+            </div>
+          </td>
+          <td class="score">${(p.score || 0).toLocaleString()}</td>
+        </tr>
+      `).join('');
     }
-    const data = await res.json();
-    const { leaderboard = [], updated = 'never' } = JSON.parse(atob(data.content));
-    render(leaderboard);
-    const time = updated !== 'never' ? new Date(updated).toLocaleTimeString() : 'never';
-    updated.textContent = `Last updated: ${time}`;
+
+    updated.textContent = `Last updated: ${time || 'never'}`;
+    loading.classList.add('hidden');
+    board.classList.remove('hidden');
   } catch (e) {
-    loading.textContent = 'Failed to load.';
+    loading.textContent = 'Failed to load leaderboard.';
+    loading.style.color = '#f66';
   }
 }
 
-// === RENDER ===
-function render(players) {
-  const sorted = [...players].sort((a, b) => (b.score || 0) - (a.score || 0));
-  loading.classList.add('hidden');
-  board.classList.remove('hidden');
-  rows.innerHTML = sorted.length ? sorted.map((p, i) => `
-    <tr>
-      <td class="rank">#${i + 1}</td>
-      <td class="name">
-        <div class="avatar">
-          <img src="${p.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'}"
-               onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
-        </div>
-        <div>
-          <div style="font-weight:700">${escape(p.name || 'Unknown')}</div>
-          ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${escape(p.discord)}</div>` : ''}
-        </div>
-      </td>
-      <td class="score">${(p.score || 0).toLocaleString()}</td>
-    </tr>
-  `).join('') : '<tr><td colspan="3" style="text-align:center;padding:40px;color:#666;">No players yet.</td></tr>';
-}
-
-function escape(t) {
+// === ESCAPE HTML ===
+function e(t) {
   const div = document.createElement('div');
   div.textContent = t;
   return div.innerHTML;
 }
-
-// Auto-refresh every 30s
-setInterval(loadLeaderboard, 30000);
 </script>
 </body>
 </html>
