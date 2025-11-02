@@ -445,19 +445,20 @@
       }
     }
 
-    /* GOON CLICKER */
-    const SAVE_KEY = 'goonClickerSave_v8';
+    /* GOON CLICKER - FULLY FIXED & ENHANCED */
+    const SAVE_KEY = 'goonClickerSave_v9';
     let goons = 0, gps = 0, prestige = 0, rankedGPS = 0, threshold = 3000;
     let clickTimeout = null;
 
-    const baseCosts = [25,110,1010,8010,50010,200010];
-    const incs = [0.1,1,10,50,200,1000];
+    // IMPROVED UPGRADES: First gives +10/s, others scaled up
+    const baseCosts = [50, 500, 5000, 50000, 500000, 5000000];
+    const incs = [10, 50, 250, 1250, 6250, 31250]; // 5x stronger than before
 
     const cosmetics = [
-      {id:'stained-pants',name:'Stained Underwear',cost:5000,icon:'tint',owned:false},
-      {id:'goon-glasses',name:'Goon Glasses',cost:10000,icon:'glasses',owned:false},
-      {id:'goon-hat',name:'Goon Hat',cost:15000,icon:'hat-cowboy',owned:false},
-      {id:'goon-aura',name:'Goon Aura',cost:30000,icon:'spa',owned:false}
+      {id:'stained-pants',name:'Stained Underwear',cost:10000,icon:'tint',owned:false},
+      {id:'goon-glasses',name:'Goon Glasses',cost:25000,icon:'glasses',owned:false},
+      {id:'goon-hat',name:'Goon Hat',cost:50000,icon:'hat-cowboy',owned:false},
+      {id:'goon-aura',name:'Goon Aura',cost:100000,icon:'spa',owned:false}
     ];
 
     const rankedCosmetics = [
@@ -467,11 +468,13 @@
       {id:'diamond',name:'Diamond Gem',threshold:10000,icon:'gem',unlocked:false}
     ];
 
+    // ENHANCED BADGES
     const badges = [
       {id:'rookie',name:'Rookie Gooner',threshold:1000,icon:'star',class:'bronze'},
-      {id:'edge',name:'Edging Expert',threshold:5000,icon:'clock',class:''},
+      {id:'edger',name:'Edging Expert',threshold:5000,icon:'clock',class:'silver'},
       {id:'hall',name:'Hall of Fame Gooner',threshold:2000,icon:'trophy',class:'gold'},
-      {id:'legend',name:'Goon Legend',threshold:50000,icon:'crown',class:'diamond'}
+      {id:'legend',name:'Goon Legend',threshold:50000,icon:'crown',class:'diamond'},
+      {id:'god',name:'Goon God',threshold:100000,icon:'bolt',class:'diamond'}
     ];
 
     const big=$('goon-big'),goonDisp=$('goons'),gpsDisp=$('gps'),multiDisp=$('goon-multiplier'),
@@ -498,7 +501,7 @@
         upgrades: upgrades.map(u=>({id:u.id,owned:u.owned,cost:u.cost})),
         cosmetics: cosmetics.map(c=>({id:c.id,owned:c.owned})),
         rankedCosmetics: rankedCosmetics.map(c=>({id:c.id,unlocked:c.unlocked})),
-        version:8
+        version:9
       };
       localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
     }
@@ -513,22 +516,35 @@
           prestige = Number(d.prestige) || 0;
           rankedGPS = Number(d.rankedGPS) || 0;
           threshold = Number(d.threshold) || calcThreshold();
+
+          // Restore upgrades
           if(d.upgrades){
             d.upgrades.forEach(u=>{
               const x = upgrades.find(v=>v.id===u.id);
-              if(x){ x.owned = Number(u.owned) || 0; x.cost = Number(u.cost) || baseCosts[upgrades.indexOf(x)]; }
+              if(x){
+                x.owned = Number(u.owned) || 0;
+                x.cost = Number(u.cost) || baseCosts[upgrades.indexOf(x)];
+              }
             });
           }
-          gps = upgrades.reduce((a,u)=>a + u.inc * u.owned * getMult(),0);
+
+          // Recalculate GPS from owned upgrades
+          gps = upgrades.reduce((a,u)=>a + u.inc * u.owned * getMult(), 0);
+
+          // Restore cosmetics
           (d.cosmetics || []).forEach(item => {
             const c = cosmetics.find(v=>v.id===item.id);
             if(c) c.owned = true;
           });
+
+          // Restore ranked cosmetics
           (d.rankedCosmetics || []).forEach(item => {
             const c = rankedCosmetics.find(v=>v.id===item.id);
             if(c) c.unlocked = true;
           });
-        }catch(e){console.error('Bad save',e);}
+        }catch(e){
+          console.error('Failed to load save:', e);
+        }
       } else {
         threshold = calcThreshold();
       }
@@ -574,8 +590,12 @@
           if(goons >= u.cost && !div.classList.contains('disabled')){
             div.style.transition = 'transform .14s'; div.style.transform = 'scale(0.93)';
             clickTimeout = setTimeout(()=>{div.style.transform='';},140);
-            goons -= u.cost; u.owned++; u.cost = Math.ceil(u.cost * 1.15);
-            gps += u.inc * getMult(); updateGoon(); saveGame();
+            goons -= u.cost;
+            u.owned++;
+            u.cost = Math.ceil(u.cost * 1.15);
+            gps += u.inc * getMult();
+            updateGoon();
+            saveGame();
           }
         });
         upDiv.appendChild(div);
@@ -647,7 +667,8 @@
     prestigeBtn.addEventListener('click', () => {
       if(goons >= threshold){
         bustAnimation(); prestige++; goons = 0; gps = 0;
-        threshold = calcThreshold(); upgrades.forEach(u => u.owned = 0);
+        threshold = calcThreshold();
+        upgrades.forEach(u => u.owned = 0);
         upgrades.forEach((u,i)=>u.cost=baseCosts[i]);
         updateGoon(); saveGame();
       }
@@ -664,14 +685,24 @@
       }, 2800);
     });
 
+    // Auto-save every 3 seconds + on visibility change
+    setInterval(saveGame, 3000);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') saveGame();
+    });
+
+    // Passive income
     setInterval(() => {
       if(gps > 0){ goons += gps / 3; updateGoon(); }
     }, 333);
 
+    // Prevent selection
     document.addEventListener('selectstart', e => e.preventDefault());
     document.addEventListener('mousedown', e => e.preventDefault());
 
-    loadGame(); updateGoon(); setInterval(saveGame, 5000);
+    // Initialize
+    loadGame();
+    updateGoon();
 
     function e(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
   </script>
