@@ -692,6 +692,7 @@
 <body>
     <div class="stars" id="stars"></div>
 
+    <!-- LOADER – CLICK OR ENTER TO START -->
     <div id="loader" tabindex="0" role="button" aria-label="Enter">
         <div id="logo">GOONING</div>
         <div style="margin-top:22px;color:#999;font-size:1.25rem;">Click or press Enter</div>
@@ -893,25 +894,27 @@
             return `https://cdn.discordapp.com/avatars/${uid}/${hash}.${ext}?size=${size}`;
         }
 
-        /* LOADER */
-        function enterLeaderboard() {
-            const l = $('loader');
-            l.style.opacity = '0';
+        /* LOADER – CLICK OR ENTER */
+        function enterHub() {
+            const loader = $('loader');
+            loader.style.opacity = '0';
             setTimeout(() => {
-                l.classList.add('hidden');
+                loader.classList.add('hidden');
                 $('app').classList.remove('hidden');
                 fetchLeaderboard();
                 setInterval(fetchLeaderboard, 90000);
             }, 1000);
         }
-        $('loader').addEventListener('click', enterLeaderboard);
-        $('loader').addEventListener('keydown', e => {
+
+        const loader = $('loader');
+        loader.addEventListener('click', enterHub);
+        loader.addEventListener('keydown', e => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                enterLeaderboard();
+                enterHub();
             }
         });
-        setTimeout(() => $('loader').focus(), 100);
+        window.addEventListener('load', () => loader.focus());
 
         /* LEADERBOARD FETCH */
         async function fetchLeaderboard() {
@@ -923,7 +926,7 @@
                 let list = Array.isArray(data) ? data : (data.leaderboard || []);
                 const time = data.updated || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 const padded = [];
-                for (let i = 0; i < 100; i++)) padded.push(list[i] || { rank: ++i });
+                for (let i = 0; i < 100; i++) padded.push(list[i] || { rank: i + 1 });
                 rows.innerHTML = padded.map((p, idx) => {
                     const has = p.name || p.discord;
                     const av = getDiscordAvatar(p.discordId, p.avatar);
@@ -950,7 +953,7 @@
             }
         }
 
-        /* GOON CLICKER – FULLY FIXED */
+        /* GOON CLICKER – FULLY INTACT */
         const SAVE_KEY = 'goonClickerSave_v13';
         let goons = 0, gps = 0, prestige = 0, rankedGPS = 0, threshold = 3000;
         let clickPower = 1;
@@ -1054,7 +1057,6 @@
             nextThresh.textContent = threshold.toLocaleString('en-US');
             progFill.style.width = `${Math.min(100, (goons / threshold) * 100)}%`;
 
-            /* UPGRADES */
             upDiv.innerHTML = '';
             upgrades.forEach(u => {
                 if (u.owned) return;
@@ -1080,7 +1082,6 @@
                 upDiv.appendChild(div);
             });
 
-            /* BUILDINGS */
             buildDiv.innerHTML = '';
             buildings.forEach(b => {
                 const cost = Math.floor(b.baseCost * Math.pow(1.15, b.owned));
@@ -1106,7 +1107,6 @@
                 buildDiv.appendChild(div);
             });
 
-            /* COSMETICS */
             cosmeticsList.innerHTML = '';
             cosmetics.forEach(c => {
                 const div = document.createElement('div');
@@ -1126,7 +1126,6 @@
                 cosmeticsList.appendChild(div);
             });
 
-            /* RANKED */
             rankedVal.textContent = rankedGPS.toFixed(1);
             rankedList.innerHTML = '';
             rankedCosmetics.forEach(c => {
@@ -1141,7 +1140,6 @@
                 rankedList.appendChild(div);
             });
 
-            /* BADGES */
             badgesDiv.innerHTML = '';
             badges.forEach(b => {
                 const unlocked = goons >= b.threshold;
