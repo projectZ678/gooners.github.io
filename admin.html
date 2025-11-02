@@ -3,54 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin Panel</title>
+<title>GOONING ADMIN</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a0a;--panel:#111;--text:#eee;--accent:#fff;--green:#4caf50;--red:#f66}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.container{max-width:400px;width:100%;background:var(--panel);padding:30px;border-radius:12px;box-shadow:0 0 30px rgba(0,0,0,.6)}
-h1{font-size:1.8rem;text-align:center;margin-bottom:20px;color:var(--accent)}
-input{width:100%;padding:12px;margin:10px 0;border:none;border-radius:8px;background:rgba(255,255,255,.08);color:var(--text);font-size:1rem}
-button{width:100%;padding:14px;margin-top:16px;background:var(--accent);color:#000;border:none;border-radius:8px;font-weight:600;cursor:pointer}
-button:hover{background:#ccc}
-.error{color:var(--red);margin-top:8px;text-align:center;font-size:.9rem}
+.container{max-width:420px;width:100%;background:var(--panel);padding:32px;border-radius:14px;box-shadow:0 0 40px rgba(0,0,0,.7)}
+h1{font-size:1.9rem;text-align:center;margin-bottom:24px;color:var(--accent)}
+input{width:100%;padding:13px;margin:10px 0;border:none;border-radius:9px;background:rgba(255,255,255,.08);color:var(--text);font-size:1rem}
+button{width:100%;padding:15px;margin-top:18px;background:var(--accent);color:#000;border:none;border-radius:9px;font-weight:600;cursor:pointer}
+button:hover{background:#ddd}
+.error{color:var(--red);margin-top:10px;text-align:center;font-size:.95rem}
 .hidden{display:none}
+#access-denied{text-align:center;color:#f66;font-size:1.1rem;margin:20px 0}
 </style>
 </head>
 <body>
+
 <div class="container">
   <h1>GOONING ADMIN</h1>
 
-  <!-- SIGNUP -->
-  <div id="signup-form">
-    <input type="text" id="signup-username" placeholder="Username (use XEN for admin)">
-    <input type="password" id="signup-password" placeholder="Password">
-    <button id="signup-btn">Create Account</button>
-    <div class="error" id="signup-error"></div>
-    <p style="text-align:center;margin-top:16px;font-size:.9rem">Have account? <a href="#" id="show-login" style="color:var(--accent)">Login</a></p>
-  </div>
-
-  <!-- LOGIN -->
-  <div id="login-form" class="hidden">
-    <input type="text" id="login-username" placeholder="Username">
-    <input type="password" id="login-password" placeholder="Password">
-    <button id="login-btn">Login</button>
-    <div class="error" id="login-error"></div>
-    <p style="text-align:center;margin-top:16px;font-size:.9rem">No account? <a href="#" id="show-signup" style="color:var(--accent)">Sign up</a></p>
+  <!-- IP CHECK -->
+  <div id="access-denied" class="hidden">
+    <p><strong>ACCESS DENIED</strong></p>
+    <p>Only IP <code>192.168.1.136</code> is allowed.</p>
+    <p>Your IP: <span id="your-ip"></span></p>
   </div>
 
   <!-- ADMIN PANEL -->
-  <div id="admin-panel" class="hidden">
+  <div id="admin-panel">
     <h2>Add Player</h2>
     <input type="text" id="new-name" placeholder="Name">
     <input type="number" id="new-score" placeholder="Score" min="0">
     <input type="text" id="new-discord" placeholder="Discord (xen#0001)">
     <input type="url" id="new-avatar" placeholder="Avatar URL">
     <button id="add-btn" style="background:var(--green);color:#fff">Add Player</button>
-    <div id="player-list" style="margin-top:20px"></div>
-    <div id="save-status" style="margin-top:12px;font-size:.9rem"></div>
-    <button id="logout-btn" style="margin-top:20px;background:#333">Logout</button>
+    <div id="player-list" style="margin-top:24px"></div>
+    <div id="save-status" style="margin-top:14px;font-size:.95rem"></div>
   </div>
 </div>
 
@@ -58,10 +48,10 @@ button:hover{background:#ccc}
 // === CONFIG ===
 const REPO = 'projectZ678/gooning-leaderboard';
 const BRANCH = 'main';
-const USERS_FILE = 'users.json';
 const BOARD_FILE = 'leaderboard.json';
 const API = 'https://api.github.com';
-const TOKEN = atob('Z2l0aHViX3BhdF8xMUJMQkhIUUkwcDA0RHE4YnRTaHQ5X2dxR0FBTGlGSUN1U0tvYUFVTWM3TXNPSkNSWmNqdWJFUWVlc2FUaWhSdnJIN0FXUVlTQzNVOEZaQzg2'); // hidden
+const TOKEN = atob('Z2l0aHViX3BhdF8xMUJMQkhIUUkwcDA0RHE4YnRTaHQ5X2dxR0FBTGlGSUN1U0tvYUFVTWM3TXNPSkNSWmNqdWJFUWVlc2FUaWhSdnJIN0FXUVlTQzNVOEZaQzg2');
+const ALLOWED_IP = '192.168.1.136';
 
 let leaderboard = [];
 
@@ -70,6 +60,27 @@ const $ = id => document.getElementById(id);
 const show = el => el.classList.remove('hidden');
 const hide = el => el.classList.add('hidden');
 const e = t => { const d=document.createElement('div'); d.textContent=t; return d.innerHTML; };
+
+// === IP CHECK ===
+async function checkIP() {
+  try {
+    const res = await fetch('https://api.ipify.org?format=json');
+    const data = await res.json();
+    const userIP = data.ip;
+    $('#your-ip').textContent = userIP;
+
+    if (userIP !== ALLOWED_IP) {
+      hide($('#admin-panel'));
+      show($('#access-denied'));
+    } else {
+      fetchLeaderboard();
+    }
+  } catch (e) {
+    $('#access-denied').innerHTML = '<p>Could not verify IP. Try again.</p>';
+    hide($('#admin-panel'));
+    show($('#access-denied'));
+  }
+}
 
 // === GITHUB API ===
 async function gh(path, opts = {}) {
@@ -93,67 +104,7 @@ async function saveFile(path, content, sha = null) {
   return res.ok;
 }
 
-// === SWITCH FORMS ===
-$('show-login').onclick = () => { hide($('signup-form')); show($('login-form')); };
-$('show-signup').onclick = () => { hide($('login-form')); show($('signup-form')); };
-
-// === SIGNUP ===
-$('signup-btn').onclick = async () => {
-  const username = $('signup-username').value.trim();
-  const password = $('signup-password').value;
-  const err = $('signup-error');
-  err.textContent = '';
-
-  if (!username || !password) return err.textContent = 'Fill all fields';
-  if (username.length < 3) return err.textContent = 'Username too short';
-
-  let usersData = await getFile(USERS_FILE) || { content: { users: [] } };
-  if (usersData.content.users.find(u => u.username === username)) return err.textContent = 'Username taken';
-
-  const hash = btoa(password);
-  const isAdmin = username.toLowerCase() === 'xen';
-  usersData.content.users.push({ username, password: hash, role: isAdmin ? 'admin' : 'user' });
-
-  const saved = await saveFile(USERS_FILE, usersData.content, usersData.sha);
-  if (!saved) return err.textContent = 'Network error — check internet';
-
-  if (isAdmin) {
-    hide($('signup-form'));
-    show($('admin-panel'));
-    fetchLeaderboard();
-  } else {
-    alert('Account created! Only XEN can edit.');
-  }
-};
-
-// === LOGIN ===
-$('login-btn').onclick = async () => {
-  const username = $('login-username').value.trim();
-  const password = $('login-password').value;
-  const err = $('login-error');
-  err.textContent = '';
-
-  if (!username || !password) return err.textContent = 'Fill all fields';
-
-  const usersData = await getFile(USERS_FILE);
-  if (!usersData) return err.textContent = 'No users — sign up first';
-
-  const user = usersData.content.users.find(u => u.username === username && atob(u.password) === password);
-  if (!user) return err.textContent = 'Wrong credentials';
-
-  if (user.role === 'admin') {
-    hide($('login-form'));
-    show($('admin-panel'));
-    fetchLeaderboard();
-  } else {
-    alert('Logged in! Only XEN can edit.');
-  }
-};
-
-// === LOGOUT ===
-$('logout-btn').onclick = () => location.reload();
-
-// === FETCH & RENDER ===
+// === LOAD & RENDER ===
 async function fetchLeaderboard() {
   let data = await getFile(BOARD_FILE);
   if (!data) {
@@ -169,7 +120,7 @@ function renderAdminPanel() {
   list.innerHTML = '';
   leaderboard.forEach(p => {
     const div = document.createElement('div');
-    div.style = 'padding:10px;background:rgba(255,255,255,.03);border-radius:8px;margin:8px 0;display:flex;align-items:center;gap:10px;font-size:.9rem';
+    div.style = 'padding:12px;background:rgba(255,255,255,.03);border-radius:9px;margin:10px 0;display:flex;align-items:center;gap:12px;font-size:.95rem';
     div.innerHTML = `
       <strong>${e(p.name)}</strong> — ${p.score} pts
       <span style="flex:1"></span>
@@ -216,6 +167,9 @@ async function saveLeaderboard() {
   status.textContent = saved ? 'Saved!' : 'Save failed';
   status.style.color = saved ? '#6f6' : '#f66';
 }
+
+// === START ===
+checkIP();
 </script>
 </body>
 </html>
