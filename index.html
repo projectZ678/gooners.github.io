@@ -22,7 +22,6 @@
     .stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
     .star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:fall linear infinite}
     @keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0}10%{opacity:1}90%{opacity:.3}100%{transform:translateY(100vh) scale(.8);opacity:0}}
-
     #app{
       max-width:800px;width:100%;position:relative;z-index:1;
       backdrop-filter:blur(20px);background:var(--glass);
@@ -32,7 +31,6 @@
       transition:all .5s var(--transition);transform:scale(1.04);margin:auto
     }
     #app:hover{transform:scale(1.06) translateY(-6px);box-shadow:0 24px 80px rgba(0,0,0,.9),0 0 40px rgba(255,255,255,.12)}
-
     h1{
       text-align:center;font-weight:800;font-size:2.1rem;letter-spacing:1.8px;
       background:linear-gradient(90deg,#fff,#ccc);background-clip:text;-webkit-background-clip:text;color:transparent;
@@ -40,7 +38,6 @@
       animation:titleGlow 3s ease-in-out infinite alternate
     }
     @keyframes titleGlow{from{text-shadow:0 0 20px rgba(255,255,255,.3)}to{text-shadow:0 0 40px rgba(255,255,255,.5),0 0 80px rgba(255,255,255,.2)}}
-
     .tabs{display:flex;justify-content:center;gap:14px;margin-bottom:22px}
     .tab{
       padding:11px 24px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);
@@ -52,13 +49,13 @@
       box-shadow:0 0 18px rgba(255,255,255,.12);transform:translateY(-2px)
     }
     .tab:hover:not(.active){background:rgba(255,255,255,.1);transform:translateY(-2px)}
-
     .panel{display:none;animation:fadeIn .6s ease}
     .panel.active{display:block}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
+    /* ────── BIGGER LEADERBOARD (NOT SQUISHED) ────── */
     .table-container{
-      max-height:64vh;overflow-y:auto;border-radius:16px;margin-top:14px;
+      max-height:68vh;overflow-y:auto;border-radius:16px;margin-top:16px;
       border:1px solid var(--glass-border);background:rgba(0,0,0,.22);
       box-shadow:inset 0 6px 14px rgba(0,0,0,.4);scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent
     }
@@ -68,82 +65,45 @@
       background:var(--scrollbar);border-radius:6px;border:2px solid transparent;background-clip:content-box
     }
     .table-container::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-hover);background-clip:content-box}
-
     table{width:100%;border-collapse:collapse}
     thead{
       position:sticky;top:0;z-index:10;
       background:linear-gradient(180deg,rgba(25,25,25,.98),rgba(15,15,15,.95));
-      backdrop-filter:blur(12px);text-transform:uppercase;font-size:.72rem;letter-spacing:1.5px;
+      backdrop-filter:blur(12px);text-transform:uppercase;font-size:.75rem;letter-spacing:1.6px;
       color:var(--muted);border-bottom:1px solid var(--glass-border)
     }
-    th,td{padding:13px 15px;transition:all .3s var(--transition)}
+    th,td{padding:16px 18px;transition:all .3s var(--transition)}
     tr:hover{background:rgba(255,255,255,.09);transform:translateX(6px);box-shadow:0 8px 20px rgba(255,255,255,.08)}
-    .rank{font-weight:800;color:var(--accent);font-size:1.25rem;text-align:center;text-shadow:0 0 10px rgba(255,255,255,.4)}
-    .rank:nth-of-type(1){color:#ffd700;font-size:1.4rem;text-shadow:0 0 20px #ffd700}
-    .rank:nth-of-type(2){color:#c0c0c0;font-size:1.35rem;text-shadow:0 0 18px #c0c0c0}
-    .rank:nth-of-type(3){color:#cd7f32;font-size:1.32rem;text-shadow:0 0 16px #cd7f32}
-    .name{display:flex;align-items:center;gap:13px;font-size:.96rem}
-    .avatar{width:38px;height:38px;border-radius:11px;overflow:hidden;
-      box-shadow:0 0 15px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.15);flex-shrink:0;transition:transform .3s ease}
-    tr:hover .avatar{transform:scale(1.12) rotate(6deg)}
+    .rank{font-weight:800;color:var(--accent);font-size:1.35rem;text-align:center;text-shadow:0 0 12px rgba(255,255,255,.4)}
+    .rank:nth-of-type(1){color:#ffd700;font-size:1.55rem;text-shadow:0 0 24px #ffd700}
+    .rank:nth-of-type(2){color:#c0c0c0;font-size:1.5rem;text-shadow:0 0 20px #c0c0c0}
+    .rank:nth-of-type(3){color:#cd7f32;font-size:1.45rem;text-shadow:0 0 18px #cd7f32}
+    .name{display:flex;align-items:center;gap:16px;font-size:1rem}
+    .avatar{width:48px;height:48px;border-radius:14px;overflow:hidden;
+      box-shadow:0 0 18px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.15);flex-shrink:0;transition:transform .3s ease}
+    tr:hover .avatar{transform:scale(1.15) rotate(6deg)}
     .avatar img{width:100%;height:100%;object-fit:cover}
-    .discord-tag{display:flex;align-items:center;gap:6px;font-size:.79rem;color:var(--discord);margin-top:2px}
-    .discord-tag i{filter:drop-shadow(0 0 5px #5865f2);animation:discordPulse 2.5s infinite alternate}
-    @keyframes discordPulse{from{filter:drop-shadow(0 0 5px #5865f2)}to{filter:drop-shadow(0 0 12px #5865f2)}}
-    .empty-slot{color:#666;font-style:italic;font-size:.93rem}
+    .discord-tag{display:flex;align-items:center;gap:7px;font-size:.82rem;color:var(--discord);margin-top:3px}
+    .discord-tag i{filter:drop-shadow(0 0 6px #5865f2);animation:discordPulse 2.5s infinite alternate}
+    @keyframes discordPulse{from{filter:drop-shadow(0 0 6px #5865f2)}to{filter:drop-shadow(0 0 14px #5865f2)}}
+    .empty-slot{color:#666;font-style:italic;font-size:.96rem}
 
-    /* ────── MINI‑GAMES PAGE (same theme) ────── */
-    #games-panel .game{
+    /* ────── MINI‑GAMES GRID (ONLY GOON CLICKER) ────── */
+    .game-grid{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;
+      margin-top:20px
+    }
+    .game-box{
       background:rgba(0,0,0,.2);border:1px solid var(--glass-border);border-radius:18px;
-      padding:24px;margin:20px 0;text-align:center;backdrop-filter:blur(8px)
+      padding:24px;text-align:center;cursor:pointer;transition:.3s;backdrop-filter:blur(8px)
     }
-    #games-panel h3{
-      font-size:1.4rem;margin-bottom:12px;color:var(--goon);text-shadow:0 0 12px var(--goon)
+    .game-box:hover{
+      background:rgba(255,77,140,.15);transform:translateY(-6px);box-shadow:0 0 30px rgba(255,77,140,.3)
     }
-
-    /* Goon Clicker (Cookie‑Clicker style) */
-    #goon-clicker{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
-    #goon-big{
-      width:180px;height:180px;margin:auto;cursor:pointer;
-      background:radial-gradient(circle,var(--goon),#ff2a6d);border-radius:50%;
-      box-shadow:0 0 30px var(--goon);transition:transform .15s
+    .game-box h3{
+      font-size:1.35rem;margin-bottom:10px;color:var(--goon);text-shadow:0 0 12px var(--goon)
     }
-    #goon-big:active{transform:scale(.9)}
-    #goon-stats{font-size:1.1rem;margin:10px 0}
-    .upgrade{
-      background:rgba(255,255,255,.07);border:1px solid var(--glass-border);
-      border-radius:12px;padding:12px;margin:8px 0;cursor:pointer;
-      transition:.3s;display:flex;justify-content:space-between;align-items:center
-    }
-    .upgrade:hover{background:rgba(255,255,255,.14);transform:translateY(-2px)}
-    .upgrade.disabled{opacity:.5;cursor:not-allowed}
-    #prestige-btn{margin-top:20px;padding:12px 30px;background:#ffd700;color:#000;border:none;border-radius:12px;font-weight:600;cursor:pointer}
-    #prestige-btn:hover{background:#ffea80}
-
-    /* Stamina Hold (Rhythm) */
-    #stamina-zone{
-      width:100%;height:60px;background:#222;border-radius:12px;position:relative;overflow:hidden;
-      margin:20px 0;border:2px solid var(--stamina)
-    }
-    #stamina-bar{
-      height:100%;width:0%;background:var(--stamina);transition:width .05s linear;
-      box-shadow:0 0 20px var(--stamina)
-    }
-    #stamina-target{
-      position:absolute;top:0;left:40%;width:20%;height:100%;background:rgba(255,255,255,.2);
-      border-left:2px solid #fff;border-right:2px solid #fff
-    }
-
-    /* Edge Timer (Dodge) */
-    #edge-canvas{width:100%;height:300px;background:#111;border-radius:12px;margin:20px 0}
-    #edge-score{font-size:1.2rem;margin-top:8px}
-
-    .btn{
-      padding:13px 32px;margin:10px;background:rgba(255,77,140,.25);border:1px solid rgba(255,77,140,.5);
-      border-radius:14px;color:#ff4d8c;font-weight:600;cursor:pointer;transition:.3s;
-      backdrop-filter:blur(6px);box-shadow:0 0 20px rgba(255,77,140,.2)
-    }
-    .btn:hover{background:rgba(255,77,140,.4);color:#fff;transform:translateY(-3px);box-shadow:0 0 30px rgba(255,77,140,.4)}
+    .game-box p{font-size:.9rem;color:var(--muted);margin:8px 0}
 
     #loader{
       position:fixed;inset:0;background:var(--bg);
@@ -157,14 +117,12 @@
       animation:glow 2.5s ease-in-out infinite alternate
     }
     @keyframes glow{from{text-shadow:0 0 15px var(--accent),0 0 30px var(--accent);opacity:.9}to{text-shadow:0 0 50px var(--accent),0 0 100px var(--accent);opacity:1}}
-
     .last-updated{font-size:.77rem;color:var(--muted);text-align:center;margin:16px 0 10px;opacity:.8}
     footer{margin-top:10px;text-align:center;font-size:.75rem;color:var(--muted)}
     footer a{color:var(--muted);text-decoration:none;transition:.2s}
     footer a:hover{color:#ccc;text-decoration:underline}
     .credit{font-size:.69rem;color:#777;margin-top:7px;opacity:.6;font-style:italic}
     .hidden{display:none !important}
-
     @media(max-width:600px){
       #app{padding:20px;border-radius:20px}
       h1{font-size:1.9rem}
@@ -178,17 +136,13 @@
   </style>
 </head>
 <body>
-
 <div class="stars" id="stars"></div>
-
 <div id="loader" tabindex="0" role="button" aria-label="Enter">
   <div id="logo">GOONING</div>
   <div style="margin-top:18px;color:#999;font-size:1.15rem;">Click or press Enter</div>
 </div>
-
 <div id="app" class="hidden">
   <h1>Gooning Hub</h1>
-
   <div class="tabs">
     <div class="tab active" data-tab="leaderboard">Leaderboard</div>
     <div class="tab" data-tab="games">Mini‑Games</div>
@@ -201,41 +155,21 @@
     </div>
     <div class="table-container">
       <table id="board" class="hidden">
-        <thead><tr><th style="width:65px">Rank</th><th>Player</th></tr></thead>
+        <thead><tr><th style="width:70px">Rank</th><th>Player</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
     <div class="last-updated" id="updated"></div>
   </div>
 
-  <!-- ────── MINI‑GAMES PANEL (full page) ────── -->
+  <!-- ────── MINI‑GAMES PANEL (ONLY GOON CLICKER) ────── -->
   <div id="games" class="panel">
-
-    <!-- GOON CLICKER (Cookie‑Clicker) -->
-    <div class="game" id="goon-clicker">
-      <h3>Goon Clicker</h3>
-      <div id="goon-big"></div>
-      <div id="goon-stats">Goons: <span id="goons">0</span> | GPS: <span id="gps">0</span></div>
-      <div id="upgrades"></div>
-      <button id="prestige-btn" class="btn">Prestige (0)</button>
+    <div class="game-grid">
+      <a href="goon-clicker.html" class="game-box">
+        <h3>Goon Clicker</h3>
+        <p>Idle clicker — build your goon empire!</p>
+      </a>
     </div>
-
-    <!-- STAMINA HOLD (Rhythm) -->
-    <div class="game">
-      <h3>Stamina Hold</h3>
-      <p>Hold <kbd>SPACE</kbd> when the bar is in the green zone!</p>
-      <div id="stamina-zone"><div id="stamina-bar"></div><div id="stamina-target"></div></div>
-      <p>Score: <span id="stamina-score">0</span> | Combo: <span id="stamina-combo">0</span></p>
-    </div>
-
-    <!-- EDGE TIMER (Dodge) -->
-    <div class="game">
-      <h3>Edge Timer</h3>
-      <p>Use arrow keys to dodge the waves!</p>
-      <canvas id="edge-canvas"></canvas>
-      <p id="edge-score">Score: 0</p>
-    </div>
-
   </div>
 
   <footer>
@@ -246,7 +180,6 @@
 
 <script>
   const $ = id => document.getElementById(id);
-
   /* ────── STARFALL ────── */
   function createStar(){
     const s=document.createElement('div');s.className='star';
@@ -261,7 +194,6 @@
   }
   setInterval(createStar,300);
   for(let i=0;i<40;i++)setTimeout(createStar,i*100);
-
   /* ────── TABS ────── */
   document.querySelectorAll('.tab').forEach(tab=>{
     tab.addEventListener('click',()=>{
@@ -271,14 +203,12 @@
       $(tab.dataset.tab).classList.add('active');
     });
   });
-
   /* ────── DISCORD AVATAR ────── */
   function getDiscordAvatar(uid,hash,size=80){
     if(!uid||!hash)return'https://cdn.discordapp.com/embed/avatars/0.png';
     const ext=hash.startsWith('a_')?'gif':'webp';
     return`https://cdn.discordapp.com/avatars/${uid}/${hash}.${ext}?size=${size}`;
   }
-
   /* ────── LOADER ────── */
   function enterLeaderboard(){
     const l=$('loader');l.style.opacity='0';
@@ -287,7 +217,6 @@
   $('loader').addEventListener('click',enterLeaderboard);
   $('loader').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();enterLeaderboard();}});
   setTimeout(()=>$('loader').focus(),100);
-
   /* ────── LEADERBOARD FETCH ────── */
   async function fetchLeaderboard(){
     const loading=$('loading'),board=$('board'),rows=$('rows'),updated=$('updated');
@@ -297,10 +226,8 @@
       const data=await res.json();
       let list=Array.isArray(data)?data:(data.leaderboard||[]);
       const time=data.updated||new Date().toLocaleTimeString([],[{hour:'2-digit',minute:'2-digit'}]);
-
       const padded=[];
       for(let i=0;i<100;i++)padded.push(list[i]||{rank:i+1});
-
       rows.innerHTML=padded.map((p,idx)=>{
         const has=p.name||p.discord;
         const av=getDiscordAvatar(p.discordId,p.avatar);
@@ -317,108 +244,12 @@
           </td>
         </tr>`;
       }).join('');
-
       updated.textContent=`Last updated: ${time}`;
       loading.classList.add('hidden');board.classList.remove('hidden');
     }catch{
       loading.textContent='Failed to load leaderboard.';loading.style.color='#f88';
     }
   }
-
-  /* ────── MINI‑GAMES (full page) ────── */
-
-  /* ── GOON CLICKER (Cookie‑Clicker) ── */
-  let goons = 0, gps = 0, prestige = 0;
-  const upgrades = [
-    {id:'auto',name:'Auto‑Gooner',cost:15,inc:0.1,owned:0},
-    {id:'factory',name:'Goon Factory',cost:100,inc:1,owned:0},
-    {id:'portal',name:'Goon Portal',cost:1000,inc:10,owned:0}
-  ];
-  const big=$('goon-big'),goonDisp=$('goons'),gpsDisp=$('gps'),upDiv=$('upgrades'),prestigeBtn=$('prestige-btn');
-
-  big.addEventListener('click',()=>{goons++;update();});
-  function update(){
-    goonDisp.textContent=Math.floor(goons).toLocaleString();
-    gpsDisp.textContent=gps.toFixed(1);
-    prestigeBtn.textContent=`Prestige (${prestige})`;
-    upgrades.forEach(u=>{
-      const el=$(u.id);
-      el.querySelector('.cost').textContent=u.cost;
-      el.classList.toggle('disabled',goons<u.cost);
-    });
-  }
-  function buy(id){
-    const u=upgrades.find(x=>x.id===id);
-    if(goons>=u.cost){
-      goons-=u.cost;u.owned++;u.cost=Math.ceil(u.cost*1.15);
-      gps+=u.inc;update();
-    }
-  }
-  upgrades.forEach(u=>{
-    const div=document.createElement('div');div.className='upgrade';div.id=u.id;
-    div.innerHTML=`<span>${u.name} (${u.owned})</span><span class="cost">${u.cost}</span>`;
-    div.addEventListener('click',()=>buy(u.id));
-    upDiv.appendChild(div);
-  });
-  prestigeBtn.addEventListener('click',()=>{if(goons>=1e6){prestige++;goons=0;gps=0;upgrades.forEach(u=>{u.owned=0;u.cost=[15,100,1000][upgrades.indexOf(u)];});update();}});
-  setInterval(()=>{goons+=gps/10;update();},100);
-  update();
-
-  /* ── STAMINA HOLD (Rhythm) ── */
-  let staminaScore=0,combo=0,holding=false,barSpeed=2;
-  const bar=$('stamina-bar'),zone=$('stamina-zone'),scoreEl=$('stamina-score'),comboEl=$('stamina-combo');
-  function resetStamina(){
-    bar.style.width='0%';barSpeed=1+Math.random()*2;
-    setTimeout(startStamina,800+Math.random()*1200);
-  }
-  function startStamina(){
-    let w=0;
-    const int=setInterval(()=>{
-      w+=barSpeed;bar.style.width=w+'%';
-      if(w>=100){clearInterval(int);checkStamina();}
-    },20);
-  }
-  function checkStamina(){
-    const pos=parseFloat(bar.style.width);
-    if(pos>=40&&pos<=60){
-      const points=100+combo*10;
-      staminaScore+=points;combo++;
-      scoreEl.textContent=staminaScore;
-      comboEl.textContent=combo;
-    }else{combo=0;comboEl.textContent=0;}
-    resetStamina();
-  }
-  document.addEventListener('keydown',e=>{if(e.key===' '&&!holding){e.preventDefault();holding=true;startStamina();}});
-  document.addEventListener('keyup',e=>{if(e.key===' '&&holding){holding=false;}});
-  resetStamina();
-
-  /* ── EDGE TIMER (Dodge) ── */
-  const canvas=$('edge-canvas'),ctx=canvas.getContext('2d');
-  canvas.width=canvas.clientWidth;canvas.height=canvas.clientHeight;
-  let playerY=canvas.height/2,waves=[],edgeScore=0,gameOver=false;
-  function Wave(){this.x=canvas.width;this.y=Math.random()*canvas.height;this.speed=2+Math.random()*3;}
-  function spawnWave(){waves.push(new Wave());}
-  function draw(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='#ff4d8c';ctx.beginPath();ctx.arc(80,playerY,20,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#ff1a1a';
-    waves.forEach((w,i)=>{
-      ctx.beginPath();ctx.arc(w.x,w.y,25,0,Math.PI*2);ctx.fill();
-      w.x-=w.speed;
-      if(w.x<-50)waves.splice(i,1);
-      if(Math.hypot(w.x-80,w.y-playerY)<45){gameOver=true;}
-    });
-    if(!gameOver)requestAnimationFrame(draw);
-    else{$('edge-score').textContent=`Game Over! Score: ${edgeScore}`;}
-  }
-  document.addEventListener('keydown',e=>{
-    if(e.key==='ArrowUp'&&playerY>30)playerY-=15;
-    if(e.key==='ArrowDown'&&playerY<canvas.height-30)playerY+=15;
-  });
-  setInterval(spawnWave,1200);
-  setInterval(()=>{if(!gameOver){edgeScore++;$('edge-score').textContent=`Score: ${edgeScore}`;}},100);
-  draw();
-
   /* ────── HTML ESCAPE ────── */
   function e(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 </script>
