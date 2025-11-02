@@ -7,25 +7,55 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#050505;--glass:#111111ee;--glass-border:rgba(255,255,255,.08);--goon:#ff4d8c;--text:#f5f5f5;--muted:#aaa;font-family:'Inter',sans-serif}
+    :root{
+      --bg:#050505;--glass:#111111ee;--glass-border:rgba(255,255,255,.08);
+      --text:#f5f5f5;--muted:#aaaaaa;--accent:#fff;--goon:#ff4d8c;
+      font-family:'Inter',system-ui,sans-serif;
+    }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html,body{min-height:100vh;background:var(--bg);color:var(--text);display:flex;justify-content:center;align-items:center;padding:12px}
     .stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
     .star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:fall linear infinite}
     @keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0}10%{opacity:1}90%{opacity:.3}100%{transform:translateY(100vh) scale(.8);opacity:0}}
-    #app{max-width:900px;width:100%;backdrop-filter:blur(20px);background:var(--glass);border:1px solid var(--glass-border);border-radius:22px;padding:32px;box-shadow:0 16px 60px rgba(0,0,0,.8)}
-    h1{text-align:center;font-size:2.3rem;color:var(--goon);text-shadow:0 0 20px var(--goon);margin-bottom:20px}
-    .back{display:block;width:fit-content;margin:0 auto 20px;padding:10px 20px;background:rgba(255,255,255,.08);border:1px solid var(--glass-border);border-radius:12px;color:var(--muted);text-decoration:none;transition:.3s}
+    #app{
+      max-width:900px;width:100%;backdrop-filter:blur(20px);background:var(--glass);
+      border:1px solid var(--glass-border);border-radius:22px;padding:32px 28px;
+      box-shadow:0 16px 60px rgba(0,0,0,.8),inset 0 0 35px rgba(255,255,255,.05);
+    }
+    h1{
+      text-align:center;font-weight:800;font-size:2.3rem;letter-spacing:2px;
+      background:linear-gradient(90deg,#fff,#ccc);background-clip:text;-webkit-background-clip:text;color:transparent;
+      text-shadow:0 0 30px rgba(255,255,255,.3);margin-bottom:20px;
+    }
+    .back{
+      display:block;width:fit-content;margin:0 auto 24px;padding:10px 20px;
+      background:rgba(255,255,255,.06);border:1px solid var(--glass-border);
+      border-radius:14px;color:var(--muted);text-decoration:none;transition:.3s;
+    }
     .back:hover{background:rgba(255,255,255,.15);color:#fff}
     #game{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-    #big{width:200px;height:200px;margin:auto;cursor:pointer;background:radial-gradient(circle,var(--goon),#ff2a6d);border-radius:50%;box-shadow:0 0 35px var(--goon);transition:.15s;position:relative}
+    #big{
+      width:200px;height:200px;margin:auto;cursor:pointer;
+      background:radial-gradient(circle,var(--goon),#ff2a6d);border-radius:50%;
+      box-shadow:0 0 35px var(--goon);transition:transform .15s;position:relative
+    }
     #big:active{transform:scale(.9)}
     #stats{font-size:1.2rem;margin:12px 0;text-align:center}
-    .upgrade{background:rgba(255,255,255,.07);border:1px solid var(--glass-border);border-radius:12px;padding:14px;margin:10px 0;cursor:pointer;transition:.3s;display:flex;align-items:center;gap:12px}
+    .upgrade{
+      background:rgba(255,255,255,.07);border:1px solid var(--glass-border);
+      border-radius:12px;padding:14px;margin:10px 0;cursor:pointer;transition:.3s;
+      display:flex;align-items:center;gap:12px
+    }
     .upgrade:hover{background:rgba(255,255,255,.14);transform:translateY(-3px)}
     .upgrade.disabled{opacity:.5;cursor:not-allowed}
-    .upgrade-icon{width:36px;height:36px;background:var(--goon);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:800}
-    #prestige{margin-top:20px;padding:14px 32px;background:#ffd700;color:#000;border:none;border-radius:12px;font-weight:600;cursor:pointer}
+    .upgrade-icon{
+      width:36px;height:36px;background:var(--goon);border-radius:8px;
+      display:flex;align-items:center;justify-content:center;color:#000;font-weight:800
+    }
+    #prestige{
+      margin-top:20px;padding:14px 32px;background:#ffd700;color:#000;
+      border:none;border-radius:12px;font-weight:600;cursor:pointer
+    }
     #prestige:hover{background:#ffea80}
     #multiplier{display:inline-block;margin-left:8px;color:#ffd700;font-weight:600}
   </style>
@@ -44,9 +74,22 @@
     </div>
     <button id="prestige">Prestige (0)</button>
   </div>
+
   <script>
     const $ = id => document.getElementById(id);
-    function createStar(){const s=document.createElement('div');s.className='star';const sz=Math.random()*3+1;s.style.width=s.style.height=`${sz}px`;s.style.left=`${Math.random()*100}vw`;s.style.animationDuration=`${Math.random()*8+5}s`;s.style.animationDelay=`${Math.random()*5}s`;s.style.opacity=Math.random()*0.6+0.3;$('#stars').appendChild(s);setTimeout(()=>s.remove(),15000);}setInterval(createStar,300);for(let i=0;i<40;i++)setTimeout(createStar,i*100);
+    function createStar(){
+      const s=document.createElement('div');s.className='star';
+      const sz=Math.random()*3+1;
+      s.style.width=s.style.height=`${sz}px`;
+      s.style.left=`${Math.random()*100}vw`;
+      s.style.animationDuration=`${Math.random()*8+5}s`;
+      s.style.animationDelay=`${Math.random()*5}s`;
+      s.style.opacity=Math.random()*0.6+0.3;
+      $('#stars').appendChild(s);
+      setTimeout(()=>s.remove(),15000);
+    }
+    setInterval(createStar,300);
+    for(let i=0;i<40;i++)setTimeout(createStar,i*100);
 
     let goons=0,gps=0,prestige=0;
     const upgrades=[
@@ -79,12 +122,21 @@
     }
     upgrades.forEach(u=>{
       const div=document.createElement('div');div.className='upgrade';div.id=u.id;
-      div.innerHTML=`<div class="upgrade-icon"><i class="fas fa-${u.icon}"></i></div><div style="flex:1"><span>${u.name} (${u.owned})</span><span class="cost" style="float:right">${u.cost}</span></div>`;
+      div.innerHTML=`<div class="upgrade-icon"><i class="fas fa-${u.icon}"></i></div>
+        <div style="flex:1"><span>${u.name} (${u.owned})</span>
+        <span class="cost" style="float:right">${u.cost}</span></div>`;
       div.addEventListener('click',()=>buy(u.id));
       upDiv.appendChild(div);
     });
-    prestigeBtn.addEventListener('click',()=>{if(goons>=1e6){prestige++;goons=0;gps=0;upgrades.forEach(u=>{u.owned=0;u.cost=[15,100,1000][upgrades.indexOf(u)];});update();}});
-    setInterval(()=>{goons+=gps/10;update();},100);update();
+    prestigeBtn.addEventListener('click',()=>{
+      if(goons>=1e6){
+        prestige++;goons=0;gps=0;
+        upgrades.forEach(u=>{u.owned=0;u.cost=[15,100,1000][upgrades.indexOf(u)];});
+        update();
+      }
+    });
+    setInterval(()=>{goons+=gps/10;update();},100);
+    update();
   </script>
 </body>
 </html>
