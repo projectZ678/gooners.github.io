@@ -187,70 +187,6 @@
     #bot-status{color:#ccc;font-size:1rem;margin-top:12px;text-align:center}
     #ranked-cosmetics h4{font-size:1.3rem;margin:18px 0 12px;color:var(--gold);text-align:center}
 
-    /* RANKED BATTLE SCREEN */
-    #ranked-battle-overlay{
-      position:fixed;inset:0;background:#000;z-index:2000;opacity:0;pointer-events:none;
-      display:flex;align-items:center;justify-content:center;overflow:hidden;
-      transition:opacity .6s ease;
-    }
-    #ranked-battle-overlay.active{opacity:1;pointer-events:all}
-    .battle-arena{
-      width:90%;max-width:1000px;height:80vh;background:rgba(0,0,0,.85);border:2px solid var(--goon);
-      border-radius:24px;box-shadow:0 0 80px var(--goon);display:flex;flex-direction:column;
-      padding:32px;position:relative;overflow:hidden;
-    }
-    .battle-header{
-      text-align:center;margin-bottom:24px;font-size:2.2rem;font-weight:800;color:var(--goon);
-      text-shadow:0 0 30px var(--goon);letter-spacing:2px;
-    }
-    .battle-players{
-      display:flex;justify-content:space-around;align-items:center;flex:1;gap:40px;
-      position:relative;
-    }
-    .player-container{
-      flex:1;display:flex;flex-direction:column;align-items:center;gap:20px;
-    }
-    .player-goon{
-      width:220px;height:300px;cursor:pointer;position:relative;
-      box-shadow:0 0 60px var(--goon);border-radius:18px;overflow:visible;
-    }
-    .player-goon svg{width:100%;height:100%;filter:drop-shadow(0 0 18px var(--goon))}
-    .player-name{
-      font-size:1.6rem;font-weight:700;color:var(--accent);text-shadow:0 0 16px var(--accent);
-    }
-    .player-score{
-      font-size:2.8rem;font-weight:900;color:var(--goon);text-shadow:0 0 24px var(--goon);
-    }
-    .vs-text{
-      font-size:4rem;font-weight:900;color:var(--gold);text-shadow:0 0 40px var(--gold);
-      animation:pulseVS 1.5s infinite;
-    }
-    @keyframes pulseVS{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-    .progress-container{
-      width:100%;height:16px;background:#222;border-radius:8px;overflow:hidden;
-      box-shadow:inset 0 0 12px rgba(0,0,0,.6);
-    }
-    .progress-bar{
-      height:100%;background:var(--goon);width:0%;transition:width .3s ease;
-      box-shadow:0 0 20px var(--goon);
-    }
-    .round-info{
-      position:absolute;top:20px;left:50%;transform:translateX(-50%);
-      background:rgba(0,0,0,.7);padding:12px 28px;border-radius:16px;
-      font-size:1.3rem;font-weight:600;color:var(--gold);text-shadow:0 0 12px var(--gold);
-      border:1px solid var(--glass-border);
-    }
-    .battle-controls{
-      display:flex;gap:20px;justify-content:center;margin-top:20px;
-    }
-    .battle-btn{
-      padding:14px 36px;background:var(--gold);color:#000;border:none;border-radius:16px;
-      font-weight:600;font-size:1.1rem;cursor:pointer;min-width:160px;
-      box-shadow:0 0 22px var(--gold);transition:.3s;
-    }
-    .battle-btn:hover{transform:scale(1.07);background:#ffea80}
-    .battle-btn.disabled{opacity:.5;cursor:not-allowed}
-
     /* GOON-STYLE BADGES */
     #badges{display:flex;justify-content:center;gap:18px;margin-top:20px;flex-wrap:wrap}
     .badge{
@@ -343,8 +279,6 @@
       #goon-left{width:100%;max-width:400px}
       #goon-upgrades-wrapper{width:100%;padding-right:0;margin-right:0}
       #goon-bottom{grid-template-columns:1fr}
-      .battle-players{flex-direction:column;gap:30px}
-      .player-goon{width:180px;height:250px}
     }
     @media (max-width: 600px) {
       #app{padding:16px}
@@ -353,9 +287,6 @@
       #goon-big{width:240px;height:340px}
       #next-prestige-bar{width:260px}
       #goon-prestige{width:220px;font-size:1.1rem}
-      .battle-header{font-size:1.8rem}
-      .vs-text{font-size:3rem}
-      .player-score{font-size:2.2rem}
     }
   </style>
 </head>
@@ -458,17 +389,20 @@
                     <circle cx="82" cy="50" r="16" fill="none" stroke="#000" stroke-width="3"/>
                     <circle cx="118" cy="50" r="16" fill="none" stroke="#000" stroke-width="3"/>
                     <line x1="98" y1="50" x2="102" y2="50" stroke="#000" stroke-width="3"/>
+                    <!-- Cream on glasses -->
                     <circle cx="80" cy="48" r="3" fill="#fff8dc" opacity="0.8"/>
                     <circle cx="120" cy="52" r="2.5" fill="#fff8dc" opacity="0.8"/>
                   </g>
                   <g id="cosmetic-hat" class="cosmetic hidden">
                     <path d="M60 30 Q100 10 140 30 Q145 40 140 45 Q100 55 60 45 Q55 40 60 30" fill="#8B4513" stroke="#654321" stroke-width="2"/>
                     <rect x="70" y="45" width="60" height="8" fill="#654321"/>
+                    <!-- Cream on hat -->
                     <circle cx="100" cy="25" r="6" fill="#fff8dc" opacity="0.85"/>
                     <circle cx="95" cy="20" r="4" fill="#fff8dc" opacity="0.9"/>
                   </g>
                   <g id="cosmetic-aura" class="cosmetic hidden">
                     <ellipse cx="100" cy="160" rx="70" ry="100" fill="none" stroke="#ff69b4" stroke-width="4" opacity="0.6" filter="url(#goonAura)"/>
+                    <!-- Cream aura splats -->
                     <circle cx="70" cy="140" r="8" fill="#fff8dc" opacity="0.7" filter="url(#creamGlow)"/>
                     <circle cx="130" cy="180" r="7" fill="#fff8dc" opacity="0.7" filter="url(#creamGlow)"/>
                   </g>
@@ -512,38 +446,6 @@
       Auto‑refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
       <div class="credit">Site made by Xen</div>
     </footer>
-  </div>
-
-  <!-- RANKED BATTLE SCREEN -->
-  <div id="ranked-battle-overlay">
-    <div class="battle-arena">
-      <div class="battle-header">RANKED BATTLE</div>
-      <div class="round-info" id="round-info">Round 1/3 - First to 500</div>
-      <div class="battle-players">
-        <div class="player-container">
-          <div class="player-name">YOU</div>
-          <div class="player-goon" id="player-goon">
-            <!-- Clone of main character -->
-          </div>
-          <div class="player-score" id="player-score">0</div>
-          <div class="progress-container"><div class="progress-bar" id="player-progress"></div></div>
-        </div>
-        <div class="vs-text">VS</div>
-        <div class="player-container">
-          <div class="player-name">BOT</div>
-          <div class="player-goon" id="bot-goon">
-            <!-- Clone of main character -->
-          </div>
-          <div class="player-score" id="bot-score">0</div>
-          <div class="progress-container"><div class="progress-bar" id="bot-progress"></div></div>
-        </div>
-      </div>
-      <div class="battle-controls">
-        <button class="battle-btn" id="battle-start">START ROUND</button>
-        <button class="battle-btn disabled" id="battle-next">NEXT ROUND</button>
-        <button class="battle-btn" id="battle-quit">QUIT</button>
-      </div>
-    </div>
   </div>
 
   <div id="splat-overlay"></div>
@@ -634,12 +536,12 @@
     }
 
     /* GOON CLICKER - FULLY FIXED & CREAMY */
-    const SAVE_KEY = 'goonClickerSave_v12';
+    const SAVE_KEY = 'goonClickerSave_v11';
     let goons = 0, gps = 0, prestige = 0, rankedGPS = 0, threshold = 3000;
 
     // UPGRADES: First = +5 GPS, others scale
     const baseCosts = [50, 500, 5000, 50000, 500000, 5000000];
-    const incs = [5, 25, 125, 625, 3125, 15625];
+    const incs = [5, 25, 125, 625, 3125, 15625]; // First: +5, then 5× each
 
     const cosmetics = [
       {id:'stained-pants',name:'Creamed Underwear',cost:10000,icon:'tint',owned:false,apply:()=>{ $('#cosmetic-stained').classList.remove('hidden'); }},
@@ -688,7 +590,7 @@
         upgrades: upgrades.map(u=>({id:u.id,owned:u.owned,cost:u.cost})),
         cosmetics: cosmetics.map(c=>({id:c.id,owned:c.owned})),
         rankedCosmetics: rankedCosmetics.map(c=>({id:c.id,unlocked:c.unlocked})),
-        version:12
+        version:11
       };
       try {
         localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
@@ -702,7 +604,7 @@
       if(saved){
         try{
           const d = JSON.parse(saved);
-          if(d.version !== 12) return;
+          if(d.version !== 11) return;
           goons = Number(d.goons) || 0;
           gps = Number(d.gps) || 0;
           prestige = Number(d.prestige) || 0;
@@ -777,7 +679,7 @@
             goons -= u.cost;
             u.owned++;
             u.cost = Math.ceil(u.cost * 1.15);
-            gps += u.inc * getMult();
+            gps += u.inc * getMult(); // GPS increases by exact amount
             updateGoon();
             saveGame();
           }
@@ -858,6 +760,7 @@
 
     big.addEventListener('click',()=>{
       goons += 1 * getMult();
+      // Cream splat on click
       const splat = document.createElement('div');
       splat.className = 'cream-splat';
       splat.style.left = `${event.clientX - 20}px`;
@@ -881,134 +784,16 @@
       }
     });
 
-    /* RANKED BATTLE MODE */
-    const battleOverlay = $('ranked-battle-overlay');
-    const playerGoon = $('player-goon');
-    const botGoon = $('bot-goon');
-    const playerScoreEl = $('player-score');
-    const botScoreEl = $('bot-score');
-    const playerProgress = $('player-progress');
-    const botProgress = $('bot-progress');
-    const roundInfo = $('round-info');
-    const startBtn = $('battle-start');
-    const nextBtn = $('battle-next');
-    const quitBtn = $('battle-quit');
-
-    // Clone main character for battle
-    function cloneCharacter(){
-      const svg = $('#goon-big svg').cloneNode(true);
-      svg.style.width = '100%'; svg.style.height = '100%';
-      return svg;
-    }
-
-    let currentRound = 1;
-    let playerScore = 0, botScore = 0;
-    let playerBattleGoons = 0, botBattleGoons = 0;
-    let battleInterval;
-    const roundTargets = [500, 1500, 2000];
-    const bestOf = 3;
-    let playerWins = 0, botWins = 0;
-
-    function startBattle(){
-      playerBattleGoons = 0; botBattleGoons = 0;
-      playerScoreEl.textContent = '0';
-      botScoreEl.textContent = '0';
-      playerProgress.style.width = '0%';
-      botProgress.style.width = '0%';
-      startBtn.classList.add('disabled');
-      nextBtn.classList.add('disabled');
-
-      const target = roundTargets[currentRound - 1];
-      roundInfo.textContent = `Round ${currentRound}/3 - First to ${target}`;
-
-      // Clone characters
-      playerGoon.innerHTML = ''; botGoon.innerHTML = '';
-      playerGoon.appendChild(cloneCharacter());
-      botGoon.appendChild(cloneCharacter());
-
-      // Player clicks
-      playerGoon.style.cursor = 'pointer';
-      const playerClick = () => {
-        playerBattleGoons += 1 * getMult();
-        updateBattleScores(target);
-      };
-      playerGoon.addEventListener('click', playerClick);
-
-      // Bot AI
-      const botGPS = Math.max(5, gps * (0.7 + Math.random() * 0.6)); // 70-130% of your GPS
-      battleInterval = setInterval(() => {
-        botBattleGoons += botGPS / 30; // 30 FPS
-        updateBattleScores(target);
-      }, 33);
-
-      function updateBattleScores(target){
-        playerScoreEl.textContent = Math.floor(playerBattleGoons);
-        botScoreEl.textContent = Math.floor(botBattleGoons);
-        playerProgress.style.width = `${Math.min(100, (playerBattleGoons / target) * 100)}%`;
-        botProgress.style.width = `${Math.min(100, (botBattleGoons / target) * 100)}%`;
-
-        if(playerBattleGoons >= target || botBattleGoons >= target){
-          clearInterval(battleInterval);
-          playerGoon.removeEventListener('click', playerClick);
-          setTimeout(() => endRound(playerBattleGoons >= target), 800);
-        }
-      }
-    }
-
-    function endRound(playerWon){
-      if(playerWon){
-        playerWins++;
-        playerScore++;
-      } else {
-        botWins++;
-        botScore++;
-      }
-
-      if(currentRound < 3){
-        nextBtn.classList.remove('disabled');
-      } else {
-        // Final result
-        const winner = playerWins >= 2 ? 'YOU WIN!' : 'BOT WINS!';
-        const gpsGain = playerWins >= 2 ? 50 + prestige * 15 : -15;
-        rankedGPS = Math.max(0, rankedGPS + gpsGain);
-        setTimeout(() => {
-          alert(`${winner}\nRanked GPS: ${gpsGain > 0 ? '+' : ''}${gpsGain} → ${rankedGPS.toFixed(1)}`);
-          endBattle();
-        }, 600);
-      }
-    }
-
-    function nextRound(){
-      currentRound++;
-      playerScore = 0; botScore = 0;
-      nextBtn.classList.add('disabled');
-      startBtn.classList.remove('disabled');
-    }
-
-    function endBattle(){
-      battleOverlay.classList.remove('active');
-      updateGoon();
-      saveGame();
-    }
-
-    // Button handlers
     $('#bot-battle').addEventListener('click', () => {
-      currentRound = 1; playerWins = 0; botWins = 0;
-      playerScore = 0; botScore = 0;
-      battleOverlay.classList.add('active');
-      startBtn.classList.remove('disabled');
-      nextBtn.classList.add('disabled');
+      botStatus.textContent = 'Battling bot...';
+      setTimeout(() => {
+        const win = Math.random() > 0.28;
+        rankedGPS += win ? 22 + prestige*6 : -8;
+        rankedGPS = Math.max(0, rankedGPS);
+        botStatus.textContent = win ? 'Win! +Ranked GPS' : 'Loss! -Ranked GPS';
+        updateGoon(); saveGame();
+      }, 2800);
     });
-
-    startBtn.addEventListener('click', () => {
-      if(!startBtn.classList.contains('disabled')) startBattle();
-    });
-
-    nextBtn.addEventListener('click', () => {
-      if(!nextBtn.classList.contains('disabled')) nextRound();
-    });
-
-    quitBtn.addEventListener('click', endBattle);
 
     setInterval(saveGame, 2000);
     document.addEventListener('visibilitychange', () => {
@@ -1016,7 +801,7 @@
     });
 
     setInterval(() => {
-      if(gps > 0 && !battleOverlay.classList.contains('active')){
+      if(gps > 0){
         const increment = gps / 3;
         goons += increment;
         updateGoon();
