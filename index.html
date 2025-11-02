@@ -15,7 +15,7 @@
       --goon:#ff4d8c;--stamina:#4dff88;
       font-family:'Inter',system-ui,sans-serif;
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;outline:none;user-select:none}
     html,body{min-height:100vh;background:var(--bg);overflow:hidden;color:var(--text);
       display:flex;justify-content:center;align-items:center;padding:12px}
     .stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
@@ -37,7 +37,7 @@
       text-shadow:0 0 32px rgba(255,255,255,.3);margin-bottom:28px;
       animation:titleGlow 3s ease-in-out infinite alternate
     }
-    @keyframes titleGlow{from{text-shadow:0 0 20px rgba(255,255,255,.3)}to{text-shadow:0 0 40px rgba(255,255,255,.5),0 0 80px rgba(255,255,255,.2)}}
+    @keyframes titleGlow{from{text-shadow:0 0 20px var(--accent)}to{text-shadow:0 0 40px var(--accent),0 0 80px var(--accent)}}
     .tabs{display:flex;justify-content:center;gap:18px;margin-bottom:28px}
     .tab{
       padding:13px 32px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);
@@ -53,7 +53,7 @@
     .panel.active{display:block}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-    /* ────── LEADERBOARD ────── */
+    /* LEADERBOARD */
     .table-container{
       flex:1;overflow-y:auto;border-radius:16px;margin-top:18px;
       border:1px solid var(--glass-border);background:rgba(0,0,0,.22);
@@ -84,18 +84,18 @@
     tr:hover .avatar{transform:scale(1.2) rotate(6deg)}
     .avatar img{width:100%;height:100%;object-fit:cover}
     .discord-tag{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--discord);margin-top:4px}
-    .discord-tag i{filter:drop-shadow 0 0 7px #5865f2;animation:discordPulse 2.5s infinite alternate}
+    .discord-tag i{filter:drop-shadow(0 0 7px #5865f2);animation:discordPulse 2.5s infinite alternate}
     @keyframes discordPulse{from{filter:drop-shadow(0 0 7px #5865f2)}to{filter:drop-shadow(0 0 15px #5865f2)}}
     .empty-slot{color:#666;font-style:italic;font-size:1.02rem}
 
-    /* ────── GOON CLICKER ────── */
-    #goon-game{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;position:relative}
-    #goon-left{display:flex;flex-direction:column;align-items:center}
-    #next-prestige-bar{background:rgba(0,0,0,.5);padding:8px 16px;border-radius:12px;font-size:.9rem;color:#fff;border:1px solid var(--glass-border);margin-bottom:16px;z-index:10;align-self:center}
-    #prestige-progress{width:200px;height:8px;background:#333;border-radius:4px;overflow:hidden;margin-top:4px}
+    /* GOON CLICKER */
+    #goon-game{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;height:100%;position:relative}
+    #goon-left{display:flex;flex-direction:column;align-items:center;max-width:100%}
+    #next-prestige-bar{background:rgba(0,0,0,.5);padding:10px 20px;border-radius:12px;font-size:.95rem;color:#fff;border:1px solid var(--glass-border);margin-bottom:16px;z-index:10;align-self:center;width:260px;text-align:center}
+    #prestige-progress{width:100%;height:10px;background:#333;border-radius:5px;overflow:hidden;margin-top:6px}
     #prestige-fill{height:100%;background:var(--goon);width:0%;transition:width .3s ease}
     #goon-big{
-      width:220px;height:320px;cursor:pointer;position:relative;
+      width:240px;height:340px;cursor:pointer;position:relative;
       background:#111;border-radius:16px;overflow:hidden;
       box-shadow:0 0 50px var(--goon),0 0 100px rgba(255,77,140,.6);
       transition:transform .15s
@@ -107,23 +107,23 @@
     #goon-big:active .arm{animation-duration:.2s}
     #goon-big .head{animation:goonFace 4s ease-in-out infinite}
     @keyframes goonFace{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
-    #goon-stats{font-size:1.3rem;margin:16px 0;text-align:center;font-weight:600;color:var(--goon)}
+    #goon-stats{font-size:1.35rem;margin:18px 0;text-align:center;font-weight:600;color:var(--goon);width:100%}
     #goon-stats span{color:var(--accent)}
     #goon-prestige{
-      margin-top:20px;padding:16px 36px;background:#ffd700;color:#000;
-      border:none;border-radius:12px;font-weight:600;cursor:pointer;font-size:1.1rem;transition:.3s
+      margin-top:12px;padding:14px 40px;background:#ffd700;color:#000;
+      border:none;border-radius:12px;font-weight:600;cursor:pointer;font-size:1.15rem;transition:.3s;width:220px
     }
     #goon-prestige:hover{background:#ffea80;transform:scale(1.05)}
     #goon-prestige.disabled{opacity:.5;cursor:not-allowed}
     .goon-upgrade{
       background:rgba(255,255,255,.07);border:1px solid var(--glass-border);
-      border-radius:12px;padding:16px;margin:12px 0;cursor:pointer;transition:.3s;
+      border-radius:12px;padding:14px;margin:8px 0;cursor:pointer;transition:.25s;
       display:flex;align-items:center;gap:14px;font-size:1rem
     }
-    .goon-upgrade:hover{background:rgba(255,255,255,.14);transform:translateY(-3px);box-shadow:0 6px 16px rgba(255,255,255,.1)}
+    .goon-upgrade:hover{background:rgba(255,255,255,.14);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,255,255,.1)}
     .goon-upgrade.disabled{opacity:.5;cursor:not-allowed}
     .goon-upgrade-icon{
-      width:40px;height:40px;background:var(--goon);color:#000;border-radius:10px;
+      width:38px;height:38px;background:var(--goon);color:#000;border-radius:10px;
       display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem
     }
     #goon-multiplier{display:inline-block;margin-left:10px;color:var(--goon);font-weight:700}
@@ -133,31 +133,29 @@
     .sticky{animation:sticky 2s ease-in-out forwards}
     @keyframes sticky{0%{filter:blur(20px)}100%{filter:blur(0);opacity:.6}}
 
-    /* RIGHT SIDE: UPGRADES + SHOP + RANKED */
-    #goon-right{flex:1;display:flex;flex-direction:column;height:100%;position:relative}
-    #right-content{flex:1;overflow-y:auto;padding:0 12px 12px 0;margin-right:-12px;scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent;display:flex;flex-direction:column;gap:20px}
-    #right-content::-webkit-scrollbar{width:8px}
+    /* RIGHT SIDE */
+    #goon-right{flex:1;display:flex;flex-direction:column;height:100%;position:relative;overflow:hidden}
+    #right-content{flex:1;overflow-y:auto;padding:0 16px 16px 0;margin-right:-16px;scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent;display:flex;flex-direction:column;gap:24px}
+    #right-content::-webkit-scrollbar{width:9px}
     #right-content::-webkit-scrollbar-track{background:transparent}
     #right-content::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:4px}
     #right-content::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-hover)}
-    #goon-upgrades{flex:1;display:flex;flex-direction:column}
-    #cosmetic-shop, #ranked-mode{padding:20px;background:rgba(0,0,0,.3);border-radius:16px;border:1px solid var(--glass-border)}
-    #cosmetic-shop h3, #ranked-mode h3{font-size:1.4rem;margin-bottom:16px;color:var(--goon);text-shadow:0 0 12px var(--goon)}
+    #goon-upgrades, #cosmetic-shop, #ranked-mode{padding:20px;background:rgba(0,0,0,.3);border-radius:16px;border:1px solid var(--glass-border);min-height:120px}
+    #cosmetic-shop h3, #ranked-mode h3{font-size:1.35rem;margin-bottom:14px;color:var(--goon);text-shadow:0 0 12px var(--goon)}
     #ranked-mode{border-color:#ffd700}
     #ranked-mode h3{color:#ffd700;text-shadow:0 0 12px #ffd700}
     .cosmetic-item, .ranked-cosmetic{
       background:rgba(255,255,255,.07);border:1px solid var(--glass-border);
-      border-radius:12px;padding:14px;margin:10px 0;cursor:pointer;transition:.3s;
-      display:flex;align-items:center;gap:14px;font-size:1rem
+      border-radius:12px;padding:12px;margin:8px 0;cursor:pointer;transition:.25s;
+      display:flex;align-items:center;gap:12px;font-size:.95rem
     }
-    .cosmetic-item:hover, .ranked-cosmetic:hover{background:rgba(255,255,255,.14);transform:translateY(-3px)}
-    .cosmetic-item.locked, .cosmetic-item.disabled{opacity:.5;cursor:not-allowed}
-    .cosmetic-item.unlocked{background:#ffd700;color:#000}
-    .ranked-cosmetic.unlocked{background:#ffd700;color:#000}
-    .cosmetic-icon{width:40px;height:40px;background:var(--goon);color:#000;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
-    #ranked-gps{font-size:1.2rem;margin-bottom:12px;color:#ffd700}
-    #bot-battle{margin-bottom:12px;padding:10px 20px;background:#ffd700;color:#000;border:none;border-radius:12px;cursor:pointer}
-    #bot-status{color:#ccc;font-size:.95rem}
+    .cosmetic-item:hover, .ranked-cosmetic:hover{background:rgba(255,255,255,.14);transform:translateY(-2px)}
+    .cosmetic-item.locked{opacity:.5;cursor:not-allowed}
+    .cosmetic-item.unlocked, .ranked-cosmetic.unlocked{background:#ffd700;color:#000}
+    .cosmetic-icon{width:38px;height:38px;background:var(--goon);color:#000;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.15rem}
+    #ranked-gps{font-size:1.15rem;margin-bottom:10px;color:#ffd700}
+    #bot-battle{margin:10px 0;padding:10px 20px;background:#ffd700;color:#000;border:none;border-radius:12px;cursor:pointer;font-size:1rem}
+    #bot-status{color:#ccc;font-size:.9rem;margin-top:8px}
 
     #loader{
       position:fixed;inset:0;background:var(--bg);
@@ -170,7 +168,7 @@
       background-clip:text;-webkit-background-clip:text;color:transparent;
       animation:glow 2.5s ease-in-out infinite alternate
     }
-    @keyframes glow{from{text-shadow:0 0 15px var(--accent),0 0 30px var(--accent);opacity:.9}to{text-shadow:0 0 50px var(--accent),0 0 100px var(--accent);opacity:1}}
+    @keyframes glow{from{text-shadow:0 0 15px var(--accent)}to{text-shadow:0 0 50px var(--accent),0 0 100px var(--accent)}}
     .last-updated{font-size:.8rem;color:var(--muted);text-align:center;margin:20px 0 14px;opacity:.8}
     footer{margin-top:14px;text-align:center;font-size:.77rem;color:var(--muted)}
     footer a{color:var(--muted);text-decoration:none;transition:.2s}
@@ -216,7 +214,6 @@
         </div>
         <div id="goon-big">
           <svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
-            <!-- Naked gooner: only underwear, muscular, detailed -->
             <defs>
               <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#fdb"/>
@@ -235,47 +232,31 @@
                 <path d="M0 30 Q10 25 20 30 T40 30" fill="none" stroke="#555" stroke-width="3"/>
               </pattern>
             </defs>
-            <!-- Hair (messy)AMENTO -->
             <path d="M65 35 Q80 15 100 10 Q120 15 135 35 Q140 55 135 65 Q100 75 65 65 Q60 55 65 35" fill="url(#hairGrad)" stroke="#210" stroke-width="2"/>
-            <!-- Head -->
             <ellipse class="head" cx="100" cy="55" rx="38" ry="42" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-            <!-- Jawline -->
             <path d="M70 65 Q100 85 130 65" fill="none" stroke="#cca" stroke-width="3"/>
-            <!-- Eyes (goon stare) -->
             <ellipse cx="82" cy="50" rx="12" ry="8" fill="#fff"/>
             <ellipse cx="118" cy="50" rx="12" ry="8" fill="#fff"/>
             <circle cx="85" cy="52" r="5" fill="#08d"/>
             <circle cx="121" cy="52" r="5" fill="#08d"/>
-            <!-- Nose -->
             <path d="M100 55 Q95 60 100 65" fill="none" stroke="#cca" stroke-width="2"/>
-            <!-- Mouth (parted) -->
             <path d="M85 72 Q100 78 115 72" fill="none" stroke="#f68" stroke-width="4"/>
-            <!-- Neck -->
             <path d="M80 90 Q100 95 120 90 L125 110 Q100 120 75 110 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-            <!-- Torso (buff, naked) -->
             <path d="M65 110 Q50 140 65 200 Q75 230 100 230 Q125 230 135 200 Q150 140 135 110 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-            <!-- Pecs -->
             <ellipse cx="85" cy="130" rx="25" ry="18" fill="#fdb"/>
             <ellipse cx="115" cy="130" rx="25" ry="18" fill="#fdb"/>
-            <!-- Nipples -->
             <circle cx="85" cy="135" r="5" fill="#c99"/>
             <circle cx="115" cy="135" r="5" fill="#c99"/>
-            <!-- Abs -->
             <rect x="75" y="145" width="50" height="70" fill="url(#absPattern)" opacity=".8"/>
-            <!-- Underwear (briefs) -->
-            <path d="M70 200 Q100 210 130 200 Q135 220 130 230 L70 230 Q65 220 70 200 Z" fill="url(#underwearGrad)" stroke="#ccc" stroke-width="2"/>
-            <!-- Bulge -->
+            <path id="underwear-path" d="M70 200 Q100 210 130 200 Q135 220 130 230 L70 230 Q65 220 70 200 Z" fill="url(#underwearGrad)" stroke="#ccc" stroke-width="2"/>
             <ellipse cx="100" cy="215" rx="20" ry="14" fill="#eee" opacity=".9"/>
-            <!-- Arm (stroking) -->
             <g class="arm">
               <path d="M130 120 Q155 115 170 125 Q180 135 175 145 Q165 140 155 135 L140 130 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
               <circle cx="178" cy="138" r="20" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
               <path d="M172 145 Q178 155 184 145" fill="none" stroke="#cca" stroke-width="10"/>
             </g>
-            <!-- Legs (naked) -->
             <ellipse cx="82" cy="250" rx="20" ry="45" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
             <ellipse cx="118" cy="250" rx="20" ry="45" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-            <!-- Feet -->
             <rect x="70" y="285" width="24" height="15" rx="6" fill="#fdb"/>
             <rect x="106" y="285" width="24" height="15" rx="6" fill="#fdb"/>
           </svg>
@@ -315,7 +296,7 @@
 <script>
   const $ = id => document.getElementById(id);
 
-  /* ────── STARFALL ────── */
+  /* STARFALL */
   function createStar(){
     const s=document.createElement('div');s.className='star';
     const sz=Math.random()*3+1;
@@ -330,7 +311,7 @@
   setInterval(createStar,300);
   for(let i=0;i<40;i++)setTimeout(createStar,i*100);
 
-  /* ────── TABS ────── */
+  /* TABS */
   document.querySelectorAll('.tab').forEach(tab=>{
     tab.addEventListener('click',()=>{
       document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -340,14 +321,14 @@
     });
   });
 
-  /* ────── DISCORD AVATAR ────── */
+  /* DISCORD AVATAR */
   function getDiscordAvatar(uid,hash,size=80){
     if(!uid||!hash)return'https://cdn.discordapp.com/embed/avatars/0.png';
     const ext=hash.startsWith('a_')?'gif':'webp';
     return`https://cdn.discordapp.com/avatars/${uid}/${hash}.${ext}?size=${size}`;
   }
 
-  /* ────── LOADER ────── */
+  /* LOADER */
   function enterLeaderboard(){
     const l=$('loader');l.style.opacity='0';
     setTimeout(()=>{l.classList.add('hidden');$('app').classList.remove('hidden');fetchLeaderboard();setInterval(fetchLeaderboard,90000);},1000);
@@ -356,7 +337,7 @@
   $('loader').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();enterLeaderboard();}});
   setTimeout(()=>$('loader').focus(),100);
 
-  /* ────── LEADERBOARD FETCH ────── */
+  /* LEADERBOARD FETCH */
   async function fetchLeaderboard(){
     const loading=$('loading'),board=$('board'),rows=$('rows'),updated=$('updated');
     try{
@@ -390,10 +371,11 @@
     }
   }
 
-  /* ────── GOON CLICKER ────── */
-  const SAVE_KEY = 'goonClickerSave_v5';
-  let goons = 0, gps = 0, prestige = 0, rankedGPS = 0;
-  let threshold = 3000;
+  /* GOON CLICKER */
+  const SAVE_KEYS = ['goonClickerSave_v5','goonClickerSave_v4','goonClickerSave_v3','goonClickerSave_v2','goonClickerSave'];
+  const SAVE_KEY = 'goonClickerSave_v6'; // New stable key
+  let goons = 0, gps = 0, prestige = 0, rankedGPS = 0, threshold = 3000;
+  let clickTimeout = null;
   const baseCosts = [25,110,1010,8010,50010,200010];
   const incs = [0.1,1,10,50,200,1000];
   const cosmetics = [
@@ -425,27 +407,59 @@
   function calcThreshold(){return Math.floor(3000 * Math.pow(1.8, prestige));}
 
   function saveGame(){
-    localStorage.setItem(SAVE_KEY, JSON.stringify({
+    const saveData = {
       goons, gps, prestige, threshold, rankedGPS,
       upgrades: upgrades.map(u=>({id:u.id,owned:u.owned,cost:u.cost})),
       cosmetics: cosmetics.map(c=>({id:c.id,owned:c.owned})),
-      rankedCosmetics: rankedCosmetics.map(c=>({id:c.id,unlocked:c.unlocked}))
-    }));
+      rankedCosmetics: rankedCosmetics.map(c=>({id:c.id,unlocked:c.unlocked})),
+      version:6
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
   }
 
   function loadGame(){
-    const saved = localStorage.getItem(SAVE_KEY) || localStorage.getItem('goonClickerSave_v4') || localStorage.getItem('goonClickerSave_v3');
-    if(saved){
-      const d = JSON.parse(saved);
-      goons = d.goons || 0;
-      gps = d.gps || 0;
-      prestige = d.prestige || 0;
-      rankedGPS = d.rankedGPS || 0;
-      threshold = d.threshold || calcThreshold();
-      (d.upgrades||[]).forEach(u=> {const x=upgrades.find(v=>v.id===u.id); if(x){x.owned=u.owned||0; x.cost=u.cost||baseCosts[upgrades.indexOf(x)];}});
-      gps = upgrades.reduce((a,u)=>a + u.inc * u.owned * getMult(),0);
-      (d.cosmetics||[]).forEach(c=> {const x=cosmetics.find(v=>v.id===c.id); if(x) x.owned=c.owned;});
-      (d.rankedCosmetics||[]).forEach(c=> {const x=rankedCosmetics.find(v=>v.id===c.id); if(x) x.unlocked=c.unlocked;});
+    let loaded = false;
+    for(const key of SAVE_KEYS){
+      const saved = localStorage.getItem(key);
+      if(saved){
+        try{
+          const d = JSON.parse(saved);
+          goons = Number(d.goons) || 0;
+          gps = Number(d.gps) || 0;
+          prestige = Number(d.prestige) || 0;
+          rankedGPS = Number(d.rankedGPS) || 0;
+          threshold = Number(d.threshold) || calcThreshold();
+          if(d.upgrades){
+            d.upgrades.forEach(u=>{
+              const x = upgrades.find(v=>v.id===u.id);
+              if(x){
+                x.owned = Number(u.owned) || 0;
+                x.cost = Number(u.cost) || baseCosts[upgrades.indexOf(x)];
+              }
+            });
+          }
+          gps = upgrades.reduce((a,u)=>a + u.inc * u.owned * getMult(),0);
+          if(d.cosmetics || d.ownedCosmetics){
+            const cos = d.cosmetics || d.ownedCosmetics || [];
+            cos.forEach(id=>{
+              const c = cosmetics.find(v=>v.id===id || v.id===id.id);
+              if(c) c.owned = true;
+            });
+          }
+          if(d.rankedCosmetics || d.unlockedRanked){
+            const rc = d.rankedCosmetics || d.unlockedRanked || [];
+            rc.forEach(id=>{
+              const c = rankedCosmetics.find(v=>v.id===id || v.id===id.id);
+              if(c) c.unlocked = true;
+            });
+          }
+          loaded = true;
+          break;
+        }catch(e){console.error('Bad save',key,e);}
+      }
+    }
+    if(!loaded){
+      threshold = calcThreshold();
     }
   }
 
@@ -458,7 +472,7 @@
     prestigeBtn.textContent = `Goonstiege (${prestige})`;
     prestigeBtn.classList.toggle('disabled', goons < threshold);
     nextThresh.textContent = threshold.toLocaleString();
-    progFill.style.width = `${Math.min(100, goons / threshold * 100)}%`;
+    progFill.style.width = `${Math.min(100, (goons / threshold) * 100)}%`;
 
     upDiv.innerHTML = '';
     upgrades.forEach(u => {
@@ -471,7 +485,19 @@
           <div style="font-size:.9rem;color:#ccc">Owned: <span class="owned">${u.owned}</span> | Cost: <span class="cost">${u.cost.toLocaleString()}</span> | +<span class="inc">${(u.inc*getMult()).toFixed(1)}</span>/s</div>
         </div>
       `;
-      div.addEventListener('click', () => {if(goons >= u.cost){goons -= u.cost; u.owned++; u.cost = Math.ceil(u.cost * 1.15); gps += u.inc * getMult(); updateGoon();}});
+      div.addEventListener('click', () => {
+        if(goons >= u.cost && !div.classList.contains('disabled')){
+          clearTimeout(clickTimeout);
+          div.style.transition = 'transform .1s';
+          div.style.transform = 'scale(0.95)';
+          clickTimeout = setTimeout(()=>{div.style.transform='';},100);
+          goons -= u.cost;
+          u.owned++;
+          u.cost = Math.ceil(u.cost * 1.15);
+          gps += u.inc * getMult();
+          updateGoon();
+        }
+      });
       upDiv.appendChild(div);
     });
 
@@ -484,10 +510,21 @@
         <div class="cosmetic-icon"><i class="fas fa-${c.icon}"></i></div>
         <div style="flex:1">
           <div style="font-weight:600">${c.name}</div>
-          <div style="font-size:.9rem;color:#ccc">Cost: ${c.cost.toLocaleString()}</div>
+          <div style="font-size:.85rem;color:#ccc">Cost: ${c.cost.toLocaleString()} Goons</div>
         </div>
       `;
-      div.addEventListener('click', () => {if(!c.owned && goons >= c.cost){goons -= c.cost; c.owned=true; applyCosmetics(); updateGoon();}});
+      div.addEventListener('click', () => {
+        if(!c.owned && goons >= c.cost){
+          clearTimeout(clickTimeout);
+          div.style.transition = 'transform .1s';
+          div.style.transform = 'scale(0.95)';
+          clickTimeout = setTimeout(()=>{div.style.transform='';},100);
+          goons -= c.cost;
+          c.owned = true;
+          applyCosmetics();
+          updateGoon();
+        }
+      });
       cosmeticsList.appendChild(div);
     });
 
@@ -501,7 +538,7 @@
         <div class="cosmetic-icon"><i class="fas fa-${c.icon}"></i></div>
         <div style="flex:1">
           <div style="font-weight:600">${c.name}</div>
-          <div style="font-size:.9rem;color:#ccc">${c.unlocked?'Unlocked':`Need ${c.threshold} Ranked GPS`}</div>
+          <div style="font-size:.85rem;color:#ccc">${c.unlocked?'Unlocked':`Need ${c.threshold} Ranked GPS`}</div>
         </div>
       `;
       rankedList.appendChild(div);
@@ -512,32 +549,37 @@
   }
 
   function applyCosmetics(){
-    // Example: stain underwear if owned
-    const underwear = document.querySelector('#underwearGrad stop:first-child');
-    if(cosmetics.find(c=>c.id==='stained-pants')?.owned && underwear){
-      underwear.setAttribute('stop-color', '#fffa');
+    const grad = document.querySelector('#underwearGrad');
+    if(grad && cosmetics.find(c=>c.id==='stained-pants')?.owned){
+      grad.innerHTML = '<stop offset="0%" stop-color="#fffa"/><stop offset="100%" stop-color="#ffee"/>';
     }
-    // Add more visual effects here
   }
 
   function bustAnimation(){
     overlay.innerHTML = '';
     overlay.style.opacity = 1;
-    for(let i=0;i<50;i++){
+    for(let i=0;i<60;i++){
       const s = document.createElement('div');
       s.className='splat';
       s.style.left=`${Math.random()*100}%`;
       s.style.top=`${Math.random()*100}%`;
-      s.style.width=s.style.height=`${Math.random()*200+80}px`;
+      s.style.width=s.style.height=`${Math.random()*220+90}px`;
       s.style.background='#fff';
-      s.style.filter='blur(30px)';
-      s.style.animationDelay=`${Math.random()*0.3}s`;
+      s.style.filter='blur(35px)';
+      s.style.animationDelay=`${Math.random()*0.4}s`;
       overlay.appendChild(s);
     }
-    setTimeout(()=>{overlay.style.opacity=0; overlay.innerHTML='';},2500);
+    setTimeout(()=>{overlay.style.opacity=0; overlay.innerHTML='';},2800);
   }
 
-  big.addEventListener('click',()=>{goons += 1 * getMult(); updateGoon();});
+  big.addEventListener('click',()=>{ 
+    goons += 1 * getMult(); 
+    updateGoon();
+    clearTimeout(clickTimeout);
+    big.style.transition = 'transform .1s';
+    big.style.transform = 'scale(0.93)';
+    clickTimeout = setTimeout(()=>{big.style.transform='';},100);
+  });
 
   prestigeBtn.addEventListener('click', () => {
     if(goons >= threshold){
@@ -553,21 +595,25 @@
   });
 
   $('#bot-battle').addEventListener('click', () => {
-    botStatus.textContent = 'Battling...';
+    botStatus.textContent = 'Battling bot...';
     setTimeout(() => {
-      const win = Math.random() > 0.4 - prestige*0.02;
-      rankedGPS += win ? 15 + prestige*3 : -8;
+      const win = Math.random() > 0.35;
+      rankedGPS += win ? 18 + prestige*4 : -6;
       rankedGPS = Math.max(0, rankedGPS);
-      botStatus.textContent = win ? 'Win! +Ranked GPS' : 'Loss! -Ranked GPS';
+      botStatus.textContent = win ? 'Victory! +Ranked GPS' : 'Defeat! -Ranked GPS';
       updateGoon();
-    }, 2500);
+    }, 2200);
   });
 
   setInterval(() => {if(gps > 0){goons += gps / 3; updateGoon();}}, 333);
 
+  // Prevent text selection / highlight on rapid clicks
+  document.addEventListener('selectstart', e => e.preventDefault());
+  document.addEventListener('mousedown', e => e.preventDefault());
+
   loadGame();
   updateGoon();
-  setInterval(saveGame, 10000);
+  setInterval(saveGame, 8000);
 
   function e(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 </script>
