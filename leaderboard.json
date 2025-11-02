@@ -1,0 +1,10 @@
+{
+  "leaderboard": [
+    { "rank": "#1", "name": "AlphaGooner", "discord": "alpha#1234", "avatar": "https://cdn.discordapp.com/avatars/123456789/abc.png" },
+    { "rank": "#2", "name": "BetaBuster",  "discord": "beta#5678" },
+    { "rank": "#3", "name": "GammaGrip",   "discord": "gamma#9012" },
+    { "rank": "#4", "name": "DeltaDrip" },
+    { "rank": "#5", "name": "EpsilonEdge" }
+  ],
+  "updated": "3:45 PM"
+}
