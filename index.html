@@ -23,30 +23,30 @@
     .star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:fall linear infinite}
     @keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0}10%{opacity:1}90%{opacity:.3}100%{transform:translateY(100vh) scale(.8);opacity:0}}
     #app{
-      max-width:800px;width:100%;position:relative;z-index:1;
+      max-width:900px;width:100%;position:relative;z-index:1;
       backdrop-filter:blur(20px);background:var(--glass);
       border:1px solid var(--glass-border);border-radius:22px;
-      padding:30px 26px;
+      padding:32px 28px;
       box-shadow:0 16px 60px rgba(0,0,0,.8),inset 0 0 35px rgba(255,255,255,.05);
       transition:all .5s var(--transition);transform:scale(1.04);margin:auto
     }
     #app:hover{transform:scale(1.06) translateY(-6px);box-shadow:0 24px 80px rgba(0,0,0,.9),0 0 40px rgba(255,255,255,.12)}
     h1{
-      text-align:center;font-weight:800;font-size:2.1rem;letter-spacing:1.8px;
+      text-align:center;font-weight:800;font-size:2.3rem;letter-spacing:2px;
       background:linear-gradient(90deg,#fff,#ccc);background-clip:text;-webkit-background-clip:text;color:transparent;
-      text-shadow:0 0 28px rgba(255,255,255,.3);margin-bottom:20px;
+      text-shadow:0 0 30px rgba(255,255,255,.3);margin-bottom:24px;
       animation:titleGlow 3s ease-in-out infinite alternate
     }
     @keyframes titleGlow{from{text-shadow:0 0 20px rgba(255,255,255,.3)}to{text-shadow:0 0 40px rgba(255,255,255,.5),0 0 80px rgba(255,255,255,.2)}}
-    .tabs{display:flex;justify-content:center;gap:14px;margin-bottom:22px}
+    .tabs{display:flex;justify-content:center;gap:16px;margin-bottom:24px}
     .tab{
-      padding:11px 24px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);
-      border-radius:14px;font-weight:600;font-size:.92rem;cursor:pointer;transition:all .3s var(--transition);
+      padding:12px 28px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);
+      border-radius:14px;font-weight:600;font-size:.95rem;cursor:pointer;transition:all .3s var(--transition);
       color:var(--muted);backdrop-filter:blur(4px)
     }
     .tab.active{
       background:rgba(255,255,255,.16);color:var(--accent);border-color:rgba(255,255,255,.22);
-      box-shadow:0 0 18px rgba(255,255,255,.12);transform:translateY(-2px)
+      box-shadow:0 0 20px rgba(255,255,255,.12);transform:translateY(-2px)
     }
     .tab:hover:not(.active){background:rgba(255,255,255,.1);transform:translateY(-2px)}
     .panel{display:none;animation:fadeIn .6s ease}
@@ -55,7 +55,7 @@
 
     /* ────── BIGGER LEADERBOARD (NOT SQUISHED) ────── */
     .table-container{
-      max-height:68vh;overflow-y:auto;border-radius:16px;margin-top:16px;
+      max-height:70vh;overflow-y:auto;border-radius:16px;margin-top:18px;
       border:1px solid var(--glass-border);background:rgba(0,0,0,.22);
       box-shadow:inset 0 6px 14px rgba(0,0,0,.4);scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent
     }
@@ -69,41 +69,41 @@
     thead{
       position:sticky;top:0;z-index:10;
       background:linear-gradient(180deg,rgba(25,25,25,.98),rgba(15,15,15,.95));
-      backdrop-filter:blur(12px);text-transform:uppercase;font-size:.75rem;letter-spacing:1.6px;
+      backdrop-filter:blur(12px);text-transform:uppercase;font-size:.76rem;letter-spacing:1.6px;
       color:var(--muted);border-bottom:1px solid var(--glass-border)
     }
-    th,td{padding:16px 18px;transition:all .3s var(--transition)}
+    th,td{padding:18px 20px;transition:all .3s var(--transition)}
     tr:hover{background:rgba(255,255,255,.09);transform:translateX(6px);box-shadow:0 8px 20px rgba(255,255,255,.08)}
-    .rank{font-weight:800;color:var(--accent);font-size:1.35rem;text-align:center;text-shadow:0 0 12px rgba(255,255,255,.4)}
-    .rank:nth-of-type(1){color:#ffd700;font-size:1.55rem;text-shadow:0 0 24px #ffd700}
-    .rank:nth-of-type(2){color:#c0c0c0;font-size:1.5rem;text-shadow:0 0 20px #c0c0c0}
-    .rank:nth-of-type(3){color:#cd7f32;font-size:1.45rem;text-shadow:0 0 18px #cd7f32}
-    .name{display:flex;align-items:center;gap:16px;font-size:1rem}
-    .avatar{width:48px;height:48px;border-radius:14px;overflow:hidden;
+    .rank{font-weight:800;color:var(--accent);font-size:1.4rem;text-align:center;text-shadow:0 0 12px rgba(255,255,255,.4)}
+    .rank:nth-of-type(1){color:#ffd700;font-size:1.6rem;text-shadow:0 0 24px #ffd700}
+    .rank:nth-of-type(2){color:#c0c0c0;font-size:1.55rem;text-shadow:0 0 20px #c0c0c0}
+    .rank:nth-of-type(3){color:#cd7f32;font-size:1.5rem;text-shadow:0 0 18px #cd7f32}
+    .name{display:flex;align-items:center;gap:18px;font-size:1.02rem}
+    .avatar{width:52px;height:52px;border-radius:14px;overflow:hidden;
       box-shadow:0 0 18px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.15);flex-shrink:0;transition:transform .3s ease}
-    tr:hover .avatar{transform:scale(1.15) rotate(6deg)}
+    tr:hover .avatar{transform:scale(1.18) rotate(6deg)}
     .avatar img{width:100%;height:100%;object-fit:cover}
-    .discord-tag{display:flex;align-items:center;gap:7px;font-size:.82rem;color:var(--discord);margin-top:3px}
+    .discord-tag{display:flex;align-items:center;gap:7px;font-size:.84rem;color:var(--discord);margin-top:3px}
     .discord-tag i{filter:drop-shadow(0 0 6px #5865f2);animation:discordPulse 2.5s infinite alternate}
     @keyframes discordPulse{from{filter:drop-shadow(0 0 6px #5865f2)}to{filter:drop-shadow(0 0 14px #5865f2)}}
-    .empty-slot{color:#666;font-style:italic;font-size:.96rem}
+    .empty-slot{color:#666;font-style:italic;font-size:.98rem}
 
     /* ────── MINI‑GAMES GRID (ONLY GOON CLICKER) ────── */
     .game-grid{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;
       margin-top:20px
     }
     .game-box{
       background:rgba(0,0,0,.2);border:1px solid var(--glass-border);border-radius:18px;
-      padding:24px;text-align:center;cursor:pointer;transition:.3s;backdrop-filter:blur(8px)
+      padding:28px;text-align:center;cursor:pointer;transition:.3s;backdrop-filter:blur(8px)
     }
     .game-box:hover{
       background:rgba(255,77,140,.15);transform:translateY(-6px);box-shadow:0 0 30px rgba(255,77,140,.3)
     }
     .game-box h3{
-      font-size:1.35rem;margin-bottom:10px;color:var(--goon);text-shadow:0 0 12px var(--goon)
+      font-size:1.4rem;margin-bottom:12px;color:var(--goon);text-shadow:0 0 12px var(--goon)
     }
-    .game-box p{font-size:.9rem;color:var(--muted);margin:8px 0}
+    .game-box p{font-size:.92rem;color:var(--muted);margin:8px 0}
 
     #loader{
       position:fixed;inset:0;background:var(--bg);
@@ -111,17 +111,17 @@
       transition:opacity 1s ease;z-index:100;cursor:pointer
     }
     #logo{
-      font-size:3.4rem;font-weight:900;text-transform:uppercase;color:var(--accent);
-      letter-spacing:5px;background:linear-gradient(45deg,#fff,#aaa);
+      font-size:3.6rem;font-weight:900;text-transform:uppercase;color:var(--accent);
+      letter-spacing:5.5px;background:linear-gradient(45deg,#fff,#aaa);
       background-clip:text;-webkit-background-clip:text;color:transparent;
       animation:glow 2.5s ease-in-out infinite alternate
     }
     @keyframes glow{from{text-shadow:0 0 15px var(--accent),0 0 30px var(--accent);opacity:.9}to{text-shadow:0 0 50px var(--accent),0 0 100px var(--accent);opacity:1}}
-    .last-updated{font-size:.77rem;color:var(--muted);text-align:center;margin:16px 0 10px;opacity:.8}
-    footer{margin-top:10px;text-align:center;font-size:.75rem;color:var(--muted)}
+    .last-updated{font-size:.78rem;color:var(--muted);text-align:center;margin:18px 0 12px;opacity:.8}
+    footer{margin-top:12px;text-align:center;font-size:.76rem;color:var(--muted)}
     footer a{color:var(--muted);text-decoration:none;transition:.2s}
     footer a:hover{color:#ccc;text-decoration:underline}
-    .credit{font-size:.69rem;color:#777;margin-top:7px;opacity:.6;font-style:italic}
+    .credit{font-size:.7rem;color:#777;margin-top:8px;opacity:.6;font-style:italic}
     .hidden{display:none !important}
     @media(max-width:600px){
       #app{padding:20px;border-radius:20px}
@@ -155,7 +155,7 @@
     </div>
     <div class="table-container">
       <table id="board" class="hidden">
-        <thead><tr><th style="width:70px">Rank</th><th>Player</th></tr></thead>
+        <thead><tr><th style="width:80px">Rank</th><th>Player</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
@@ -165,10 +165,10 @@
   <!-- ────── MINI‑GAMES PANEL (ONLY GOON CLICKER) ────── -->
   <div id="games" class="panel">
     <div class="game-grid">
-      <a href="goon-clicker.html" class="game-box">
+      <div class="game-box" onclick="window.location='goon-clicker.html'">
         <h3>Goon Clicker</h3>
         <p>Idle clicker — build your goon empire!</p>
-      </a>
+      </div>
     </div>
   </div>
 
