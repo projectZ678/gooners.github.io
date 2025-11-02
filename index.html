@@ -22,25 +22,26 @@
     .star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:fall linear infinite}
     @keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0}10%{opacity:1}90%{opacity:.3}100%{transform:translateY(100vh) scale(.8);opacity:0}}
     #app{
-      max-width:1000px;width:100%;position:relative;z-index:1;
+      max-width:1100px;width:100%;height:680px;position:relative;z-index:1;
       backdrop-filter:blur(20px);background:var(--glass);
       border:1px solid var(--glass-border);border-radius:22px;
-      padding:32px 36px;
+      padding:36px 40px;
       box-shadow:0 16px 60px rgba(0,0,0,.8),inset 0 0 35px rgba(255,255,255,.05);
-      transition:all .5s var(--transition);transform:scale(1.04);margin:auto
+      transition:all .5s var(--transition);margin:auto;
+      display:flex;flex-direction:column
     }
-    #app:hover{transform:scale(1.06) translateY(-6px);box-shadow:0 24px 80px rgba(0,0,0,.9),0 0 40px rgba(255,255,255,.12)}
+    #app:hover{transform:scale(1.04) translateY(-6px);box-shadow:0 24px 80px rgba(0,0,0,.9),0 0 40px rgba(255,255,255,.12)}
     h1{
-      text-align:center;font-weight:800;font-size:2.4rem;letter-spacing:2.2px;
+      text-align:center;font-weight:800;font-size:2.5rem;letter-spacing:2.3px;
       background:linear-gradient(90deg,#fff,#ccc);background-clip:text;-webkit-background-clip:text;color:transparent;
-      text-shadow:0 0 30px rgba(255,255,255,.3);margin-bottom:26px;
+      text-shadow:0 0 32px rgba(255,255,255,.3);margin-bottom:28px;
       animation:titleGlow 3s ease-in-out infinite alternate
     }
     @keyframes titleGlow{from{text-shadow:0 0 20px rgba(255,255,255,.3)}to{text-shadow:0 0 40px rgba(255,255,255,.5),0 0 80px rgba(255,255,255,.2)}}
-    .tabs{display:flex;justify-content:center;gap:18px;margin-bottom:26px}
+    .tabs{display:flex;justify-content:center;gap:18px;margin-bottom:28px}
     .tab{
-      padding:13px 30px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);
-      border-radius:14px;font-weight:600;font-size:.96rem;cursor:pointer;transition:all .3s var(--transition);
+      padding:13px 32px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);
+      border-radius:14px;font-weight:600;font-size:.97rem;cursor:pointer;transition:all .3s var(--transition);
       color:var(--muted);backdrop-filter:blur(4px)
     }
     .tab.active{
@@ -48,13 +49,13 @@
       box-shadow:0 0 20px rgba(255,255,255,.12);transform:translateY(-2px)
     }
     .tab:hover:not(.active){background:rgba(255,255,255,.1);transform:translateY(-2px)}
-    .panel{display:none;animation:fadeIn .6s ease}
+    .panel{display:none;animation:fadeIn .6s ease;flex:1}
     .panel.active{display:block}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-    /* ────── WIDER & SHORTER LEADERBOARD ────── */
+    /* ────── SQUARE & WIDE LEADERBOARD ────── */
     .table-container{
-      max-height:58vh;overflow-y:auto;border-radius:16px;margin-top:18px;
+      flex:1;overflow-y:auto;border-radius:16px;margin-top:18px;
       border:1px solid var(--glass-border);background:rgba(0,0,0,.22);
       box-shadow:inset 0 6px 14px rgba(0,0,0,.4);scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent
     }
@@ -63,46 +64,43 @@
     .table-container::-webkit-scrollbar-thumb{
       background:var(--scrollbar);border-radius:6px;border:2px solid transparent;background-clip:content-box
     }
-    .table-container::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-hover);background-clip:content-box}
+    .table-container::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-hover)}
     table{width:100%;border-collapse:collapse}
     thead{
       position:sticky;top:0;z-index:10;
       background:linear-gradient(180deg,rgba(25,25,25,.98),rgba(15,15,15,.95));
-      backdrop-filter:blur(12px);text-transform:uppercase;font-size:.78rem;letter-spacing:1.7px;
+      backdrop-filter:blur(12px);text-transform:uppercase;font-size:.8rem;letter-spacing:1.8px;
       color:var(--muted);border-bottom:1px solid var(--glass-border)
     }
-    th,td{padding:18px 22px;transition:all .3s var(--transition)}
+    th,td{padding:20px 24px;transition:all .3s var(--transition)}
     tr:hover{background:rgba(255,255,255,.09);transform:translateX(6px);box-shadow:0 8px 20px rgba(255,255,255,.08)}
-    .rank{font-weight:800;color:var(--accent);font-size:1.45rem;text-align:center;text-shadow:0 0 12px rgba(255,255,255,.4)}
-    .rank:nth-of-type(1){color:#ffd700;font-size:1.65rem;text-shadow:0 0 24px #ffd700}
-    .rank:nth-of-type(2){color:#c0c0c0;font-size:1.6rem;text-shadow:0 0 20px #c0c0c0}
-    .rank:nth-of-type(3){color:#cd7f32;font-size:1.55rem;text-shadow:0 0 18px #cd7f32}
-    .name{display:flex;align-items:center;gap:20px;font-size:1.04rem}
-    .avatar{width:56px;height:56px;border-radius:14px;overflow:hidden;
-      box-shadow:0 0 18px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.15);flex-shrink:0;transition:transform .3s ease}
-    tr:hover .avatar{transform:scale(1.18) rotate(6deg)}
+    .rank{font-weight:800;color:var(--accent);font-size:1.5rem;text-align:center;text-shadow:0 0 14px rgba(255,255,255,.4)}
+    .rank:nth-of-type(1){color:#ffd700;font-size:1.7rem;text-shadow:0 0 26px #ffd700}
+    .rank:nth-of-type(2){color:#c0c0c0;font-size:1.65rem;text-shadow:0 0 22px #c0c0c0}
+    .rank:nth-of-type(3){color:#cd7f32;font-size:1.6rem;text-shadow:0 0 20px #cd7f32}
+    .name{display:flex;align-items:center;gap:22px;font-size:1.06rem}
+    .avatar{width:60px;height:60px;border-radius:15px;overflow:hidden;
+      box-shadow:0 0 20px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.15);flex-shrink:0;transition:transform .3s ease}
+    tr:hover .avatar{transform:scale(1.2) rotate(6deg)}
     .avatar img{width:100%;height:100%;object-fit:cover}
-    .discord-tag{display:flex;align-items:center;gap:8px;font-size:.86rem;color:var(--discord);margin-top:3px}
-    .discord-tag i{filter:drop-shadow(0 0 6px #5865f2);animation:discordPulse 2.5s infinite alternate}
-    @keyframes discordPulse{from{filter:drop-shadow(0 0 6px #5865f2)}to{filter:drop-shadow(0 0 14px #5865f2)}}
-    .empty-slot{color:#666;font-style:italic;font-size:1rem}
+    .discord-tag{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--discord);margin-top:4px}
+    .discord-tag i{filter:drop-shadow(0 0 7px #5865f2);animation:discordPulse 2.5s infinite alternate}
+    @keyframes discordPulse{from{filter:drop-shadow(0 0 7px #5865f2)}to{filter:drop-shadow(0 0 15px #5865f2)}}
+    .empty-slot{color:#666;font-style:italic;font-size:1.02rem}
 
-    /* ────── MINI‑GAMES GRID (ONLY GOON CLICKER) ────── */
     .game-grid{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;
       margin-top:20px
     }
     .game-box{
       background:rgba(0,0,0,.2);border:1px solid var(--glass-border);border-radius:18px;
-      padding:30px;text-align:center;cursor:pointer;transition:.3s;backdrop-filter:blur(8px)
+      padding:32px;text-align:center;cursor:pointer;transition:.3s;backdrop-filter:blur(8px)
     }
     .game-box:hover{
       background:rgba(255,77,140,.15);transform:translateY(-6px);box-shadow:0 0 30px rgba(255,77,140,.3)
     }
-    .game-box h3{
-      font-size:1.45rem;margin-bottom:12px;color:var(--goon);text-shadow:0 0 12px var(--goon)
-    }
-    .game-box p{font-size:.94rem;color:var(--muted);margin:8px 0}
+    .game-box h3{font-size:1.5rem;margin-bottom:14px;color:var(--goon);text-shadow:0 0 14px var(--goon)}
+    .game-box p{font-size:.96rem;color:var(--muted);margin:8px 0}
 
     #loader{
       position:fixed;inset:0;background:var(--bg);
@@ -110,17 +108,17 @@
       transition:opacity 1s ease;z-index:100;cursor:pointer
     }
     #logo{
-      font-size:3.8rem;font-weight:900;text-transform:uppercase;color:var(--accent);
-      letter-spacing:6px;background:linear-gradient(45deg,#fff,#aaa);
+      font-size:4rem;font-weight:900;text-transform:uppercase;color:var(--accent);
+      letter-spacing:6.5px;background:linear-gradient(45deg,#fff,#aaa);
       background-clip:text;-webkit-background-clip:text;color:transparent;
       animation:glow 2.5s ease-in-out infinite alternate
     }
     @keyframes glow{from{text-shadow:0 0 15px var(--accent),0 0 30px var(--accent);opacity:.9}to{text-shadow:0 0 50px var(--accent),0 0 100px var(--accent);opacity:1}}
-    .last-updated{font-size:.79rem;color:var(--muted);text-align:center;margin:18px 0 12px;opacity:.8}
-    footer{margin-top:12px;text-align:center;font-size:.76rem;color:var(--muted)}
+    .last-updated{font-size:.8rem;color:var(--muted);text-align:center;margin:20px 0 14px;opacity:.8}
+    footer{margin-top:14px;text-align:center;font-size:.77rem;color:var(--muted)}
     footer a{color:var(--muted);text-decoration:none;transition:.2s}
     footer a:hover{color:#ccc;text-decoration:underline}
-    .credit{font-size:.7rem;color:#777;margin-top:8px;opacity:.6;font-style:italic}
+    .credit{font-size:.71rem;color:#777;margin-top:9px;opacity:.6;font-style:italic}
     .hidden{display:none !important}
   </style>
 </head>
@@ -137,21 +135,19 @@
     <div class="tab" data-tab="games">Mini‑Games</div>
   </div>
 
-  <!-- ────── LEADERBOARD PANEL ────── -->
   <div id="leaderboard" class="panel active">
     <div id="loading" style="text-align:center;color:#bbb;margin:22px 0;font-size:.97rem;">
       Loading leaderboard...
     </div>
     <div class="table-container">
       <table id="board" class="hidden">
-        <thead><tr><th style="width:90px">Rank</th><th>Player</th></tr></thead>
+        <thead><tr><th style="width:100px">Rank</th><th>Player</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
     <div class="last-updated" id="updated"></div>
   </div>
 
-  <!-- ────── MINI‑GAMES PANEL (ONLY GOON CLICKER) ────── -->
   <div id="games" class="panel">
     <div class="game-grid">
       <div class="game-box" onclick="window.location='goon-clicker.html'">
@@ -226,7 +222,7 @@
             ${has?`
             <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name||'User')}"></div>
             <div>
-              <div style="font-weight:600;font-size:1rem;">${e(p.name||'Unknown')}</div>
+              <div style="font-weight:600;font-size:1.02rem;">${e(p.name||'Unknown')}</div>
               ${p.discord?`<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>`:''}
             </div>`:`<div class="empty-slot">— Empty Slot —</div>`}
           </td>
