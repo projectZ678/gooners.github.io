@@ -35,7 +35,7 @@
       text-shadow:0 0 40px rgba(255,255,255,.4);margin-bottom:32px;
       animation:titleGlow 3s ease-in-out infinite alternate;
     }
-    @keyframes titleGlow{from{text-shadow:0 0 25px var(--accent)}to{text-shadow:0 0 50px var(--accent),0 0 100px var(--accent)}}
+    @keyframes titleGlow{from{text-shadow:0 0 25px var(--accent)}to{text-shadow:0 0 5050px var(--accent),0 0 100px var(--accent)}}
     .tabs{display:flex;justify-content:center;gap:22px;margin-bottom:32px}
     .tab{
       padding:15px 40px;background:rgba(255,255,255,.08);border:1px solid var(--glass-border);
@@ -83,6 +83,39 @@
     .discord-tag i{filter:drop-shadow(0 0 9px #5865f2);animation:discordPulse 2.5s infinite alternate}
     @keyframes discordPulse{from{filter:drop-shadow(0 0 9px #5865f2)}to{filter:drop-shadow(0 0 18px #5865f2)}}
     .empty-slot{color:#666;font-style:italic;font-size:1.06rem}
+
+    /* GAME MODE SELECTOR */
+    #game-selector{
+      flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;
+      text-align:center;
+    }
+    #game-selector h2{
+      font-size:2.8rem;font-weight:800;color:var(--goon);text-shadow:0 0 30px var(--goon);
+      letter-spacing:2px;
+    }
+    .game-modes{
+      display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:28px;width:100%;max-width:900px;
+    }
+    .game-card{
+      background:rgba(255,255,255,.09);border:1px solid var(--glass-border);
+      border-radius:20px;padding:32px;cursor:pointer;transition:.35s;
+      display:flex;flex-direction:column;align-items:center;gap:18px;
+      box-shadow:0 8px 24px rgba(0,0,0,.4);
+    }
+    .game-card:hover{
+      background:rgba(255,255,255,.18);transform:translateY(-12px);box-shadow:0 16px 36px rgba(255,77,140,.3);
+    }
+    .game-icon{
+      width:90px;height:90px;background:var(--goon);color:#000;border-radius:22px;
+      display:flex;align-items:center;justify-content:center;font-size:2.4rem;
+      box-shadow:0 0 30px var(--goon);
+    }
+    .game-title{
+      font-size:1.6rem;font-weight:700;color:var(--accent);text-shadow:0 0 14px var(--accent);
+    }
+    .game-desc{
+      font-size:1.05rem;color:var(--muted);line-height:1.5;
+    }
 
     /* GOON CLICKER */
     #goon-game{display:flex;flex-direction:column;height:100%;gap:24px;padding-bottom:20px}
@@ -345,6 +378,7 @@
       #goon-bottom{grid-template-columns:1fr}
       .battle-players{flex-direction:column;gap:30px}
       .player-goon{width:180px;height:250px}
+      .game-modes{grid-template-columns:1fr}
     }
     @media (max-width: 600px) {
       #app{padding:16px}
@@ -386,8 +420,25 @@
       <div class="last-updated" id="updated"></div>
     </div>
 
+    <!-- GAME MODE SELECTOR -->
+    <div id="game-selector" class="panel">
+      <h2>Choose Your Goon Mode</h2>
+      <div class="game-modes">
+        <div class="game-card" data-mode="goon-clicker">
+          <div class="game-icon"><i class="fas fa-hand-paper"></i></div>
+          <div class="game-title">Goon Clicker</div>
+          <div class="game-desc">Click to goon. Buy upgrades. Prestige. Become a goon god.</div>
+        </div>
+        <div class="game-card" data-mode="ranked">
+          <div class="game-icon"><i class="fas fa-trophy"></i></div>
+          <div class="game-title">Ranked Battle</div>
+          <div class="game-desc">Best of 3 vs AI. First to 500 → 1500 → 2000. Win GPS.</div>
+        </div>
+      </div>
+    </div>
+
     <!-- GOON CLICKER PANEL -->
-    <div id="games" class="panel">
+    <div id="goon-clicker" class="panel">
       <div id="goon-game">
         <div id="goon-top">
           <div id="goon-left">
@@ -522,18 +573,14 @@
       <div class="battle-players">
         <div class="player-container">
           <div class="player-name">YOU</div>
-          <div class="player-goon" id="player-goon">
-            <!-- Clone of main character -->
-          </div>
+          <div class="player-goon" id="player-goon"></div>
           <div class="player-score" id="player-score">0</div>
           <div class="progress-container"><div class="progress-bar" id="player-progress"></div></div>
         </div>
         <div class="vs-text">VS</div>
         <div class="player-container">
           <div class="player-name">BOT</div>
-          <div class="player-goon" id="bot-goon">
-            <!-- Clone of main character -->
-          </div>
+          <div class="player-goon" id="bot-goon"></div>
           <div class="player-score" id="bot-score">0</div>
           <div class="progress-container"><div class="progress-bar" id="bot-progress"></div></div>
         </div>
@@ -575,7 +622,21 @@
         document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
         tab.classList.add('active');
-        $(tab.dataset.tab).classList.add('active');
+        const target = tab.dataset.tab;
+        if(target === 'games'){
+          $('#game-selector').classList.add('active');
+        } else {
+          $(target).classList.add('active');
+        }
+      });
+    });
+
+    /* GAME MODE SELECTOR */
+    document.querySelectorAll('.game-card').forEach(card=>{
+      card.addEventListener('click',()=>{
+        document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+        const mode = card.dataset.mode;
+        $(mode).classList.add('active');
       });
     });
 
@@ -634,7 +695,7 @@
     }
 
     /* GOON CLICKER - FULLY FIXED & CREAMY */
-    const SAVE_KEY = 'goonClickerSave_v12';
+    const SAVE_KEY = 'goonClickerSave_v13';
     let goons = 0, gps = 0, prestige = 0, rankedGPS = 0, threshold = 3000;
 
     // UPGRADES: First = +5 GPS, others scale
@@ -688,7 +749,7 @@
         upgrades: upgrades.map(u=>({id:u.id,owned:u.owned,cost:u.cost})),
         cosmetics: cosmetics.map(c=>({id:c.id,owned:c.owned})),
         rankedCosmetics: rankedCosmetics.map(c=>({id:c.id,unlocked:c.unlocked})),
-        version:12
+        version:13
       };
       try {
         localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
@@ -702,7 +763,7 @@
       if(saved){
         try{
           const d = JSON.parse(saved);
-          if(d.version !== 12) return;
+          if(d.version !== 13) return;
           goons = Number(d.goons) || 0;
           gps = Number(d.gps) || 0;
           prestige = Number(d.prestige) || 0;
@@ -777,7 +838,7 @@
             goons -= u.cost;
             u.owned++;
             u.cost = Math.ceil(u.cost * 1.15);
-            gps += u.inc * getMult();
+            gps += u.inc * getMult(); // GPS increases by exact amount
             updateGoon();
             saveGame();
           }
@@ -894,7 +955,6 @@
     const nextBtn = $('battle-next');
     const quitBtn = $('battle-quit');
 
-    // Clone main character for battle
     function cloneCharacter(){
       const svg = $('#goon-big svg').cloneNode(true);
       svg.style.width = '100%'; svg.style.height = '100%';
@@ -906,7 +966,6 @@
     let playerBattleGoons = 0, botBattleGoons = 0;
     let battleInterval;
     const roundTargets = [500, 1500, 2000];
-    const bestOf = 3;
     let playerWins = 0, botWins = 0;
 
     function startBattle(){
@@ -921,23 +980,19 @@
       const target = roundTargets[currentRound - 1];
       roundInfo.textContent = `Round ${currentRound}/3 - First to ${target}`;
 
-      // Clone characters
       playerGoon.innerHTML = ''; botGoon.innerHTML = '';
       playerGoon.appendChild(cloneCharacter());
       botGoon.appendChild(cloneCharacter());
 
-      // Player clicks
-      playerGoon.style.cursor = 'pointer';
       const playerClick = () => {
         playerBattleGoons += 1 * getMult();
         updateBattleScores(target);
       };
       playerGoon.addEventListener('click', playerClick);
 
-      // Bot AI
-      const botGPS = Math.max(5, gps * (0.7 + Math.random() * 0.6)); // 70-130% of your GPS
+      const botGPS = Math.max(5, gps * (0.7 + Math.random() * 0.6));
       battleInterval = setInterval(() => {
-        botBattleGoons += botGPS / 30; // 30 FPS
+        botBattleGoons += botGPS / 30;
         updateBattleScores(target);
       }, 33);
 
@@ -967,7 +1022,6 @@
       if(currentRound < 3){
         nextBtn.classList.remove('disabled');
       } else {
-        // Final result
         const winner = playerWins >= 2 ? 'YOU WIN!' : 'BOT WINS!';
         const gpsGain = playerWins >= 2 ? 50 + prestige * 15 : -15;
         rankedGPS = Math.max(0, rankedGPS + gpsGain);
@@ -991,7 +1045,6 @@
       saveGame();
     }
 
-    // Button handlers
     $('#bot-battle').addEventListener('click', () => {
       currentRound = 1; playerWins = 0; botWins = 0;
       playerScore = 0; botScore = 0;
@@ -1016,7 +1069,7 @@
     });
 
     setInterval(() => {
-      if(gps > 0 && !battleOverlay.classList.contains('active')){
+      if(gps > 0 && !battleOverlay.classList.contains('active') && $('#goon-clicker').classList.contains('active')){
         const increment = gps / 3;
         goons += increment;
         updateGoon();
