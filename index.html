@@ -10,6 +10,7 @@
     :root{
       --bg:#000;--glass:#111111ee;--glass-border:rgba(255,255,255,.1);
       --text:#fff;--muted:#aaa;--accent:#fff;--glow:#fff;
+      --goon:#ccc;--splat:#ddd;
       font-family:'Inter',system-ui,sans-serif;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;outline:none;user-select:none;}
@@ -30,7 +31,7 @@
       100%{box-shadow:0 0 60px var(--glow),0 0 120px rgba(255,255,255,.4);}}
     #pfp img{width:100%;height:100%;object-fit:cover;}
     .sidebar-title{font-size:1.8rem;font-weight:800;letter-spacing:4px;color:var(--accent);
-      margin-bottom:32px;text-shadow:0 0 20px rgba(255,255,255,.6);}
+      margin-bottom:32px;text:text-shadow:0 0 20px rgba(255,255,255,.6);}
     .nav-btn{display:flex;align-items:center;gap:14px;width:100%;padding:14px 18px;
       background:rgba(255,255,255,.08);border:1px solid var(--glass-border);border-radius:14px;
       font-weight:600;cursor:pointer;transition:.3s;color:var(--text);margin-bottom:10px;
@@ -56,7 +57,7 @@
     .panel{display:none;flex:1;flex-direction:column;}
     .panel.active{display:flex;}
 
-    /* GOON CLICKER - ANIMATED ARM */
+    /* GOON CLICKER */
     .clicker-panel{display:flex;flex-direction:column;align-items:center;gap:20px;position:relative;}
     #gooner-container{
       position:relative;width:280px;height:380px;cursor:pointer;
@@ -74,12 +75,27 @@
     #goon-gloves{top:310px;left:80px;width:120px;height:40px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40"><rect fill="%23666" width="120" height="40"/></svg>') no-repeat center/contain;}
 
     /* GOON SPLATS */
-    .splat{position:absolute;width:30px;height:30px;background:#ccc;border-radius:50%;opacity:.6;
+    .splat{position:absolute;width:30px;height:30px;background:var(--splat);border-radius:50%;opacity:.7;
       pointer-events:none;animation:splatFade 3s forwards;z-index:5;}
-    @keyframes splatFade{0%{transform:scale(0);opacity:0;}30%{transform:scale(1.5);opacity:.8;}100%{transform:scale(1);opacity:0;}}
+    @keyframes splatFade{0%{transform:scale(0);opacity:0;}30%{transform:scale(1.5);opacity:.9;}100%{transform:scale(1);opacity:0;}}
 
     #points{font-size:3.5rem;font-weight:800;color:#fff;text-shadow:0 0 30px #fff;}
     #gps{font-size:1.5rem;color:#aaa;margin-top:10px;}
+
+    /* PRESTIGE BAR */
+    .prestige-bar-container{
+      width:100%;max-width:600px;height:16px;background:rgba(255,255,255,.1);
+      border-radius:8px;overflow:hidden;margin:20px 0;position:relative;
+    }
+    .prestige-bar{
+      height:100%;background:linear-gradient(90deg,#fff,#ccc);width:0%;
+      transition:width .3s ease;border-radius:8px;
+    }
+    .prestige-text{
+      position:absolute;top:0;left:0;width:100%;text-align:center;
+      font-size:.9rem;font-weight:700;color:#fff;text-shadow:0 0 10px #000;
+      line-height:16px;
+    }
 
     .upgrades-grid,.goonmetics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;width:100%;max-width:900px;margin-top:16px;}
     .upgrade,.goonmetic{background:rgba(255,255,255,.08);border:1px solid var(--glass-border);border-radius:16px;
@@ -89,14 +105,28 @@
     .upgrade-name,.goonmetic-name{font-weight:700;color:#fff;}
     .upgrade-cost,.goonmetic-cost{font-size:0.9rem;color:#ccc;margin-top:4px;}
 
-    .badges-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:20px;}
-    .badge{background:rgba(255,255,255,.1);border:2px solid #fff;border-radius:12px;padding:8px 16px;
-      font-size:0.9rem;font-weight:700;color:#fff;box-shadow:0 0 20px #fff;transition:.3s;}
-    .badge.unlocked{animation:pulseBadge 2s infinite;}
+    /* BADGES — ONLY SHOW WHEN UNLOCKED */
+    .badges-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:20px;min-height:60px;}
+    .badge{
+      background:rgba(255,255,255,.1);border:2px solid #555;border-radius:12px;padding:8px 16px;
+      font-size:0.9rem;font-weight:700;color:#555;box-shadow:0 0 10px rgba(255,255,255,.1);
+      transition:all .4s;opacity:0;transform:scale(0.8);
+    }
+    .badge.unlocked{
+      background:rgba(255,255,255,.2);border-color:#fff;color:#fff;
+      box-shadow:0 0 30px #fff;opacity:1;transform:scale(1);
+      animation:pulseBadge 2s infinite;
+    }
     @keyframes pulseBadge{0%,100%{box-shadow:0 0 20px #fff;}50%{box-shadow:0 0 40px #fff;}}
 
-    .prestige-btn{margin-top:30px;padding:16px 40px;background:#fff;color:#000;border:none;
-      border-radius:16px;font-weight:800;cursor:pointer;transition:.4s;box-shadow:0 0 40px #fff;}
+    .prestige-btn{
+      margin-top:20px;padding:16px 40px;background:#fff;color:#000;border:none;
+      border-radius:16px;font-weight:800;cursor:pointer;transition:.4s;box-shadow:0 0 40px #fff;
+      opacity:0;pointer-events:none;transform:scale(0.8);
+    }
+    .prestige-btn.ready{
+      opacity:1;pointer-events:all;transform:scale(1);
+    }
     .prestige-btn:hover{transform:scale(1.1);box-shadow:0 0 80px #fff;}
 
     /* LEADERBOARD */
@@ -138,9 +168,7 @@
     @keyframes glow{from{text-shadow:0 0 30px #fff;}to{text-shadow:0 0 80px #fff,0 0 160px #fff;}}
     .hidden{display:none!important;}
 
-    @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-10px);}75%{transform:translateX(10px);}}
-    @keyframes particle{0%{transform:scale(1) translateY(0);opacity:1;}100%{transform:scale(0) translateY(-100px);opacity:0;}}
-    @keyframes goonArm{0%{transform:rotate(0deg);}50%{transform:rotate(-45deg);}100%{transform:rotate(0deg);}}
+    @keyframes goonArm{0%,100%{transform:rotate(0deg) translateX(0);}50%{transform:rotate(-60deg) translateX(-20px) translateY(20px);}}
   </style>
 </head>
 <body>
@@ -184,6 +212,13 @@
             <div id="goon-beanie" class="goonmetic"></div>
             <div id="goon-gloves" class="goonmetic"></div>
           </div>
+
+          <!-- PRESTIGE BAR -->
+          <div class="prestige-bar-container">
+            <div class="prestige-bar" id="prestigeBar"></div>
+            <div class="prestige-text" id="prestigeText">0 / 100,000 GP</div>
+          </div>
+
           <div class="upgrades-grid" id="upgrades"></div>
           <div class="goonmetics-grid" id="goonmetics"></div>
           <div class="badges-grid" id="badges"></div>
@@ -287,9 +322,9 @@
       });
     });
 
-    // === GOON CLICKER - ANIMATED ARM + REALISTIC CHARACTER ===
-    let points = 0, gps = 0, clickPower = 1, prestige = 1, totalClicks = 0, splatCount = 0;
-    let goonStreak = 0;
+    // === GOON CLICKER ===
+    let points = 0, gps = 0, clickPower = 1, prestige = 1, totalClicks = 0, goonStreak = 0;
+    const PRESTIGE_COST = 100000;
 
     const upgrades = [
       {id:'auto',name:'Auto-Gooner',cost:50,effect:1,owned:0},
@@ -303,11 +338,11 @@
     ];
 
     const goonmetics = [
-      {id:'stains',name:'Goon Stains',cost:5000,el:'goon-stains'},
-      {id:'hoodie',name:'Gooned Hoodie',cost:10000,el:'gooned-hoodie'},
-      {id:'goggles',name:'Goon Goggles',cost:20000,el:'goon-goggles'},
-      {id:'beanie',name:'Goon Beanie',cost:30000,el:'goon-beanie'},
-      {id:'gloves',name:'Goon Gloves',cost:50000,el:'goon-gloves'}
+      {id:'stains',name:'Goon Stains',el:'goon-stains'},
+      {id:'hoodie',name:'Gooned Hoodie',el:'gooned-hoodie'},
+      {id:'goggles',name:'Goon Goggles',el:'goon-goggles'},
+      {id:'beanie',name:'Goon Beanie',el:'goon-beanie'},
+      {id:'gloves',name:'Goon Gloves',el:'goon-gloves'}
     ];
 
     const badges = [
@@ -320,22 +355,15 @@
 
     const characters = [
       {min:0, svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 380">
-        <defs><clipPath id="headClip"><circle cx="140" cy="80" r="50"/></clipPath></defs>
-        <!-- Skin -->
         <circle fill="%23fdb" cx="140" cy="80" r="50"/>
-        <!-- Hair -->
         <path fill="%23432" d="M100 50c0-20 40-20 40 0v30h-40z"/>
-        <!-- Eyes -->
         <circle fill="%23000" cx="125" cy="75" r="8"/>
         <circle fill="%23000" cx="155" cy="75" r="8"/>
         <circle fill="%23fff" cx="127" cy="73" r="3"/>
         <circle fill="%23fff" cx="157" cy="73" r="3"/>
-        <!-- Mouth -->
         <path fill="%23f55" d="M120 95q10 10 20 0"/>
-        <!-- Body -->
         <rect fill="%23666" x="100" y="140" width="80" height="180"/>
         <rect fill="%23999" x="80" y="320" width="120" height="40"/>
-        <!-- Arm (animated) -->
         <g id="goonArm" transform="translate(180,180)">
           <rect fill="%23fdb" x="0" y="0" width="30" height="100" rx="15"/>
           <circle fill="%23fdb" cx="15" cy="100" r="15"/>
@@ -354,7 +382,7 @@
           <circle fill="%23edb" cx="15" cy="100" r="15"/>
         </g>
       </svg>`},
-      // ... (other characters with increasing goon filth)
+      // Add more as needed...
     ];
 
     let unlockedBadges = [], unlockedCosmetics = [];
@@ -364,6 +392,7 @@
       updateCharacter();
       renderAll();
       updateDisplay();
+      updatePrestigeBar();
       setInterval(autoEarn, 1000);
       setInterval(saveGame, 5000);
     }
@@ -374,8 +403,9 @@
       goonStreak++;
       animateGoonArm();
       addSplat();
-      if (goonStreak % 5 === 0) addFaceSplat();
+      if (goonStreak % 5 === 0) $('#goon-stains').style.opacity = '1';
       updateDisplay();
+      updatePrestigeBar();
       checkBadges();
       checkAchievements();
     });
@@ -383,13 +413,13 @@
     function animateGoonArm(){
       const arm = document.querySelector('#goonArm');
       if (arm) {
-        arm.style.animation = 'goonArm 0.4s ease-in-out';
-        setTimeout(() => arm.style.animation = '', 400);
+        arm.style.animation = 'goonArm 0.5s ease-in-out';
+        setTimeout(() => arm.style.animation = '', 500);
       }
     }
 
     function addSplat(){
-      const container = $('.clicker-panel');
+      const container = document.querySelector('.clicker-panel');
       const splat = document.createElement('div');
       splat.className = 'splat';
       const x = 140 + (Math.random() - 0.5) * 300;
@@ -400,25 +430,18 @@
       setTimeout(() => splat.remove(), 3000);
     }
 
-    function addFaceSplat(){
-      const stains = $('#goon-stains');
-      if (stains) stains.style.opacity = '1';
-    }
-
     function autoEarn(){
       points += gps * prestige * getBadgeMultiplier('gps');
       updateDisplay();
+      updatePrestigeBar();
     }
 
     function updateCharacter(){
       const char = characters.find(c => prestige >= c.min) || characters[0];
       document.documentElement.style.setProperty('--character-svg', `url('data:image/svg+xml;utf8,${encodeURIComponent(char.svg)}')`);
-      // Auto-equip
-      if (prestige >= 1) unlockCosmetic('stains');
-      if (prestige >= 2) unlockCosmetic('hoodie');
-      if (prestige >= 3) unlockCosmetic('goggles');
-      if (prestige >= 4) unlockCosmetic('beanie');
-      if (prestige >= 5) unlockCosmetic('gloves');
+      goonmetics.forEach((g, i) => {
+        if (prestige > i) unlockCosmetic(g.id);
+      });
     }
 
     function unlockCosmetic(id){
@@ -429,22 +452,20 @@
       }
     }
 
-    function buyUpgrade(id){
-      const u = upgrades.find(x => x.id === id);
-      if (points >= u.cost) {
-        points -= u.cost;
-        u.owned++;
-        u.cost = Math.floor(u.cost * 1.5);
-        if (['auto','neon','hyper','mega','ultra','god'].includes(u.id)) gps += u.effect;
-        if (u.id === 'double') clickPower += u.effect;
-        if (u.id === 'vault') prestige += 0.5;
-        renderUpgrades();
-        updateDisplay();
+    function updatePrestigeBar(){
+      const progress = Math.min(points / PRESTIGE_COST, 1);
+      $('#prestigeBar').style.width = `${progress * 100}%`;
+      $('#prestigeText').textContent = `${Math.floor(points).toLocaleString()} / ${PRESTIGE_COST.toLocaleString()} GP`;
+      const btn = $('prestige');
+      if (points >= PRESTIGE_COST) {
+        btn.classList.add('ready');
+      } else {
+        btn.classList.remove('ready');
       }
     }
 
     function prestigeReset(){
-      if (points >= 100000) {
+      if (points >= PRESTIGE_COST) {
         prestige *= 2;
         points = 0; gps = 0; clickPower = 1; goonStreak = 0;
         upgrades.forEach(u => { u.owned = 0; u.cost = [50,200,1000,5000,20000,100000,500000,5000000][upgrades.indexOf(u)]; });
@@ -452,12 +473,11 @@
         checkBadges(true);
         renderAll();
         updateDisplay();
-        showAchievement("PRESTIGED! x" + prestige + " Multiplier");
+        updatePrestigeBar();
+        showAchievement(`PRESTIGED! x${prestige} Multiplier`);
         for(let i=0; i<50; i++) setTimeout(addSplat, i*50);
       }
     }
-
-    // ... (rest of render functions, save/load, leaderboard same as before)
 
     function renderAll(){
       renderUpgrades();
@@ -485,10 +505,25 @@
     }
 
     function renderBadges(){
-      $('badges').innerHTML = badges.map(b => {
-        const unlocked = unlockedBadges.includes(b.id);
-        return `<div class="badge ${unlocked?'unlocked':''}">${b.name}</div>`;
-      }).join('');
+      const unlocked = badges.filter(b => unlockedBadges.includes(b.id));
+      $('badges').innerHTML = unlocked.map(b => `
+        <div class="badge unlocked">${b.name}</div>
+      `).join('');
+    }
+
+    function buyUpgrade(id){
+      const u = upgrades.find(x => x.id === id);
+      if (points >= u.cost) {
+        points -= u.cost;
+        u.owned++;
+        u.cost = Math.floor(u.cost * 1.5);
+        if (['auto','neon','hyper','mega','ultra','god'].includes(u.id)) gps += u.effect;
+        if (u.id === 'double') clickPower += u.effect;
+        if (u.id === 'vault') prestige += 0.5;
+        renderUpgrades();
+        updateDisplay();
+        updatePrestigeBar();
+      }
     }
 
     function getBadgeMultiplier(type){
@@ -536,11 +571,8 @@
     }
 
     function saveGame(){
-      const save = {
-        points, gps, clickPower, prestige, totalClicks, goonStreak,
-        upgrades: upgrades.map(u => ({...u})),
-        unlockedCosmetics, unlockedBadges
-      };
+      const save = { points, gps, clickPower, prestige, totalClicks, goonStreak,
+        upgrades: upgrades.map(u => ({...u})), unlockedCosmetics, unlockedBadges };
       localStorage.setItem('goonSave', JSON.stringify(save));
     }
 
@@ -559,10 +591,54 @@
 
     $('prestige').onclick = prestigeReset;
 
-    // === LEADERBOARD (same as before) ===
-    // ... (unchanged)
+    // === LEADERBOARD (unchanged) ===
+    async function fetchLeaderboard(){
+      const loading = $('loading'), error = $('error'), board = $('board'), rows = $('rows'), updated = $('updated');
+      loading.classList.remove('hidden');
+      error.classList.add('hidden');
+      board.classList.add('hidden');
 
-    // Zoom (same)
+      try {
+        const r = await fetch('leaderboard.json?' + Date.now());
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        const list = Array.isArray(data) ? data : (data.leaderboard || []);
+        const time = data.updated || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        const padded = Array(100).fill().map((_, i) => list[i] || { rank: i + 1 });
+        rows.innerHTML = padded.map((p, idx) => {
+          const av = p.discordId && p.avatar
+            ? `https://cdn.discordapp.com/avatars/${p.discordId}/${p.avatar}.${p.avatar.startsWith('a_') ? 'gif' : 'webp'}?size=80`
+            : 'https://cdn.discordapp.com/embed/avatars/0.png';
+          const rank = p.rank || idx + 1;
+          return `<tr>
+            <td class="rank">${rank}</td>
+            <td class="name">
+              ${p.name ? `
+                <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name)}"></div>
+                <div style="font-weight:600;">${e(p.name)}</div>
+              ` : `<div class="empty-slot">— Empty Slot —</div>`}
+            </td>
+          </tr>`;
+        }).join('');
+
+        updated.textContent = `Last updated: ${time}`;
+        loading.classList.add('hidden');
+        board.classList.remove('hidden');
+      } catch (err) {
+        console.error(err);
+        loading.classList.add('hidden');
+        error.classList.remove('hidden');
+      }
+    }
+
+    function e(t){
+      const d = document.createElement('div');
+      d.textContent = t;
+      return d.innerHTML;
+    }
+
+    // Zoom
     const board = $('board');
     const zoomPercent = $('#zoomPercent');
     let scale = 0.5;
