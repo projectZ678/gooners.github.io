@@ -61,23 +61,19 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
   border:3px solid #444;box-shadow:0 0 15px rgba(0,0,0,.5);}
 .hand-glow{position:absolute;inset:-10px;border-radius:50%;background:rgba(255,102,179,.4);filter:blur(15px);opacity:0;transition:opacity .2s;}
 
-/* GOON METER */
-#goon-meter-container{width:300px;height:20px;background:rgba(255,255,255,.1);border:2px solid var(--glass-border);
-  border-radius:10px;overflow:hidden;margin-top:10px;position:relative;}
-#goon-meter{height:100%;width:0%;background:linear-gradient(90deg,#ff66b3,#ff1a75);transition:width .3s;box-shadow:0 0 20px #ff66b3;}
-#goon-meter-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:600;color:#fff;}
-
-/* NEXT BADGE BAR */
-#next-badge-container{width:300px;height:20px;background:rgba(255,255,255,.1);border:2px solid var(--glass-border);
-  border-radius:10px;overflow:hidden;margin-top:8px;position:relative;}
-#next-badge-fill{height:100%;width:0%;background:linear-gradient(90deg,#ffcc00,#ff9900);transition:width .3s;}
-#next-badge-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:600;color:#fff;}
-
-/* PRESTIGE BAR */
-#prestige-bar-container{width:300px;height:20px;background:rgba(255,255,255,.1);border:2px solid var(--glass-border);
-  border-radius:10px;overflow:hidden;margin-top:8px;position:relative;}
-#prestige-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#ff33cc,#cc00ff);transition:width .3s;}
-#prestige-bar-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:600;color:#fff;}
+/* BARS */
+#goon-meter-container,#next-badge-container,#prestige-bar-container{
+  width:300px;height:20px;background:rgba(255,255,255,.1);border:2px solid var(--glass-border);
+  border-radius:10px;overflow:hidden;margin-top:8px;position:relative;
+}
+#goon-meter,#next-badge-fill,#prestige-bar-fill{height:100%;width:0%;transition:width .3s;}
+#goon-meter{background:linear-gradient(90deg,#ff66b3,#ff1a75);box-shadow:0 0 20px #ff66b3;}
+#next-badge-fill{background:linear-gradient(90deg,#ffcc00,#ff9900);}
+#prestige-bar-fill{background:linear-gradient(90deg,#ff33cc,#cc00ff);}
+#goon-meter-label,#next-badge-label,#prestige-bar-label{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:600;color:#fff;
+}
 
 /* BADGES ROW (multipliers) */
 .badges-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:12px;}
@@ -156,7 +152,6 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
     <div id="pfp"><img src="https://i.pinimg.com/1200x/65/ce/74/65ce749c9a83c75ee8f49bd698097a09.jpg" alt="PFP"></div>
     <div class="sidebar-title">GOONING</div>
     <div class="nav-btn active" data-panel="clicker">GOON CLICKER</div>
-    <div class="nav-btn" data-panel="badges">BADGES</div>
     <div class="nav-btn" data-panel="home">Leaderboard</div>
     <div class="nav-btn" data-panel="promo">Vault 13</div>
     <div class="nav-btn" data-panel="credits">Credits</div>
@@ -181,7 +176,7 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
         <!-- PRESTIGE BAR -->
         <div id="prestige-bar-container"><div id="prestige-bar-fill"></div><div id="prestige-bar-label">Prestige: 0 / 50,000</div></div>
 
-        <!-- BADGES ROW -->
+        <!-- BADGES ROW (multipliers) -->
         <div class="badges-row" id="badgeRow"></div>
 
         <!-- GOONER -->
@@ -199,13 +194,7 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
       </div>
     </div>
 
-    <!-- BADGES LIST -->
-    <div id="badges" class="panel">
-      <h1>GOON BADGES</h1>
-      <div class="badges-grid" id="badgeList" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:16px;"></div>
-    </div>
-
-    <!-- LEADERBOARD (unchanged) -->
+    <!-- LEADERBOARD -->
     <div id="home" class="panel">
       <h1>Gooning Leaderboard</h1>
       <div class="zoom-controls">
@@ -265,7 +254,6 @@ document.querySelectorAll('.nav-btn').forEach(b=>{
     document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');
     $(b.dataset.panel).classList.add('active');
-    if(b.dataset.panel==='badges') renderBadgeList();
   });
 });
 
@@ -299,7 +287,7 @@ const badgeDefs = [
   {id:'b200k', req:200000, mult:3,    icon:'200K',name:'200K Goon'},
   {id:'b1m',   req:1000000,mult:5,    icon:'1M',  name:'1M Goon'},
 ];
-let badges = {};   // id → {mult}
+let badges = {};
 
 /* ---------- PRESTIGE LEVELS ---------- */
 const prestigeReqs = [50000, 500000, 5000000, 50000000, 500000000];
@@ -316,7 +304,6 @@ function initClicker(){
   loadGame();
   renderUpgrades();
   renderBadgeRow();
-  renderBadgeList();
   renderNextBadgeBar();
   renderPrestigeBar();
   updateDisplay();
@@ -411,7 +398,6 @@ function checkBadges(){
       globalMult *= b.mult;
       showAchievement(`${b.icon} ${b.name} UNLOCKED! ×${b.mult}`);
       renderBadgeRow();
-      renderBadgeList();
       renderNextBadgeBar();
     }
   });
@@ -420,15 +406,6 @@ function renderBadgeRow(){
   $('#badgeRow').innerHTML = badgeDefs.map(b=>{
     const unlocked = !!badges[b.id];
     return `<div class="badge ${unlocked?'unlocked':''}"><i class="fas fa-${unlocked?'check-circle':'circle'}"></i><span>${b.icon}</span></div>`;
-  }).join('');
-}
-function renderBadgeList(){
-  $('#badgeList').innerHTML = badgeDefs.map(b=>{
-    const unlocked = !!badges[b.id];
-    return `<div class="badge ${unlocked?'unlocked':''}" style="padding:12px;">
-      <i class="fas fa-${unlocked?'trophy':'lock'}"></i>
-      <div style="margin-top:6px;font-size:.9rem;">${b.name}<br>×${b.mult} (need ${b.req.toLocaleString()})</div>
-    </div>`;
   }).join('');
 }
 
@@ -547,10 +524,10 @@ function saveGame(){
     upgrades:upgrades.map(u=>({id:u.id,owned:u.owned})),
     badges:Object.keys(badges),
     shardUpgrades:shardUpgrades.map(u=>({id:u.id,owned:u.owned}))};
-  localStorage.setItem('goonSaveV5',JSON.stringify(save));
+  localStorage.setItem('goonSaveV6',JSON.stringify(save));
 }
 function loadGame(){
-  const raw=localStorage.getItem('goonSaveV5')||localStorage.getItem('goonSaveV4')||localStorage.getItem('goonSaveV3')||localStorage.getItem('goonSaveV2')||localStorage.getItem('goonSave');
+  const raw=localStorage.getItem('goonSaveV6')||localStorage.getItem('goonSaveV5')||localStorage.getItem('goonSaveV4')||localStorage.getItem('goonSaveV3')||localStorage.getItem('goonSaveV2')||localStorage.getItem('goonSave');
   if(!raw) return;
   const s=JSON.parse(raw);
   points=s.points??0; gps=s.gps??0; clickPower=s.clickPower??1; prestige=s.prestige??1; shards=s.shards??0; globalMult=s.globalMult??1;
@@ -558,18 +535,17 @@ function loadGame(){
   (s.badges||[]).forEach(id=>{const b=badgeDefs.find(x=>x.id===id); if(b) badges[id]={mult:b.mult};});
   (s.shardUpgrades||[]).forEach(u=>{const t=shardUpgrades.find(x=>x.id===u.id); if(t) t.owned=u.owned??0;});
 
-  // re-apply
   Object.values(badges).forEach(b=>globalMult*=b.mult);
   shardUpgrades.forEach(u=>{for(let i=0;i<u.owned;i++){if(u.id==='s_mult')globalMult+=u.effect;else if(u.id==='s_click')clickPower+=u.effect;else if(u.id==='s_gps')gps+=u.effect;}});
   upgrades.forEach(u=>{for(let i=0;i<u.owned;i++){if(u.type==='gps')gps+=u.effect;else if(u.type==='click')clickPower+=u.effect;else if(u.type==='mult')prestige+=u.effect;}});
 }
 
-/* ---------- LEADERBOARD (unchanged) ---------- */
+/* ---------- LEADERBOARD (PUBLIC JSON) ---------- */
 async function fetchLeaderboard(){
   const loading=$('loading'),error=$('error'),board=$('board'),rows=$('rows'),updated=$('updated');
   loading.classList.remove('hidden');error.classList.add('hidden');board.classList.add('hidden');
   try{
-    const r=await fetch('leaderboard.json?'+Date.now());
+    const r=await fetch('https://raw.githubusercontent.com/projectZ678/goon-clicker/main/leaderboard.json?'+Date.now());
     if(!r.ok) throw new Error('HTTP '+r.status);
     const data=await r.json();
     const list=Array.isArray(data)?data:(data.leaderboard||[]);
@@ -585,7 +561,10 @@ async function fetchLeaderboard(){
     }).join('');
     updated.textContent=`Last updated: ${time}`;
     loading.classList.add('hidden');board.classList.remove('hidden');
-  }catch(err){loading.classList.add('hidden');error.classList.remove('hidden');}
+  }catch(err){
+    console.error(err);
+    loading.classList.add('hidden');error.classList.remove('hidden');
+  }
 }
 function e(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 const board=$('board'),zoomPercent=$('#zoomPercent');let scale=0.5;
