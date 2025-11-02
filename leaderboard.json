@@ -2,7 +2,7 @@
   "leaderboard": [
     { "rank": "#1", "name": "Uzi", "discord": "fvhc", "avatar": "https://cdn.discordapp.com/avatars/123456789/abc.png" },
     { "rank": "#2", "name": "SILVER", "discord": "mrd3d" },
-    { "rank": "#3", "name": "Not taken", "discord": "nil" },
+    { "rank": "#3", "name": "Not taken", "discord": "" },
     { "rank": "#4", "name": "Not taken" },
     { "rank": "#5", "name": "Not taken" },
     { "rank": "#6", "name": "Not taken" },
