@@ -34,6 +34,7 @@
       overflow: hidden;
       color: var(--text);
       display: flex;
+      justify-content: center;
       touch-action: manipulation;
     }
 
@@ -62,12 +63,12 @@
     #app {
       display: flex;
       height: 100vh;
-      position: relative;
-      z-index: 1;
       width: 100%;
       max-width: 1400px;
       margin: 0 auto;
       box-shadow: 0 0 80px rgba(255, 255, 255, 0.15);
+      position: relative;
+      z-index: 1;
     }
 
     /* SIDEBAR */
@@ -202,6 +203,8 @@
       overflow: hidden;
       background: rgba(0, 0, 0, .4);
       backdrop-filter: blur(12px);
+      align-items: center;
+      justify-content: flex-start;
     }
 
     h1 {
@@ -211,7 +214,6 @@
       color: var(--accent);
       text-shadow: 0 0 50px rgba(255, 255, 255, .6);
       margin-bottom: 28px;
-      text-align: center;
       animation: titleGlow 3s ease-in-out infinite alternate;
     }
 
@@ -222,17 +224,20 @@
 
     .panel {
       display: none;
-      flex: 1;
+      width: 100%;
+      max-width: 800px;
       flex-direction: column;
+      align-items: center;
     }
 
     .panel.active {
       display: flex;
     }
 
-    /* LEADERBOARD */
+    /* LEADERBOARD - CENTERED */
     .table-container {
-      flex: 1;
+      width: 100%;
+      max-width: 700px;
       overflow-y: auto;
       border-radius: 18px;
       border: 1px solid var(--glass-border);
@@ -240,6 +245,7 @@
       box-shadow: inset 0 10px 18px rgba(0, 0, 0, .6);
       scrollbar-width: thin;
       scrollbar-color: #666 transparent;
+      margin: 0 auto;
     }
 
     .table-container::-webkit-scrollbar {
@@ -280,44 +286,47 @@
     }
 
     th, td {
-      padding: 24px 28px;
-      transition: .3s;
+      padding: 20px 24px;
+      text-align: left;
+    }
+
+    th:first-child, td:first-child {
+      text-align: center;
+      width: 80px;
     }
 
     tr:hover {
       background: rgba(255, 255, 255, .07);
-      transform: translateX(10px);
       box-shadow: 0 12px 24px rgba(255, 255, 255, .12);
     }
 
     .rank {
       font-weight: 800;
       color: var(--accent);
-      font-size: 1.8rem;
-      text-align: center;
+      font-size: 1.7rem;
       text-shadow: 0 0 18px rgba(255, 255, 255, .7);
     }
 
     .name {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 18px;
       font-size: 1.1rem;
     }
 
     .avatar {
-      width: 68px;
-      height: 68px;
-      border-radius: 16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
       overflow: hidden;
-      box-shadow: 0 0 24px rgba(0, 0, 0, .8), 0 0 0 2px rgba(255, 255, 255, .3);
+      box-shadow: 0 0 20px rgba(0, 0, 0, .8), 0 0 0 2px rgba(255, 255, 255, .3);
       flex-shrink: 0;
       transition: transform .3s ease, box-shadow .3s;
     }
 
     tr:hover .avatar {
-      transform: scale(1.3) rotate(8deg);
-      box-shadow: 0 0 50px rgba(255, 255, 255, .4);
+      transform: scale(1.25);
+      box-shadow: 0 0 40px rgba(255, 255, 255, .4);
     }
 
     .avatar img {
@@ -326,17 +335,9 @@
       object-fit: cover;
     }
 
-    .discord-tag {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: .92rem;
-      color: #888;
-      margin-top: 4px;
-    }
-
-    .discord-tag i {
-      filter: drop-shadow(0 0 8px #aaa);
+    .player-name {
+      font-weight: 600;
+      font-size: 1.1rem;
     }
 
     .empty-slot {
@@ -373,14 +374,15 @@
       font-size: .94rem;
       color: var(--muted);
       text-align: center;
-      margin: 20px 0;
+      margin: 24px 0 0;
       opacity: .9;
     }
 
-    /* CREDITS */
-    .credits-content {
-      padding: 20px;
+    /* CREDITS & PROMO */
+    .credits-content, .promo-content {
       text-align: center;
+      max-width: 600px;
+      width: 100%;
     }
 
     .credits-content h2 {
@@ -389,7 +391,7 @@
       color: var(--glow);
     }
 
-    .credits-content p {
+    .credits-content p, .promo-content p {
       margin: 12px 0;
       color: var(--text);
       line-height: 1.6;
@@ -404,15 +406,6 @@
     .credits-content a:hover {
       color: var(--glow);
       text-decoration: underline;
-    }
-
-    /* PROMO TAB */
-    .promo-content {
-      padding: 40px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     .vault-logo {
@@ -432,7 +425,6 @@
 
     .vault-desc {
       font-size: 1.3rem;
-      color: var(--text);
       max-width: 600px;
       line-height: 1.7;
       margin-bottom: 30px;
@@ -495,8 +487,8 @@
     }
 
     @media (max-width: 1100px) {
-      #app { flex-direction: column; max-width: 100%; }
-      #sidebar { width: 100%; padding: 20px; }
+      #app { flex-direction: column; }
+      #sidebar { width: 100%; padding: 20px; border-right: none; border-bottom: 1px solid var(--glass-border); }
       #main { padding: 20px; }
       #pfp { width: 100px; height: 100px; }
       .vault-logo { font-size: 3.2rem; }
@@ -507,9 +499,10 @@
       #pfp { width: 80px; height: 80px; }
       .nav-btn { font-size: .95rem; padding: 12px 16px; }
       .social-icon { width: 44px; height: 44px; font-size: 1.4rem; }
-      .avatar { width: 50px; height: 50px; }
+      .avatar { width: 48px; height: 48px; }
       .vault-logo { font-size: 2.8rem; }
       .vault-btn { padding: 14px 36px; font-size: 1.1rem; }
+      .table-container { max-width: 100%; }
     }
   </style>
 </head>
@@ -549,11 +542,11 @@
 
     <!-- MAIN -->
     <div id="main">
-      <!-- HOME / LEADERBOARD -->
+      <!-- LEADERBOARD -->
       <div id="home" class="panel active">
         <h1>Gooning Leaderboard</h1>
 
-        <div id="loading" style="text-align:center;color:#bbb;margin:32px 0;font-size:1.1rem;">Loading leaderboard...</div>
+        <div id="loading" style="color:#bbb;margin:32px 0;font-size:1.1rem;">Loading leaderboard...</div>
         <div id="error" class="error-msg hidden">
           Failed to load leaderboard.<br>
           <button class="retry-btn" onclick="fetchLeaderboard()">Retry</button>
@@ -561,7 +554,7 @@
 
         <div class="table-container">
           <table id="board" class="hidden">
-            <thead><tr><th style="width:130px">Rank</th><th>Player</th></tr></thead>
+            <thead><tr><th>Rank</th><th>Player</th></tr></thead>
             <tbody id="rows"></tbody>
           </table>
         </div>
@@ -569,7 +562,7 @@
         <div class="last-updated" id="updated"></div>
       </div>
 
-      <!-- PROMO: VAULT 13 -->
+      <!-- PROMO -->
       <div id="promo" class="panel">
         <div class="promo-content">
           <div class="vault-logo">VAULT 13</div>
@@ -580,9 +573,7 @@
             <button class="vault-btn">Visit vault13.lol</button>
           </a>
           <a href="https://discord.gg/6v5388xm" target="_blank">
-            <button class="vault-btn">
-              <i class="fab fa-discord"></i> Join Vault 13 Discord
-            </button>
+            <button class="vault-btn">Join Vault 13 Discord</button>
           </a>
         </div>
       </div>
@@ -676,12 +667,10 @@
           return `<tr>
             <td class="rank">${rank}</td>
             <td class="name">
-              ${p.name || p.discord ? `
-                <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name || 'User')}"></div>
-                <div>
-                  <div style="font-weight:600;font-size:1.1rem;">${e(p.name || 'Unknown User')}</div>
-                  ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
-                </div>` : `<div class="empty-slot">— Empty Slot —</div>`}
+              ${p.name ? `
+                <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name)}"></div>
+                <div class="player-name">${e(p.name)}</div>
+              ` : `<div class="empty-slot">— Empty Slot —</div>`}
             </td>
           </tr>`;
         }).join('');
