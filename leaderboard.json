@@ -1,10 +1,12 @@
 {
   "leaderboard": [
-    { "rank": "#1", "name": "AlphaGooner", "discord": "alpha#1234", "avatar": "https://cdn.discordapp.com/avatars/123456789/abc.png" },
-    { "rank": "#2", "name": "BetaBuster",  "discord": "beta#5678" },
-    { "rank": "#3", "name": "GammaGrip",   "discord": "gamma#9012" },
-    { "rank": "#4", "name": "DeltaDrip" },
-    { "rank": "#5", "name": "EpsilonEdge" }
+    { "rank": "#1", "name": "Uzi", "discord": "fvhc", "avatar": "https://cdn.discordapp.com/avatars/123456789/abc.png" },
+    { "rank": "#2", "name": "༺𝐒𝐈𝐋𝐕𝐄𝐑༻",  "discord": "mrd3d" },
+    { "rank": "#3", "name": "Not taken",   "discord": "gamma#9012" },
+    { "rank": "#4", "name": "Not taken" },
+    { "rank": "#5", "name": "Not taken" }
+    { "rank": "#6", "name": "Not taken" },
+    { "rank": "#7", "name": "Not taken" }
   ],
   "updated": "3:45 PM"
 }
