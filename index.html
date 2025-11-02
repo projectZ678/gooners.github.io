@@ -7,65 +7,142 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
+/* ────────────────────────────────── VARIABLES ────────────────────────────────── */
 :root{
-  --bg:#0a0a0a;--panel:#111;--text:#eee;--muted:#888;--glow:rgba(255,255,255,.2);
-  --accent:#fff;--discord:#5865F2;--transition:300ms ease;
+  --bg:#050505;--glass:#111111cc;--text:#f5f5f5;--muted:#999;--glow:#ffffff;
+  --accent:#fff;--discord:#fff;--transition:0.35s cubic-bezier(0.25,0.8,0.25,1);
   font-family:'Inter',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+
+/* ────────────────────────────────── BODY & LAYOUT ────────────────────────────────── */
+html,body{min-height:100vh;background:var(--bg);overflow:hidden}
 body{
-  min-height:100vh;background:
-    radial-gradient(circle at 30% 20%,rgba(255,255,255,.04),transparent 30%),
-    radial-gradient(circle at 80% 80%,rgba(255,255,255,.03),transparent 40%),
+  background:
+    radial-gradient(circle at 20% 10%,rgba(255,255,255,.07),transparent 30%),
+    radial-gradient(circle at 80% 90%,rgba(255,255,255,.05),transparent 40%),
     var(--bg);
   color:var(--text);display:flex;align-items:center;justify-content:center;
+  padding:20px;
 }
-#app{max-width:800px;width:100%;padding:24px}
+
+/* ────────────────────────────────── APP CONTAINER ────────────────────────────────── */
+#app{
+  max-width:860px;width:100%;position:relative;
+  backdrop-filter:blur(12px);
+  background:var(--glass);
+  border-radius:20px;
+  padding:32px 28px;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,.6),
+    inset 0 0 30px rgba(255,255,255,.03);
+  transition:transform .4s var(--transition);
+}
+#app:hover{transform:translateY(-4px)}
+
+/* ────────────────────────────────── TITLE ────────────────────────────────── */
 h1{
-  text-align:center;font-weight:800;font-size:2rem;letter-spacing:1px;
-  color:var(--accent);text-shadow:0 0 20px var(--glow);margin-bottom:16px;
+  text-align:center;font-weight:800;font-size:2.4rem;letter-spacing:1.4px;
+  color:var(--accent);text-shadow:0 0 22px var(--glow);margin-bottom:20px;
 }
+
+/* ────────────────────────────────── TABLE ────────────────────────────────── */
 table{
-  width:100%;border-collapse:collapse;margin-top:24px;border-radius:12px;
-  overflow:hidden;box-shadow:0 0 40px rgba(0,0,0,.6),0 0 20px rgba(255,255,255,.02) inset;
+  width:100%;border-collapse:collapse;margin-top:24px;border-radius:16px;
+  overflow:hidden;background:var(--glass);
+  box-shadow:0 6px 20px rgba(0,0,0,.5);
 }
 thead{
-  background:rgba(255,255,255,.05);text-transform:uppercase;
-  font-size:.8rem;letter-spacing:1px;color:var(--muted);
+  background:rgba(255,255,255,.08);text-transform:uppercase;
+  font-size:.78rem;letter-spacing:1.3px;color:var(--muted);
 }
-th,td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);text-align:left}
+th,td{
+  padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.07);
+  transition:background .3s var(--transition);
+}
 tr:hover{
-  background:rgba(255,255,255,.03);transform:translateY(-2px);
-  box-shadow:0 6px 16px rgba(255,255,255,.03);
-  transition:transform var(--transition),box-shadow var(--transition);
+  background:rgba(255,255,255,.06);
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(255,255,255,.04);
 }
-.rank{font-weight:700;color:var(--accent)}
-.name{display:flex;align-items:center;gap:12px}
-.avatar{width:40px;height:40px;border-radius:10px;overflow:hidden;box-shadow:0 0 10px rgba(255,255,255,.05)}
+.rank{font-weight:800;color:var(--accent);font-size:1.3rem}
+.name{display:flex;align-items:center;gap:14px}
+.avatar{
+  width:44px;height:44px;border-radius:12px;overflow:hidden;
+  box-shadow:0 0 14px rgba(255,255,255,.1);
+}
 .avatar img{width:100%;height:100%;object-fit:cover}
-.discord-tag{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--discord);font-weight:500}
+
+/* ────────────────────────────────── DISCORD ICON (WHITE + GLOW) ────────────────────────────────── */
+.discord-tag{
+  display:flex;align-items:center;gap:7px;font-size:.86rem;color:var(--discord);font-weight:500;
+}
+.discord-tag i{
+  filter:drop-shadow(0 0 5px var(--glow));
+  animation:discordPulse 2s infinite alternate;
+}
+@keyframes discordPulse{
+  from{filter:drop-shadow(0 0 5px var(--glow));}
+  to{filter:drop-shadow(0 0 10px var(--glow));}
+}
+
+/* ────────────────────────────────── LOADER ────────────────────────────────── */
 #loader{
   position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;transition:opacity 700ms ease;z-index:10;
+  align-items:center;justify-content:center;transition:opacity .7s ease;z-index:10;
   cursor:pointer;
 }
 #logo{
-  font-size:2.5rem;font-weight:900;text-transform:uppercase;color:var(--accent);
-  letter-spacing:2px;animation:glow 2s infinite alternate;
+  font-size:2.8rem;font-weight:900;text-transform:uppercase;color:var(--accent);
+  letter-spacing:3px;animation:glow 2s infinite alternate;
 }
 @keyframes glow{
-  from{text-shadow:0 0 5px var(--accent);opacity:.7}
-  to{text-shadow:0 0 25px var(--accent),0 0 50px var(--accent);opacity:1}
+  from{ text-shadow:0 0 10px var(--accent); opacity:.78 }
+  to{   text-shadow:0 0 35px var(--accent),0 0 70px var(--accent); opacity:1 }
 }
-.hidden{display:none !important}
-footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
-.last-updated{font-size:.75rem;color:var(--muted);text-align:center;margin-top:10px}
 
-/* Responsive */
+/* ────────────────────────────────── EDITOR MODAL ────────────────────────────────── */
+#editor-modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;
+  justify-content:center;z-index:20;opacity:0;pointer-events:none;transition:opacity .3s;
+}
+#editor-modal.show{opacity:1;pointer-events:auto}
+#editor-box{
+  background:var(--glass);padding:28px;border-radius:16px;width:92%;max-width:640px;
+  box-shadow:0 0 50px rgba(0,0,0,.7);
+  backdrop-filter:blur(10px);
+}
+#json-editor{
+  width:100%;height:340px;background:#0a0a0a;color:#0f0;font-family:monospace;
+  padding:14px;border-radius:10px;border:1px solid #333;resize:none;
+  font-size:.95rem;line-height:1.5;
+}
+.modal-btn{
+  margin-top:14px;padding:11px 18px;background:var(--accent);color:#000;
+  border:none;border-radius:10px;font-weight:600;cursor:pointer;transition:.25s;
+}
+.modal-btn:hover{background:#ddd}
+#save-msg{margin-top:10px;font-size:.9rem}
+
+/* ────────────────────────────────── EDIT BUTTON ────────────────────────────────── */
+#edit-btn{
+  position:absolute;top:24px;right:24px;background:var(--accent);color:#000;
+  padding:8px 14px;border-radius:8px;font-size:.85rem;font-weight:600;
+  cursor:pointer;transition:.25s;box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+#edit-btn:hover{background:#ccc;transform:translateY(-1px)}
+
+/* ────────────────────────────────── MISC ────────────────────────────────── */
+.hidden{display:none !important}
+footer{margin-top:32px;text-align:center;font-size:.78rem;color:var(--muted)}
+.last-updated{font-size:.76rem;color:var(--muted);text-align:center;margin-top:12px}
+
+/* ────────────────────────────────── RESPONSIVE ────────────────────────────────── */
 @media (max-width:600px){
-  #app{padding:16px}
-  table{font-size:.9rem}
-  th,td{padding:10px 8px}
+  #app{padding:20px}
+  h1{font-size:2rem}
+  th,td{padding:12px 10px}
+  .avatar{width:38px;height:38px}
 }
 </style>
 </head>
@@ -74,14 +151,15 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
 <!-- LOADER -->
 <div id="loader" tabindex="0" role="button" aria-label="Enter leaderboard">
   <div id="logo">GOONING</div>
-  <div style="margin-top:12px;color:#777;font-size:1rem;">Click to enter</div>
+  <div style="margin-top:14px;color:#777;font-size:1.1rem;">Click to enter</div>
 </div>
 
 <!-- MAIN APP -->
 <div id="app" class="hidden">
+  <button id="edit-btn">Edit JSON</button>
   <h1>Gooning Leaderboard</h1>
 
-  <div id="loading" style="text-align:center;color:#aaa;margin:20px 0;">Loading leaderboard...</div>
+  <div id="loading" style="text-align:center;color:#aaa;margin:22px 0;">Loading…</div>
 
   <table id="board" class="hidden">
     <thead><tr><th>Rank</th><th>Player</th></tr></thead>
@@ -92,10 +170,21 @@ footer{margin-top:30px;text-align:center;font-size:.8rem;color:var(--muted)}
   <footer>Auto-updated • <a href="leaderboard.json" target="_blank" style="color:var(--muted)">view raw JSON</a></footer>
 </div>
 
+<!-- EDITOR MODAL -->
+<div id="editor-modal">
+  <div id="editor-box">
+    <h3 style="margin-bottom:14px;color:#fff;">Edit Leaderboard JSON</h3>
+    <textarea id="json-editor" spellcheck="false"></textarea>
+    <button class="modal-btn" id="save-btn">Save & Update</button>
+    <button class="modal-btn" id="cancel-btn" style="background:#555;margin-left:10px;">Cancel</button>
+    <div id="save-msg"></div>
+  </div>
+</div>
+
 <script>
 const $ = id => document.getElementById(id);
 
-// === ENTER ON CLICK OR ENTER KEY ===
+// ────── LOADER ──────
 function enterLeaderboard() {
   const loader = $('loader');
   loader.style.opacity = '0';
@@ -103,7 +192,7 @@ function enterLeaderboard() {
     loader.classList.add('hidden');
     $('app').classList.remove('hidden');
     fetchLeaderboard();
-    setInterval(fetchLeaderboard, 30000);   // refresh every 30 s
+    setInterval(fetchLeaderboard, 30000);
   }, 700);
 }
 $('loader').addEventListener('click', enterLeaderboard);
@@ -112,7 +201,7 @@ $('loader').addEventListener('keydown', e => {
 });
 $('loader').focus();
 
-// === FETCH LEADERBOARD FROM leaderboard.json ===
+// ────── FETCH LEADERBOARD ──────
 async function fetchLeaderboard() {
   const loading = $('loading');
   const board   = $('board');
@@ -120,11 +209,10 @@ async function fetchLeaderboard() {
   const updated = $('updated');
 
   try {
-    const res = await fetch('leaderboard.json?' + Date.now()); // cache-bust
-    if (!res.ok) throw new Error('File not found');
+    const res = await fetch('leaderboard.json?' + Date.now());
+    if (!res.ok) throw new Error('Not found');
     const data = await res.json();
 
-    // Accept plain array or { leaderboard: [...], updated: "…" }
     const list = Array.isArray(data) ? data : (data.leaderboard || []);
     const time = data.updated || new Date().toLocaleTimeString();
 
@@ -156,7 +244,48 @@ async function fetchLeaderboard() {
   }
 }
 
-// Simple HTML-escape
+// ────── EDITOR MODAL ──────
+const modal = $('editor-modal');
+const jsonEditor = $('json-editor');
+
+$('edit-btn').onclick = async () => {
+  try {
+    const res = await fetch('leaderboard.json');
+    const txt = await res.text();
+    jsonEditor.value = txt;
+    modal.classList.add('show');
+  } catch (e) { alert('Could not read JSON'); }
+};
+
+$('cancel-btn').onclick = () => modal.classList.remove('show');
+
+$('save-btn').onclick = async () => {
+  const msg = $('save-msg');
+  let obj;
+  try { obj = JSON.parse(jsonEditor.value); } catch (e) {
+    msg.textContent = 'Invalid JSON'; msg.style.color = '#f66'; return;
+  }
+
+  const saveRes = await fetch('leaderboard.json', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(obj, null, 2)
+  });
+
+  if (saveRes.ok) {
+    msg.textContent = 'Saved! Refreshing…';
+    msg.style.color = '#6f6';
+    setTimeout(() => {
+      modal.classList.remove('show');
+      fetchLeaderboard();
+    }, 800);
+  } else {
+    msg.textContent = 'Save failed – run the tiny server below';
+    msg.style.color = '#f66';
+  }
+};
+
+// ────── UTILS ──────
 function e(t) {
   const d = document.createElement('div');
   d.textContent = t;
