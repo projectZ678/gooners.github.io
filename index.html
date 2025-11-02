@@ -44,8 +44,11 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
 /* GOON CLICKER */
 .clicker-panel{display:flex;flex-direction:column;align-items:center;gap:20px;position:relative;}
 
-/* FULL BODY GOONER */
-#gooner{width:340px;height:460px;position:relative;cursor:pointer;filter:drop-shadow(0 0 30px var(--goon));}
+/* FULL BODY GOONER – CLICKABLE */
+#gooner{
+  width:340px;height:460px;position:relative;cursor:pointer;
+  filter:drop-shadow(0 0 30px var(--goon));user-select:none;
+}
 #torso{width:180px;height:220px;background:#333;border-radius:40px 40px 30px 30px;position:absolute;top:120px;left:50%;transform:translateX(-50%);
   border:3px solid #444;box-shadow:inset 0 0 30px rgba(0,0,0,.6);}
 #head{width:130px;height:150px;background:#f8d8c0;border-radius:50%;position:absolute;top:30px;left:50%;transform:translateX(-50%);
@@ -56,7 +59,7 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
 .pupil{width:14px;height:14px;background:#000;border-radius:50%;position:absolute;top:10px;left:50%;transform:translateX(-50%);}
 @keyframes blink{0%,95%{height:34px;}97%,100%{height:4px;}}
 #arm{width:55px;height:170px;background:#f8d8c0;border-radius:30px;position:absolute;bottom:80px;right:55px;
-  transform-origin:bottom right;transform:rotate(-20deg);border:3px solid #444;transition:transform .1s;}
+  transform-origin:bottom right;transform:rotate(-20deg);border:3px solid #444;transition:transform .12s;}
 #hand{width:48px;height:48px;background:#f8d8c0;border-radius:50%;position:absolute;bottom:-24px;right:-24px;
   border:3px solid #444;box-shadow:0 0 15px rgba(0,0,0,.5);}
 .hand-glow{position:absolute;inset:-10px;border-radius:50%;background:rgba(255,102,179,.4);filter:blur(15px);opacity:0;transition:opacity .2s;}
@@ -75,7 +78,7 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
   font-size:.85rem;font-weight:600;color:#fff;
 }
 
-/* BADGES ROW (multipliers) */
+/* BADGES ROW */
 .badges-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:12px;}
 .badge{display:flex;flex-direction:column;align-items:center;width:80px;opacity:0.4;transition:opacity .3s;}
 .badge.unlocked{opacity:1;animation:pop .5s;}
@@ -88,7 +91,7 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
 #gps{color:#ff99cc;}
 #shards{color:#ffd700;}
 
-/* UPGRADES – CLEAN UI */
+/* UPGRADES */
 .upgrades-grid{
   display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%;max-width:960px;margin-top:20px;
 }
@@ -151,16 +154,30 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
   <div id="sidebar">
     <div id="pfp"><img src="https://i.pinimg.com/1200x/65/ce/74/65ce749c9a83c75ee8f49bd698097a09.jpg" alt="PFP"></div>
     <div class="sidebar-title">GOONING</div>
-    <div class="nav-btn active" data-panel="clicker">GOON CLICKER</div>
     <div class="nav-btn" data-panel="home">Leaderboard</div>
+    <div class="nav-btn" data-panel="clicker">GOON CLICKER</div>
     <div class="nav-btn" data-panel="promo">Vault 13</div>
     <div class="nav-btn" data-panel="credits">Credits</div>
   </div>
 
   <!-- MAIN -->
   <div id="main">
+    <!-- LEADERBOARD (DEFAULT) -->
+    <div id="home" class="panel">
+      <h1>Gooning Leaderboard</h1>
+      <div class="zoom-controls">
+        <button id="zoomOut">-</button><span id="zoomPercent">50%</span><button id="zoomIn">+</button><button id="zoomReset">Reset</button>
+      </div>
+      <div id="loading" style="text-align:center;color:#bbb;margin:32px 0;">Loading…</div>
+      <div id="error" class="hidden" style="color:#f88;text-align:center;padding:40px;">
+        Failed to load leaderboard.<br><button class="retry-btn" onclick="fetchLeaderboard()">Retry</button>
+      </div>
+      <div class="table-container"><table id="board" class="hidden"><thead><tr><th>Rank</th><th>Player</th></tr></thead><tbody id="rows"></tbody></table></div>
+      <div class="last-updated" id="updated"></div>
+    </div>
+
     <!-- CLICKER -->
-    <div id="clicker" class="panel active">
+    <div id="clicker" class="panel">
       <h1>GOON CLICKER</h1>
       <div class="clicker-panel">
         <div id="points">0</div>
@@ -176,10 +193,10 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
         <!-- PRESTIGE BAR -->
         <div id="prestige-bar-container"><div id="prestige-bar-fill"></div><div id="prestige-bar-label">Prestige: 0 / 50,000</div></div>
 
-        <!-- BADGES ROW (multipliers) -->
+        <!-- BADGES ROW -->
         <div class="badges-row" id="badgeRow"></div>
 
-        <!-- GOONER -->
+        <!-- GOONER (clickable) -->
         <div id="gooner">
           <div id="torso"></div>
           <div id="head">
@@ -192,20 +209,6 @@ h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
         <div class="upgrades-grid" id="upgrades"></div>
         <button class="prestige-btn" id="prestige">PRESTIGE FOR SHARDS</button>
       </div>
-    </div>
-
-    <!-- LEADERBOARD -->
-    <div id="home" class="panel">
-      <h1>Gooning Leaderboard</h1>
-      <div class="zoom-controls">
-        <button id="zoomOut">-</button><span id="zoomPercent">50%</span><button id="zoomIn">+</button><button id="zoomReset">Reset</button>
-      </div>
-      <div id="loading" style="text-align:center;color:#bbb;margin:32px 0;">Loading…</div>
-      <div id="error" class="hidden" style="color:#f88;text-align:center;padding:40px;">
-        Failed to load leaderboard.<br><button class="retry-btn" onclick="fetchLeaderboard()">Retry</button>
-      </div>
-      <div class="table-container"><table id="board" class="hidden"><thead><tr><th>Rank</th><th>Player</th></tr></thead><tbody id="rows"></tbody></table></div>
-      <div class="last-updated" id="updated"></div>
     </div>
 
     <!-- PROMO / CREDITS -->
@@ -241,7 +244,16 @@ setInterval(addStar,250);
 /* ---------- LOADER ---------- */
 function enterHub(){
   const l=$('loader'); l.style.opacity='0';
-  setTimeout(()=>{l.classList.add('hidden');$('app').classList.remove('hidden');initClicker();fetchLeaderboard();setInterval(fetchLeaderboard,60000);},800);
+  setTimeout(()=>{
+    l.classList.add('hidden');
+    $('app').classList.remove('hidden');
+    // Start on Leaderboard
+    document.querySelector('.nav-btn[data-panel="home"]').classList.add('active');
+    $('#home').classList.add('active');
+    fetchLeaderboard();
+    setInterval(fetchLeaderboard,60000);
+    initClicker();
+  },800);
 }
 $('loader').addEventListener('click',enterHub);
 $('loader').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();enterHub();}});
@@ -314,11 +326,12 @@ function initClicker(){
   setInterval(renderNextBadgeBar,500);
   setInterval(renderPrestigeBar,500);
 
-  $('#hand').addEventListener('mousedown',goonClick);
-  $('#hand').addEventListener('touchstart',e=>{e.preventDefault();goonClick();});
+  // Click entire gooner
+  $('#gooner').addEventListener('mousedown',goonClick);
+  $('#gooner').addEventListener('touchstart',e=>{e.preventDefault();goonClick();});
 }
 
-/* ---------- CLICK ---------- */
+/* ---------- CLICK (ARM SWING) ---------- */
 function goonClick(){
   const earned = clickPower * prestige * globalMult;
   points += earned;
@@ -390,7 +403,7 @@ function renderUpgrades(){
   }).join('');
 }
 
-/* ---------- BADGES (multipliers) ---------- */
+/* ---------- BADGES ---------- */
 function checkBadges(){
   badgeDefs.forEach(b=>{
     if(points>=b.req && !badges[b.id]){
@@ -484,8 +497,8 @@ function updateDisplay(){
 /* ---------- VISUAL FX ---------- */
 function animateArm(){
   const arm=$('#arm'), hand=$('#hand'), glow=hand.querySelector('.hand-glow');
-  arm.style.transform='rotate(-50deg)'; glow.style.opacity='1';
-  setTimeout(()=>{arm.style.transform='rotate(-20deg)'; glow.style.opacity='0';},150);
+  arm.style.transform='rotate(-60deg)'; glow.style.opacity='1';
+  setTimeout(()=>{arm.style.transform='rotate(-20deg)'; glow.style.opacity='0';},180);
 }
 function createSweat(){
   for(let i=0;i<3;i++){
@@ -524,10 +537,10 @@ function saveGame(){
     upgrades:upgrades.map(u=>({id:u.id,owned:u.owned})),
     badges:Object.keys(badges),
     shardUpgrades:shardUpgrades.map(u=>({id:u.id,owned:u.owned}))};
-  localStorage.setItem('goonSaveV6',JSON.stringify(save));
+  localStorage.setItem('goonSaveV7',JSON.stringify(save));
 }
 function loadGame(){
-  const raw=localStorage.getItem('goonSaveV6')||localStorage.getItem('goonSaveV5')||localStorage.getItem('goonSaveV4')||localStorage.getItem('goonSaveV3')||localStorage.getItem('goonSaveV2')||localStorage.getItem('goonSave');
+  const raw=localStorage.getItem('goonSaveV7')||localStorage.getItem('goonSaveV6')||localStorage.getItem('goonSaveV5')||localStorage.getItem('goonSaveV4')||localStorage.getItem('goonSaveV3')||localStorage.getItem('goonSaveV2')||localStorage.getItem('goonSave');
   if(!raw) return;
   const s=JSON.parse(raw);
   points=s.points??0; gps=s.gps??0; clickPower=s.clickPower??1; prestige=s.prestige??1; shards=s.shards??0; globalMult=s.globalMult??1;
@@ -540,7 +553,7 @@ function loadGame(){
   upgrades.forEach(u=>{for(let i=0;i<u.owned;i++){if(u.type==='gps')gps+=u.effect;else if(u.type==='click')clickPower+=u.effect;else if(u.type==='mult')prestige+=u.effect;}});
 }
 
-/* ---------- LEADERBOARD (PUBLIC JSON) ---------- */
+/* ---------- LEADERBOARD (GITHUB) ---------- */
 async function fetchLeaderboard(){
   const loading=$('loading'),error=$('error'),board=$('board'),rows=$('rows'),updated=$('updated');
   loading.classList.remove('hidden');error.classList.add('hidden');board.classList.add('hidden');
