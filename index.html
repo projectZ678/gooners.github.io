@@ -141,6 +141,7 @@
             from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
         /* LEADERBOARD */
         .table-container {
             flex: 1;
@@ -219,9 +220,61 @@
         .empty-slot { color: #666; font-style: italic; font-size: 1.06rem; }
 
         /* GOON CLICKER */
-        #goon-game { display: flex; flex-direction: column; height: 100%; gap: 24px; padding-bottom: 20px; }
-        #goon-top { flex: 1; display: flex; gap: 30px; align-items: flex-start; min-height: 0; }
-        #goon-left { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+        #goon-game {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: 20px;
+            padding-bottom: 20px;
+        }
+        #goon-top {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+            min-height: 0;
+        }
+        #goon-left {
+            width: 340px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #goon-big {
+            width: 280px;
+            height: 380px;
+            cursor: pointer;
+            position: relative;
+            background: transparent;
+            border-radius: 20px;
+            overflow: visible;
+            box-shadow: 0 0 70px var(--goon), 0 0 140px rgba(255,77,140,.8);
+            transition: transform .2s;
+        }
+        #goon-big:active { transform: scale(.93); }
+        #goon-big svg { width: 100%; height: 100%; filter: drop-shadow(0 0 20px var(--goon)); }
+        #goon-big .arm { transform-origin: 68% 38%; animation: stroke 1.2s ease-in-out infinite alternate; }
+        @keyframes stroke {
+            0% { transform: rotate(-15deg); }
+            100% { transform: rotate(25deg); }
+        }
+        #goon-big:active .arm { animation-duration: .2s; }
+        #goon-big .head { animation: goonFace 4s ease-in-out infinite; }
+        @keyframes goonFace {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+        #goon-stats {
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.55rem;
+            font-weight: 600;
+            color: var(--goon);
+            text-shadow: 0 0 14px var(--goon);
+        }
+        #goon-stats span { color: var(--accent); }
+        #goon-multiplier { display: inline-block; margin-left: 14px; color: var(--goon); font-weight: 700; }
+
         #next-prestige-bar {
             background: rgba(0,0,0,.6);
             padding: 14px 28px;
@@ -233,7 +286,6 @@
             width: 300px;
             text-align: center;
             box-shadow: 0 0 25px rgba(255,77,140,.4);
-            align-self: center;
         }
         #prestige-progress {
             width: 100%;
@@ -250,41 +302,6 @@
             transition: width .4s ease;
             box-shadow: 0 0 18px var(--goon), 0 0 30px var(--goon-pulse);
         }
-        #goon-big {
-            width: 280px;
-            height: 380px;
-            cursor: pointer;
-            position: relative;
-            background: transparent;
-            border-radius: 20px;
-            overflow: visible;
-            box-shadow: 0 0 70px var(--goon), 0 0 140px rgba(255,77,140,.8);
-            transition: transform .2s;
-            flex-shrink: 0;
-        }
-        #goon-big:active { transform: scale(.93); }
-        #goon-big svg { width: 100%; height: 100%; filter: drop-shadow(0 0 20px var(--goon)); }
-        #goon-big .arm { transform-origin: 68% 38%; animation: stroke 1.2s ease-in-out infinite alternate; }
-        @keyframes stroke {
-            0% { transform: rotate(-15deg); }
-            100% { transform: rotate(25deg); }
-        }
-        #goon-big:active .arm { animation-duration: .2s; }
-        #goon-big .head { animation: goonFace 4s ease-in-out infinite; }
-        @keyframes goonFace {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(6px); }
-        }
-        #goon-stats {
-            font-size: 1.55rem;
-            margin: 22px 0;
-            text-align: center;
-            font-weight: 600;
-            color: var(--goon);
-            text-shadow: 0 0 14px var(--goon);
-            width: 100%;
-        }
-        #goon-stats span { color: var(--accent); }
         #goon-prestige {
             margin-top: 16px;
             padding: 18px 48px;
@@ -298,50 +315,66 @@
             transition: .3s;
             width: 260px;
             box-shadow: 0 0 25px var(--gold);
-            align-self: center;
         }
         #goon-prestige:hover { background: #ffea80; transform: scale(1.07); }
         #goon-prestige.disabled { opacity: .5; cursor: not-allowed; }
-        #goon-multiplier { display: inline-block; margin-left: 14px; color: var(--goon); font-weight: 700; }
 
-        /* UPGRADES */
-        #goon-upgrades-wrapper {
+        #goon-right {
             flex: 1;
-            overflow-y: auto;
-            padding-right: 20px;
-            margin-right: -20px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--scrollbar) transparent;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 20px;
+            overflow: hidden;
         }
-        #goon-upgrades-wrapper::-webkit-scrollbar { width: 11px; }
-        #goon-upgrades-wrapper::-webkit-scrollbar-track { background: transparent; }
-        #goon-upgrades-wrapper::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 5px; }
-        #goon-upgrades-wrapper::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
-        .goon-upgrade {
+        #goon-store {
+            background: rgba(0,0,0,.35);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar) transparent;
+        }
+        #goon-store::-webkit-scrollbar { width: 11px; }
+        #goon-store::-webkit-scrollbar-track { background: transparent; }
+        #goon-store::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 5px; }
+        #goon-store::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
+
+        .store-section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--goon);
+            text-shadow: 0 0 12px var(--goon);
+            margin-bottom: 16px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .goon-upgrade, .goon-building {
             background: rgba(255,255,255,.09);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 18px;
+            padding: 16px;
+            margin-bottom: 12px;
             cursor: pointer;
             transition: .3s;
             display: flex;
             align-items: center;
-            gap: 18px;
-            font-size: 1.05rem;
+            gap: 16px;
+            font-size: 1.02rem;
             box-shadow: 0 5px 16px rgba(0,0,0,.35);
         }
-        .goon-upgrade:hover {
+        .goon-upgrade:hover, .goon-building:hover {
             background: rgba(255,255,255,.18);
             transform: translateY(-4px);
             box-shadow: 0 10px 22px rgba(255,255,255,.14);
         }
-        .goon-upgrade.disabled { opacity: .5; cursor: not-allowed; }
-        .goon-upgrade-icon {
-            width: 46px;
-            height: 46px;
+        .goon-upgrade.disabled, .goon-building.disabled { opacity: .5; cursor: not-allowed; }
+        .goon-upgrade-icon, .building-icon {
+            width: 44px;
+            height: 44px;
             background: var(--goon);
             color: #000;
             border-radius: 14px;
@@ -352,8 +385,16 @@
             font-size: 1.2rem;
             box-shadow: 0 0 20px var(--goon);
         }
+        .building-count {
+            background: rgba(255,255,255,.15);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: .9rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
 
-        /* BOTTOM PANELS */
         #goon-bottom {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -363,7 +404,6 @@
             border-radius: 20px;
             border: 1px solid var(--glass-border);
             box-shadow: inset 0 0 25px rgba(0,0,0,.45);
-            margin-top: 16px;
         }
         #cosmetic-shop h3, #ranked-mode h3 {
             font-size: 1.6rem;
@@ -374,22 +414,22 @@
         #ranked-mode h3 { color: var(--gold); text-shadow: 0 0 16px var(--gold); }
         #cosmetics-list, #ranked-cosmetics-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 14px;
         }
         .cosmetic-item, .ranked-cosmetic {
             background: rgba(255,255,255,.09);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 16px;
+            padding: 14px;
             cursor: pointer;
             transition: .3s;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 10px;
-            font-size: .98rem;
+            gap: 8px;
+            font-size: .96rem;
             box-shadow: 0 5px 14px rgba(0,0,0,.35);
         }
         .cosmetic-item:hover, .ranked-cosmetic:hover {
@@ -404,15 +444,15 @@
             box-shadow: 0 0 25px var(--gold);
         }
         .cosmetic-icon {
-            width: 52px;
-            height: 52px;
+            width: 50px;
+            height: 50px;
             background: var(--goon);
             color: #000;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             box-shadow: 0 0 22px var(--goon);
         }
         #ranked-gps {
@@ -436,28 +476,21 @@
         }
         #bot-battle:hover { transform: scale(1.06); }
         #bot-status { color: #ccc; font-size: 1rem; margin-top: 12px; text-align: center; }
-        #ranked-cosmetics h4 {
-            font-size: 1.3rem;
-            margin: 18px 0 12px;
-            color: var(--gold);
-            text-align: center;
-        }
 
-        /* GOON-STYLE BADGES */
         #badges {
             display: flex;
             justify-content: center;
-            gap: 18px;
-            margin-top: 20px;
+            gap: 16px;
+            margin-top: 18px;
             flex-wrap: wrap;
         }
         .badge {
-            padding: 10px 20px;
+            padding: 10px 18px;
             background: var(--gold);
             color: #000;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: .98rem;
             box-shadow: 0 0 20px var(--gold);
             opacity: 0;
             transform: scale(0);
@@ -489,7 +522,6 @@
             50% { box-shadow: 0 0 60px #ff4500, 0 0 80px #ffd700; }
         }
 
-        /* GOONSTIEGE ANIMATION */
         #goonstiege-overlay {
             position: fixed;
             inset: 0;
@@ -562,6 +594,22 @@
             100% { transform: scale(5); opacity: 0; }
         }
 
+        .cream-splat {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--cream);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--cream);
+            opacity: 0.9;
+            pointer-events: none;
+            animation: creamDrop 1.2s ease-out forwards;
+        }
+        @keyframes creamDrop {
+            0% { transform: translateY(0) scale(0.5); opacity: 1; }
+            100% { transform: translateY(80px) scale(1.5); opacity: 0; }
+        }
+
         #loader {
             position: fixed;
             inset: 0;
@@ -626,28 +674,9 @@
         }
         .hidden { display: none !important; }
 
-        /* CREAM EFFECTS */
-        .cream-splat {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: var(--cream);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--cream);
-            opacity: 0.9;
-            pointer-events: none;
-            animation: creamDrop 1.2s ease-out forwards;
-        }
-        @keyframes creamDrop {
-            0% { transform: translateY(0) scale(0.5); opacity: 1; }
-            100% { transform: translateY(80px) scale(1.5); opacity: 0; }
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 1000px) {
+        @media (max-width: 1100px) {
             #goon-top { flex-direction: column; align-items: center; }
             #goon-left { width: 100%; max-width: 400px; }
-            #goon-upgrades-wrapper { width: 100%; padding-right: 0; margin-right: 0; }
             #goon-bottom { grid-template-columns: 1fr; }
         }
         @media (max-width: 600px) {
@@ -673,7 +702,7 @@
 
         <div class="tabs">
             <div class="tab active" data-tab="leaderboard">Leaderboard</div>
-            <div class="tab" data-tab="games">Mini‑Games</div>
+            <div class="tab" data-tab="games">Goon Clicker</div>
         </div>
 
         <!-- LEADERBOARD PANEL -->
@@ -784,24 +813,33 @@
                         <div id="badges"></div>
                     </div>
 
-                    <div id="goon-upgrades-wrapper">
-                        <div id="goon-upgrades"></div>
-                    </div>
-                </div>
+                    <div id="goon-right">
+                        <div id="goon-store">
+                            <div class="store-section">
+                                <div class="section-title">Upgrades</div>
+                                <div id="goon-upgrades"></div>
+                            </div>
+                            <div class="store-section">
+                                <div class="section-title">Buildings</div>
+                                <div id="goon-buildings"></div>
+                            </div>
+                        </div>
 
-                <div id="goon-bottom">
-                    <div id="cosmetic-shop">
-                        <h3>Cosmetic Shop</h3>
-                        <div id="cosmetics-list"></div>
-                    </div>
-                    <div id="ranked-mode">
-                        <h3>Ranked Mode</h3>
-                        <div id="ranked-gps">Your Ranked GPS: <span id="ranked-gps-val">0.0</span></div>
-                        <button id="bot-battle">Battle Bot</button>
-                        <div id="bot-status"></div>
-                        <div id="ranked-cosmetics">
-                            <h4>Ranked Cosmetics</h4>
-                            <div id="ranked-cosmetics-list"></div>
+                        <div id="goon-bottom">
+                            <div id="cosmetic-shop">
+                                <h3>Cosmetic Shop</h3>
+                                <div id="cosmetics-list"></div>
+                            </div>
+                            <div id="ranked-mode">
+                                <h3>Ranked Mode</h3>
+                                <div id="ranked-gps">Your Ranked GPS: <span id="ranked-gps-val">0.0</span></div>
+                                <button id="bot-battle">Battle Bot</button>
+                                <div id="bot-status"></div>
+                                <div id="ranked-cosmetics">
+                                    <h4>Ranked Cosmetics</h4>
+                                    <div id="ranked-cosmetics-list"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -810,7 +848,7 @@
 
         <footer>
             Auto‑refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
-            <div class="credit">Site made by Xen</div>
+            <div class="credit">Site made by Xen • Goon Clicker v3.0</div>
         </footer>
     </div>
 
@@ -885,7 +923,7 @@
                 let list = Array.isArray(data) ? data : (data.leaderboard || []);
                 const time = data.updated || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 const padded = [];
-                for (let i = 0; i < 100; i++) padded.push(list[i] || { rank: i + 1 });
+                for (let i = 0; i < 100; i++)) padded.push(list[i] || { rank: ++i });
                 rows.innerHTML = padded.map((p, idx) => {
                     const has = p.name || p.discord;
                     const av = getDiscordAvatar(p.discordId, p.avatar);
@@ -912,12 +950,28 @@
             }
         }
 
-        /* GOON CLICKER - FULLY FIXED & CREAMY */
-        const SAVE_KEY = 'goonClickerSave_v11';
+        /* GOON CLICKER – FULLY FIXED */
+        const SAVE_KEY = 'goonClickerSave_v13';
         let goons = 0, gps = 0, prestige = 0, rankedGPS = 0, threshold = 3000;
+        let clickPower = 1;
 
-        const baseCosts = [50, 500, 5000, 50000, 500000, 5000000];
-        const incs = [5, 25, 125, 625, 3125, 15625];
+        const upgrades = [
+            { id: 'lube',    name: 'Premium Lube',    icon: 'tint',    cost: 500,    clickMul: 2,  gpsBoost: 0.5,  owned: false },
+            { id: 'edging',  name: 'Edging Technique',icon: 'clock',   cost: 5000,   clickMul: 3,  gpsBoost: 2,    owned: false },
+            { id: 'goon-mode',name: 'Goon Mode',      icon: 'fire',    cost: 50000,  clickMul: 5,  gpsBoost: 10,   owned: false },
+            { id: 'cream-boost',name: 'Cream Boost',  icon: 'droplet', cost: 500000, clickMul: 10, gpsBoost: 50,   owned: false }
+        ];
+
+        const buildings = [
+            { id: 'hand',   name: 'Hand Job',      icon: 'hand',      baseCps: 0.1,   baseCost: 15,      owned: 0 },
+            { id: 'vibe',   name: 'Vibrator',      icon: 'vibrate',   baseCps: 1,     baseCost: 100,     owned: 0 },
+            { id: 'flesh',  name: 'Fleshlight',    icon: 'circle',    baseCps: 8,     baseCost: 1100,    owned: 0 },
+            { id: 'pump',   name: 'Cock Pump',     icon: 'wind',      baseCps: 47,    baseCost: 12000,   owned: 0 },
+            { id: 'edger',  name: 'AI Edger',      icon: 'robot',     baseCps: 260,   baseCost: 130000,  owned: 0 },
+            { id: 'milker', name: 'Auto Milker',   icon: 'droplet',   baseCps: 1400,  baseCost: 1.4e6,   owned: 0 },
+            { id: 'cave',   name: 'Goon Cave',     icon: 'home',      baseCps: 7800,  baseCost: 20e6,    owned: 0 },
+            { id: 'factory',name: 'Goon Factory',  icon: 'industry',  baseCps: 44000, baseCost: 330e6,   owned: 0 }
+        ];
 
         const cosmetics = [
             { id: 'stained-pants', name: 'Creamed Underwear', cost: 10000, icon: 'tint', owned: false, apply: () => { $('#cosmetic-stained').classList.remove('hidden'); } },
@@ -942,80 +996,57 @@
         ];
 
         const big = $('goon-big'), goonDisp = $('goons'), gpsDisp = $('gps'), multiDisp = $('goon-multiplier'),
-              upDiv = $('goon-upgrades'), prestigeBtn = $('goon-prestige'), nextThresh = $('next-threshold'),
-              progFill = $('prestige-fill'), overlay = $('splat-overlay'), goonstiegeOverlay = $('goonstiege-overlay'),
-              cosmeticsList = $('cosmetics-list'), rankedList = $('ranked-cosmetics-list'), rankedVal = $('ranked-gps-val'),
-              botStatus = $('bot-status'), badgesDiv = $('badges');
-
-        let upgrades = [
-            { id: 'hand', name: 'Hand Job', icon: 'hand', inc: incs[0], owned: 0, cost: baseCosts[0] },
-            { id: 'vibe', name: 'Vibrator', icon: 'vibrate', inc: incs[1], owned: 0, cost: baseCosts[1] },
-            { id: 'flesh', name: 'Fleshlight', icon: 'circle', inc: incs[2], owned: 0, cost: baseCosts[2] },
-            { id: 'pump', name: 'Cock Pump', icon: 'wind', inc: incs[3], owned: 0, cost: baseCosts[3] },
-            { id: 'edger', name: 'AI Edger', icon: 'robot', inc: incs[4], owned: 0, cost: baseCosts[4] },
-            { id: 'milker', name: 'Auto Milker', icon: 'droplet', inc: incs[5], owned: 0, cost: baseCosts[5] }
-        ];
+              upDiv = $('goon-upgrades'), buildDiv = $('goon-buildings'), prestigeBtn = $('goon-prestige'),
+              nextThresh = $('next-threshold'), progFill = $('prestige-fill'), overlay = $('splat-overlay'),
+              goonstiegeOverlay = $('goonstiege-overlay'), cosmeticsList = $('cosmetics-list'),
+              rankedList = $('ranked-cosmetics-list'), rankedVal = $('ranked-gps-val'), botStatus = $('bot-status'),
+              badgesDiv = $('badges');
 
         function getMult() { return 1 + prestige * 0.5; }
         function calcThreshold() { return Math.floor(3000 * Math.pow(1.8, prestige)); }
+        function calcCps() {
+            let total = buildings.reduce((s, b) => s + b.baseCps * b.owned * getMult(), 0);
+            total += upgrades.reduce((s, u) => s + (u.owned ? u.gpsBoost * getMult() : 0), 0);
+            return total;
+        }
 
         function saveGame() {
-            const saveData = {
-                goons, gps, prestige, threshold, rankedGPS,
-                upgrades: upgrades.map(u => ({ id: u.id, owned: u.owned, cost: u.cost })),
-                cosmetics: cosmetics.map(c => ({ id: c.id, owned: c.owned })),
-                rankedCosmetics: rankedCosmetics.map(c => ({ id: c.id, unlocked: c.unlocked })),
-                version: 11
+            const data = {
+                goons, gps, prestige, threshold, rankedGPS, clickPower,
+                upgrades: upgrades.map(u => ({id:u.id, owned:u.owned})),
+                buildings: buildings.map(b => ({id:b.id, owned:b.owned, cost:b.cost})),
+                cosmetics: cosmetics.map(c => ({id:c.id, owned:c.owned})),
+                rankedCosmetics: rankedCosmetics.map(c => ({id:c.id, unlocked:c.unlocked})),
+                version: 13
             };
-            try { localStorage.setItem(SAVE_KEY, JSON.stringify(saveData)); }
+            try { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); }
             catch (e) { console.warn('Save failed', e); }
         }
 
         function loadGame() {
             const saved = localStorage.getItem(SAVE_KEY);
-            if (saved) {
-                try {
-                    const d = JSON.parse(saved);
-                    if (d.version !== 11) return;
-                    goons = Number(d.goons) || 0;
-                    gps = Number(d.gps) || 0;
-                    prestige = Number(d.prestige) || 0;
-                    rankedGPS = Number(d.rankedGPS) || 0;
-                    threshold = Number(d.threshold) || calcThreshold();
-                    if (d.upgrades) {
-                        d.upgrades.forEach(u => {
-                            const x = upgrades.find(v => v.id === u.id);
-                            if (x) { x.owned = Number(u.owned) || 0; x.cost = Number(u.cost) || baseCosts[upgrades.indexOf(x)]; }
-                        });
-                    }
-                    gps = upgrades.reduce((a, u) => a + u.inc * u.owned * getMult(), 0);
-                    (d.cosmetics || []).forEach(item => {
-                        const c = cosmetics.find(v => v.id === item.id);
-                        if (c) { c.owned = true; c.apply(); }
-                    });
-                    (d.rankedCosmetics || []).forEach(item => {
-                        const c = rankedCosmetics.find(v => v.id === item.id);
-                        if (c) c.unlocked = true;
-                    });
-                } catch (e) { console.error('Load failed:', e); }
-            } else {
-                threshold = calcThreshold();
-            }
+            if (!saved) { threshold = calcThreshold(); buildings.forEach(b=>b.cost=b.baseCost); return; }
+            try {
+                const d = JSON.parse(saved);
+                if (d.version !== 13) return;
+                goons = Number(d.goons)||0; gps = Number(d.gps)||0; prestige = Number(d.prestige)||0;
+                rankedGPS = Number(d.rankedGPS)||0; clickPower = Number(d.clickPower)||1;
+                threshold = Number(d.threshold)||calcThreshold();
+
+                (d.upgrades||[]).forEach(u=>{ const x=upgrades.find(v=>v.id===u.id); if(x) x.owned=!!u.owned; });
+                (d.buildings||[]).forEach(b=>{ const x=buildings.find(v=>v.id===b.id);
+                    if(x){ x.owned=Number(b.owned)||0; x.cost=Number(b.cost)||x.baseCost; }});
+                (d.cosmetics||[]).forEach(c=>{ const x=cosmetics.find(v=>v.id===c.id); if(x && c.owned){ x.owned=true; x.apply(); }});
+                (d.rankedCosmetics||[]).forEach(c=>{ const x=rankedCosmetics.find(v=>v.id===c.id); if(x) x.unlocked=c.unlocked; });
+
+                clickPower = 1;
+                upgrades.forEach(u=>{ if(u.owned) clickPower *= u.clickMul; });
+                gps = calcCps();
+            } catch(e){ console.error('Load failed',e); }
         }
 
-        function updateBadges() {
-            badgesDiv.innerHTML = '';
-            badges.forEach(b => {
-                const unlocked = goons >= b.threshold;
-                const div = document.createElement('div');
-                div.className = `badge ${unlocked ? 'unlocked' : ''} ${b.class || ''}`;
-                div.innerHTML = `<i class="fas fa-${b.icon}"></i> ${b.name}`;
-                badgesDiv.appendChild(div);
-            });
-        }
-
-        function updateGoon() {
-            goonDisp.textContent = Number(goons).toLocaleString('en-US');
+        function updateDisplay() {
+            goonDisp.textContent = Math.floor(goons).toLocaleString('en-US');
             gpsDisp.textContent = gps.toFixed(1);
             multiDisp.textContent = `x${getMult().toFixed(1)}`;
             prestigeBtn.textContent = `Goonstiege (${prestige})`;
@@ -1023,38 +1054,59 @@
             nextThresh.textContent = threshold.toLocaleString('en-US');
             progFill.style.width = `${Math.min(100, (goons / threshold) * 100)}%`;
 
+            /* UPGRADES */
             upDiv.innerHTML = '';
             upgrades.forEach(u => {
+                if (u.owned) return;
                 const div = document.createElement('div');
                 div.className = 'goon-upgrade';
-                div.id = u.id;
                 div.classList.toggle('disabled', goons < u.cost);
                 div.innerHTML = `
                     <div class="goon-upgrade-icon"><i class="fas fa-${u.icon}"></i></div>
                     <div style="flex:1">
                         <div style="font-weight:600">${u.name}</div>
                         <div style="font-size:.94rem;color:#ccc">
-                            Owned: <span class="owned">${u.owned}</span> |
-                            Cost: <span class="cost">${u.cost.toLocaleString('en-US')}</span> |
-                            +<span class="inc">${(u.inc * getMult()).toFixed(1)}</span>/s
+                            Click ×${u.clickMul} | +${u.gpsBoost} GPS | Cost: ${u.cost.toLocaleString('en-US')}
                         </div>
                     </div>`;
                 div.addEventListener('click', () => {
                     if (goons >= u.cost && !div.classList.contains('disabled')) {
-                        div.style.transition = 'transform .14s';
-                        div.style.transform = 'scale(0.93)';
-                        setTimeout(() => { div.style.transform = ''; }, 140);
-                        goons -= u.cost;
-                        u.owned++;
-                        u.cost = Math.ceil(u.cost * 1.15);
-                        gps += u.inc * getMult();
-                        updateGoon();
-                        saveGame();
+                        goons -= u.cost; u.owned = true;
+                        clickPower *= u.clickMul;
+                        gps = calcCps();
+                        updateDisplay(); saveGame();
                     }
                 });
                 upDiv.appendChild(div);
             });
 
+            /* BUILDINGS */
+            buildDiv.innerHTML = '';
+            buildings.forEach(b => {
+                const cost = Math.floor(b.baseCost * Math.pow(1.15, b.owned));
+                b.cost = cost;
+                const div = document.createElement('div');
+                div.className = 'goon-building';
+                div.classList.toggle('disabled', goons < cost);
+                div.innerHTML = `
+                    <div class="building-icon"><i class="fas fa-${b.icon}"></i></div>
+                    <div style="flex:1">
+                        <div style="font-weight:600">${b.name}</div>
+                        <div style="font-size:.94rem;color:#ccc">
+                            ${b.owned} owned | ${(b.baseCps * getMult()).toFixed(1)} GPS each
+                        </div>
+                    </div>
+                    <div class="building-count">${cost.toLocaleString('en-US')}</div>`;
+                div.addEventListener('click', () => {
+                    if (goons >= cost) {
+                        goons -= cost; b.owned++; gps = calcCps();
+                        updateDisplay(); saveGame();
+                    }
+                });
+                buildDiv.appendChild(div);
+            });
+
+            /* COSMETICS */
             cosmeticsList.innerHTML = '';
             cosmetics.forEach(c => {
                 const div = document.createElement('div');
@@ -1064,22 +1116,17 @@
                 div.innerHTML = `
                     <div class="cosmetic-icon"><i class="fas fa-${c.icon}"></i></div>
                     <div style="font-weight:600">${c.name}</div>
-                    <div style="font-size:.9rem;color:#ccc">Cost: ${c.cost.toLocaleString('en-US')}</div>`;
+                    <div style="font-size:.9rem;color:#ccc">${c.owned ? 'Owned' : `Cost: ${c.cost.toLocaleString('en-US')}`}</div>`;
                 div.addEventListener('click', () => {
                     if (!c.owned && goons >= c.cost) {
-                        div.style.transition = 'transform .14s';
-                        div.style.transform = 'scale(0.93)';
-                        setTimeout(() => { div.style.transform = ''; }, 140);
-                        goons -= c.cost;
-                        c.owned = true;
-                        c.apply();
-                        updateGoon();
-                        saveGame();
+                        goons -= c.cost; c.owned = true; c.apply();
+                        updateDisplay(); saveGame();
                     }
                 });
                 cosmeticsList.appendChild(div);
             });
 
+            /* RANKED */
             rankedVal.textContent = rankedGPS.toFixed(1);
             rankedList.innerHTML = '';
             rankedCosmetics.forEach(c => {
@@ -1094,7 +1141,15 @@
                 rankedList.appendChild(div);
             });
 
-            updateBadges();
+            /* BADGES */
+            badgesDiv.innerHTML = '';
+            badges.forEach(b => {
+                const unlocked = goons >= b.threshold;
+                const div = document.createElement('div');
+                div.className = `badge ${unlocked ? 'unlocked' : ''} ${b.class || ''}`;
+                div.innerHTML = `<i class="fas fa-${b.icon}"></i> ${b.name}`;
+                badgesDiv.appendChild(div);
+            });
         }
 
         function bustAnimation() {
@@ -1136,31 +1191,29 @@
         }
 
         big.addEventListener('click', () => {
-            goons += 1 * getMult();
+            const earned = clickPower * getMult();
+            goons += earned;
+            bustAnimation();
             const splat = document.createElement('div');
             splat.className = 'cream-splat';
-            splat.style.left = `${event.clientX - 20}px`;
-            splat.style.top = `${event.clientY - 20}px`;
+            splat.style.left = `${event.clientX-20}px`;
+            splat.style.top = `${event.clientY-20}px`;
             document.body.appendChild(splat);
-            setTimeout(() => splat.remove(), 1200);
-            updateGoon();
-            saveGame();
-            big.style.transition = 'transform .14s';
-            big.style.transform = 'scale(0.91)';
-            setTimeout(() => { big.style.transform = ''; }, 140);
+            setTimeout(()=>splat.remove(),1200);
+            updateDisplay(); saveGame();
+            big.style.transition='transform .14s';
+            big.style.transform='scale(.91)';
+            setTimeout(()=>{big.style.transform='';},140);
         });
 
         prestigeBtn.addEventListener('click', () => {
             if (goons >= threshold) {
                 triggerGoonstiege();
-                prestige++;
-                goons = 0;
-                gps = 0;
-                threshold = calcThreshold();
-                upgrades.forEach(u => u.owned = 0);
-                upgrades.forEach((u, i) => u.cost = baseCosts[i]);
-                updateGoon();
-                saveGame();
+                prestige++; goons = 0; gps = 0; threshold = calcThreshold();
+                buildings.forEach(b=>{b.owned=0; b.cost=b.baseCost;});
+                upgrades.forEach(u=>u.owned=false);
+                clickPower = 1; gps = calcCps();
+                updateDisplay(); saveGame();
             }
         });
 
@@ -1171,35 +1224,17 @@
                 rankedGPS += win ? 22 + prestige * 6 : -8;
                 rankedGPS = Math.max(0, rankedGPS);
                 botStatus.textContent = win ? 'Win! +Ranked GPS' : 'Loss! -Ranked GPS';
-                updateGoon();
-                saveGame();
+                updateDisplay(); saveGame();
             }, 2800);
         });
 
         setInterval(saveGame, 2000);
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') saveGame();
-        });
+        document.addEventListener('visibilitychange',()=>{ if(document.hidden) saveGame(); });
+        setInterval(()=>{ if(gps>0){ goons+=gps/10; updateDisplay(); } },100);
 
-        setInterval(() => {
-            if (gps > 0) {
-                const increment = gps / 3;
-                goons += increment;
-                updateGoon();
-            }
-        }, 333);
+        loadGame(); updateDisplay();
 
-        document.addEventListener('selectstart', e => e.preventDefault());
-        document.addEventListener('mousedown', e => e.preventDefault());
-
-        loadGame();
-        updateGoon();
-
-        function e(t) {
-            const d = document.createElement('div');
-            d.textContent = t;
-            return d.innerHTML;
-        }
+        function e(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
     </script>
 </body>
 </html>
