@@ -64,7 +64,7 @@
       display: flex;
       height: 100vh;
       width: 100%;
-      max-width: 1400px;
+      max-width: 100vw;
       margin: 0 auto;
       box-shadow: 0 0 80px rgba(255, 255, 255, 0.15);
       position: relative;
@@ -82,6 +82,7 @@
       flex-direction: column;
       align-items: center;
       box-shadow: 0 0 60px rgba(255, 255, 255, .12);
+      flex-shrink: 0;
     }
 
     #pfp {
@@ -194,7 +195,7 @@
       50% { transform: scale(1.12); }
     }
 
-    /* MAIN CONTENT */
+    /* MAIN CONTENT - FULL WIDTH */
     #main {
       flex: 1;
       display: flex;
@@ -203,8 +204,7 @@
       overflow: hidden;
       background: rgba(0, 0, 0, .4);
       backdrop-filter: blur(12px);
-      align-items: center;
-      justify-content: flex-start;
+      min-width: 0; /* Allows flex shrinking */
     }
 
     h1 {
@@ -214,6 +214,7 @@
       color: var(--accent);
       text-shadow: 0 0 50px rgba(255, 255, 255, .6);
       margin-bottom: 28px;
+      text-align: center;
       animation: titleGlow 3s ease-in-out infinite alternate;
     }
 
@@ -224,20 +225,18 @@
 
     .panel {
       display: none;
-      width: 100%;
-      max-width: 800px;
+      flex: 1;
       flex-direction: column;
-      align-items: center;
     }
 
     .panel.active {
       display: flex;
     }
 
-    /* LEADERBOARD - CENTERED */
+    /* LEADERBOARD - FULL WIDTH */
     .table-container {
+      flex: 1;
       width: 100%;
-      max-width: 700px;
       overflow-y: auto;
       border-radius: 18px;
       border: 1px solid var(--glass-border);
@@ -245,7 +244,6 @@
       box-shadow: inset 0 10px 18px rgba(0, 0, 0, .6);
       scrollbar-width: thin;
       scrollbar-color: #666 transparent;
-      margin: 0 auto;
     }
 
     .table-container::-webkit-scrollbar {
@@ -378,11 +376,12 @@
       opacity: .9;
     }
 
-    /* CREDITS & PROMO */
+    /* CREDITS & PROMO - FULL WIDTH */
     .credits-content, .promo-content {
       text-align: center;
-      max-width: 600px;
       width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
     .credits-content h2 {
@@ -427,7 +426,7 @@
       font-size: 1.3rem;
       max-width: 600px;
       line-height: 1.7;
-      margin-bottom: 30px;
+      margin: 0 auto 30px;
     }
 
     .vault-btn {
@@ -502,7 +501,6 @@
       .avatar { width: 48px; height: 48px; }
       .vault-logo { font-size: 2.8rem; }
       .vault-btn { padding: 14px 36px; font-size: 1.1rem; }
-      .table-container { max-width: 100%; }
     }
   </style>
 </head>
@@ -524,29 +522,29 @@
       <div class="sidebar-title">GOONING</div>
 
       <div class="nav-btn active" data-panel="home">
-        <i class="fas fa-trophy"></i> Leaderboard
+        Trophy Leaderboard
       </div>
       <div class="nav-btn" data-panel="promo">
-        <i class="fas fa-gem"></i> Vault 13
+        Gem Vault 13
       </div>
       <div class="nav-btn" data-panel="credits">
-        <i class="fas fa-heart"></i> Credits
+        Heart Credits
       </div>
 
       <div class="socials">
         <a href="https://github.com/projectZ678" target="_blank" class="social-icon" title="GitHub">
-          <i class="fab fa-github"></i>
+          GitHub
         </a>
       </div>
     </div>
 
-    <!-- MAIN -->
+    <!-- MAIN - FULL WIDTH -->
     <div id="main">
       <!-- LEADERBOARD -->
       <div id="home" class="panel active">
         <h1>Gooning Leaderboard</h1>
 
-        <div id="loading" style="color:#bbb;margin:32px 0;font-size:1.1rem;">Loading leaderboard...</div>
+        <div id="loading" style="text-align:center;color:#bbb;margin:32px 0;font-size:1.1rem;">Loading leaderboard...</div>
         <div id="error" class="error-msg hidden">
           Failed to load leaderboard.<br>
           <button class="retry-btn" onclick="fetchLeaderboard()">Retry</button>
@@ -644,7 +642,7 @@
       });
     });
 
-    // Leaderboard
+    // Leaderboard - NO DISCORD LOGO
     async function fetchLeaderboard() {
       const loading = $('loading'), error = $('error'), board = $('board'), rows = $('rows'), updated = $('updated');
       loading.classList.remove('hidden');
