@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gooning Hub</title>
+  <title>Gooning Hub Leaderboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
   <style>
@@ -23,167 +23,67 @@
       10%{opacity:1;}90%{opacity:.3;}100%{transform:translateY(100vh) scale(.8);opacity:0;}}
     #app{width:100vw;height:100vh;position:relative;z-index:1;backdrop-filter:blur(24px);
       background:var(--glass);padding:32px 48px;display:flex;flex-direction:column;overflow:hidden;}
-    h1{font-weight:800;font-size:3rem;letter-spacing:3.5px;background:linear-gradient(90deg,#fff,#eee);
-      -webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 40px rgba(255,255,255,.4);
-      margin-bottom:32px;animation:titleGlow 3s ease-in-out infinite alternate;text-align:center;}
-    @keyframes titleGlow{from{text-shadow:0 0 25px var(--accent);}to{text-shadow:0 0 50px var(--accent),0 0 100px var(--accent);}}
-    .tabs{display:flex;justify-content:center;gap:22px;margin-bottom:32px;}
-    .tab{padding:15px 40px;background:rgba(255,255,255,.08);border:1px solid var(--glass-border);
-      border-radius:18px;font-weight:600;cursor:pointer;transition:.3s;color:var(--muted);backdrop-filter:blur(6px);}
-    .tab.active{background:rgba(255,255,255,.2);color:var(--accent);border-color:rgba(255,255,255,.28);
-      box-shadow:0 0 28px rgba(255,255,255,.18);transform:translateY(-4px);}
-    .tab:hover:not(.active){background:rgba(255,255,255,.14);transform:translateY(-4px);}
-    .panel{display:none;animation:fadeIn .6s ease;}
-    .panel.active{display:flex;flex-direction:column;}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-    /* LEADERBOARD */
-    .table-container{flex:1;overflow-y:auto;border-radius:20px;margin-top:22px;
+    h1{font-weight:800;font-size:3.2rem;letter-spacing:4px;background:linear-gradient(90deg,#fff,#eee);
+      -webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 50px rgba(255,255,255,.5);
+      margin-bottom:28px;animation:titleGlow 3s ease-in-out infinite alternate;text-align:center;}
+    @keyframes titleGlow{from{text-shadow:0 0 30px var(--accent);}to{text-shadow:0 0 60px var(--accent),0 0 120px var(--accent);}}
+    .table-container{flex:1;overflow-y:auto;border-radius:20px;
       border:1px solid var(--glass-border);background:rgba(0,0,0,.28);box-shadow:inset 0 10px 18px rgba(0,0,0,.5);
-      scrollbar-width:thin;scrollbar-color:#444 transparent;}
+      scrollbar-width:thin;scrollbar-color:#555 transparent;}
     .table-container::-webkit-scrollbar{width:12px;}
     .table-container::-webkit-scrollbar-track{background:transparent;}
-    .table-container::-webkit-scrollbar-thumb{background:#444;border-radius:6px;border:3px solid transparent;background-clip:content-box;}
-    .table-container::-webkit-scrollbar-thumb:hover{background:#666;}
+    .table-container::-webkit-scrollbar-thumb{background:#555;border-radius:6px;border:3px solid transparent;background-clip:content-box;}
+    .table-container::-webkit-scrollbar-thumb:hover{background:#777;}
     table{width:100%;border-collapse:collapse;}
     thead{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,rgba(30,30,30,.98),rgba(20,20,20,.95));
-      backdrop-filter:blur(16px);text-transform:uppercase;font-size:.9rem;letter-spacing:2.2px;color:var(--muted);
+      backdrop-filter:blur(16px);text-transform:uppercase;font-size:.92rem;letter-spacing:2.4px;color:var(--muted);
       border-bottom:1px solid var(--glass-border);}
-    th,td{padding:24px 28px;transition:.3s;}
-    tr:hover{background:rgba(255,255,255,.11);transform:translateX(10px);box-shadow:0 12px 24px rgba(255,255,255,.12);}
-    .rank{font-weight:800;color:var(--accent);font-size:1.7rem;text-align:center;text-shadow:0 0 18px rgba(255,255,255,.5);}
-    .rank:nth-of-type(1){color:var(--gold);font-size:1.9rem;text-shadow:0 0 30px var(--gold);}
-    .rank:nth-of-type(2){color:var(--silver);font-size:1.85rem;text-shadow:0 0 26px var(--silver);}
-    .rank:nth-of-type(3){color:var(--bronze);font-size:1.8rem;text-shadow:0 0 24px var(--bronze);}
-    .name{display:flex;align-items:center;gap:26px;font-size:1.1rem;}
-    .avatar{width:66px;height:66px;border-radius:18px;overflow:hidden;box-shadow:0 0 24px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.2);
-      flex-shrink:0;transition:transform .3s ease;}
-    tr:hover .avatar{transform:scale(1.3) rotate(9deg);}
+    th,td{padding:26px 30px;transition:.3s;}
+    tr:hover{background:rgba(255,255,255,.12);transform:translateX(12px);box-shadow:0 14px 28px rgba(255,255,255,.15);}
+    .rank{font-weight:800;color:var(--accent);font-size:1.9rem;text-align:center;text-shadow:0 0 20px rgba(255,255,255,.6);}
+    .rank:nth-of-type(1){color:var(--gold);font-size:2.1rem;text-shadow:0 0 35px var(--gold),0 0 50px #ff0;}
+    .rank:nth-of-type(2){color:var(--silver);font-size:2.05rem;text-shadow:0 0 30px var(--silver),0 0 45px #ccc;}
+    .rank:nth-of-type(3){color:var(--bronze);font-size:2rem;text-shadow:0 0 28px var(--bronze),0 0 40px #fa0;}
+    .name{display:flex;align-items:center;gap:28px;font-size:1.15rem;}
+    .avatar{width:72px;height:72px;border-radius:20px;overflow:hidden;
+      box-shadow:0 0 28px rgba(0,0,0,.7),0 0 0 2px rgba(255,255,255,.25);flex-shrink:0;
+      transition:transform .3s ease,box-shadow .3s;}
+    tr:hover .avatar{transform:scale(1.35) rotate(10deg);box-shadow:0 0 40px rgba(255,255,255,.3);}
     .avatar img{width:100%;height:100%;object-fit:cover;}
-    .discord-tag{display:flex;align-items:center;gap:10px;font-size:.92rem;color:var(--discord);margin-top:6px;}
-    .discord-tag i{filter:drop-shadow(0 0 9px #5865f2);animation:discordPulse 2.5s infinite alternate;}
-    @keyframes discordPulse{from{filter:drop-shadow(0 0 9px #5865f2);}to{filter:drop-shadow(0 0 18px #5865f2);}}
-    .empty-slot{color:#666;font-style:italic;font-size:1.06rem;}
-    /* GOON CLICKER */
-    #goon-game{display:flex;flex-direction:column;height:100%;gap:20px;padding-bottom:20px;}
-    #goon-top{display:flex;gap:30px;flex:1;min-height:0;}
-    #goon-left{width:340px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;}
-    #goon-big{width:280px;height:380px;cursor:pointer;position:relative;background:transparent;
-      border-radius:20px;overflow:visible;box-shadow:0 0 70px var(--goon),0 0 140px rgba(255,77,140,.8);
-      transition:transform .08s ease-out;}
-    #goon-big:active{transform:scale(.93);}
-    #goon-big svg{width:100%;height:100%;filter:drop-shadow(0 0 20px var(--goon));}
-    .arm{transform-origin:68% 38%;animation:stroke 1.2s ease-in-out infinite alternate;}
-    @keyframes stroke{0%{transform:rotate(-15deg);}100%{transform:rotate(25deg);}}
-    .head{animation:goonFace 4s ease-in-out infinite;}
-    @keyframes goonFace{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
-    #goon-stats{margin:20px 0;text-align:center;font-size:1.55rem;font-weight:600;color:var(--goon);
-      text-shadow:0 0 14px var(--goon);}
-    #goon-stats span{color:var(--accent);}
-    #goon-multiplier{display:inline-block;margin-left:14px;color:var(--goon);font-weight:700;}
-    #next-prestige-bar{background:rgba(0,0,0,.6);padding:14px 28px;border-radius:16px;
-      font-size:1.05rem;color:#fff;border:1px solid var(--glass-border);margin-bottom:20px;width:300px;
-      text-align:center;box-shadow:0 0 25px rgba(255,77,140,.4);}
-    #prestige-progress{width:100%;height:14px;background:#333;border-radius:7px;overflow:hidden;margin-top:10px;}
-    #prestige-fill{height:100%;background:var(--goon);width:0%;transition:width .4s ease;
-      box-shadow:0 0 18px var(--goon),0 0 30px #ff1493;}
-    #goon-prestige{margin-top:16px;padding:18px 48px;background:var(--gold);color:#000;border:none;
-      border-radius:16px;font-weight:600;cursor:pointer;font-size:1.25rem;transition:.3s;width:260px;
-      box-shadow:0 0 25px var(--gold);}
-    #goon-prestige:hover{background:#ffea80;transform:scale(1.07);}
-    #goon-prestige.disabled{opacity:.5;cursor:not-allowed;}
-    #goon-right{flex:1;display:flex;flex-direction:column;gap:20px;overflow:hidden;}
-    #goon-store{background:rgba(0,0,0,.35);border:1px solid var(--glass-border);border-radius:20px;
-      padding:20px;flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#444 transparent;}
-    #goon-store::-webkit-scrollbar{width:11px;}
-    #goon-store::-webkit-scrollbar-track{background:transparent;}
-    #goon-store::-webkit-scrollbar-thumb{background:#444;border-radius:5px;}
-    #goon-store::-webkit-scrollbar-thumb:hover{background:#666;}
-    .store-section{margin-bottom:30px;}
-    .section-title{font-size:1.4rem;color:var(--goon);text-shadow:0 0 12px var(--goon);
-      margin-bottom:16px;text-align:center;font-weight:600;}
-    .goon-upgrade,.goon-building{background:rgba(255,255,255,.09);border:1px solid var(--glass-border);
-      border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;transition:.3s;display:flex;
-      align-items:center;gap:16px;font-size:1.02rem;box-shadow:0 5px 16px rgba(0,0,0,.35);}
-    .goon-upgrade:hover,.goon-building:hover{background:rgba(255,255,255,.18);transform:translateY(-4px);
-      box-shadow:0 10px 22px rgba(255,255,255,.14);}
-    .goon-upgrade.disabled,.goon-building.disabled{opacity:.5;cursor:not-allowed;}
-    .goon-upgrade-icon,.building-icon{width:44px;height:44px;background:var(--goon);color:#000;
-      border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;
-      font-size:1.2rem;box-shadow:0 0 20px var(--goon);}
-    .building-count{background:rgba(255,255,255,.15);color:var(--accent);padding:4px 10px;
-      border-radius:10px;font-size:.9rem;font-weight:600;margin-left:auto;}
-    #goon-bottom{display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:28px;
-      background:rgba(0,0,0,.35);border-radius:20px;border:1px solid var(--glass-border);
-      box-shadow:inset 0 0 25px rgba(0,0,0,.45);}
-    #cosmetic-shop h3,#ranked-mode h3{font-size:1.6rem;margin-bottom:18px;text-align:center;}
-    #cosmetic-shop h3{color:var(--goon);text-shadow:0 0 16px var(--goon);}
-    #ranked-mode h3{color:var(--gold);text-shadow:0 0 16px var(--gold);}
-    #cosmetics-list,#ranked-cosmetics-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;}
-    .cosmetic-item,.ranked-cosmetic{background:rgba(255,255,255,.09);border:1px solid var(--glass-border);
-      border-radius:16px;padding:14px;cursor:pointer;transition:.3s;display:flex;flex-direction:column;
-      align-items:center;text-align:center;gap:8px;font-size:.96rem;box-shadow:0 5px 14px rgba(0,0,0,.35);}
-    .cosmetic-item:hover,.ranked-cosmetic:hover{background:rgba(255,255,255,.18);transform:translateY(-5px);
-      box-shadow:0 10px 24px rgba(255,255,255,.12);}
-    .cosmetic-item.unlocked,.ranked-cosmetic.unlocked{background:var(--gold);color:#000;
-      box-shadow:0 0 25px var(--gold);}
-    .cosmetic-icon{width:50px;height:50px;background:var(--goon);color:#000;border-radius:16px;
-      display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 0 22px var(--goon);}
-    #ranked-gps{font-size:1.35rem;margin-bottom:16px;color:var(--gold);text-align:center;
-      text-shadow:0 0 12px var(--gold);}
-    #bot-battle{margin:14px auto 0;display:block;padding:14px 32px;background:var(--gold);
-      color:#000;border:none;border-radius:16px;cursor:pointer;font-size:1.1rem;box-shadow:0 0 22px var(--gold);}
-    #bot-battle:hover{transform:scale(1.06);}
-    #bot-status{color:#ccc;font-size:1rem;margin-top:12px;text-align:center;}
-    #badges{display:flex;justify-content:center;gap:16px;margin-top:18px;flex-wrap:wrap;}
-    .badge{padding:10px 18px;background:var(--gold);color:#000;border-radius:12px;font-weight:600;
-      font-size:.98rem;box-shadow:0 0 20px var(--gold);opacity:0;transform:scale(0);transition:opacity .5s,transform .5s;position:relative;overflow:hidden;}
-    .badge::before{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);transition:left .6s;transform:skewX(-25deg);}
-    .badge.unlocked{opacity:1;transform:scale(1);}
-    .badge.unlocked::before{left:200%;}
-    .badge.bronze{background:var(--bronze);box-shadow:0 0 20px var(--bronze);}
-    .badge.silver{background:var(--silver);box-shadow:0 0 20px var(--silver);}
-    .badge.gold{background:var(--gold);box-shadow:0 0 20px var(--gold);}
-    .badge.diamond{background:#b9f2ff;box-shadow:0 0 20px #b9f2ff;color:#000;}
-    .badge.legend{background:linear-gradient(45deg,#ff00ff,#00ffff);box-shadow:0 0 30px #ff00ff;color:#fff;}
-    .badge.god{background:linear-gradient(45deg,#ff4500,#ffd700);box-shadow:0 0 40px #ff4500;color:#fff;
-      animation:pulseGod 2s infinite;}
-    @keyframes pulseGod{0%,100%{box-shadow:0 0 40px #ff4500;}50%{box-shadow:0 0 60px #ff4500,0 0 80px #ffd700;}}
-    /* OVERLAYS */
-    #splat-overlay{position:fixed;inset:0;pointer-events:none;z-index:999;opacity:0;}
-    .splat{position:absolute;width:100px;height:100px;background:#fff;border-radius:50%;
-      filter:blur(20px);opacity:.8;animation:splatAnim 1.5s ease-out forwards;}
-    @keyframes splatAnim{0%{transform:scale(0);opacity:0;}30%{transform:scale(1);}100%{transform:scale(5);opacity:0;}}
-    #goonstiege-overlay{position:fixed;inset:0;background:#000;z-index:1000;opacity:0;
-      pointer-events:none;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-    #goonstiege-overlay.active{opacity:1;pointer-events:all;animation:goonstiegeIn .8s ease-out;}
-    @keyframes goonstiegeIn{0%{opacity:0;transform:scale(.8);}100%{opacity:1;transform:scale(1);}}
-    .goonstiege-effect{position:absolute;width:100%;height:100%;background:var(--goon);
-      transform:scale(0);border-radius:50%;animation:goonstiegeBurst 1.6s ease-out forwards;}
-    @keyframes goonstiegeBurst{0%{transform:scale(0);opacity:1;}70%{transform:scale(1.5);opacity:.6;}
-      100%{transform:scale(3);opacity:0;}}
-    .goonstiege-text{font-size:6rem;font-weight:900;color:#fff;text-shadow:0 0 40px var(--goon);
-      animation:goonstiegeText 2s ease-out forwards;opacity:0;}
-    @keyframes goonstiegeText{0%{opacity:0;transform:scale(.5) rotate(-180deg);}50%{opacity:1;transform:scale(1.2) rotate(0);}
-      100%{opacity:0;transform:scale(.8) rotate(180deg);}}
+    .discord-tag{display:flex;align-items:center;gap:10px;font-size:.94rem;color:var(--discord);margin-top:6px;}
+    .discord-tag i{filter:drop-shadow(0 0 10px #5865f2);animation:discordPulse 2.5s infinite alternate;}
+    @keyframes discordPulse{from{filter:drop-shadow(0 0 10px #5865f2);}to{filter:drop-shadow(0 0 20px #5865f2);}}
+    .empty-slot{color:#666;font-style:italic;font-size:1.08rem;}
+    .error-msg{text-align:center;padding:40px;color:#f88;font-size:1.1rem;}
+    .retry-btn{margin-top:16px;padding:12px 32px;background:#f44;color:#fff;border:none;
+      border-radius:12px;cursor:pointer;font-weight:600;transition:.3s;}
+    .retry-btn:hover{background:#f66;transform:scale(1.05);}
+    .last-updated{font-size:.95rem;color:var(--muted);text-align:center;margin:20px 0;opacity:.9;}
     /* LOADER */
     #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
       align-items:center;justify-content:center;transition:opacity 1s ease;z-index:100;cursor:pointer;}
-    #logo{font-size:5rem;font-weight:900;text-transform:uppercase;color:var(--accent);
-      letter-spacing:8px;background:linear-gradient(45deg,#fff,#ccc);-webkit-background-clip:text;
+    #logo{font-size:5.5rem;font-weight:900;text-transform:uppercase;color:var(--accent);
+      letter-spacing:9px;background:linear-gradient(45deg,#fff,#ccc);-webkit-background-clip:text;
       background-clip:text;color:transparent;animation:glow 2.5s ease-in-out infinite alternate;}
-    @keyframes glow{from{text-shadow:0 0 20px var(--accent);}to{text-shadow:0 0 60px var(--accent),0 0 120px var(--accent);}}
+    @keyframes glow{from{text-shadow:0 0 25px var(--accent);}to{text-shadow:0 0 70px var(--accent),0 0 140px var(--accent);}}
     footer{margin-top:18px;text-align:center;font-size:.85rem;color:var(--muted);position:absolute;
       bottom:20px;left:0;right:0;}
     footer a{color:var(--muted);text-decoration:none;transition:.2s;}
     footer a:hover{color:#eee;text-decoration:underline;}
     .credit{font-size:.78rem;color:#777;margin-top:12px;opacity:.7;font-style:italic;}
     .hidden{display:none!important;}
-    @media (max-width:1100px){#goon-top{flex-direction:column;align-items:center;}
-      #goon-left{width:100%;max-width:400px;}#goon-bottom{grid-template-columns:1fr;}}
-    @media (max-width:600px){#app{padding:16px;}h1{font-size:2.2rem;}
-      .tab{padding:10px 20px;font-size:.95rem;}#goon-big{width:240px;height:340px;}
-      #next-prestige-bar{width:260px;}#goon-prestige{width:220px;font-size:1.1rem;}}
+    @media (max-width:800px){
+      #app{padding:20px;}h1{font-size:2.5rem;}
+      .avatar{width:60px;height:60px;}
+      th,td{padding:18px 20px;}
+      .rank{font-size:1.6rem;}
+    }
+    @media (max-width:500px){
+      h1{font-size:2rem;letter-spacing:2px;}
+      .name{gap:16px;font-size:1rem;}
+      .avatar{width:50px;height:50px;}
+      th,td{padding:14px 16px;}
+    }
   </style>
 </head>
 <body>
@@ -192,140 +92,38 @@
   <!-- LOADER -->
   <div id="loader" tabindex="0" role="button" aria-label="Enter">
     <div id="logo">GOONING</div>
-    <div style="margin-top:22px;color:#999;font-size:1.25rem;">Click or press Enter</div>
+    <div style="margin-top:22px;color:#999;font-size:1.3rem;">Click or press Enter</div>
   </div>
 
   <div id="app" class="hidden">
-    <h1>Gooning Hub</h1>
+    <h1>Gooning Leaderboard</h1>
 
-    <div class="tabs">
-      <div class="tab active" data-tab="leaderboard">Leaderboard</div>
-      <div class="tab" data-tab="games">Goon Clicker</div>
+    <div id="loading" style="text-align:center;color:#bbb;margin:32px 0;font-size:1.1rem;">Loading leaderboard...</div>
+    <div id="error" class="error-msg hidden">
+      Failed to load leaderboard.<br>
+      <button class="retry-btn" onclick="fetchLeaderboard()">Retry</button>
     </div>
 
-    <!-- LEADERBOARD -->
-    <div id="leaderboard" class="panel active">
-      <div id="loading" style="text-align:center;color:#bbb;margin:26px 0;font-size:1.05rem;">Loading leaderboard...</div>
-      <div class="table-container">
-        <table id="board" class="hidden">
-          <thead><tr><th style="width:120px">Rank</th><th>Player</th></tr></thead>
-          <tbody id="rows"></tbody>
-        </table>
-      </div>
-      <div class="last-updated" id="updated"></div>
+    <div class="table-container">
+      <table id="board" class="hidden">
+        <thead><tr><th style="width:130px">Rank</th><th>Player</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
     </div>
 
-    <!-- GOON CLICKER -->
-    <div id="games" class="panel">
-      <div id="goon-game">
-        <div id="goon-top">
-          <div id="goon-left">
-            <div id="next-prestige-bar">
-              Next Goonstiege: <span id="next-threshold">3,000</span>
-              <div id="prestige-progress"><div id="prestige-fill"></div></div>
-            </div>
-
-            <div id="goon-big">
-              <svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#fdb"/><stop offset="100%" stop-color="#fea"/>
-                  </linearGradient>
-                  <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#321"/><stop offset="100%" stop-color="#210"/>
-                  </linearGradient>
-                  <linearGradient id="underwearGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#ddd"/>
-                  </linearGradient>
-                  <pattern id="absPattern" patternUnits="userSpaceOnUse" width="40" height="40">
-                    <path d="M0 20 Q10 15 20 20 T40 20" fill="none" stroke="#555" stroke-width="3"/>
-                    <path d="M0 30 Q10 25 20 30 T40 30" fill="none" stroke="#555" stroke-width="3"/>
-                  </pattern>
-                </defs>
-                <g id="goon-character">
-                  <path d="M65 35 Q80 15 100 10 Q120 15 135 35 Q140 55 135 65 Q100 75 65 65 Q60 55 65 35"
-                    fill="url(#hairGrad)" stroke="#210" stroke-width="2"/>
-                  <ellipse class="head" cx="100" cy="55" rx="38" ry="42" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                  <path d="M70 65 Q100 85 130 65" fill="none" stroke="#cca" stroke-width="3"/>
-                  <ellipse cx="82" cy="50" rx="12" ry="8" fill="#fff"/>
-                  <ellipse cx="118" cy="50" rx="12" ry="8" fill="#fff"/>
-                  <circle cx="85" cy="52" r="5" fill="#08d"/>
-                  <circle cx="121" cy="52" r="5" fill="#08d"/>
-                  <path d="M100 55 Q95 60 100 65" fill="none" stroke="#cca" stroke-width="2"/>
-                  <path d="M85 72 Q100 78 115 72" fill="none" stroke="#f68" stroke-width="4"/>
-                  <path d="M80 90 Q100 95 120 90 L125 110 Q100 120 75 110 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                  <path d="M65 110 Q50 140 65 200 Q75 230 100 230 Q125 230 135 200 Q150 140 135 110 Z"
-                    fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                  <ellipse cx="85" cy="130" rx="25" ry="18" fill="#fdb"/>
-                  <ellipse cx="115" cy="130" rx="25" ry="18" fill="#fdb"/>
-                  <circle cx="85" cy="135" r="5" fill="#c99"/>
-                  <circle cx="115" cy="135" r="5" fill="#c99"/>
-                  <rect x="75" y="145" width="50" height="70" fill="url(#absPattern)" opacity=".8"/>
-                  <path id="underwear-path" d="M70 200 Q100 210 130 200 Q135 220 130 230 L70 230 Q65 220 70 200 Z"
-                    fill="url(#underwearGrad)" stroke="#ccc" stroke-width="2"/>
-                  <ellipse cx="100" cy="215" rx="20" ry="14" fill="#eee" opacity=".9"/>
-                  <g class="arm">
-                    <path d="M130 120 Q155 115 170 125 Q180 135 175 145 Q165 140 155 135 L140 130 Z"
-                      fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                    <circle cx="178" cy="138" r="20" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                    <path d="M172 145 Q178 155 184 145" fill="none" stroke="#cca" stroke-width="10"/>
-                  </g>
-                  <ellipse cx="82" cy="250" rx="20" ry="45" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                  <ellipse cx="118" cy="250" rx="20" ry="45" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-                  <rect x="70" y="285" width="24" height="15" rx="6" fill="#fdb"/>
-                  <rect x="106" y="285" width="24" height="15" rx="6" fill="#fdb"/>
-                </g>
-              </svg>
-            </div>
-
-            <div id="goon-stats">
-              Goons: <span id="goons">0</span> | GPS: <span id="gps">0.0</span>
-              <span id="goon-multiplier">x1.0</span>
-            </div>
-
-            <button id="goon-prestige">Goonstiege (0)</button>
-            <div id="badges"></div>
-          </div>
-
-          <div id="goon-right">
-            <div id="goon-store">
-              <div class="store-section"><div class="section-title">Upgrades</div><div id="goon-upgrades"></div></div>
-              <div class="store-section"><div class="section-title">Buildings</div><div id="goon-buildings"></div></div>
-            </div>
-
-            <div id="goon-bottom">
-              <div id="cosmetic-shop"><h3>Cosmetic Shop</h3><div id="cosmetics-list"></div></div>
-              <div id="ranked-mode">
-                <h3>Ranked Mode</h3>
-                <div id="ranked-gps">Your Ranked GPS: <span id="ranked-gps-val">0.0</span></div>
-                <button id="bot-battle">Battle Bot</button>
-                <div id="bot-status"></div>
-                <div id="ranked-cosmetics"><h4>Ranked Cosmetics</h4><div id="ranked-cosmetics-list"></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="last-updated" id="updated"></div>
 
     <footer>
-      Auto-refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
-      <div class="credit">Site made by Xen • Goon Clicker v5.0</div>
+      Auto-refreshed every 60s • <a href="leaderboard.json" target="_blank">view raw JSON</a>
+      <div class="credit">Site made by Xen</div>
     </footer>
   </div>
 
-  <div id="splat-overlay"></div>
-  <div id="goonstiege-overlay"><div class="goonstiege-text">GOONSTIEGE!</div></div>
-
   <script>
     const $ = id => document.getElementById(id);
-    const SAVE_KEY = 'goonhub_v19';
-    let goons = 0, gps = 0, prestige = 0, rankedGPS = 0, threshold = 3000, clickPower = 1;
-    let lastClick = 0, clickerInited = false;
-
-    /* STARFIELD */
     const stars = $('#stars');
     let starCnt = 0;
+
     function addStar(){
       if(starCnt>120) return;
       const s=document.createElement('div'); s.className='star';
@@ -339,7 +137,6 @@
     }
     setInterval(addStar,250);
 
-    /* LOADER */
     function enterHub(){
       const loader=$('loader');
       loader.style.opacity='0';
@@ -347,8 +144,7 @@
         loader.classList.add('hidden');
         $('app').classList.remove('hidden');
         fetchLeaderboard();
-        setInterval(fetchLeaderboard,90000);
-        initClicker();
+        setInterval(fetchLeaderboard,60000); // Every 60s
       },800);
     }
     const loader=$('loader');
@@ -356,17 +152,24 @@
     loader.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();enterHub();}});
     loader.focus();
 
-    /* LEADERBOARD */
     async function fetchLeaderboard(){
-      const loading=$('loading'), board=$('board'), rows=$('rows'), updated=$('updated');
+      const loading=$('loading'), error=$('error'), board=$('board'), rows=$('rows'), updated=$('updated');
+      loading.classList.remove('hidden');
+      error.classList.add('hidden');
+      board.classList.add('hidden');
+
       try{
         const r=await fetch('leaderboard.json?'+Date.now());
+        if(!r.ok) throw new Error('HTTP '+r.status);
         const data=await r.json();
         const list = Array.isArray(data) ? data : (data.leaderboard||[]);
         const time = data.updated || new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+
         const padded = Array(100).fill().map((_,i)=>list[i]||{rank:i+1});
         rows.innerHTML = padded.map((p,idx)=>{
-          const av = p.discordId && p.avatar ? `https://cdn.discordapp.com/avatars/${p.discordId}/${p.avatar}.${p.avatar.startsWith('a_')?'gif':'webp'}?size=80` : 'https://cdn.discordapp.com/embed/avatars/0.png';
+          const av = p.discordId && p.avatar 
+            ? `https://cdn.discordapp.com/avatars/${p.discordId}/${p.avatar}.${p.avatar.startsWith('a_')?'gif':'webp'}?size=80` 
+            : 'https://cdn.discordapp.com/embed/avatars/0.png';
           const rank = p.rank||idx+1;
           return `<tr>
             <td class="rank">${rank}</td>
@@ -374,210 +177,27 @@
               ${p.name||p.discord?`
                 <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name||'User')}"></div>
                 <div>
-                  <div style="font-weight:600;font-size:1.06rem;">${e(p.name||'Unknown')}</div>
+                  <div style="font-weight:600;font-size:1.1rem;">${e(p.name||'Unknown User')}</div>
                   ${p.discord?`<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>`:''}
                 </div>`:`<div class="empty-slot">— Empty Slot —</div>`}
             </td>
           </tr>`;
         }).join('');
+
         updated.textContent=`Last updated: ${time}`;
         loading.classList.add('hidden');
         board.classList.remove('hidden');
-      }catch{
-        loading.textContent='Failed to load leaderboard.';
-        loading.style.color='#f88';
+      }catch(err){
+        console.error(err);
+        loading.classList.add('hidden');
+        error.classList.remove('hidden');
       }
     }
-    function e(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 
-    /* CLICKER DATA */
-    const upgrades = [
-      {id:'click1',name:'Stronger Grip',cost:50,clickMul:2,owned:false},
-      {id:'click2',name:'Turbo Stroke',cost:500,clickMul:3,owned:false},
-      {id:'click3',name:'Goon Master',cost:5000,clickMul:4,owned:false},
-    ];
-    const buildings = [
-      {id:'farm',name:'Goon Farm',baseCps:0.1,baseCost:15,owned:0,cost:15},
-      {id:'factory',name:'Goon Factory',baseCps:1,baseCost:100,owned:0,cost:100},
-      {id:'lab',name:'Goon Lab',baseCps:8,baseCost:1100,owned:0,cost:1100},
-    ];
-    const cosmetics = [
-      {id:'stained',name:'Stained Shorts',cost:500,owned:false,apply:()=>$('#underwear-path').setAttribute('fill','#ffdddd')},
-      {id:'glasses',name:'Cool Shades',cost:2000,owned:false,apply:()=>{}},
-      {id:'hat',name:'Goon Hat',cost:10000,owned:false,apply:()=>{}},
-    ];
-    const rankedCosmetics = [
-      {id:'rankedAura',name:'Ranked Aura',unlock:500,unlocked:false},
-      {id:'goldTrail',name:'Gold Trail',unlock:2000,unlocked:false},
-    ];
-    const badges = [
-      {id:'first',name:'First Goon',req:100,unlocked:false},
-      {id:'thousand',name:'1,000 Goons',req:1000,unlocked:false},
-      {id:'prestige1',name:'Prestige I',reqPrestige:1,unlocked:false},
-      {id:'rankedWin',name:'Ranked Warrior',reqRanked:100,unlocked:false},
-    ];
-
-    function getMult(){return 1 + prestige*0.5;}
-    function calcThreshold(){return Math.floor(3000*Math.pow(1.8,prestige));}
-    function calcCps(){
-      return buildings.reduce((s,b)=>s + b.baseCps*b.owned*getMult(),0);
-    }
-
-    function save(){
-      localStorage.setItem(SAVE_KEY,JSON.stringify({goons,gps,prestige,threshold,rankedGPS,clickPower,
-        upgrades:upgrades.map(u=>({id:u.id,owned:u.owned})),
-        buildings:buildings.map(b=>({id:b.id,owned:b.owned,cost:b.cost})),
-        cosmetics:cosmetics.map(c=>({id:c.id,owned:c.owned})),
-        rankedCosmetics:rankedCosmetics.map(c=>({id:c.id,unlocked:c.unlocked})),
-        version:19}));
-    }
-    function load(){
-      const s=localStorage.getItem(SAVE_KEY);
-      if(!s) return;
-      try{
-        const d=JSON.parse(s);
-        if(d.version!==19) return;
-        goons=+d.goons||0; prestige=+d.prestige||0; rankedGPS=+d.rankedGPS||0;
-        threshold=+d.threshold||calcThreshold();
-        (d.upgrades||[]).forEach(u=>{const x=upgrades.find(v=>v.id===u.id);if(x) x.owned=!!u.owned;});
-        (d.buildings||[]).forEach(b=>{const x=buildings.find(v=>v.id===b.id);
-          if(x){x.owned=+b.owned||0; x.cost=+b.cost||x.baseCost;}});
-        (d.cosmetics||[]).forEach(c=>{const x=cosmetics.find(v=>v.id===c.id);if(x&&c.owned){x.owned=true;x.apply();}});
-        (d.rankedCosmetics||[]).forEach(c=>{const x=rankedCosmetics.find(v=>v.id===c.id);if(x) x.unlocked=c.unlocked;});
-        clickPower=1; upgrades.forEach(u=>{if(u.owned) clickPower*=u.clickMul||1;});
-        gps=calcCps();
-      }catch{}
-    }
-
-    function buildClickerUI(){
-      $('goons').textContent=Math.floor(goons).toLocaleString();
-      $('gps').textContent=gps.toFixed(1);
-      $('goon-multiplier').textContent='x'+getMult().toFixed(1);
-      $('goon-prestige').textContent=`Goonstiege (${prestige})`;
-      $('goon-prestige').classList.toggle('disabled',goons<threshold);
-      $('next-threshold').textContent=threshold.toLocaleString();
-      $('prestige-fill').style.width=`${Math.min(100,(goons/threshold)*100)}%`;
-
-      const upDiv=$('goon-upgrades'); upDiv.innerHTML='';
-      upgrades.forEach(u=>{if(u.owned) return;
-        const div=document.createElement('div'); div.className='goon-upgrade';
-        div.innerHTML=`<div class="goon-upgrade-icon">U</div><div>${u.name}<br><small>${u.cost} goons</small></div>`;
-        div.onclick=()=>{if(goons>=u.cost){goons-=u.cost; u.owned=true; clickPower*=u.clickMul; buildClickerUI();save();}};
-        upDiv.appendChild(div);
-      });
-
-      const bDiv=$('goon-buildings'); bDiv.innerHTML='';
-      buildings.forEach(b=>{
-        const div=document.createElement('div'); div.className='goon-building';
-        div.innerHTML=`<div class="building-icon">B</div>
-          <div>${b.name}<br><small>${b.cost} goons – ${b.baseCps} GPS</small></div>
-          <div class="building-count">${b.owned}</div>`;
-        div.onclick=()=>{if(goons>=b.cost){goons-=b.cost; b.owned++; b.cost=Math.floor(b.cost*1.15); gps=calcCps(); buildClickerUI();save();}};
-        bDiv.appendChild(div);
-      });
-
-      const cList=$('cosmetics-list'); cList.innerHTML='';
-      cosmetics.forEach(c=>{
-        const div=document.createElement('div'); div.className='cosmetic-item'+(c.owned?' unlocked':'');
-        div.innerHTML=`<div class="cosmetic-icon">C</div><div>${c.name}<br><small>${c.cost} goons</small></div>`;
-        if(!c.owned) div.onclick=()=>{if(goons>=c.cost){goons-=c.cost; c.owned=true; c.apply(); buildClickerUI();save();}};
-        cList.appendChild(div);
-      });
-
-      const rcList=$('ranked-cosmetics-list'); rcList.innerHTML='';
-      rankedCosmetics.forEach(rc=>{
-        const unlocked = rankedGPS >= rc.unlock;
-        if(unlocked && !rc.unlocked) rc.unlocked = true;
-        const div=document.createElement('div'); div.className='ranked-cosmetic'+(rc.unlocked?' unlocked':'');
-        div.innerHTML=`<div class="cosmetic-icon">R</div><div>${rc.name}<br><small>${rc.unlock} RGPS</small></div>`;
-        rcList.appendChild(div);
-      });
-
-      const badgeDiv=$('badges'); badgeDiv.innerHTML='';
-      badges.forEach(bd=>{
-        const unlocked = (bd.req && goons>=bd.req) || (bd.reqPrestige && prestige>=bd.reqPrestige) || (bd.reqRanked && rankedGPS>=bd.reqRanked);
-        if(unlocked && !bd.unlocked) bd.unlocked = true;
-        const div=document.createElement('div'); div.className='badge'+(bd.unlocked?' unlocked':'');
-        div.textContent=bd.name;
-        badgeDiv.appendChild(div);
-      });
-
-      $('ranked-gps-val').textContent=rankedGPS.toFixed(1);
-    }
-
-    function bustAnimation(){
-      const overlay=$('splat-overlay');
-      overlay.innerHTML=''; overlay.style.opacity=1;
-      for(let i=0;i<60;i++){
-        const s=document.createElement('div'); s.className='splat';
-        s.style.left=`${30+Math.random()*40}%`; s.style.top=`${30+Math.random()*40}%`;
-        s.style.width=s.style.height=`${Math.random()*200+100}px`; s.style.filter='blur(40px)';
-        overlay.appendChild(s);
-      }
-      setTimeout(()=>{overlay.style.opacity=0; overlay.innerHTML='';},2000);
-    }
-    function triggerGoonstiege(){
-      const ov=$('goonstiege-overlay');
-      ov.classList.add('active'); bustAnimation();
-      for(let i=0;i<5;i++){
-        setTimeout(()=>{const b=document.createElement('div'); b.className='goonstiege-effect';
-          b.style.left=`${30+Math.random()*40}%`; b.style.top=`${30+Math.random()*40}%`;
-          ov.appendChild(b);},i*150);
-      }
-      setTimeout(()=>{ov.classList.remove('active');
-        setTimeout(()=>{ov.innerHTML='<div class="goonstiege-text">GOONSTIEGE!</div>';},1000);
-      },3000);
-    }
-
-    $('#goon-big').addEventListener('pointerdown',e=>{
-      e.preventDefault();
-      const now=performance.now();
-      if(now-lastClick<16) return;
-      lastClick=now;
-      goons += clickPower*getMult();
-      buildClickerUI(); save();
-      const big=$('goon-big');
-      big.style.transform='scale(.93)';
-      requestAnimationFrame(()=>{big.style.transform='';});
-    });
-
-    $('#goon-prestige').onclick=()=>{
-      if(goons>=threshold){
-        triggerGoonstiege();
-        prestige++; goons=0; gps=0; threshold=calcThreshold();
-        buildings.forEach(b=>{b.owned=0; b.cost=b.baseCost;});
-        upgrades.forEach(u=>u.owned=false);
-        clickPower=1; gps=calcCps();
-        buildClickerUI(); save();
-      }
-    };
-
-    $('#bot-battle').onclick=()=>{
-      $('bot-status').textContent='Battling...';
-      setTimeout(()=>{
-        const win=Math.random()>0.28;
-        rankedGPS += win ? 22+prestige*6 : -8;
-        rankedGPS=Math.max(0,rankedGPS);
-        $('bot-status').textContent=win?'Win!':'Loss!';
-        buildClickerUI(); save();
-      },2800);
-    };
-
-    document.querySelectorAll('.tab').forEach(t=>{
-      t.onclick=()=>{
-        document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
-        t.classList.add('active');
-        $(t.dataset.tab).classList.add('active');
-        if(t.dataset.tab==='games' && clickerInited) buildClickerUI();
-      };
-    });
-
-    function initClicker(){
-      load(); buildClickerUI();
-      clickerInited = true;
-      setInterval(()=>{goons+=gps/10; buildClickerUI();},100);
-      setInterval(save,3000);
+    function e(t){
+      const d=document.createElement('div');
+      d.textContent=t;
+      return d.innerHTML;
     }
   </script>
 </body>
