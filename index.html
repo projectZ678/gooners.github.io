@@ -49,11 +49,11 @@
       box-shadow:0 0 20px rgba(255,255,255,.12);transform:translateY(-2px)
     }
     .tab:hover:not(.active){background:rgba(255,255,255,.1);transform:translateY(-2px)}
-    .panel{display:none;animation:fadeIn .6s ease;flex:1;overflow:hidden}
+    .panel{display:none;animation:fadeIn .6s ease;overflow:hidden}
     .panel.active{display:block}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-    /* ────── SQUARE & WIDE LEADERBOARD ────── */
+    /* ────── LEADERBOARD ────── */
     .table-container{
       flex:1;overflow-y:auto;border-radius:16px;margin-top:18px;
       border:1px solid var(--glass-border);background:rgba(0,0,0,.22);
@@ -84,17 +84,18 @@
     tr:hover .avatar{transform:scale(1.2) rotate(6deg)}
     .avatar img{width:100%;height:100%;object-fit:cover}
     .discord-tag{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--discord);margin-top:4px}
-    .discord-tag i{filter:drop-shadow(0 0 7px #5865f2);animation:discordPulse 2.5s infinite alternate}
+    .discord-tag i{filter:drop-shadow 0 0 7px #5865f2;animation:discordPulse 2.5s infinite alternate}
     @keyframes discordPulse{from{filter:drop-shadow(0 0 7px #5865f2)}to{filter:drop-shadow(0 0 15px #5865f2)}}
     .empty-slot{color:#666;font-style:italic;font-size:1.02rem}
 
-    /* ────── GOON CLICKER IN MINI-GAMES TAB ────── */
-    #goon-game{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;height:100%;position:relative}
-    #next-prestige-bar{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);padding:8px 16px;border-radius:12px;font-size:.9rem;color:#fff;border:1px solid var(--glass-border);z-index:10}
+    /* ────── GOON CLICKER ────── */
+    #goon-game{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;position:relative}
+    #goon-left{display:flex;flex-direction:column;align-items:center}
+    #next-prestige-bar{background:rgba(0,0,0,.5);padding:8px 16px;border-radius:12px;font-size:.9rem;color:#fff;border:1px solid var(--glass-border);margin-bottom:16px;z-index:10;align-self:center}
     #prestige-progress{width:200px;height:8px;background:#333;border-radius:4px;overflow:hidden;margin-top:4px}
     #prestige-fill{height:100%;background:var(--goon);width:0%;transition:width .3s ease}
     #goon-big{
-      width:220px;height:320px;margin:auto;cursor:pointer;position:relative;
+      width:220px;height:320px;cursor:pointer;position:relative;
       background:#111;border-radius:16px;overflow:hidden;
       box-shadow:0 0 50px var(--goon),0 0 100px rgba(255,77,140,.6);
       transition:transform .15s
@@ -108,6 +109,12 @@
     @keyframes goonFace{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
     #goon-stats{font-size:1.3rem;margin:16px 0;text-align:center;font-weight:600;color:var(--goon)}
     #goon-stats span{color:var(--accent)}
+    #goon-prestige{
+      margin-top:20px;padding:16px 36px;background:#ffd700;color:#000;
+      border:none;border-radius:12px;font-weight:600;cursor:pointer;font-size:1.1rem;transition:.3s
+    }
+    #goon-prestige:hover{background:#ffea80;transform:scale(1.05)}
+    #goon-prestige.disabled{opacity:.5;cursor:not-allowed}
     .goon-upgrade{
       background:rgba(255,255,255,.07);border:1px solid var(--glass-border);
       border-radius:12px;padding:16px;margin:12px 0;cursor:pointer;transition:.3s;
@@ -119,12 +126,6 @@
       width:40px;height:40px;background:var(--goon);color:#000;border-radius:10px;
       display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem
     }
-    #goon-prestige{
-      margin:24px auto 0;display:block;padding:16px 36px;background:#ffd700;color:#000;
-      border:none;border-radius:12px;font-weight:600;cursor:pointer;font-size:1.1rem;transition:.3s
-    }
-    #goon-prestige:hover{background:#ffea80;transform:scale(1.05)}
-    #goon-prestige.disabled{opacity:.5;cursor:not-allowed}
     #goon-multiplier{display:inline-block;margin-left:10px;color:var(--goon);font-weight:700}
     #splat-overlay{position:fixed;inset:0;pointer-events:none;z-index:999;opacity:0}
     .splat{position:absolute;width:100px;height:100px;background:#fff;border-radius:50%;filter:blur(20px);opacity:.8;animation:splatAnim 1.5s ease-out forwards}
@@ -132,39 +133,31 @@
     .sticky{animation:sticky 2s ease-in-out forwards}
     @keyframes sticky{0%{filter:blur(20px)}100%{filter:blur(0);opacity:.6}}
 
-    /* SCROLLABLE UPGRADES */
+    /* RIGHT SIDE: UPGRADES + SHOP + RANKED */
     #goon-right{flex:1;display:flex;flex-direction:column;height:100%;position:relative}
-    #goon-upgrades{flex:1;overflow-y:auto;padding:0 12px 12px 0;margin-right:-12px;scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent}
-    #goon-upgrades::-webkit-scrollbar{width:8px}
-    #goon-upgrades::-webkit-scrollbar-track{background:transparent}
-    #goon-upgrades::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:4px}
-    #goon-upgrades::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-hover)}
-
-    /* COSMETIC SHOP */
-    #cosmetic-shop{margin-top:20px;padding:20px;background:rgba(0,0,0,.3);border-radius:16px;border:1px solid var(--glass-border)}
-    #cosmetic-shop h3{font-size:1.4rem;margin-bottom:16px;color:var(--goon);text-shadow:0 0 12px var(--goon)}
-    .cosmetic-item{
+    #right-content{flex:1;overflow-y:auto;padding:0 12px 12px 0;margin-right:-12px;scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent;display:flex;flex-direction:column;gap:20px}
+    #right-content::-webkit-scrollbar{width:8px}
+    #right-content::-webkit-scrollbar-track{background:transparent}
+    #right-content::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:4px}
+    #right-content::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-hover)}
+    #goon-upgrades{flex:1;display:flex;flex-direction:column}
+    #cosmetic-shop, #ranked-mode{padding:20px;background:rgba(0,0,0,.3);border-radius:16px;border:1px solid var(--glass-border)}
+    #cosmetic-shop h3, #ranked-mode h3{font-size:1.4rem;margin-bottom:16px;color:var(--goon);text-shadow:0 0 12px var(--goon)}
+    #ranked-mode{border-color:#ffd700}
+    #ranked-mode h3{color:#ffd700;text-shadow:0 0 12px #ffd700}
+    .cosmetic-item, .ranked-cosmetic{
       background:rgba(255,255,255,.07);border:1px solid var(--glass-border);
       border-radius:12px;padding:14px;margin:10px 0;cursor:pointer;transition:.3s;
       display:flex;align-items:center;gap:14px;font-size:1rem
     }
-    .cosmetic-item:hover{background:rgba(255,255,255,.14);transform:translateY(-3px)}
-    .cosmetic-item.locked{opacity:.5;cursor:not-allowed}
+    .cosmetic-item:hover, .ranked-cosmetic:hover{background:rgba(255,255,255,.14);transform:translateY(-3px)}
+    .cosmetic-item.locked, .cosmetic-item.disabled{opacity:.5;cursor:not-allowed}
     .cosmetic-item.unlocked{background:#ffd700;color:#000}
-    .cosmetic-icon{width:40px;height:40px;background:var(--goon);color:#000;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
-
-    /* RANKED MODE */
-    #ranked-mode{margin-top:20px;padding:20px;background:rgba(0,0,0,.3);border-radius:16px;border:1px solid #ffd700}
-    #ranked-mode h3{font-size:1.4rem;margin-bottom:16px;color:#ffd700;text-shadow:0 0 12px #ffd700}
-    #ranked-gps{font-size:1.2rem;margin-bottom:12px;color:#ffd700}
-    #bot-battle{margin-bottom:12px}
-    #bot-status{color:#ccc;font-size:.95rem}
-    #ranked-cosmetics{margin-top:16px}
-    .ranked-cosmetic{
-      background:rgba(255,215,0,.1);border:1px solid #ffd700;
-      border-radius:12px;padding:12px;margin:8px 0;display:flex;align-items:center;gap:12px;font-size:.95rem
-    }
     .ranked-cosmetic.unlocked{background:#ffd700;color:#000}
+    .cosmetic-icon{width:40px;height:40px;background:var(--goon);color:#000;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+    #ranked-gps{font-size:1.2rem;margin-bottom:12px;color:#ffd700}
+    #bot-battle{margin-bottom:12px;padding:10px 20px;background:#ffd700;color:#000;border:none;border-radius:12px;cursor:pointer}
+    #bot-status{color:#ccc;font-size:.95rem}
 
     #loader{
       position:fixed;inset:0;background:var(--bg);
@@ -216,14 +209,14 @@
   <!-- MINI-GAMES PANEL: GOON CLICKER -->
   <div id="games" class="panel">
     <div id="goon-game">
-      <div id="next-prestige-bar">
-        Next Goonstiege: <span id="next-threshold">3,000</span>
-        <div id="prestige-progress"><div id="prestige-fill"></div></div>
-      </div>
-      <div>
+      <div id="goon-left">
+        <div id="next-prestige-bar">
+          Next Goonstiege: <span id="next-threshold">3,000</span>
+          <div id="prestige-progress"><div id="prestige-fill"></div></div>
+        </div>
         <div id="goon-big">
           <svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
-            <!-- Premium gooner: muscular, detailed, hot -->
+            <!-- Naked gooner: only underwear, muscular, detailed -->
             <defs>
               <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#fdb"/>
@@ -233,84 +226,83 @@
                 <stop offset="0%" stop-color="#321"/>
                 <stop offset="100%" stop-color="#210"/>
               </linearGradient>
-              <linearGradient id="shortsGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#333"/>
-                <stop offset="100%" stop-color="#111"/>
+              <linearGradient id="underwearGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#fff"/>
+                <stop offset="100%" stop-color="#ddd"/>
               </linearGradient>
               <pattern id="absPattern" patternUnits="userSpaceOnUse" width="40" height="40">
                 <path d="M0 20 Q10 15 20 20 T40 20" fill="none" stroke="#555" stroke-width="3"/>
                 <path d="M0 30 Q10 25 20 30 T40 30" fill="none" stroke="#555" stroke-width="3"/>
               </pattern>
             </defs>
-            <!-- Hair (messy, sexy) -->
+            <!-- Hair (messy)AMENTO -->
             <path d="M65 35 Q80 15 100 10 Q120 15 135 35 Q140 55 135 65 Q100 75 65 65 Q60 55 65 35" fill="url(#hairGrad)" stroke="#210" stroke-width="2"/>
             <!-- Head -->
             <ellipse class="head" cx="100" cy="55" rx="38" ry="42" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
             <!-- Jawline -->
             <path d="M70 65 Q100 85 130 65" fill="none" stroke="#cca" stroke-width="3"/>
-            <!-- Eyes (intense goon stare) -->
+            <!-- Eyes (goon stare) -->
             <ellipse cx="82" cy="50" rx="12" ry="8" fill="#fff"/>
             <ellipse cx="118" cy="50" rx="12" ry="8" fill="#fff"/>
             <circle cx="85" cy="52" r="5" fill="#08d"/>
             <circle cx="121" cy="52" r="5" fill="#08d"/>
-            <path d="M78 48 Q82 45 86 48" fill="none" stroke="#000" stroke-width="2"/>
-            <path d="M114 48 Q118 45 122 48" fill="none" stroke="#000" stroke-width="2"/>
             <!-- Nose -->
             <path d="M100 55 Q95 60 100 65" fill="none" stroke="#cca" stroke-width="2"/>
-            <!-- Mouth (parted, drooling vibe) -->
+            <!-- Mouth (parted) -->
             <path d="M85 72 Q100 78 115 72" fill="none" stroke="#f68" stroke-width="4"/>
-            <path d="M92 75 Q100 80 108 75" fill="none" stroke="#f34" stroke-width="2"/>
-            <!-- Neck + Traps -->
+            <!-- Neck -->
             <path d="M80 90 Q100 95 120 90 L125 110 Q100 120 75 110 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-            <!-- Torso (buff) -->
-            <path d="M65 110 Q50 140 65 200 Q75 230 100 230 Q125 230 135 200 Q150 140 135 110 Z" fill="#666" stroke="#555" stroke-width="2"/>
-            <path d="M65 110 Q100 105 135 110" fill="none" stroke="#777" stroke-width="3"/>
+            <!-- Torso (buff, naked) -->
+            <path d="M65 110 Q50 140 65 200 Q75 230 100 230 Q125 230 135 200 Q150 140 135 110 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
             <!-- Pecs -->
-            <ellipse cx="85" cy="130" rx="25" ry="18" fill="#777"/>
-            <ellipse cx="115" cy="130" rx="25" ry="18" fill="#777"/>
-            <!-- Abs (8-pack) -->
+            <ellipse cx="85" cy="130" rx="25" ry="18" fill="#fdb"/>
+            <ellipse cx="115" cy="130" rx="25" ry="18" fill="#fdb"/>
+            <!-- Nipples -->
+            <circle cx="85" cy="135" r="5" fill="#c99"/>
+            <circle cx="115" cy="135" r="5" fill="#c99"/>
+            <!-- Abs -->
             <rect x="75" y="145" width="50" height="70" fill="url(#absPattern)" opacity=".8"/>
-            <!-- Shorts -->
-            <path d="M65 200 Q100 210 135 200 L140 230 L60 230 Z" fill="url(#shortsGrad)" stroke="#000" stroke-width="2"/>
+            <!-- Underwear (briefs) -->
+            <path d="M70 200 Q100 210 130 200 Q135 220 130 230 L70 230 Q65 220 70 200 Z" fill="url(#underwearGrad)" stroke="#ccc" stroke-width="2"/>
             <!-- Bulge -->
-            <ellipse cx="100" cy="215" rx="18" ry="12" fill="#222" opacity=".8"/>
-            <!-- Arm (muscular, stroking) -->
+            <ellipse cx="100" cy="215" rx="20" ry="14" fill="#eee" opacity=".9"/>
+            <!-- Arm (stroking) -->
             <g class="arm">
               <path d="M130 120 Q155 115 170 125 Q180 135 175 145 Q165 140 155 135 L140 130 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
               <circle cx="178" cy="138" r="20" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-              <!-- Hand (gripping) -->
               <path d="M172 145 Q178 155 184 145" fill="none" stroke="#cca" stroke-width="10"/>
-              <path d="M175 148 Q178 153 181 148" fill="none" stroke="#cca" stroke-width="6"/>
             </g>
-            <!-- Legs (thicc) -->
-            <ellipse cx="82" cy="250" rx="20" ry="45" fill="#555" stroke="#444" stroke-width="2"/>
-            <ellipse cx="118" cy="250" rx="20" ry="45" fill="#555" stroke="#444" stroke-width="2"/>
+            <!-- Legs (naked) -->
+            <ellipse cx="82" cy="250" rx="20" ry="45" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
+            <ellipse cx="118" cy="250" rx="20" ry="45" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
             <!-- Feet -->
-            <rect x="70" y="285" width="24" height="15" rx="6" fill="#000"/>
-            <rect x="106" y="285" width="24" height="15" rx="6" fill="#000"/>
+            <rect x="70" y="285" width="24" height="15" rx="6" fill="#fdb"/>
+            <rect x="106" y="285" width="24" height="15" rx="6" fill="#fdb"/>
           </svg>
         </div>
         <div id="goon-stats">Goons: <span id="goons">0</span> | GPS: <span id="gps">0</span> <span id="goon-multiplier"></span></div>
+        <button id="goon-prestige">Goonstiege (0)</button>
       </div>
       <div id="goon-right">
-        <div id="goon-upgrades"></div>
-        <div id="cosmetic-shop">
-          <h3>Cosmetic Shop</h3>
-          <div id="cosmetics-list"></div>
-        </div>
-        <div id="ranked-mode">
-          <h3>Ranked Mode</h3>
-          <div id="ranked-gps">Your Ranked GPS: <span id="ranked-gps-val">0</span></div>
-          <button id="bot-battle">Battle Bot (Coming Soon)</button>
-          <div id="bot-status"></div>
-          <div id="ranked-cosmetics">
-            <h4>Ranked Cosmetics</h4>
-            <div id="ranked-cosmetics-list"></div>
+        <div id="right-content">
+          <div id="goon-upgrades"></div>
+          <div id="cosmetic-shop">
+            <h3>Cosmetic Shop</h3>
+            <div id="cosmetics-list"></div>
+          </div>
+          <div id="ranked-mode">
+            <h3>Ranked Mode</h3>
+            <div id="ranked-gps">Your Ranked GPS: <span id="ranked-gps-val">0</span></div>
+            <button id="bot-battle">Battle Bot (Coming Soon)</button>
+            <div id="bot-status"></div>
+            <div id="ranked-cosmetics">
+              <h4>Ranked Cosmetics</h4>
+              <div id="ranked-cosmetics-list"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <button id="goon-prestige">Goonstiege (0)</button>
   </div>
 
   <footer>
@@ -398,24 +390,23 @@
     }
   }
 
-  /* ────── GOON CLICKER (IN MINI-GAMES TAB) ────── */
-  const SAVE_KEY = 'goonClickerSave_v4'; // New version for cosmetics + ranked
+  /* ────── GOON CLICKER ────── */
+  const SAVE_KEY = 'goonClickerSave_v5';
   let goons = 0, gps = 0, prestige = 0, rankedGPS = 0;
   let threshold = 3000;
   const baseCosts = [25,110,1010,8010,50010,200010];
   const incs = [0.1,1,10,50,200,1000];
   const cosmetics = [
-    {id:'stained-pants',name:'Goon Stained Pants',cost:5000,icon:'tint',type:'pants'},
-    {id:'stained-shirt',name:'Goon Stained Shirt',cost:10000,icon:'tshirt',type:'shirt'},
-    {id:'goon-glasses',name:'Goon Glasses',cost:15000,icon:'glasses',type:'face'},
-    {id:'goon-hat',name:'Goon Hat',cost:25000,icon:'hat-cowboy',type:'head'},
-    {id:'goon-aura',name:'Goon Aura',cost:50000,icon:'spa',type:'aura'}
+    {id:'stained-pants',name:'Goon Stained Underwear',cost:5000,icon:'tint',owned:false},
+    {id:'goon-glasses',name:'Goon Glasses',cost:10000,icon:'glasses',owned:false},
+    {id:'goon-hat',name:'Goon Hat',cost:15000,icon:'hat-cowboy',owned:false},
+    {id:'goon-aura',name:'Goon Aura Glow',cost:30000,icon:'spa',owned:false}
   ];
   const rankedCosmetics = [
-    {id:'rank-bronze',name:'Bronze Rank Badge',threshold:100,icon:'medal'},
-    {id:'rank-silver',name:'Silver Rank Badge',threshold:500,icon:'medal'},
-    {id:'rank-gold',name:'Gold Rank Badge',threshold:2000,icon:'trophy'},
-    {id:'rank-diamond',name:'Diamond Rank Badge',threshold:10000,icon:'gem'}
+    {id:'bronze',name:'Bronze Badge',threshold:100,icon:'medal',unlocked:false},
+    {id:'silver',name:'Silver Badge',threshold:500,icon:'medal',unlocked:false},
+    {id:'gold',name:'Gold Trophy',threshold:2000,icon:'trophy',unlocked:false},
+    {id:'diamond',name:'Diamond Gem',threshold:10000,icon:'gem',unlocked:false}
   ];
   const upgrades = [
     {id:'auto',name:'Auto-Gooner',cost:baseCosts[0],inc:incs[0],owned:0,icon:'robot'},
@@ -427,61 +418,38 @@
   ];
   const big=$('goon-big'),goonDisp=$('goons'),gpsDisp=$('gps'),multiDisp=$('goon-multiplier'),upDiv=$('goon-upgrades'),prestigeBtn=$('goon-prestige');
   const nextThresh=$('next-threshold'),progFill=$('prestige-fill'),overlay=$('splat-overlay');
-  const cosmeticsList=$('cosmetics-list'),rankedCosmeticsList=$('ranked-cosmetics-list'),rankedGPSVal=$('ranked-gps-val'),botStatus=$('bot-status');
+  const cosmeticsList=$('cosmetics-list'),rankedList=$('ranked-cosmetics-list'),rankedVal=$('ranked-gps-val'),botStatus=$('bot-status');
 
   function getMult(){return 1 + prestige * 0.5;}
 
   function calcThreshold(){return Math.floor(3000 * Math.pow(1.8, prestige));}
 
   function saveGame(){
-    const saveData = {
+    localStorage.setItem(SAVE_KEY, JSON.stringify({
       goons, gps, prestige, threshold, rankedGPS,
-      upgrades: upgrades.map(u => ({id: u.id, owned: u.owned, cost: u.cost})),
-      ownedCosmetics: cosmetics.filter(c => c.owned).map(c => c.id),
-      unlockedRanked: rankedCosmetics.filter(c => rankedGPS >= c.threshold).map(c => c.id)
-    };
-    localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+      upgrades: upgrades.map(u=>({id:u.id,owned:u.owned,cost:u.cost})),
+      cosmetics: cosmetics.map(c=>({id:c.id,owned:c.owned})),
+      rankedCosmetics: rankedCosmetics.map(c=>({id:c.id,unlocked:c.unlocked}))
+    }));
   }
 
   function loadGame(){
-    const saved = localStorage.getItem(SAVE_KEY) || localStorage.getItem('goonClickerSave_v3') || localStorage.getItem('goonClickerSave_v2') || localStorage.getItem('goonClickerSave');
+    const saved = localStorage.getItem(SAVE_KEY) || localStorage.getItem('goonClickerSave_v4') || localStorage.getItem('goonClickerSave_v3');
     if(saved){
-      const data = JSON.parse(saved);
-      goons = data.goons || 0;
-      gps = data.gps || 0;
-      prestige = data.prestige || 0;
-      rankedGPS = data.rankedGPS || 0;
-      threshold = data.threshold || calcThreshold();
-      if(data.upgrades){
-        data.upgrades.forEach(savedU => {
-          const u = upgrades.find(x => x.id === savedU.id);
-          if(u){
-            u.owned = savedU.owned || 0;
-            u.cost = savedU.cost || baseCosts[upgrades.indexOf(u)];
-          }
-        });
-      }
-      gps = 0;
-      upgrades.forEach(u => gps += u.inc * u.owned * getMult());
-      if(data.ownedCosmetics){
-        data.ownedCosmetics.forEach(id => {
-          const c = cosmetics.find(x => x.id === id);
-          if(c) c.owned = true;
-        });
-      }
-      if(data.unlockedRanked){
-        data.unlockedRanked.forEach(id => {
-          const c = rankedCosmetics.find(x => x.id === id);
-          if(c) c.unlocked = true;
-        });
-      }
-      if(!data.threshold) threshold = calcThreshold();
+      const d = JSON.parse(saved);
+      goons = d.goons || 0;
+      gps = d.gps || 0;
+      prestige = d.prestige || 0;
+      rankedGPS = d.rankedGPS || 0;
+      threshold = d.threshold || calcThreshold();
+      (d.upgrades||[]).forEach(u=> {const x=upgrades.find(v=>v.id===u.id); if(x){x.owned=u.owned||0; x.cost=u.cost||baseCosts[upgrades.indexOf(x)];}});
+      gps = upgrades.reduce((a,u)=>a + u.inc * u.owned * getMult(),0);
+      (d.cosmetics||[]).forEach(c=> {const x=cosmetics.find(v=>v.id===c.id); if(x) x.owned=c.owned;});
+      (d.rankedCosmetics||[]).forEach(c=> {const x=rankedCosmetics.find(v=>v.id===c.id); if(x) x.unlocked=c.unlocked;});
     }
   }
 
-  function resetCosts(){
-    upgrades.forEach((u, i) => u.cost = baseCosts[i]);
-  }
+  function resetCosts(){upgrades.forEach((u,i)=>u.cost=baseCosts[i]);}
 
   function updateGoon(){
     goonDisp.textContent = Math.floor(goons).toLocaleString();
@@ -490,20 +458,23 @@
     prestigeBtn.textContent = `Goonstiege (${prestige})`;
     prestigeBtn.classList.toggle('disabled', goons < threshold);
     nextThresh.textContent = threshold.toLocaleString();
-    const prog = Math.min(100, (goons / threshold) * 100);
-    progFill.style.width = `${prog}%`;
+    progFill.style.width = `${Math.min(100, goons / threshold * 100)}%`;
 
+    upDiv.innerHTML = '';
     upgrades.forEach(u => {
-      const el = $(u.id);
-      if(el){
-        el.querySelector('.owned').textContent = u.owned;
-        el.querySelector('.cost').textContent = u.cost.toLocaleString();
-        el.querySelector('.inc').textContent = (u.inc * getMult()).toFixed(1);
-        el.classList.toggle('disabled', goons < u.cost);
-      }
+      const div = document.createElement('div'); div.className = 'goon-upgrade'; div.id = u.id;
+      div.classList.toggle('disabled', goons < u.cost);
+      div.innerHTML = `
+        <div class="goon-upgrade-icon"><i class="fas fa-${u.icon}"></i></div>
+        <div style="flex:1">
+          <div style="font-weight:600">${u.name}</div>
+          <div style="font-size:.9rem;color:#ccc">Owned: <span class="owned">${u.owned}</span> | Cost: <span class="cost">${u.cost.toLocaleString()}</span> | +<span class="inc">${(u.inc*getMult()).toFixed(1)}</span>/s</div>
+        </div>
+      `;
+      div.addEventListener('click', () => {if(goons >= u.cost){goons -= u.cost; u.owned++; u.cost = Math.ceil(u.cost * 1.15); gps += u.inc * getMult(); updateGoon();}});
+      upDiv.appendChild(div);
     });
 
-    // Cosmetics shop
     cosmeticsList.innerHTML = '';
     cosmetics.forEach(c => {
       const div = document.createElement('div'); div.className = 'cosmetic-item';
@@ -513,126 +484,91 @@
         <div class="cosmetic-icon"><i class="fas fa-${c.icon}"></i></div>
         <div style="flex:1">
           <div style="font-weight:600">${c.name}</div>
-          <div style="font-size:.9rem;color:#ccc">Cost: ${c.cost.toLocaleString()} Goons</div>
+          <div style="font-size:.9rem;color:#ccc">Cost: ${c.cost.toLocaleString()}</div>
         </div>
       `;
-      div.addEventListener('click', () => {
-        if(!c.owned && goons >= c.cost){
-          goons -= c.cost;
-          c.owned = true;
-          applyCosmetic(c.type);
-          updateGoon();
-        }
-      });
+      div.addEventListener('click', () => {if(!c.owned && goons >= c.cost){goons -= c.cost; c.owned=true; applyCosmetics(); updateGoon();}});
       cosmeticsList.appendChild(div);
     });
 
-    // Ranked cosmetics
-    rankedGPSVal.textContent = rankedGPS.toFixed(1);
-    rankedCosmeticsList.innerHTML = '';
+    rankedVal.textContent = rankedGPS.toFixed(1);
+    rankedList.innerHTML = '';
     rankedCosmetics.forEach(c => {
+      c.unlocked = rankedGPS >= c.threshold;
       const div = document.createElement('div'); div.className = 'ranked-cosmetic';
-      div.classList.toggle('unlocked', rankedGPS >= c.threshold);
+      div.classList.toggle('unlocked', c.unlocked);
       div.innerHTML = `
         <div class="cosmetic-icon"><i class="fas fa-${c.icon}"></i></div>
         <div style="flex:1">
           <div style="font-weight:600">${c.name}</div>
-          <div style="font-size:.9rem;color:#ccc">Need ${c.threshold} Ranked GPS</div>
+          <div style="font-size:.9rem;color:#ccc">${c.unlocked?'Unlocked':`Need ${c.threshold} Ranked GPS`}</div>
         </div>
       `;
-      rankedCosmeticsList.appendChild(div);
+      rankedList.appendChild(div);
     });
 
+    applyCosmetics();
     saveGame();
   }
 
-  function applyCosmetic(type){
-    const shorts = document.querySelector('#shortsGrad stop:last-child');
-    if(type === 'pants' && shorts) shorts.setAttribute('stop-color', '#fff');
-    // Add more visual changes per cosmetic
-  }
-
-  function buyGoon(id){
-    const u = upgrades.find(x => x.id === id);
-    if(goons >= u.cost){
-      goons -= u.cost;
-      u.owned++;
-      u.cost = Math.ceil(u.cost * 1.15);
-      gps += u.inc * getMult();
-      updateGoon();
+  function applyCosmetics(){
+    // Example: stain underwear if owned
+    const underwear = document.querySelector('#underwearGrad stop:first-child');
+    if(cosmetics.find(c=>c.id==='stained-pants')?.owned && underwear){
+      underwear.setAttribute('stop-color', '#fffa');
     }
+    // Add more visual effects here
   }
 
-  function splatAnimation(){
+  function bustAnimation(){
     overlay.innerHTML = '';
     overlay.style.opacity = 1;
-    for(let i=0;i<30;i++){
+    for(let i=0;i<50;i++){
       const s = document.createElement('div');
-      s.className = 'splat';
-      s.style.left = `${Math.random()*100}%`;
-      s.style.top = `${Math.random()*100}%`;
-      s.style.width = s.style.height = `${Math.random()*150 + 50}px`;
-      s.style.animationDelay = `${Math.random()*0.5}s`;
+      s.className='splat';
+      s.style.left=`${Math.random()*100}%`;
+      s.style.top=`${Math.random()*100}%`;
+      s.style.width=s.style.height=`${Math.random()*200+80}px`;
+      s.style.background='#fff';
+      s.style.filter='blur(30px)';
+      s.style.animationDelay=`${Math.random()*0.3}s`;
       overlay.appendChild(s);
-      if(i<5) s.classList.add('sticky');
     }
-    setTimeout(()=>{overlay.style.opacity = 0; overlay.innerHTML='';}, 2000);
+    setTimeout(()=>{overlay.style.opacity=0; overlay.innerHTML='';},2500);
   }
 
   big.addEventListener('click',()=>{goons += 1 * getMult(); updateGoon();});
 
-  upgrades.forEach(u => {
-    const div = document.createElement('div'); div.className = 'goon-upgrade'; div.id = u.id;
-    div.innerHTML = `
-      <div class="goon-upgrade-icon"><i class="fas fa-${u.icon}"></i></div>
-      <div style="flex:1">
-        <div style="font-weight:600">${u.name}</div>
-        <div style="font-size:.9rem;color:#ccc">Owned: <span class="owned">0</span> | Cost: <span class="cost">${u.cost}</span> | +<span class="inc">${u.inc}</span>/s</div>
-      </div>
-    `;
-    div.addEventListener('click', () => buyGoon(u.id));
-    upDiv.appendChild(div);
-  });
-
   prestigeBtn.addEventListener('click', () => {
     if(goons >= threshold){
-      splatAnimation();
+      bustAnimation();
       prestige++;
       goons = 0;
       gps = 0;
       threshold = calcThreshold();
-      upgrades.forEach(u => {u.owned = 0;});
+      upgrades.forEach(u => u.owned = 0);
       resetCosts();
       updateGoon();
     }
   });
 
-  // AUTO-GOONER: 3 clicks per second
-  setInterval(() => {
-    if(gps > 0){
-      goons += gps / 3;
-      updateGoon();
-    }
-  }, 333);
-
-  // RANKED MODE (1v1 bots placeholder)
   $('#bot-battle').addEventListener('click', () => {
-    botStatus.textContent = 'Battling bot... (Coming Soon - GPS duel)';
+    botStatus.textContent = 'Battling...';
     setTimeout(() => {
-      const win = Math.random() > 0.5;
-      rankedGPS += win ? 10 + prestige * 2 : -5;
+      const win = Math.random() > 0.4 - prestige*0.02;
+      rankedGPS += win ? 15 + prestige*3 : -8;
       rankedGPS = Math.max(0, rankedGPS);
-      botStatus.textContent = win ? 'You won! +GPS' : 'You lost! -GPS';
+      botStatus.textContent = win ? 'Win! +Ranked GPS' : 'Loss! -Ranked GPS';
       updateGoon();
-    }, 2000);
+    }, 2500);
   });
 
-  // Load & init
+  setInterval(() => {if(gps > 0){goons += gps / 3; updateGoon();}}, 333);
+
   loadGame();
   updateGoon();
   setInterval(saveGame, 10000);
 
-  /* ────── HTML ESCAPE ────── */
   function e(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 </script>
 </body>
