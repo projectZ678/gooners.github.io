@@ -156,7 +156,7 @@ footer{margin-top:32px;text-align:center;font-size:.78rem;color:var(--muted)}
 
 <!-- MAIN APP -->
 <div id="app" class="hidden">
-  <button id="edit-btn" class="hidden">Edit JSON</button>
+  <button id="edit-btn">Edit JSON</button>
   <h1>Gooning Leaderboard</h1>
 
   <div id="loading" style="text-align:center;color:#aaa;margin:22px 0;">Loading…</div>
@@ -184,21 +184,6 @@ footer{margin-top:32px;text-align:center;font-size:.78rem;color:var(--muted)}
 <script>
 const $ = id => document.getElementById(id);
 
-// ────── CHECK IP & SHOW EDIT BUTTON ──────
-async function checkIPAndShowEdit() {
-  try {
-    const res = await fetch('https://api.ipify.org?format=json');
-    const data = await res.json();
-    const userIP = data.ip;
-
-    if (userIP === '192.168.1.136') {
-      $('edit-btn').classList.remove('hidden');
-    }
-  } catch (err) {
-    console.warn('Could not check IP (CORS or offline). Edit button hidden.');
-  }
-}
-
 // ────── DISCORD PFP HELPER ──────
 function getDiscordAvatar(userId, avatarHash, size = 64) {
   if (!userId || !avatarHash) {
@@ -215,7 +200,6 @@ function enterLeaderboard() {
   setTimeout(() => {
     loader.classList.add('hidden');
     $('app').classList.remove('hidden');
-    checkIPAndShowEdit();
     fetchLeaderboard();
     setInterval(fetchLeaderboard, 30000);
   }, 700);
@@ -238,18 +222,27 @@ async function fetchLeaderboard() {
     if (!res.ok) throw new Error('Not found');
     const data = await res.json();
 
-    const list = Array.isArray(data) ? data : (data.leaderboard || []);
+    let list = Array.isArray(data) ? data : (data.leaderboard || []);
     const time = data.updated || new Date().toLocaleTimeString();
 
-    if (!list.length) {
+    // Ensure 100 slots
+    const paddedList = [];
+    for (let i = 0; i < 100; i++) {
+      const entry = list[i] || { rank: i + 1 };
+      paddedList.push(entry);
+    }
+
+    if (!paddedList.length) {
       rows.innerHTML = `<tr><td colspan="2" style="text-align:center;color:#aaa;padding:40px;">No players yet.</td></tr>`;
     } else {
-      rows.innerHTML = list.map(p => {
+      rows.innerHTML = paddedList.map(p => {
+        const hasData = p.name || p.discord;
         const avatarUrl = getDiscordAvatar(p.discordId, p.avatar);
         return `
           <tr>
-            <td class="rank">${e(p.rank || '?')}</td>
+            <td class="rank">${p.rank || '?'}</td>
             <td class="name">
+              ${hasData ? `
               <div class="avatar">
                 <img src="${avatarUrl}"
                      onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"
@@ -259,6 +252,9 @@ async function fetchLeaderboard() {
                 <div style="font-weight:600">${e(p.name || 'Unknown')}</div>
                 ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
               </div>
+              ` : `
+              <div style="color:#555; font-style:italic;">— Empty Slot —</div>
+              `}
             </td>
           </tr>`;
       }).join('');
@@ -273,7 +269,7 @@ async function fetchLeaderboard() {
   }
 }
 
-// ────── EDITOR MODAL (READ-ONLY WARNING) ──────
+// ────── EDITOR MODAL ──────
 const modal = $('editor-modal');
 const jsonEditor = $('json-editor');
 
