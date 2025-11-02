@@ -16,7 +16,7 @@
       font-family:'Inter',system-ui,sans-serif;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html,body{min-height:100vh;background:var(--bg);overflow:hidden;color:var(--text);
+    html,body{min-height:100vh;background:var(--bg);overflow-hidden;color:var(--text);
       display:flex;justify-content:center;align-items:center;padding:12px}
     .stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
     .star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:fall linear infinite}
@@ -91,13 +91,18 @@
     /* ────── GOON CLICKER IN MINI-GAMES TAB ────── */
     #goon-game{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;height:100%}
     #goon-big{
-      width:220px;height:220px;margin:auto;cursor:pointer;
-      background:radial-gradient(circle,var(--goon),#ff2a6d);border-radius:50%;
+      width:220px;height:300px;margin:auto;cursor:pointer;position:relative;
+      background:#111;border-radius:16px;overflow:hidden;
       box-shadow:0 0 50px var(--goon),0 0 100px rgba(255,77,140,.6);
-      transition:transform .15s;position:relative
+      transition:transform .15s
     }
-    #goon-big:active{transform:scale(.92)}
-    #goon-stats{font-size:1.3rem;margin:16px 0;text-align:center;font-weight:600}
+    #goon-big:active{transform:scale(.95)}
+    #goon-big svg{width:100%;height:100%}
+    #goon-big .arm{transform-origin:60% 40%;animation:stroke 1.2s ease-in-out infinite alternate}
+    @keyframes stroke{0%{transform:rotate(0deg)}100%{transform:rotate(20deg)}}
+    #goon-big:active .arm{animation-duration:.3s}
+    #goon-stats{font-size:1.3rem;margin:16px 0;text-align:center;font-weight:600;color:var(--goon)}
+    #goon-stats span{color:var(--accent)}
     .goon-upgrade{
       background:rgba(255,255,255,.07);border:1px solid var(--glass-border);
       border-radius:12px;padding:16px;margin:12px 0;cursor:pointer;transition:.3s;
@@ -110,10 +115,11 @@
       display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem
     }
     #goon-prestige{
-      margin-top:24px;padding:16px 36px;background:#ffd700;color:#000;
-      border:none;border-radius:12px;font-weight:600;cursor:pointer;font-size:1.1rem
+      margin:24px auto 0;display:block;padding:16px 36px;background:#ffd700;color:#000;
+      border:none;border-radius:12px;font-weight:600;cursor:pointer;font-size:1.1rem;transition:.3s
     }
-    #goon-prestige:hover{background:#ffea80}
+    #goon-prestige:hover{background:#ffea80;transform:scale(1.05)}
+    #goon-prestige.disabled{opacity:.5;cursor:not-allowed}
     #goon-multiplier{display:inline-block;margin-left:10px;color:var(--goon);font-weight:700}
 
     #loader{
@@ -167,12 +173,34 @@
   <div id="games" class="panel">
     <div id="goon-game">
       <div>
-        <div id="goon-big"></div>
+        <div id="goon-big">
+          <svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+            <!-- Head -->
+            <circle cx="100" cy="60" r="40" fill="#fdb" stroke="#ccc" stroke-width="2"/>
+            <!-- Eyes -->
+            <circle cx="85" cy="55" r="8" fill="#fff"/>
+            <circle cx="115" cy="55" r="8" fill="#fff"/>
+            <circle cx="87" cy="57" r="4" fill="#000"/>
+            <circle cx="117" cy="57" r="4" fill="#000"/>
+            <!-- Mouth (gooning expression) -->
+            <path d="M80 75 Q100 85 120 75" stroke="#f68" stroke-width="4" fill="none"/>
+            <!-- Body -->
+            <rect x="60" y="100" width="80" height="120" rx="20" fill="#fdb" stroke="#ccc" stroke-width="2"/>
+            <!-- Arm (stroking) -->
+            <g class="arm">
+              <rect x="120" y="120" width="50" height="20" rx="10" fill="#fdb" stroke="#ccc" stroke-width="2"/>
+              <circle cx="175" cy="130" r="15" fill="#fdb" stroke="#ccc" stroke-width="2"/>
+            </g>
+            <!-- Legs -->
+            <rect x="70" y="220" width="25" height="60" rx="12" fill="#888" stroke="#666" stroke-width="2"/>
+            <rect x="105" y="220" width="25" height="60" rx="12" fill="#888" stroke="#666" stroke-width="2"/>
+          </svg>
+        </div>
         <div id="goon-stats">Goons: <span id="goons">0</span> | GPS: <span id="gps">0</span> <span id="goon-multiplier"></span></div>
       </div>
       <div id="goon-upgrades"></div>
     </div>
-    <button id="goon-prestige">Prestige (0)</button>
+    <button id="goon-prestige">Prestige (0) - Need 20,000 Goons</button>
   </div>
 
   <footer>
@@ -260,38 +288,88 @@
   }
 
   /* ────── GOON CLICKER (IN MINI-GAMES TAB) ────── */
+  const SAVE_KEY = 'goonClickerSave';
+  const PRESTIGE_THRESHOLD = 20000;
   let goons = 0, gps = 0, prestige = 0;
+  const baseCosts = [15,100,1000,8000,50000,200000];
   const upgrades = [
     {id:'auto',name:'Auto-Gooner',cost:15,inc:0.1,owned:0,icon:'robot'},
     {id:'factory',name:'Goon Factory',cost:100,inc:1,owned:0,icon:'industry'},
-    {id:'portal',name:'Goon Portal',cost:1000,inc:10,owned:0,icon:'portal-enter'}
+    {id:'portal',name:'Goon Portal',cost:1000,inc:10,owned:0,icon:'portal-enter'},
+    {id:'edge',name:'Edging Master',cost:8000,inc:50,owned:0,icon:'clock'},
+    {id:'harem',name:'Goon Harem',cost:50000,inc:200,owned:0,icon:'users'},
+    {id:'hypno',name:'Hypno Goon',cost:200000,inc:1000,owned:0,icon:'eye'}
   ];
   const big=$('goon-big'),goonDisp=$('goons'),gpsDisp=$('gps'),multiDisp=$('goon-multiplier'),upDiv=$('goon-upgrades'),prestigeBtn=$('goon-prestige');
 
-  big.addEventListener('click',()=>{goons += 1 * getMult(); updateGoon();});
-
   function getMult(){return 1 + prestige * 0.5;}
+
+  function saveGame(){
+    const saveData = {
+      goons,
+      gps,
+      prestige,
+      upgrades: upgrades.map(u => ({id: u.id, owned: u.owned, cost: u.cost}))
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+  }
+
+  function loadGame(){
+    const saved = localStorage.getItem(SAVE_KEY);
+    if(saved){
+      const data = JSON.parse(saved);
+      goons = data.goons || 0;
+      gps = data.gps || 0;
+      prestige = data.prestige || 0;
+      if(data.upgrades){
+        data.upgrades.forEach(savedU => {
+          const u = upgrades.find(x => x.id === savedU.id);
+          if(u){
+            u.owned = savedU.owned || 0;
+            u.cost = savedU.cost || baseCosts[upgrades.indexOf(u)];
+          }
+        });
+      }
+      // Re-calculate GPS from loaded owned upgrades
+      gps = 0;
+      upgrades.forEach(u => gps += u.inc * u.owned * getMult());
+    }
+  }
+
+  function resetCosts(){
+    upgrades.forEach((u, i) => u.cost = baseCosts[i]);
+  }
+
   function updateGoon(){
     goonDisp.textContent = Math.floor(goons).toLocaleString();
     gpsDisp.textContent = gps.toFixed(1);
     multiDisp.textContent = `x${getMult().toFixed(1)}`;
-    prestigeBtn.textContent = `Prestige (${prestige})`;
+    prestigeBtn.textContent = `Prestige (${prestige}) - Need ${PRESTIGE_THRESHOLD.toLocaleString()} Goons`;
+    prestigeBtn.classList.toggle('disabled', goons < PRESTIGE_THRESHOLD);
     upgrades.forEach(u => {
       const el = $(u.id);
       if(el){
         el.querySelector('.owned').textContent = u.owned;
-        el.querySelector('.cost').textContent = u.cost;
+        el.querySelector('.cost').textContent = u.cost.toLocaleString();
+        el.querySelector('.inc').textContent = (u.inc * getMult()).toFixed(1);
         el.classList.toggle('disabled', goons < u.cost);
       }
     });
+    saveGame();
   }
+
   function buyGoon(id){
     const u = upgrades.find(x => x.id === id);
     if(goons >= u.cost){
-      goons -= u.cost; u.owned++; u.cost = Math.ceil(u.cost * 1.15);
-      gps += u.inc * getMult(); updateGoon();
+      goons -= u.cost;
+      u.owned++;
+      u.cost = Math.ceil(u.cost * 1.15);
+      gps += u.inc * getMult();
+      updateGoon();
     }
   }
+
+  big.addEventListener('click',()=>{goons += 1 * getMult(); updateGoon();});
 
   // Create upgrade buttons
   upgrades.forEach(u => {
@@ -300,7 +378,7 @@
       <div class="goon-upgrade-icon"><i class="fas fa-${u.icon}"></i></div>
       <div style="flex:1">
         <div style="font-weight:600">${u.name}</div>
-        <div style="font-size:.9rem;color:#ccc">Owned: <span class="owned">0</span> | Cost: <span class="cost">${u.cost}</span></div>
+        <div style="font-size:.9rem;color:#ccc">Owned: <span class="owned">0</span> | Cost: <span class="cost">${u.cost}</span> | +<span class="inc">${u.inc}</span>/s</div>
       </div>
     `;
     div.addEventListener('click', () => buyGoon(u.id));
@@ -308,9 +386,12 @@
   });
 
   prestigeBtn.addEventListener('click', () => {
-    if(goons >= 1e6){
-      prestige++; goons = 0; gps = 0;
-      upgrades.forEach(u => {u.owned = 0; u.cost = [15,100,1000][upgrades.indexOf(u)];});
+    if(goons >= PRESTIGE_THRESHOLD){
+      prestige++;
+      goons = 0;
+      gps = 0;
+      upgrades.forEach(u => {u.owned = 0;});
+      resetCosts();
       updateGoon();
     }
   });
@@ -323,7 +404,12 @@
     }
   }, 333);
 
+  // Load on start
+  loadGame();
   updateGoon();
+
+  // Save every 10 seconds
+  setInterval(saveGame, 10000);
 
   /* ────── HTML ESCAPE ────── */
   function e(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
