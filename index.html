@@ -1,412 +1,1088 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Gooning Hub – Fixed Upgrades + Ranked</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-/* --------------------------------------------------------------
-   ALL CSS FROM THE PREVIOUS VERSION (unchanged, only trimmed)
-   -------------------------------------------------------------- */
-:root{--bg:#050505;--glass:#111111ee;--glass-border:rgba(255,255,255,.08);
-      --text:#f5f5f5;--muted:#aaa;--accent:#fff;--goon:#ff4d8c;--gold:#ffd700;
-      --silver:#c0c0c0;--bronze:#cd7f32;--cream:#fff8dc;
-      font-family:'Inter',system-ui,sans-serif;}
-*{box-sizing:border-box;margin:0;padding:0;outline:none;user-select:none}
-html,body{min-height:100vh;background:var(--bg);overflow:hidden;color:var(--text);
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gooning Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#050505;--glass:#111111ee;--glass-border:rgba(255,255,255,.08);
+      --text:#f5f5f5;--muted:#aaaaaa;--accent:#fff;--discord:#ccc;
+      --transition:.35s cubic-bezier(.25,.8,.25,1);
+      --scrollbar:#444;--scrollbar-hover:#666;
+      --goon:#ff4d8c;--gold:#ffd700;--silver:#c0c0c0;--bronze:#cd7f32;
+      --goon-glow:#ff69b4;--goon-pulse:#ff1493;--cream:#fff8dc;
+      font-family:'Inter',system-ui,sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;outline:none;user-select:none}
+    html,body{min-height:100vh;background:var(--bg);overflow:hidden;color:var(--text);
       display:flex;justify-content:center;align-items:flex-start;}
-.stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
-.star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:fall linear infinite}
-@keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0}10%{opacity:1}90%{opacity:.3}100%{transform:translateY(100vh) scale(.8);opacity:0}}
-#app{width:100vw;height:100vh;position:relative;z-index:1;backdrop-filter:blur(24px);
-      background:var(--glass);padding:32px 48px;display:flex;flex-direction:column;overflow:hidden;}
-h1{text-align:center;font-weight:800;font-size:3rem;letter-spacing:3.5px;
-   background:linear-gradient(90deg,#fff,#eee);background-clip:text;-webkit-background-clip:text;color:transparent;
-   text-shadow:0 0 40px rgba(255,255,255,.4);margin-bottom:32px;}
-.tabs{display:flex;justify-content:center;gap:22px;margin-bottom:32px}
-.tab{padding:15px 40px;background:rgba(255,255,255,.08);border:1px solid var(--glass-border);
-     border-radius:18px;font-weight:600;cursor:pointer;transition:.3s;color:var(--muted);}
-.tab.active{background:rgba(255,255,255,.2);color:var(--accent);border-color:rgba(255,255,255,.28);
-          box-shadow:0 0 28px rgba(255,255,255,.18);transform:translateY(-4px)}
-.panel{display:none;animation:fadeIn .6s ease;overflow:hidden;height:100%}
-.panel.active{display:flex;flex-direction:column}
-@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    .stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+    .star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:fall linear infinite}
+    @keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0}10%{opacity:1}90%{opacity:.3}100%{transform:translateY(100vh) scale(.8);opacity:0}}
+    #app{
+      width:100vw;height:100vh;position:relative;z-index:1;
+      backdrop-filter:blur(24px);background:var(--glass);
+      padding:32px 48px;transition:all .5s var(--transition);
+      display:flex;flex-direction:column;overflow:hidden;
+    }
+    #app:hover{box-shadow:0 0 60px rgba(255,255,255,.12)}
+    h1{
+      text-align:center;font-weight:800;font-size:3rem;letter-spacing:3.5px;
+      background:linear-gradient(90deg,#fff,#eee);background-clip:text;-webkit-background-clip:text;color:transparent;
+      text-shadow:0 0 40px rgba(255,255,255,.4);margin-bottom:32px;
+      animation:titleGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes titleGlow{from{text-shadow:0 0 25px var(--accent)}to{text-shadow:0 0 50px var(--accent),0 0 100px var(--accent)}}
+    .tabs{display:flex;justify-content:center;gap:22px;margin-bottom:32px}
+    .tab{
+      padding:15px 40px;background:rgba(255,255,255,.08);border:1px solid var(--glass-border);
+      border-radius:18px;font-weight:600;font-size:1.05rem;cursor:pointer;transition:all .3s var(--transition);
+      color:var(--muted);backdrop-filter:blur(6px);
+    }
+    .tab.active{background:rgba(255,255,255,.2);color:var(--accent);border-color:rgba(255,255,255,.28);
+      box-shadow:0 0 28px rgba(255,255,255,.18);transform:translateY(-4px)}
+    .tab:hover:not(.active){background:rgba(255,255,255,.14);transform:translateY(-4px)}
+    .panel{display:none;animation:fadeIn .6s ease;overflow:hidden;height:100%}
+    .panel.active{display:flex;flex-direction:column}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-/* Leaderboard */
-.table-container{flex:1;overflow-y:auto;border-radius:20px;margin-top:22px;
-                 border:1px solid var(--glass-border);background:rgba(0,0,0,.28);}
-table{width:100%;border-collapse:collapse}
-thead{position:sticky;top:0;background:linear-gradient(180deg,rgba(30,30,30,.98),rgba(20,20,20,.95));
-      backdrop-filter:blur(16px);text-transform:uppercase;color:var(--muted);}
-th,td{padding:24px 28px}
-tr:hover{background:rgba(255,255,255,.11);transform:translateX(10px)}
+    /* LEADERBOARD */
+    .table-container{
+      flex:1;overflow-y:auto;border-radius:20px;margin-top:22px;
+      border:1px solid var(--glass-border);background:rgba(0,0,0,.28);
+      box-shadow:inset 0 10px 18px rgba(0,0,0,.5);scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent;
+    }
+    .table-container::-webkit-scrollbar{width:12px}
+    .table-container::-webkit-scrollbar-track{background:transparent}
+    .table-container::-webkit-scrollbar-thumb{
+      background:var(--scrollbar);border-radius:6px;border:3px solid transparent;background-clip:content-box;
+    }
+    .table-container::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-hover)}
+    table{width:100%;border-collapse:collapse}
+    thead{
+      position:sticky;top:0;z-index:10;
+      background:linear-gradient(180deg,rgba(30,30,30,.98),rgba(20,20,20,.95));
+      backdrop-filter:blur(16px);text-transform:uppercase;font-size:.9rem;letter-spacing:2.2px;
+      color:var(--muted);border-bottom:1px solid var(--glass-border);
+    }
+    th,td{padding:24px 28px;transition:all .3s var(--transition)}
+    tr:hover{background:rgba(255,255,255,.11);transform:translateX(10px);box-shadow:0 12px 24px rgba(255,255,255,.12)}
+    .rank{font-weight:800;color:var(--accent);font-size:1.7rem;text-align:center;text-shadow:0 0 18px rgba(255,255,255,.5)}
+    .rank:nth-of-type(1){color:var(--gold);font-size:1.9rem;text-shadow:0 0 30px var(--gold)}
+    .rank:nth-of-type(2){color:var(--silver);font-size:1.85rem;text-shadow:0 0 26px var(--silver)}
+    .rank:nth-of-type(3){color:var(--bronze);font-size:1.8rem;text-shadow:0 0 24px var(--bronze)}
+    .name{display:flex;align-items:center;gap:26px;font-size:1.1rem}
+    .avatar{width:66px;height:66px;border-radius:18px;overflow:hidden;
+      box-shadow:0 0 24px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.2);flex-shrink:0;transition:transform .3s ease}
+    tr:hover .avatar{transform:scale(1.3) rotate(9deg)}
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .discord-tag{display:flex;align-items:center;gap:10px;font-size:.92rem;color:var(--discord);margin-top:6px}
+    .discord-tag i{filter:drop-shadow(0 0 9px #5865f2);animation:discordPulse 2.5s infinite alternate}
+    @keyframes discordPulse{from{filter:drop-shadow(0 0 9px #5865f2)}to{filter:drop-shadow(0 0 18px #5865f2)}}
+    .empty-slot{color:#666;font-style:italic;font-size:1.06rem}
 
-/* Game selector */
-#game-selector{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;text-align:center;}
-#game-selector h2{font-size:2.8rem;color:var(--goon);text-shadow:0 0 30px var(--goon);}
-.game-modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;max-width:900px;}
-.game-card{background:rgba(255,255,255,.09);border:1px solid var(--glass-border);
-           border-radius:20px;padding:32px;cursor:pointer;transition:.35s;display:flex;flex-direction:column;align-items:center;gap:18px;}
-.game-card:hover{transform:translateY(-12px);background:rgba(255,255,255,.18);}
+    /* GAME MODE SELECTOR */
+    #game-selector{
+      flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;
+      text-align:center;
+    }
+    #game-selector h2{
+      font-size:2.8rem;font-weight:800;color:var(--goon);text-shadow:0 0 30px var(--goon);
+      letter-spacing:2px;
+    }
+    .game-modes{
+      display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:28px;width:100%;max-width:900px;
+    }
+    .game-card{
+      background:rgba(255,255,255,.09);border:1px solid var(--glass-border);
+      border-radius:20px;padding:32px;cursor:pointer;transition:.35s;
+      display:flex;flex-direction:column;align-items:center;gap:18px;
+      box-shadow:0 8px 24px rgba(0,0,0,.4);
+    }
+    .game-card:hover{
+      background:rgba(255,255,255,.18);transform:translateY(-12px);box-shadow:0 16px 36px rgba(255,77,140,.3);
+    }
+    .game-icon{
+      width:90px;height:90px;background:var(--goon);color:#000;border-radius:22px;
+      display:flex;align-items:center;justify-content:center;font-size:2.4rem;
+      box-shadow:0 0 30px var(--goon);
+    }
+    .game-title{
+      font-size:1.6rem;font-weight:700;color:var(--accent);text-shadow:0 0 14px var(--accent);
+    }
+    .game-desc{
+      font-size:1.05rem;color:var(--muted);line-height:1.5;
+    }
 
-/* Clicker UI (only the parts we need) */
-#goon-top{flex:1;display:flex;gap:30px;align-items:flex-start;}
-#goon-left{flex:1;display:flex;flex-direction:column;align-items:center;}
-#next-prestige-bar{background:rgba(0,0,0,.6);padding:14px 28px;border-radius:16px;width:300px;text-align:center;}
-#prestige-progress{height:14px;background:#333;border-radius:7px;overflow:hidden;margin-top:10px;}
-#prestige-fill{height:100%;background:var(--goon);width:0%;transition:width .4s ease;}
-#goon-big{width:280px;height:380px;cursor:pointer;box-shadow:0 0 70px var(--goon);}
-#goon-stats{font-size:1.55rem;margin:22px 0;color:var(--goon);}
-#goon-prestige{margin-top:16px;padding:18px 48px;background:var(--gold);color:#000;
-               border:none;border-radius:16px;cursor:pointer;width:260px;}
-#goon-upgrades-wrapper{flex:1;overflow-y:auto;padding-right:20px;}
-.goon-upgrade{background:rgba(255,255,255,.09);border:1px solid var(--glass-border);
-               border-radius:16px;padding:18px;cursor:pointer;display:flex;align-items:center;gap:18px;}
-.goon-upgrade.disabled{opacity:.5;cursor:not-allowed}
-.goon-upgrade-icon{width:46px;height:46px;background:var(--goon);color:#000;border-radius:14px;
-                   display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+    /* GOON CLICKER */
+    #goon-game{display:flex;flex-direction:column;height:100%;gap:24px;padding-bottom:20px}
+    #goon-top{flex:1;display:flex;gap:30px;align-items:flex-start;min-height:0}
+    #goon-left{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+    #next-prestige-bar{
+      background:rgba(0,0,0,.6);padding:14px 28px;border-radius:16px;font-size:1.05rem;color:#fff;
+      border:1px solid var(--glass-border);margin-bottom:20px;width:300px;text-align:center;
+      box-shadow:0 0 25px rgba(255,77,140,.4);align-self:center;
+    }
+    #prestige-progress{width:100%;height:14px;background:#333;border-radius:7px;overflow:hidden;margin-top:10px}
+    #prestige-fill{height:100%;background:var(--goon);width:0%;transition:width .4s ease;
+      box-shadow:0 0 18px var(--goon), 0 0 30px var(--goon-pulse)}
+    #goon-big{
+      width:280px;height:380px;cursor:pointer;position:relative;background:transparent;
+      border-radius:20px;overflow:visible;box-shadow:0 0 70px var(--goon),0 0 140px rgba(255,77,140,.8);
+      transition:transform .2s;flex-shrink:0;
+    }
+    #goon-big:active{transform:scale(.93)}
+    #goon-big svg{width:100%;height:100%;filter:drop-shadow(0 0 20px var(--goon))}
+    #goon-big .arm{transform-origin:68% 38%;animation:stroke 1.2s ease-in-out infinite alternate}
+    @keyframes stroke{0%{transform:rotate(-15deg)}100%{transform:rotate(25deg)}}
+    #goon-big:active .arm{animation-duration:.2s}
+    #goon-big .head{animation:goonFace 4s ease-in-out infinite}
+    @keyframes goonFace{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+    #goon-stats{
+      font-size:1.55rem;margin:22px 0;text-align:center;font-weight:600;color:var(--goon);
+      text-shadow:0 0 14px var(--goon);width:100%;
+    }
+    #goon-stats span{color:var(--accent)}
+    #goon-prestige{
+      margin-top:16px;padding:18px 48px;background:var(--gold);color:#000;
+      border:none;border-radius:16px;font-weight:600;cursor:pointer;font-size:1.25rem;
+      transition:.3s;width:260px;box-shadow:0 0 25px var(--gold);align-self:center;
+    }
+    #goon-prestige:hover{background:#ffea80;transform:scale(1.07)}
+    #goon-prestige.disabled{opacity:.5;cursor:not-allowed}
+    #goon-multiplier{display:inline-block;margin-left:14px;color:var(--goon);font-weight:700}
 
-/* Ranked battle overlay */
-#ranked-battle-overlay{position:fixed;inset:0;background:#000;z-index:2000;opacity:0;pointer-events:none;
-                       display:flex;align-items:center;justify-content:center;transition:opacity .6s;}
-#ranked-battle-overlay.active{opacity:1;pointer-events:all}
-.battle-arena{width:90%;max-width:1000px;height:80vh;background:rgba(0,0,0,.85);border:2px solid var(--goon);
-              border-radius:24px;padding:32px;display:flex;flex-direction:column;}
-.battle-header{font-size:2.2rem;color:var(--goon);text-align:center;margin-bottom:24px;}
-.battle-players{display:flex;justify-content:space-around;align-items:center;flex:1;gap:40px;}
-.player-goon{width:220px;height:300px;cursor:pointer;box-shadow:0 0 60px var(--goon);}
-.player-score{font-size:2.8rem;color:var(--goon);}
-.progress-container{width:100%;height:16px;background:#222;border-radius:8px;overflow:hidden;}
-.progress-bar{height:100%;background:var(--goon);width:0%;transition:width .3s;}
-.round-info{position:absolute;top:20px;left:50%;transform:translateX(-50%);
-            background:rgba(0,0,0,.7);padding:12px 28px;border-radius:16px;color:var(--gold);}
-.battle-controls{display:flex;gap:20px;justify-content:center;margin-top:20px;}
-.battle-btn{padding:14px 36px;background:var(--gold);color:#000;border:none;border-radius:16px;
-            cursor:pointer;min-width:160px;}
-.battle-btn.disabled{opacity:.5;cursor:not-allowed}
+    /* UPGRADES */
+    #goon-upgrades-wrapper{
+      flex:1;overflow-y:auto;padding-right:20px;margin-right:-20px;
+      scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent;
+      display:flex;flex-direction:column;gap:14px;
+    }
+    #goon-upgrades-wrapper::-webkit-scrollbar{width:11px}
+    #goon-upgrades-wrapper::-webkit-scrollbar-track{background:transparent}
+    #goon-upgrades-wrapper::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:5px}
+    #goon-upgrades-wrapper::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-hover)}
+    .goon-upgrade{
+      background:rgba(255,255,255,.09);border:1px solid var(--glass-border);
+      border-radius:16px;padding:18px;cursor:pointer;transition:.3s;
+      display:flex;align-items:center;gap:18px;font-size:1.05rem;
+      box-shadow:0 5px 16px rgba(0,0,0,.35);
+    }
+    .goon-upgrade:hover{background:rgba(255,255,255,.18);transform:translateY(-4px);box-shadow:0 10px 22px rgba(255,255,255,.14)}
+    .goon-upgrade.disabled{opacity:.5;cursor:not-allowed}
+    .goon-upgrade-icon{
+      width:46px;height:46px;background:var(--goon);color:#000;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;
+      box-shadow:0 0 20px var(--goon);
+    }
 
-/* Misc */
-.hidden{display:none!important}
-</style>
+    /* BOTTOM PANELS */
+    #goon-bottom{
+      display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:28px;
+      background:rgba(0,0,0,.35);border-radius:20px;border:1px solid var(--glass-border);
+      box-shadow:inset 0 0 25px rgba(0,0,0,.45);margin-top:16px;
+    }
+    #cosmetic-shop h3, #ranked-mode h3{
+      font-size:1.6rem;margin-bottom:18px;text-align:center;
+    }
+    #cosmetic-shop h3{color:var(--goon);text-shadow:0 0 16px var(--goon)}
+    #ranked-mode h3{color:var(--gold);text-shadow:0 0 16px var(--gold)}
+    #cosmetics-list, #ranked-cosmetics-list{
+      display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:16px;
+    }
+    .cosmetic-item, .ranked-cosmetic{
+      background:rgba(255,255,255,.09);border:1px solid var(--glass-border);
+      border-radius:16px;padding:16px;cursor:pointer;transition:.3s;
+      display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;
+      font-size:.98rem;box-shadow:0 5px 14px rgba(0,0,0,.35);
+    }
+    .cosmetic-item:hover, .ranked-cosmetic:hover{
+      background:rgba(255,255,255,.18);transform:translateY(-5px);box-shadow:0 10px 24px rgba(255,255,255,.12);
+    }
+    .cosmetic-item.locked{opacity:.5;cursor:not-allowed}
+    .cosmetic-item.unlocked, .ranked-cosmetic.unlocked{
+      background:var(--gold);color:#000;box-shadow:0 0 25px var(--gold);
+    }
+    .cosmetic-icon{
+      width:52px;height:52px;background:var(--goon);color:#000;border-radius:16px;
+      display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+      box-shadow:0 0 22px var(--goon);
+    }
+    #ranked-gps{font-size:1.35rem;margin-bottom:16px;color:var(--gold);text-align:center;text-shadow:0 0 12px var(--gold)}
+    #bot-battle{
+      margin:14px auto 0;display:block;padding:14px 32px;background:var(--gold);color:#000;
+      border:none;border-radius:16px;cursor:pointer;font-size:1.1rem;box-shadow:0 0 22px var(--gold);
+    }
+    #bot-battle:hover{transform:scale(1.06)}
+    #bot-status{color:#ccc;font-size:1rem;margin-top:12px;text-align:center}
+    #ranked-cosmetics h4{font-size:1.3rem;margin:18px 0 12px;color:var(--gold);text-align:center}
+
+    /* RANKED BATTLE SCREEN */
+    #ranked-battle-overlay{
+      position:fixed;inset:0;background:#000;z-index:2000;opacity:0;pointer-events:none;
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+      transition:opacity .6s ease;
+    }
+    #ranked-battle-overlay.active{opacity:1;pointer-events:all}
+    .battle-arena{
+      width:90%;max-width:1000px;height:80vh;background:rgba(0,0,0,.85);border:2px solid var(--goon);
+      border-radius:24px;box-shadow:0 0 80px var(--goon);display:flex;flex-direction:column;
+      padding:32px;position:relative;overflow:hidden;
+    }
+    .battle-header{
+      text-align:center;margin-bottom:24px;font-size:2.2rem;font-weight:800;color:var(--goon);
+      text-shadow:0 0 30px var(--goon);letter-spacing:2px;
+    }
+    .battle-players{
+      display:flex;justify-content:space-around;align-items:center;flex:1;gap:40px;
+      position:relative;
+    }
+    .player-container{
+      flex:1;display:flex;flex-direction:column;align-items:center;gap:20px;
+    }
+    .player-goon{
+      width:220px;height:300px;cursor:pointer;position:relative;
+      box-shadow:0 0 60px var(--goon);border-radius:18px;overflow:visible;
+    }
+    .player-goon svg{width:100%;height:100%;filter:drop-shadow(0 0 18px var(--goon))}
+    .player-name{
+      font-size:1.6rem;font-weight:700;color:var(--accent);text-shadow:0 0 16px var(--accent);
+    }
+    .player-score{
+      font-size:2.8rem;font-weight:900;color:var(--goon);text-shadow:0 0 24px var(--goon);
+    }
+    .vs-text{
+      font-size:4rem;font-weight:900;color:var(--gold);text-shadow:0 0 40px var(--gold);
+      animation:pulseVS 1.5s infinite;
+    }
+    @keyframes pulseVS{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+    .progress-container{
+      width:100%;height:16px;background:#222;border-radius:8px;overflow:hidden;
+      box-shadow:inset 0 0 12px rgba(0,0,0,.6);
+    }
+    .progress-bar{
+      height:100%;background:var(--goon);width:0%;transition:width .3s ease;
+      box-shadow:0 0 20px var(--goon);
+    }
+    .round-info{
+      position:absolute;top:20px;left:50%;transform:translateX(-50%);
+      background:rgba(0,0,0,.7);padding:12px 28px;border-radius:16px;
+      font-size:1.3rem;font-weight:600;color:var(--gold);text-shadow:0 0 12px var(--gold);
+      border:1px solid var(--glass-border);
+    }
+    .battle-controls{
+      display:flex;gap:20px;justify-content:center;margin-top:20px;
+    }
+    .battle-btn{
+      padding:14px 36px;background:var(--gold);color:#000;border:none;border-radius:16px;
+      font-weight:600;font-size:1.1rem;cursor:pointer;min-width:160px;
+      box-shadow:0 0 22px var(--gold);transition:.3s;
+    }
+    .battle-btn:hover{transform:scale(1.07);background:#ffea80}
+    .battle-btn.disabled{opacity:.5;cursor:not-allowed}
+
+    /* GOON-STYLE BADGES */
+    #badges{display:flex;justify-content:center;gap:18px;margin-top:20px;flex-wrap:wrap}
+    .badge{
+      padding:10px 20px;background:var(--gold);color:#000;border-radius:12px;
+      font-weight:600;font-size:1rem;box-shadow:0 0 20px var(--gold);
+      opacity:0;transform:scale(0);transition:opacity .5s, transform .5s;
+      position:relative;overflow:hidden;
+    }
+    .badge::before{
+      content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+      transition:left .6s;transform:skewX(-25deg);
+    }
+    .badge.unlocked{opacity:1;transform:scale(1)}
+    .badge.unlocked::before{left:200%}
+    .badge.bronze{background:var(--bronze);box-shadow:0 0 20px var(--bronze)}
+    .badge.silver{background:var(--silver);box-shadow:0 0 20px var(--silver)}
+    .badge.gold{background:var(--gold);box-shadow:0 0 20px var(--gold)}
+    .badge.diamond{background:#b9f2ff;box-shadow:0 0 20px #b9f2ff;color:#000}
+    .badge.legend{background:linear-gradient(45deg,#ff00ff,#00ffff);box-shadow:0 0 30px #ff00ff;color:#fff}
+    .badge.god{background:linear-gradient(45deg,#ff4500,#ffd700);box-shadow:0 0 40px #ff4500;color:#fff;animation:pulseGod 2s infinite}
+
+    @keyframes pulseGod{0%,100%{box-shadow:0 0 40px #ff4500}50%{box-shadow:0 0 60px #ff4500,0 0 80px #ffd700}}
+
+    /* GOONSTIEGE ANIMATION */
+    #goonstiege-overlay{
+      position:fixed;inset:0;background:#000;z-index:1000;opacity:0;pointer-events:none;
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+    }
+    #goonstiege-overlay.active{opacity:1;pointer-events:all;animation:goonstiegeIn .8s ease-out}
+    @keyframes goonstiegeIn{0%{opacity:0;transform:scale(0.8)}100%{opacity:1;transform:scale(1)}}
+    .goonstiege-effect{
+      position:absolute;width:100%;height:100%;background:var(--goon);
+      transform:scale(0);border-radius:50%;animation:goonstiegeBurst 1.6s ease-out forwards;
+    }
+    @keyframes goonstiegeBurst{
+      0%{transform:scale(0);opacity:1}
+      70%{transform:scale(1.5);opacity:0.6}
+      100%{transform:scale(3);opacity:0}
+    }
+    .goonstiege-text{
+      font-size:6rem;font-weight:900;color:#fff;text-shadow:0 0 40px var(--goon);
+      animation:goonstiegeText 2s ease-out forwards;opacity:0;
+    }
+    @keyframes goonstiegeText{
+      0%{opacity:0;transform:scale(0.5) rotate(-180deg)}
+      50%{opacity:1;transform:scale(1.2) rotate(0)}
+      100%{opacity:0;transform:scale(0.8) rotate(180deg)}
+    }
+
+    #splat-overlay{position:fixed;inset:0;pointer-events:none;z-index:999;opacity:0}
+    .splat{position:absolute;width:100px;height:100px;background:#fff;border-radius:50%;
+      filter:blur(20px);opacity:.8;animation:splatAnim 1.5s ease-out forwards}
+    @keyframes splatAnim{0%{transform:scale(0);opacity:0}30%{transform:scale(1)}100%{transform:scale(5);opacity:0}}
+
+    #loader{
+      position:fixed;inset:0;background:var(--bg);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      transition:opacity 1s ease;z-index:100;cursor:pointer;
+    }
+    #logo{
+      font-size:5rem;font-weight:900;text-transform:uppercase;color:var(--accent);
+      letter-spacing:8px;background:linear-gradient(45deg,#fff,#ccc);
+      background-clip:text;-webkit-background-clip:text;color:transparent;
+      animation:glow 2.5s ease-in-out infinite alternate;
+    }
+    @keyframes glow{from{text-shadow:0 0 20px var(--accent)}to{text-shadow:0 0 60px var(--accent),0 0 120px var(--accent)}}
+
+    .last-updated{font-size:.9rem;color:var(--muted);text-align:center;margin:24px 0 18px;opacity:.9}
+    footer{margin-top:18px;text-align:center;font-size:.85rem;color:var(--muted);position:absolute;bottom:20px;left:0;right:0}
+    footer a{color:var(--muted);text-decoration:none;transition:.2s}
+    footer a:hover{color:#eee;text-decoration:underline}
+    .credit{font-size:.78rem;color:#777;margin-top:12px;opacity:.7;font-style:italic}
+    .hidden{display:none !important}
+
+    /* CREAM EFFECTS */
+    .cream-splat{
+      position:absolute;width:12px;height:12px;background:var(--cream);border-radius:50%;
+      box-shadow:0 0 8px var(--cream);opacity:0.9;pointer-events:none;
+      animation:creamDrop 1.2s ease-out forwards;
+    }
+    @keyframes creamDrop{
+      0%{transform:translateY(0) scale(0.5);opacity:1}
+      100%{transform:translateY(80px) scale(1.5);opacity:0}
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      #goon-top{flex-direction:column;align-items:center}
+      #goon-left{width:100%;max-width:400px}
+      #goon-upgrades-wrapper{width:100%;padding-right:0;margin-right:0}
+      #goon-bottom{grid-template-columns:1fr}
+      .battle-players{flex-direction:column;gap:30px}
+      .player-goon{width:180px;height:250px}
+      .game-modes{grid-template-columns:1fr}
+    }
+    @media (max-width: 600px) {
+      #app{padding:16px}
+      h1{font-size:2.2rem}
+      .tab{padding:10px 20px;font-size:0.95rem}
+      #goon-big{width:240px;height:340px}
+      #next-prestige-bar{width:260px}
+      #goon-prestige{width:220px;font-size:1.1rem}
+      .battle-header{font-size:1.8rem}
+      .vs-text{font-size:3rem}
+      .player-score{font-size:2.2rem}
+    }
+  </style>
 </head>
 <body>
-<div class="stars" id="stars"></div>
+  <div class="stars" id="stars"></div>
 
-<div id="loader">Loading…</div>
-
-<div id="app" class="hidden">
-  <h1>Gooning Hub</h1>
-  <div class="tabs">
-    <div class="tab active" data-tab="leaderboard">Leaderboard</div>
-    <div class="tab" data-tab="games">Mini‑Games</div>
+  <div id="loader" tabindex="0" role="button" aria-label="Enter">
+    <div id="logo">GOONING</div>
+    <div style="margin-top:22px;color:#999;font-size:1.25rem;">Click or press Enter</div>
   </div>
 
-  <!-- LEADERBOARD -->
-  <div id="leaderboard" class="panel active">
-    <div id="loading" style="text-align:center;color:#bbb;margin:26px 0;">Loading…</div>
-    <div class="table-container"><table id="board" class="hidden"><thead><tr><th>Rank</th><th>Player</th></tr></thead><tbody id="rows"></tbody></table></div>
-    <div class="last-updated" id="updated"></div>
-  </div>
-
-  <!-- GAME SELECTOR -->
-  <div id="game-selector" class="panel">
-    <h2>Choose Your Goon Mode</h2>
-    <div class="game-modes">
-      <div class="game-card" data-mode="goon-clicker"><div class="game-icon"><i class="fas fa-hand-paper"></i></div><div class="game-title">Goon Clicker</div></div>
-      <div class="game-card" data-mode="ranked"><div class="game-icon"><i class="fas fa-trophy"></i></div><div class="game-title">Ranked Battle</div></div>
+  <div id="app" class="hidden">
+    <h1>Gooning Hub</h1>
+    <div class="tabs">
+      <div class="tab active" data-tab="leaderboard">Leaderboard</div>
+      <div class="tab" data-tab="games">Mini‑Games</div>
     </div>
-  </div>
 
-  <!-- GOON CLICKER -->
-  <div id="goon-clicker" class="panel">
-    <div id="goon-top">
-      <div id="goon-left">
-        <div id="next-prestige-bar">Next Goonstiege: <span id="next-threshold">3,000</span><div id="prestige-progress"><div id="prestige-fill"></div></div></div>
+    <!-- LEADERBOARD PANEL -->
+    <div id="leaderboard" class="panel active">
+      <div id="loading" style="text-align:center;color:#bbb;margin:26px 0;font-size:1.05rem;">Loading leaderboard...</div>
+      <div class="table-container">
+        <table id="board" class="hidden">
+          <thead><tr><th style="width:120px">Rank</th><th>Player</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="last-updated" id="updated"></div>
+    </div>
 
-        <div id="goon-big">
-          <svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
-            <!-- (the whole SVG from previous version – unchanged) -->
-            <defs>
-              <linearGradient id="skinGrad"><stop offset="0%" stop-color="#fdb"/><stop offset="100%" stop-color="#fea"/></linearGradient>
-              <linearGradient id="hairGrad"><stop offset="0%" stop-color="#321"/><stop offset="100%" stop-color="#210"/></linearGradient>
-              <linearGradient id="underwearGrad"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#ddd"/></linearGradient>
-            </defs>
-            <g id="goon-character">
-              <path d="M65 35 Q80 15 100 10 Q120 15 135 35 Q140 55 135 65 Q100 75 65 65 Q60 55 65 35" fill="url(#hairGrad)" stroke="#210" stroke-width="2"/>
-              <ellipse class="head" cx="100" cy="55" rx="38" ry="42" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
-              <!-- … (rest of SVG omitted for brevity – copy from previous file) … -->
-            </g>
-          </svg>
+    <!-- GAME MODE SELECTOR -->
+    <div id="game-selector" class="panel">
+      <h2>Choose Your Goon Mode</h2>
+      <div class="game-modes">
+        <div class="game-card" data-mode="goon-clicker">
+          <div class="game-icon"><i class="fas fa-hand-paper"></i></div>
+          <div class="game-title">Goon Clicker</div>
+          <div class="game-desc">Click to goon. Buy upgrades. Prestige. Become a goon god.</div>
+        </div>
+        <div class="game-card" data-mode="ranked">
+          <div class="game-icon"><i class="fas fa-trophy"></i></div>
+          <div class="game-title">Ranked Battle</div>
+          <div class="game-desc">Best of 3 vs AI. First to 500 → 1500 → 2000. Win GPS.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GOON CLICKER PANEL -->
+    <div id="goon-clicker" class="panel">
+      <div id="goon-game">
+        <div id="goon-top">
+          <div id="goon-left">
+            <div id="next-prestige-bar">
+              Next Goonstiege: <span id="next-threshold">3,000</span>
+              <div id="prestige-progress"><div id="prestige-fill"></div></div>
+            </div>
+
+            <div id="goon-big">
+              <svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fdb"/><stop offset="100%" stop-color="#fea"/>
+                  </linearGradient>
+                  <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#321"/><stop offset="100%" stop-color="#210"/>
+                  </linearGradient>
+                  <linearGradient id="underwearGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#ddd"/>
+                  </linearGradient>
+                  <pattern id="absPattern" patternUnits="userSpaceOnUse" width="40" height="40">
+                    <path d="M0 20 Q10 15 20 20 T40 20" fill="none" stroke="#555" stroke-width="3"/>
+                    <path d="M0 30 Q10 25 20 30 T40 30" fill="none" stroke="#555" stroke-width="3"/>
+                  </pattern>
+                  <filter id="goonAura">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="12"/>
+                  </filter>
+                  <filter id="creamGlow">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="6"/>
+                  </filter>
+                </defs>
+                <g id="goon-character">
+                  <path d="M65 35 Q80 15 100 10 Q120 15 135 35 Q140 55 135 65 Q100 75 65 65 Q60 55 65 35" fill="url(#hairGrad)" stroke="#210" stroke-width="2"/>
+                  <ellipse class="head" cx="100" cy="55" rx="38" ry="42" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
+                  <path d="M70 65 Q100 85 130 65" fill="none" stroke="#cca" stroke-width="3"/>
+                  <ellipse cx="82" cy="50" rx="12" ry="8" fill="#fff"/>
+                  <ellipse cx="118" cy="50" rx="12" ry="8" fill="#fff"/>
+                  <circle cx="85" cy="52" r="5" fill="#08d"/>
+                  <circle cx="121" cy="52" r="5" fill="#08d"/>
+                  <path d="M100 55 Q95 60 100 65" fill="none" stroke="#cca" stroke-width="2"/>
+                  <path d="M85 72 Q100 78 115 72" fill="none" stroke="#f68" stroke-width="4"/>
+                  <path d="M80 90 Q100 95 120 90 L125 110 Q100 120 75 110 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
+                  <path d="M65 110 Q50 140 65 200 Q75 230 100 230 Q125 230 135 200 Q150 140 135 110 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
+                  <ellipse cx="85" cy="130" rx="25" ry="18" fill="#fdb"/>
+                  <ellipse cx="115" cy="130" rx="25" ry="18" fill="#fdb"/>
+                  <circle cx="85" cy="135" r="5" fill="#c99"/>
+                  <circle cx="115" cy="135" r="5" fill="#c99"/>
+                  <rect x="75" y="145" width="50" height="70" fill="url(#absPattern)" opacity=".8"/>
+                  <path id="underwear-path" d="M70 200 Q100 210 130 200 Q135 220 130 230 L70 230 Q65 220 70 200 Z" fill="url(#underwearGrad)" stroke="#ccc" stroke-width="2"/>
+                  <ellipse cx="100" cy="215" rx="20" ry="14" fill="#eee" opacity=".9"/>
+                  <g class="arm">
+                    <path d="M130 120 Q155 115 170 125 Q180 135 175 145 Q165 140 155 135 L140 130 Z" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
+                    <circle cx="178" cy="138" r="20" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
+                    <path d="M172 145 Q178 155 184 145" fill="none" stroke="#cca" stroke-width="10"/>
+                  </g>
+                  <ellipse cx="82" cy="250" rx="20" ry="45" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
+                  <ellipse cx="118" cy="250" rx="20" ry="45" fill="url(#skinGrad)" stroke="#cca" stroke-width="2"/>
+                  <rect x="70" y="285" width="24" height="15" rx="6" fill="#fdb"/>
+                  <rect x="106" y="285" width="24" height="15" rx="6" fill="#fdb"/>
+                  <!-- COSMETIC LAYERS -->
+                  <g id="cosmetic-stained" class="cosmetic hidden">
+                    <ellipse cx="100" cy="215" rx="22" ry="16" fill="#fff8dc" opacity="0.85"/>
+                    <circle cx="95" cy="208" r="6" fill="#fff8dc" opacity="0.9"/>
+                    <circle cx="105" cy="220" r="5" fill="#fff8dc" opacity="0.9"/>
+                    <circle cx="88" cy="218" r="4" fill="#fff8dc" opacity="0.9"/>
+                  </g>
+                  <g id="cosmetic-glasses" class="cosmetic hidden">
+                    <circle cx="82" cy="50" r="16" fill="none" stroke="#000" stroke-width="3"/>
+                    <circle cx="118" cy="50" r="16" fill="none" stroke="#000" stroke-width="3"/>
+                    <line x1="98" y1="50" x2="102" y2="50" stroke="#000" stroke-width="3"/>
+                    <circle cx="80" cy="48" r="3" fill="#fff8dc" opacity="0.8"/>
+                    <circle cx="120" cy="52" r="2.5" fill="#fff8dc" opacity="0.8"/>
+                  </g>
+                  <g id="cosmetic-hat" class="cosmetic hidden">
+                    <path d="M60 30 Q100 10 140 30 Q145 40 140 45 Q100 55 60 45 Q55 40 60 30" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+                    <rect x="70" y="45" width="60" height="8" fill="#654321"/>
+                    <circle cx="100" cy="25" r="6" fill="#fff8dc" opacity="0.85"/>
+                    <circle cx="95" cy="20" r="4" fill="#fff8dc" opacity="0.9"/>
+                  </g>
+                  <g id="cosmetic-aura" class="cosmetic hidden">
+                    <ellipse cx="100" cy="160" rx="70" ry="100" fill="none" stroke="#ff69b4" stroke-width="4" opacity="0.6" filter="url(#goonAura)"/>
+                    <circle cx="70" cy="140" r="8" fill="#fff8dc" opacity="0.7" filter="url(#creamGlow)"/>
+                    <circle cx="130" cy="180" r="7" fill="#fff8dc" opacity="0.7" filter="url(#creamGlow)"/>
+                  </g>
+                </g>
+              </svg>
+            </div>
+
+            <div id="goon-stats">
+              Goons: <span id="goons">0</span> | GPS: <span id="gps">0.0</span> <span id="goon-multiplier">x1.0</span>
+            </div>
+
+            <button id="goon-prestige">Goonstiege (0)</button>
+            <div id="badges"></div>
+          </div>
+
+          <div id="goon-upgrades-wrapper">
+            <div id="goon-upgrades"></div>
+          </div>
         </div>
 
-        <div id="goon-stats">Goons: <span id="goons">0</span> | GPS: <span id="gps">0.0</span> <span id="goon-multiplier">x1.0</span></div>
-        <button id="goon-prestige">Goonstiege (0)</button>
-        <div id="badges"></div>
+        <div id="goon-bottom">
+          <div id="cosmetic-shop">
+            <h3>Cosmetic Shop</h3>
+            <div id="cosmetics-list"></div>
+          </div>
+          <div id="ranked-mode">
+            <h3>Ranked Mode</h3>
+            <div id="ranked-gps">Your Ranked GPS: <span id="ranked-gps-val">0.0</span></div>
+            <button id="bot-battle">Battle Bot</button>
+            <div id="bot-status"></div>
+            <div id="ranked-cosmetics">
+              <h4>Ranked Cosmetics</h4>
+              <div id="ranked-cosmetics-list"></div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div id="goon-upgrades-wrapper"><div id="goon-upgrades"></div></div>
     </div>
 
-    <div id="goon-bottom" style="display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:28px;background:rgba(0,0,0,.35);border-radius:20px;">
-      <div id="cosmetic-shop"><h3>Cosmetic Shop</h3><div id="cosmetics-list"></div></div>
-      <div id="ranked-mode"><h3>Ranked Mode</h3>
-        <div id="ranked-gps">Your Ranked GPS: <span id="ranked-gps-val">0.0</span></div>
-        <button id="bot-battle">Battle Bot</button>
-        <div id="bot-status"></div>
+    <footer>
+      Auto‑refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
+      <div class="credit">Site made by Xen</div>
+    </footer>
+  </div>
+
+  <!-- RANKED BATTLE SCREEN -->
+  <div id="ranked-battle-overlay">
+    <div class="battle-arena">
+      <div class="battle-header">RANKED BATTLE</div>
+      <div class="round-info" id="round-info">Round 1/3 - First to 500</div>
+      <div class="battle-players">
+        <div class="player-container">
+          <div class="player-name">YOU</div>
+          <div class="player-goon" id="player-goon"></div>
+          <div class="player-score" id="player-score">0</div>
+          <div class="progress-container"><div class="progress-bar" id="player-progress"></div></div>
+        </div>
+        <div class="vs-text">VS</div>
+        <div class="player-container">
+          <div class="player-name">BOT</div>
+          <div class="player-goon" id="bot-goon"></div>
+          <div class="player-score" id="bot-score">0</div>
+          <div class="progress-container"><div class="progress-bar" id="bot-progress"></div></div>
+        </div>
+      </div>
+      <div class="battle-controls">
+        <button class="battle-btn" id="battle-start">START ROUND</button>
+        <button class="battle-btn disabled" id="battle-next">NEXT ROUND</button>
+        <button class="battle-btn" id="battle-quit">QUIT</button>
       </div>
     </div>
   </div>
-</div>
 
-<!-- RANKED BATTLE OVERLAY -->
-<div id="ranked-battle-overlay">
-  <div class="battle-arena">
-    <div class="battle-header">RANKED BATTLE</div>
-    <div class="round-info" id="round-info">Round 1/3 – First to 500</div>
-    <div class="battle-players">
-      <div class="player-container"><div class="player-name">YOU</div><div class="player-goon" id="player-goon"></div><div class="player-score" id="player-score">0</div><div class="progress-container"><div class="progress-bar" id="player-progress"></div></div></div>
-      <div style="font-size:4rem;color:var(--gold);">VS</div>
-      <div class="player-container"><div class="player-name">BOT</div><div class="player-goon" id="bot-goon"></div><div class="player-score" id="bot-score">0</div><div class="progress-container"><div class="progress-bar" id="bot-progress"></div></div></div>
-    </div>
-    <div class="battle-controls">
-      <button class="battle-btn" id="battle-start">START ROUND</button>
-      <button class="battle-btn disabled" id="battle-next">NEXT ROUND</button>
-      <button class="battle-btn" id="battle-quit">QUIT</button>
-    </div>
+  <div id="splat-overlay"></div>
+  <div id="goonstiege-overlay">
+    <div class="goonstiege-text">GOONSTIEGE!</div>
   </div>
-</div>
 
-<script>
-/* ==============================================================
-   1. GLOBAL HELPERS
-   ============================================================== */
-const $ = id => document.getElementById(id);
-function e(txt){const d=document.createElement('div');d.textContent=txt;return d.innerHTML;}
+  <script>
+    const $ = id => document.getElementById(id);
 
-/* ==============================================================
-   2. STARFIELD
-   ============================================================== */
-function createStar(){
-  const s=document.createElement('div');s.className='star';
-  const sz=Math.random()*3+1;
-  s.style.width=s.style.height=`${sz}px`;
-  s.style.left=`${Math.random()*100}vw`;
-  s.style.animationDuration=`${Math.random()*8+5}s`;
-  s.style.animationDelay=`${Math.random()*5}s`;
-  s.style.opacity=Math.random()*0.6+0.3;
-  $('#stars').appendChild(s);
-  setTimeout(()=>s.remove(),15000);
-}
-setInterval(createStar,300);
-for(let i=0;i<60;i++)setTimeout(createStar,i*70);
-
-/* ==============================================================
-   3. TAB / PANEL SWITCHING
-   ============================================================== */
-document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');
-    const target = t.dataset.tab;
-    if(target==='games') $('#game-selector').classList.add('active');
-    else $(target).classList.add('active');
-  });
-});
-document.querySelectorAll('.game-card').forEach(c=>{
-  c.addEventListener('click',()=>{
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    $(c.dataset.mode).classList.add('active');
-  });
-});
-
-/* ==============================================================
-   4. LEADERBOARD (uses a tiny in-memory JSON fallback)
-   ============================================================== */
-const FALLBACK_LEADERBOARD = {
-  updated: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
-  leaderboard: [
-    {rank:1,name:"GoonGod",discord:"goongod#1337",discordId:"123456789",avatar:"a_abc123"},
-    {rank:2,name:"EdgeLord",discord:"edgelord#0001",discordId:"987654321",avatar:"def456"},
-    // … more fake entries if you want …
-  ]
-};
-async function fetchLeaderboard(){
-  const rows=$('#rows'), loading=$('#loading'), updated=$('#updated');
-  try{
-    const res=await fetch('leaderboard.json?'+Date.now());
-    const data = res.ok ? await res.json() : FALLBACK_LEADERBOARD;
-    const list = Array.isArray(data) ? data : (data.leaderboard||[]);
-    const time = data.updated||new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    const padded = [];
-    for(let i=0;i<100;i++) padded.push(list[i]||{rank:i+1});
-    rows.innerHTML = padded.map((p,idx)=>{
-      const av = p.discordId && p.avatar ? `https://cdn.discordapp.com/avatars/${p.discordId}/${p.avatar}.${p.avatar.startsWith('a_')?'gif':'webp'}?size=80` : 'https://cdn.discordapp.com/embed/avatars/0.png';
-      const has = p.name||p.discord;
-      return `<tr>
-        <td class="rank">${p.rank||idx+1}</td>
-        <td class="name">
-          ${has?`
-            <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name||'User')}"></div>
-            <div><div style="font-weight:600;">${e(p.name||'Unknown')}</div>${p.discord?`<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>`:''}</div>
-          `: `<div class="empty-slot">— Empty Slot —</div>`}
-        </td>
-      </tr>`;
-    }).join('');
-    updated.textContent=`Last updated: ${time}`;
-    loading.classList.add('hidden'); $('#board').classList.remove('hidden');
-  }catch{ loading.textContent='Failed – using demo data.'; }
-}
-$('#loader').onclick = ()=>{ $('#loader').classList.add('hidden'); $('#app').classList.remove('hidden'); fetchLeaderboard(); setInterval(fetchLeaderboard,90000); };
-setTimeout(()=>{ $('#loader').focus(); },100);
-
-/* ==============================================================
-   5. GOON CLICKER – CORE LOGIC (upgrades now work!)
-   ============================================================== */
-const SAVE_KEY = 'goonClicker_v14';
-let goons=0, gps=0, prestige=0, rankedGPS=0, threshold=3000;
-
-const baseCosts = [50,500,5000,50000,500000,5000000];
-const incs      = [5,25,125,625,3125,15625];
-
-let upgrades = [
-  {id:'hand',name:'Hand Job',icon:'hand',inc:incs[0],owned:0,cost:baseCosts[0]},
-  {id:'vibe',name:'Vibrator',icon:'vibrate',inc:incs[1],owned:0,cost:baseCosts[1]},
-  {id:'flesh',name:'Fleshlight',icon:'circle',inc:incs[2],owned:0,cost:baseCosts[2]},
-  {id:'pump',name:'Cock Pump',icon:'wind',inc:incs[3],owned:0,cost:baseCosts[3]},
-  {id:'edger',name:'AI Edger',icon:'robot',inc:incs[4],owned:0,cost:baseCosts[4]},
-  {id:'milker',name:'Auto Milker',icon:'droplet',inc:incs[5],owned:0,cost:baseCosts[5]}
-];
-
-function mult(){return 1 + prestige*0.5;}
-function calcThresh(){return Math.floor(3000*Math.pow(1.8,prestige));}
-
-/* ---- SAVE / LOAD ---- */
-function save(){ localStorage.setItem(SAVE_KEY,JSON.stringify({goons,gps,prestige,rankedGPS,threshold,upgrades:upgrades.map(u=>({id:u.id,owned:u.owned,cost:u.cost})),version:14})); }
-function load(){
-  const s=localStorage.getItem(SAVE_KEY);
-  if(!s) return;
-  try{
-    const d=JSON.parse(s);
-    if(d.version!==14) return;
-    goons=Number(d.goons)||0; gps=Number(d.gps)||0; prestige=Number(d.prestige)||0;
-    rankedGPS=Number(d.rankedGPS)||0; threshold=Number(d.threshold)||calcThresh();
-    (d.upgrades||[]).forEach(u=>{ const x=upgrades.find(v=>v.id===u.id); if(x){x.owned=Number(u.owned)||0; x.cost=Number(u.cost)||baseCosts[upgrades.indexOf(x)];}});
-    gps = upgrades.reduce((a,u)=>a + u.inc*u.owned*mult(),0);
-  }catch(e){console.error(e);}
-}
-
-/* ---- UI UPDATE ---- */
-function updateUI(){
-  $('#goons').textContent=Number(goons).toLocaleString();
-  $('#gps').textContent=gps.toFixed(1);
-  $('#goon-multiplier').textContent='x'+mult().toFixed(1);
-  $('#goon-prestige').textContent=`Goonstiege (${prestige})`;
-  $('#goon-prestige').classList.toggle('disabled',goons<threshold);
-  $('#next-threshold').textContent=threshold.toLocaleString();
-  $('#prestige-fill').style.width=`${Math.min(100,(goons/threshold)*100)}%`;
-  $('#ranked-gps-val').textContent=rankedGPS.toFixed(1);
-
-  const upDiv=$('#goon-upgrades'); upDiv.innerHTML='';
-  upgrades.forEach(u=>{
-    const div=document.createElement('div'); div.className='goon-upgrade';
-    div.classList.toggle('disabled',goons<u.cost);
-    div.innerHTML=`
-      <div class="goon-upgrade-icon"><i class="fas fa-${u.icon}"></i></div>
-      <div style="flex:1"><div style="font-weight:600">${u.name}</div>
-      <div style="font-size:.94rem;color:#ccc">
-        Owned: <span class="owned">${u.owned}</span> |
-        Cost: <span class="cost">${u.cost.toLocaleString()}</span> |
-        +<span class="inc">${(u.inc*mult()).toFixed(1)}</span>/s
-      </div></div>`;
-    div.onclick=()=>{ if(goons>=u.cost){ goons-=u.cost; u.owned++; u.cost=Math.ceil(u.cost*1.15); gps+=u.inc*mult(); updateUI(); save(); }};
-    upDiv.appendChild(div);
-  });
-}
-
-/* ---- CLICK & PRESTIGE ---- */
-$('#goon-big').onclick=()=>{ goons+=1*mult(); updateUI(); save(); };
-$('#goon-prestige').onclick=()=>{
-  if(goons>=threshold){
-    prestige++; goons=0; gps=0; threshold=calcThresh();
-    upgrades.forEach((u,i)=>{u.owned=0; u.cost=baseCosts[i];});
-    updateUI(); save();
-  }
-};
-
-/* ---- PASSIVE GPS ---- */
-setInterval(()=>{ if(gps>0 && $('#goon-clicker').classList.contains('active')){ goons+=gps/3; updateUI(); } },333);
-
-/* ==============================================================
-   6. RANKED BATTLE (now fully functional)
-   ============================================================== */
-const battleOverlay=$('#ranked-battle-overlay');
-let round=1, pWins=0, bWins=0, pScore=0, bScore=0;
-let pBattle=0, bBattle=0, interval;
-const targets=[500,1500,2000];
-
-function cloneChar(){ return $('#goon-big svg').cloneNode(true); }
-
-$('#bot-battle').onclick=()=>{
-  round=1; pWins=0; bWins=0; pScore=0; bScore=0;
-  battleOverlay.classList.add('active');
-  $('#battle-start').classList.remove('disabled');
-  $('#battle-next').classList.add('disabled');
-};
-
-$('#battle-start').onclick=()=>{ if($('#battle-start').classList.contains('disabled')) return; startRound(); };
-$('#battle-next').onclick =()=>{ if($('#battle-next').classList.contains('disabled')) return; round++; startRound(); };
-$('#battle-quit').onclick =()=>{ battleOverlay.classList.remove('active'); updateUI(); };
-
-function startRound(){
-  pBattle=bBattle=0;
-  $('#player-score').textContent='0'; $('#bot-score').textContent='0';
-  $('#player-progress').style.width='0%'; $('#bot-progress').style.width='0%';
-  $('#battle-start').classList.add('disabled');
-  $('#battle-next').classList.add('disabled');
-  const target=targets[round-1];
-  $('#round-info').textContent=`Round ${round}/3 – First to ${target}`;
-
-  $('#player-goon').innerHTML=''; $('#bot-goon').innerHTML='';
-  $('#player-goon').appendChild(cloneChar());
-  $('#bot-goon').appendChild(cloneChar());
-
-  const clickHandler=()=>{ pBattle+=1*mult(); draw(); };
-  $('#player-goon').onclick=clickHandler;
-
-  const botGPS = Math.max(5,gps*(0.7+Math.random()*0.6));
-  interval=setInterval(()=>{ bBattle+=botGPS/30; draw(); },33);
-
-  function draw(){
-    $('#player-score').textContent=Math.floor(pBattle);
-    $('#bot-score').textContent=Math.floor(bBattle);
-    $('#player-progress').style.width=`${Math.min(100,(pBattle/target)*100)}%`;
-    $('#bot-progress').style.width=`${Math.min(100,(bBattle/target)*100)}%`;
-
-    if(pBattle>=target||bBattle>=target){
-      clearInterval(interval);
-      $('#player-goon').onclick=null;
-      setTimeout(()=>endRound(pBattle>=target),800);
+    /* STARFALL */
+    function createStar(){
+      const s=document.createElement('div');s.className='star';
+      const sz=Math.random()*3+1;
+      s.style.width=s.style.height=`${sz}px`;
+      s.style.left=`${Math.random()*100}vw`;
+      s.style.animationDuration=`${Math.random()*8+5}s`;
+      s.style.animationDelay=`${Math.random()*5}s`;
+      s.style.opacity=Math.random()*0.6+0.3;
+      $('#stars').appendChild(s);
+      setTimeout(()=>s.remove(),15000);
     }
-  }
-}
-function endRound(playerWon){
-  if(playerWon){ pWins++; pScore++; } else { bWins++; bScore++; }
-  if(round<3){ $('#battle-next').classList.remove('disabled'); }
-  else{
-    const win = pWins>=2;
-    const gain = win ? 50+prestige*15 : -15;
-    rankedGPS = Math.max(0, rankedGPS+gain);
-    setTimeout(()=>{ alert(`${win?'YOU WIN!':'BOT WINS!'}\nRanked GPS ${gain>0?'+':''}${gain} → ${rankedGPS.toFixed(1)}`); battleOverlay.classList.remove('active'); updateUI(); save(); },600);
-  }
-}
+    setInterval(createStar,300);
+    for(let i=0;i<60;i++)setTimeout(createStar,i*70);
 
-/* ==============================================================
-   7. INITIALISE
-   ============================================================== */
-load(); updateUI(); setInterval(save,2000);
-</script>
+    /* TABS */
+    document.querySelectorAll('.tab').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+        tab.classList.add('active');
+        const target = tab.dataset.tab;
+        if(target === 'games'){
+          $('#game-selector').classList.add('active');
+        } else {
+          $(target).classList.add('active');
+        }
+      });
+    });
+
+    /* GAME MODE SELECTOR */
+    document.querySelectorAll('.game-card').forEach(card=>{
+      card.addEventListener('click',()=>{
+        document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+        const mode = card.dataset.mode;
+        $(mode).classList.add('active');
+      });
+    });
+
+    /* DISCORD AVATAR */
+    function getDiscordAvatar(uid,hash,size=80){
+      if(!uid||!hash)return'https://cdn.discordapp.com/embed/avatars/0.png';
+      const ext=hash.startsWith('a_')?'gif':'webp';
+      return `https://cdn.discordapp.com/avatars/${uid}/${hash}.${ext}?size=${size}`;
+    }
+
+    /* LOADER */
+    function enterLeaderboard(){
+      const l=$('loader');l.style.opacity='0';
+      setTimeout(()=>{
+        l.classList.add('hidden');$('app').classList.remove('hidden');
+        fetchLeaderboard();setInterval(fetchLeaderboard,90000);
+      },1000);
+    }
+    $('loader').addEventListener('click',enterLeaderboard);
+    $('loader').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();enterLeaderboard();}});
+    setTimeout(()=>$('loader').focus(),100);
+
+    /* LEADERBOARD FETCH */
+    async function fetchLeaderboard(){
+      const loading=$('loading'),board=$('board'),rows=$('rows'),updated=$('updated');
+      try{
+        const res=await fetch('leaderboard.json?'+Date.now());
+        if(!res.ok)throw'';
+        const data=await res.json();
+        let list=Array.isArray(data)?data:(data.leaderboard||[]);
+        const time=data.updated||new Date().toLocaleTimeString([],[{hour:'2-digit',minute:'2-digit'}]);
+        const padded=[];
+        for(let i=0;i<100;i++)padded.push(list[i]||{rank:i+1});
+        rows.innerHTML=padded.map((p,idx)=>{
+          const has=p.name||p.discord;
+          const av=getDiscordAvatar(p.discordId,p.avatar);
+          const rank=p.rank||idx+1;
+          return `<tr>
+            <td class="rank">${rank}</td>
+            <td class="name">
+              ${has ? `
+                <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name||'User')}"></div>
+                <div>
+                  <div style="font-weight:600;font-size:1.06rem;">${e(p.name||'Unknown')}</div>
+                  ${p.discord ? `<div class="discord-tag"><i class="fab fa-discord"></i>${e(p.discord)}</div>` : ''}
+                </div>
+              ` : `<div class="empty-slot">— Empty Slot —</div>`}
+            </td>
+          </tr>`;
+        }).join('');
+        updated.textContent=`Last updated: ${time}`;
+        loading.classList.add('hidden');board.classList.remove('hidden');
+      }catch{
+        loading.textContent='Failed to load leaderboard.';loading.style.color='#f88';
+      }
+    }
+
+    /* GOON CLICKER - FULLY FIXED & CREAMY */
+    const SAVE_KEY = 'goonClickerSave_v13';
+    let goons = 0, gps = 0, prestige = 0, rankedGPS = 0, threshold = 3000;
+
+    // UPGRADES: First = +5 GPS, others scale
+    const baseCosts = [50, 500, 5000, 50000, 500000, 5000000];
+    const incs = [5, 25, 125, 625, 3125, 15625];
+
+    const cosmetics = [
+      {id:'stained-pants',name:'Creamed Underwear',cost:10000,icon:'tint',owned:false,apply:()=>{ $('#cosmetic-stained').classList.remove('hidden'); }},
+      {id:'goon-glasses',name:'Creamed Glasses',cost:25000,icon:'glasses',owned:false,apply:()=>{ $('#cosmetic-glasses').classList.remove('hidden'); }},
+      {id:'goon-hat',name:'Creamed Hat',cost:50000,icon:'hat-cowboy',owned:false,apply:()=>{ $('#cosmetic-hat').classList.remove('hidden'); }},
+      {id:'goon-aura',name:'Cream Aura',cost:100000,icon:'spa',owned:false,apply:()=>{ $('#cosmetic-aura').classList.remove('hidden'); }}
+    ];
+
+    const rankedCosmetics = [
+      {id:'bronze',name:'Bronze Badge',threshold:100,icon:'medal',unlocked:false},
+      {id:'silver',name:'Silver Badge',threshold:500,icon:'medal',unlocked:false},
+      {id:'gold',name:'Gold Trophy',threshold:2000,icon:'trophy',unlocked:false},
+      {id:'diamond',name:'Diamond Gem',threshold:10000,icon:'gem',unlocked:false}
+    ];
+
+    const badges = [
+      {id:'hall',name:'Hall of Fame Gooner',threshold:2000,icon:'trophy',class:'gold'},
+      {id:'edger',name:'Edging Emperor',threshold:10000,icon:'clock',class:'silver'},
+      {id:'pump',name:'Pumped Up Pro',threshold:25000,icon:'wind',class:'bronze'},
+      {id:'legend',name:'Goon Legend',threshold:50000,icon:'crown',class:'legend'},
+      {id:'god',name:'Goon God',threshold:100000,icon:'bolt',class:'god'}
+    ];
+
+    const big=$('goon-big'),goonDisp=$('goons'),gpsDisp=$('gps'),multiDisp=$('goon-multiplier'),
+          upDiv=$('goon-upgrades'),prestigeBtn=$('goon-prestige'),
+          nextThresh=$('next-threshold'),progFill=$('prestige-fill'),overlay=$('splat-overlay'),
+          goonstiegeOverlay=$('goonstiege-overlay'), cosmeticsList=$('cosmetics-list'),
+          rankedList=$('ranked-cosmetics-list'), rankedVal=$('ranked-gps-val'),
+          botStatus=$('bot-status'),badgesDiv=$('badges');
+
+    let upgrades = [
+      {id:'hand',name:'Hand Job',icon:'hand',inc:incs[0],owned:0,cost:baseCosts[0]},
+      {id:'vibe',name:'Vibrator',icon:'vibrate',inc:incs[1],owned:0,cost:baseCosts[1]},
+      {id:'flesh',name:'Fleshlight',icon:'circle',inc:incs[2],owned:0,cost:baseCosts[2]},
+      {id:'pump',name:'Cock Pump',icon:'wind',inc:incs[3],owned:0,cost:baseCosts[3]},
+      {id:'edger',name:'AI Edger',icon:'robot',inc:incs[4],owned:0,cost:baseCosts[4]},
+      {id:'milker',name:'Auto Milker',icon:'droplet',inc:incs[5],owned:0,cost:baseCosts[5]}
+    ];
+
+    function getMult(){return 1 + prestige * 0.5;}
+    function calcThreshold(){return Math.floor(3000 * Math.pow(1.8, prestige));}
+
+    function saveGame(){
+      const saveData = {
+        goons, gps, prestige, threshold, rankedGPS,
+        upgrades: upgrades.map(u=>({id:u.id,owned:u.owned,cost:u.cost})),
+        cosmetics: cosmetics.map(c=>({id:c.id,owned:c.owned})),
+        rankedCosmetics: rankedCosmetics.map(c=>({id:c.id,unlocked:c.unlocked})),
+        version:13
+      };
+      try {
+        localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+      } catch(e) {
+        console.warn('Save failed', e);
+      }
+    }
+
+    function loadGame(){
+      const saved = localStorage.getItem(SAVE_KEY);
+      if(saved){
+        try{
+          const d = JSON.parse(saved);
+          if(d.version !== 13) return;
+          goons = Number(d.goons) || 0;
+          gps = Number(d.gps) || 0;
+          prestige = Number(d.prestige) || 0;
+          rankedGPS = Number(d.rankedGPS) || 0;
+          threshold = Number(d.threshold) || calcThreshold();
+
+          if(d.upgrades){
+            d.upgrades.forEach(u=>{
+              const x = upgrades.find(v=>v.id===u.id);
+              if(x){ x.owned = Number(u.owned) || 0; x.cost = Number(u.cost) || baseCosts[upgrades.indexOf(x)]; }
+            });
+          }
+          gps = upgrades.reduce((a,u)=>a + u.inc * u.owned * getMult(), 0);
+
+          (d.cosmetics || []).forEach(item => {
+            const c = cosmetics.find(v=>v.id===item.id);
+            if(c) { c.owned = true; c.apply(); }
+          });
+
+          (d.rankedCosmetics || []).forEach(item => {
+            const c = rankedCosmetics.find(v=>v.id===item.id);
+            if(c) c.unlocked = true;
+          });
+        }catch(e){
+          console.error('Load failed:', e);
+        }
+      } else {
+        threshold = calcThreshold();
+      }
+    }
+
+    function updateBadges(){
+      badgesDiv.innerHTML = '';
+      badges.forEach(b => {
+        const unlocked = goons >= b.threshold;
+        const div = document.createElement('div');
+        div.className = `badge ${unlocked ? 'unlocked' : ''} ${b.class || ''}`;
+        div.innerHTML = `<i class="fas fa-${b.icon}"></i> ${b.name}`;
+        badgesDiv.appendChild(div);
+      });
+    }
+
+    function updateGoon(){
+      goonDisp.textContent = Number(goons).toLocaleString('en-US');
+      gpsDisp.textContent = gps.toFixed(1);
+      multiDisp.textContent = `x${getMult().toFixed(1)}`;
+      prestigeBtn.textContent = `Goonstiege (${prestige})`;
+      prestigeBtn.classList.toggle('disabled', goons < threshold);
+      nextThresh.textContent = threshold.toLocaleString('en-US');
+      progFill.style.width = `${Math.min(100, (goons / threshold) * 100)}%`;
+
+      upDiv.innerHTML = '';
+      upgrades.forEach(u => {
+        const div = document.createElement('div');
+        div.className = 'goon-upgrade';
+        div.id = u.id;
+        div.classList.toggle('disabled', goons < u.cost);
+        div.innerHTML = `
+          <div class="goon-upgrade-icon"><i class="fas fa-${u.icon}"></i></div>
+          <div style="flex:1">
+            <div style="font-weight:600">${u.name}</div>
+            <div style="font-size:.94rem;color:#ccc">
+              Owned: <span class="owned">${u.owned}</span> |
+              Cost: <span class="cost">${u.cost.toLocaleString('en-US')}</span> |
+              +<span class="inc">${(u.inc*getMult()).toFixed(1)}</span>/s
+            </div>
+          </div>`;
+        div.addEventListener('click', () => {
+          if(goons >= u.cost && !div.classList.contains('disabled')){
+            div.style.transition = 'transform .14s'; div.style.transform = 'scale(0.93)';
+            setTimeout(()=>{div.style.transform='';},140);
+            goons -= u.cost;
+            u.owned++;
+            u.cost = Math.ceil(u.cost * 1.15);
+            gps += u.inc * getMult(); // GPS increases by exact amount
+            updateGoon();
+            saveGame();
+          }
+        });
+        upDiv.appendChild(div);
+      });
+
+      cosmeticsList.innerHTML = '';
+      cosmetics.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'cosmetic-item';
+        div.classList.toggle('locked', !c.owned && goons < c.cost);
+        div.classList.toggle('unlocked', c.owned);
+        div.innerHTML = `
+          <div class="cosmetic-icon"><i class="fas fa-${c.icon}"></i></div>
+          <div style="font-weight:600">${c.name}</div>
+          <div style="font-size:.9rem;color:#ccc">Cost: ${c.cost.toLocaleString('en-US')}</div>`;
+        div.addEventListener('click', () => {
+          if(!c.owned && goons >= c.cost){
+            div.style.transition = 'transform .14s'; div.style.transform = 'scale(0.93)';
+            setTimeout(()=>{div.style.transform='';},140);
+            goons -= c.cost; c.owned = true; c.apply(); updateGoon(); saveGame();
+          }
+        });
+        cosmeticsList.appendChild(div);
+      });
+
+      rankedVal.textContent = rankedGPS.toFixed(1);
+      rankedList.innerHTML = '';
+      rankedCosmetics.forEach(c => {
+        c.unlocked = rankedGPS >= c.threshold;
+        const div = document.createElement('div');
+        div.className = 'ranked-cosmetic';
+        div.classList.toggle('unlocked', c.unlocked);
+        div.innerHTML = `
+          <div class="cosmetic-icon"><i class="fas fa-${c.icon}"></i></div>
+          <div style="font-weight:600">${c.name}</div>
+          <div style="font-size:.9rem;color:#ccc">${c.unlocked ? 'Unlocked' : `Need ${c.threshold} GPS`}</div>`;
+        rankedList.appendChild(div);
+      });
+
+      updateBadges();
+    }
+
+    function bustAnimation(){
+      overlay.innerHTML = ''; overlay.style.opacity = 1;
+      for(let i=0;i<80;i++){
+        const s = document.createElement('div'); s.className='splat';
+        s.style.left=`${Math.random()*100}%`; s.style.top=`${Math.random()*100}%`;
+        s.style.width=s.style.height=`${Math.random()*260+110}px`;
+        s.style.background='#fff'; s.style.filter='blur(45px)';
+        s.style.animationDelay=`${Math.random()*0.6}s`;
+        overlay.appendChild(s);
+      }
+      setTimeout(()=>{overlay.style.opacity=0; overlay.innerHTML='';},3200);
+    }
+
+    function triggerGoonstiege(){
+      goonstiegeOverlay.classList.add('active');
+      const text = goonstiegeOverlay.querySelector('.goonstiege-text');
+      text.style.opacity = 1;
+
+      for(let i=0;i<5;i++){
+        setTimeout(()=>{
+          const burst = document.createElement('div');
+          burst.className = 'goonstiege-effect';
+          burst.style.left = `${30 + Math.random()*40}%`;
+          burst.style.top = `${30 + Math.random()*40}%`;
+          goonstiegeOverlay.appendChild(burst);
+        }, i*200);
+      }
+
+      setTimeout(()=>{
+        goonstiegeOverlay.classList.remove('active');
+        setTimeout(()=>{ goonstiegeOverlay.innerHTML = '<div class="goonstiege-text">GOONSTIEGE!</div>'; }, 1000);
+      }, 3000);
+    }
+
+    big.addEventListener('click',()=>{
+      goons += 1 * getMult();
+      const splat = document.createElement('div');
+      splat.className = 'cream-splat';
+      splat.style.left = `${event.clientX - 20}px`;
+      splat.style.top = `${event.clientY - 20}px`;
+      document.body.appendChild(splat);
+      setTimeout(() => splat.remove(), 1200);
+
+      updateGoon(); saveGame();
+      big.style.transition = 'transform .14s'; big.style.transform = 'scale(0.91)';
+      setTimeout(()=>{big.style.transform='';},140);
+    });
+
+    prestigeBtn.addEventListener('click', () => {
+      if(goons >= threshold){
+        triggerGoonstiege();
+        prestige++; goons = 0; gps = 0;
+        threshold = calcThreshold();
+        upgrades.forEach(u => u.owned = 0);
+        upgrades.forEach((u,i)=>u.cost=baseCosts[i]);
+        updateGoon(); saveGame();
+      }
+    });
+
+    /* RANKED BATTLE MODE */
+    const battleOverlay = $('ranked-battle-overlay');
+    const playerGoon = $('player-goon');
+    const botGoon = $('bot-goon');
+    const playerScoreEl = $('player-score');
+    const botScoreEl = $('bot-score');
+    const playerProgress = $('player-progress');
+    const botProgress = $('bot-progress');
+    const roundInfo = $('round-info');
+    const startBtn = $('battle-start');
+    const nextBtn = $('battle-next');
+    const quitBtn = $('battle-quit');
+
+    function cloneCharacter(){
+      const svg = $('#goon-big svg').cloneNode(true);
+      svg.style.width = '100%'; svg.style.height = '100%';
+      return svg;
+    }
+
+    let currentRound = 1;
+    let playerScore = 0, botScore = 0;
+    let playerBattleGoons = 0, botBattleGoons = 0;
+    let battleInterval;
+    const roundTargets = [500, 1500, 2000];
+    let playerWins = 0, botWins = 0;
+
+    function startBattle(){
+      playerBattleGoons = 0; botBattleGoons = 0;
+      playerScoreEl.textContent = '0';
+      botScoreEl.textContent = '0';
+      playerProgress.style.width = '0%';
+      botProgress.style.width = '0%';
+      startBtn.classList.add('disabled');
+      nextBtn.classList.add('disabled');
+
+      const target = roundTargets[currentRound - 1];
+      roundInfo.textContent = `Round ${currentRound}/3 - First to ${target}`;
+
+      playerGoon.innerHTML = ''; botGoon.innerHTML = '';
+      playerGoon.appendChild(cloneCharacter());
+      botGoon.appendChild(cloneCharacter());
+
+      const playerClick = () => {
+        playerBattleGoons += 1 * getMult();
+        updateBattleScores(target);
+      };
+      playerGoon.addEventListener('click', playerClick);
+
+      const botGPS = Math.max(5, gps * (0.7 + Math.random() * 0.6));
+      battleInterval = setInterval(() => {
+        botBattleGoons += botGPS / 30;
+        updateBattleScores(target);
+      }, 33);
+
+      function updateBattleScores(target){
+        playerScoreEl.textContent = Math.floor(playerBattleGoons);
+        botScoreEl.textContent = Math.floor(botBattleGoons);
+        playerProgress.style.width = `${Math.min(100, (playerBattleGoons / target) * 100)}%`;
+        botProgress.style.width = `${Math.min(100, (botBattleGoons / target) * 100)}%`;
+
+        if(playerBattleGoons >= target || botBattleGoons >= target){
+          clearInterval(battleInterval);
+          playerGoon.removeEventListener('click', playerClick);
+          setTimeout(() => endRound(playerBattleGoons >= target), 800);
+        }
+      }
+    }
+
+    function endRound(playerWon){
+      if(playerWon){
+        playerWins++;
+        playerScore++;
+      } else {
+        botWins++;
+        botScore++;
+      }
+
+      if(currentRound < 3){
+        nextBtn.classList.remove('disabled');
+      } else {
+        const winner = playerWins >= 2 ? 'YOU WIN!' : 'BOT WINS!';
+        const gpsGain = playerWins >= 2 ? 50 + prestige * 15 : -15;
+        rankedGPS = Math.max(0, rankedGPS + gpsGain);
+        setTimeout(() => {
+          alert(`${winner}\nRanked GPS: ${gpsGain > 0 ? '+' : ''}${gpsGain} → ${rankedGPS.toFixed(1)}`);
+          endBattle();
+        }, 600);
+      }
+    }
+
+    function nextRound(){
+      currentRound++;
+      playerScore = 0; botScore = 0;
+      nextBtn.classList.add('disabled');
+      startBtn.classList.remove('disabled');
+    }
+
+    function endBattle(){
+      battleOverlay.classList.remove('active');
+      updateGoon();
+      saveGame();
+    }
+
+    $('#bot-battle').addEventListener('click', () => {
+      currentRound = 1; playerWins = 0; botWins = 0;
+      playerScore = 0; botScore = 0;
+      battleOverlay.classList.add('active');
+      startBtn.classList.remove('disabled');
+      nextBtn.classList.add('disabled');
+    });
+
+    startBtn.addEventListener('click', () => {
+      if(!startBtn.classList.contains('disabled')) startBattle();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if(!nextBtn.classList.contains('disabled')) nextRound();
+    });
+
+    quitBtn.addEventListener('click', endBattle);
+
+    setInterval(saveGame, 2000);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') saveGame();
+    });
+
+    setInterval(() => {
+      if(gps > 0 && !battleOverlay.classList.contains('active') && $('#goon-clicker').classList.contains('active')){
+        const increment = gps / 3;
+        goons += increment;
+        updateGoon();
+      }
+    }, 333);
+
+    document.addEventListener('selectstart', e => e.preventDefault());
+    document.addEventListener('mousedown', e => e.preventDefault());
+
+    loadGame();
+    updateGoon();
+
+    function e(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+  </script>
 </body>
 </html>
