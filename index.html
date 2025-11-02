@@ -175,7 +175,7 @@ tr:hover{background:rgba(255,255,255,.07);}
       </div>
     </div>
 
-    <!-- LEADERBOARD, PROMO, CREDITS (unchanged) -->
+    <!-- LEADERBOARD -->
     <div id="home" class="panel">
       <h1>Gooning Leaderboard</h1>
       <div class="zoom-controls">
@@ -195,6 +195,7 @@ tr:hover{background:rgba(255,255,255,.07);}
       <div class="last-updated" id="updated"></div>
     </div>
 
+    <!-- PROMO -->
     <div id="promo" class="panel">
       <div style="text-align:center;max-width:600px;margin:0 auto;">
         <h1>VAULT 13</h1>
@@ -205,6 +206,7 @@ tr:hover{background:rgba(255,255,255,.07);}
       </div>
     </div>
 
+    <!-- CREDITS -->
     <div id="credits" class="panel">
       <div style="text-align:center;">
         <h2>Made with love by <span style="color:#fff">Xen</span></h2>
@@ -268,7 +270,7 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
   });
 });
 
-/* ---------- GOON CLICKER (FIXED + INTEGRATED) ---------- */
+/* ---------- GOON CLICKER ---------- */
 let points = 0, gps = 0, clickPower = 1, prestige = 1, totalClicks = 0, goonStreak = 0;
 const PRESTIGE_COST = 100000;
 
@@ -309,7 +311,7 @@ function initClicker(){
   setInterval(saveGame, 5000);
 }
 
-/* ----- CLICK ----- */
+/* ----- CLICK (FIXED) ----- */
 $('#gooner-container').addEventListener('click', (e) => {
   points += clickPower * prestige;
   totalClicks++; goonStreak++;
@@ -319,7 +321,7 @@ $('#gooner-container').addEventListener('click', (e) => {
   if (goonStreak % 5 === 0) $('#goon-stains').style.opacity = '1';
 });
 
-/* ----- SPLAT ----- */
+/* ----- SPLAT (FIXED) ----- */
 function splat(e){
   const s = document.createElement('div');
   s.className='splat';
@@ -460,11 +462,49 @@ function loadGame(){
   updateCharacter(); checkBadges(); $('#prestige').textContent = `PRESTIGE (x${prestige})`;
 }
 
-/* ---------- LEADERBOARD & ZOOM (unchanged) ---------- */
-async function fetchLeaderboard(){ /* ... same as before ... */ }
+/* ---------- LEADERBOARD (RESTORED) ---------- */
+async function fetchLeaderboard(){
+  const loading = $('loading'), error = $('error'), board = $('board'), rows = $('rows'), updated = $('updated');
+  loading.classList.remove('hidden'); error.classList.add('hidden'); board.classList.add('hidden');
+  try{
+    const r = await fetch('leaderboard.json?' + Date.now());
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const data = await r.json();
+    const list = Array.isArray(data) ? data : (data.leaderboard||[]);
+    const time = data.updated || new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    const padded = Array(100).fill().map((_,i)=>list[i]||{rank:i+1});
+    rows.innerHTML = padded.map((p,idx)=>{
+      const av = p.discordId && p.avatar ?
+        `https://cdn.discordapp.com/avatars/${p.discordId}/${p.avatar}.${p.avatar.startsWith('a_')?'gif':'webp'}?size=80` :
+        'https://cdn.discordapp.com/embed/avatars/0.png';
+      const rank = p.rank||idx+1;
+      return `<tr>
+        <td class="rank">${rank}</td>
+        <td class="name">
+          ${p.name?`<div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name)}"></div>
+          <div style="font-weight:600;">${e(p.name)}</div>`:
+          `<div class="empty-slot">— Empty Slot —</div>`}
+        </td>
+      </tr>`;
+    }).join('');
+    updated.textContent = `Last updated: ${time}`;
+    loading.classList.add('hidden'); board.classList.remove('hidden');
+  }catch(err){
+    console.error(err);
+    loading.classList.add('hidden'); error.classList.remove('hidden');
+  }
+}
 function e(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
-const board = $('board'); const zoomPercent = $('#zoomPercent'); let scale = 0.5;
-function updateZoom(){ board.style.transform = `scale(${scale})`; board.style.transformOrigin = 'top left'; zoomPercent.textContent = `${Math.round(scale*100)}%`; }
+
+/* ---------- ZOOM ---------- */
+const board = $('board');
+const zoomPercent = $('#zoomPercent');
+let scale = 0.5;
+function updateZoom(){
+  board.style.transform = `scale(${scale})`;
+  board.style.transformOrigin = 'top left';
+  zoomPercent.textContent = `${Math.round(scale*100)}%`;
+}
 $('#zoomIn').onclick = ()=>{ scale = Math.min(scale+0.1,2); updateZoom(); };
 $('#zoomOut').onclick = ()=>{ scale = Math.max(scale-0.1,0.3); updateZoom(); };
 $('#zoomReset').onclick = ()=>{ scale = 0.5; updateZoom(); };
