@@ -51,7 +51,7 @@
     h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
       text-shadow:0 0 50px rgba(255,255,255,.6);margin-bottom:28px;text-align:center;
       animation:titleGlow 3s ease-in-out infinite alternate;}
-    @keyframes titleGlow{0%{text-shadow:0  آپ 0 40px rgba(255,255,255,.6);}
+    @keyframes titleGlow{0%{text-shadow:0 0 40px rgba(255,255,255,.6);}
       100%{text-shadow:0 0 80px rgba(255,255,255,.8),0 0 140px rgba(255,255,255,.5);}}
     .panel{display:none;flex:1;flex-direction:column;}
     .panel.active{display:flex;}
@@ -67,15 +67,18 @@
       50%{box-shadow:0 0 100px #fff,inset 0 0 80px #ddd;}}
     #points{font-size:3.5rem;font-weight:800;color:#fff;text-shadow:0 0 30px #fff;}
     #gps{font-size:1.5rem;color:#aaa;margin-top:10px;}
+    #total-goons{font-size:1.2rem;color:#ccc;margin-top:8px;}
 
-    .upgrades-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;width:100%;max-width:900px;}
+    .upgrades-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;width:100%;max-width:1000px;}
     .upgrade{background:rgba(255,255,255,.08);border:1px solid var(--glass-border);border-radius:16px;
-      padding:16px;text-align:center;transition:.3s;cursor:pointer;}
+      padding:18px;text-align:center;transition:.3s;cursor:pointer;position:relative;overflow:hidden;}
     .upgrade:hover{background:rgba(255,255,255,.15);transform:translateY(-4px);box-shadow:0 0 30px #fff;}
     .upgrade.bought{opacity:0.6;pointer-events:none;}
-    .upgrade-name{font-weight:700;color:#fff;}
-    .upgrade-cost{font-size:0.9rem;color:#ccc;margin-top:4px;}
-    .upgrade-effect{font-size:0.8rem;color:#888;margin-top:8px;}
+    .upgrade-name{font-weight:700;color:#fff;font-size:1.1rem;}
+    .upgrade-cost{font-size:0.95rem;color:#ccc;margin-top:6px;}
+    .upgrade-effect{font-size:0.85rem;color:#888;margin-top:8px;}
+    .upgrade-level{position:absolute;top:8px;right:8px;background:#fff;color:#000;padding:2px 8px;
+      border-radius:8px;font-size:0.7rem;font-weight:800;}
 
     .prestige-btn{margin-top:30px;padding:16px 40px;background:#fff;color:#000;border:none;
       border-radius:16px;font-weight:800;cursor:pointer;transition:.4s;box-shadow:0 0 40px #fff;}
@@ -103,6 +106,7 @@
       box-shadow:0 0 20px rgba(0,0,0,.8),0 0 0 2px #fff;}
     .avatar img{width:100%;height:100%;object-fit:cover;}
     .empty-slot{color:#666;font-style:italic;}
+    .total-goons{font-weight:600;color:#0f0;}
 
     .retry-btn{margin-top:16px;padding:12px 32px;background:#444;color:#fff;border:none;
       border-radius:12px;cursor:pointer;font-weight:600;transition:.3s;}
@@ -159,6 +163,7 @@
         <div class="clicker-panel">
           <div id="points">0</div>
           <div id="gps">0 GPS</div>
+          <div id="total-goons">Total Goons: 0</div>
           <div id="goon-btn">CLICK TO GOON</div>
           <div class="upgrades-grid" id="upgrades"></div>
           <button class="prestige-btn" id="prestige">PRESTIGE (x2 Multiplier)</button>
@@ -181,7 +186,7 @@
         </div>
         <div class="table-container">
           <table id="board" class="hidden">
-            <thead><tr><th>Rank</th><th>Player</th></tr></thead>
+            <thead><tr><th>Rank</th><th>Player</th><th>Total Goons</th></tr></thead>
             <tbody id="rows"></tbody>
           </table>
         </div>
@@ -235,7 +240,7 @@
     }
     setInterval(addStar,250);
 
-    // === FIXED LOADER ===
+    // === LOADER ===
     function enterHub(){
       const loader = $('loader');
       loader.style.opacity = '0';
@@ -269,78 +274,119 @@
     });
 
     // === GOON CLICKER ===
-    let points = 0, gps = 0, clickPower = 1, prestige = 1;
+    let points = 0, gps = 0, clickPower = 1, prestige = 1, totalGoons = 0;
+    let clickInterval = 1000; // ms per click (for 2x speed)
+    let autoClickerActive = false;
+
     const upgrades = [
-      {id:'auto',name:'Auto-Gooner',cost:50,effect:1,owned:0},
-      {id:'double',name:'Double Click',cost:200,effect:1,owned:0},
-      {id:'neon',name:'Neon Boost',cost:1000,effect:5,owned:0},
-      {id:'vault',name:'Vault Pass',cost:5000,effect:10,owned:0}
+      {id:'auto',name:'Auto-Gooner',cost:50,baseCost:50,effect:0.1,owned:0,type:'gps'},
+      {id:'double',name:'Double Click',cost:200,baseCost:200,effect:1,owned:0,type:'click'},
+      {id:'speed',name:'2x Goon Speed',cost:800,baseCost:800,effect:0.5,owned:0,type:'speed'},
+      {id:'neon',name:'Neon Boost',cost:2000,baseCost:2000,effect:2,owned:0,type:'gps'},
+      {id:'vault',name:'Vault Pass',cost:10000,baseCost:10000,effect:0.5,owned:0,type:'prestige'},
+      {id:'mega',name:'Mega Click',cost:50000,baseCost:50000,effect:10,owned:0,type:'click'},
+      {id:'hyper',name:'Hyper GPS',cost:100000,baseCost:100000,effect:10,owned:0,type:'gps'},
+      {id:'god',name:'God Mode',cost:500000,baseCost:500000,effect:5,owned:0,type:'multi'}
     ];
 
     function initClicker(){
       loadGame();
       renderUpgrades();
       updateDisplay();
-      setInterval(autoEarn, 1000);
+      setInterval(autoEarn, 100);
       setInterval(saveGame, 5000);
+      if (autoClickerActive) startAutoClicker();
+    }
+
+    function gainGoons(amount) {
+      const earned = amount * prestige;
+      points += earned;
+      totalGoons += earned;
+      updateDisplay();
+      checkAchievements();
+      submitToLeaderboard(); // Auto-submit on gain
     }
 
     $('goon-btn').onclick = () => {
-      points += clickPower * prestige;
-      updateDisplay();
+      gainGoons(clickPower);
       createParticles();
       screenShake();
-      checkAchievements();
     };
 
     function autoEarn(){
-      points += gps * prestige;
-      updateDisplay();
+      if (gps > 0) gainGoons(gps / 10);
+    }
+
+    function startAutoClicker() {
+      if (autoClickerActive) return;
+      autoClickerActive = true;
+      setInterval(() => {
+        if (document.visibilityState === 'visible') {
+          gainGoons(clickPower);
+          createParticles(6);
+        }
+      }, clickInterval);
     }
 
     function buyUpgrade(id){
       const u = upgrades.find(x => x.id === id);
-      if (points >= u.cost && u.owned < 10) {
-        points -= u.cost;
-        u.owned++;
-        u.cost = Math.floor(u.cost * 1.5);
-        if (id === 'auto') gps += u.effect;
-        if (id === 'double') clickPower += u.effect;
-        if (id === 'neon') gps += u.effect * 2;
-        if (id === 'vault') prestige += 0.5;
-        renderUpgrades();
-        updateDisplay();
-      }
+      if (!u || points < u.cost || u.owned >= 50) return;
+
+      points -= u.cost;
+      u.owned++;
+      u.cost = Math.floor(u.baseCost * Math.pow(1.5, u.owned));
+
+      if (u.type === 'gps') gps += u.effect;
+      if (u.type === 'click') clickPower += u.effect;
+      if (u.type === 'speed') clickInterval = Math.max(200, clickInterval * (1 - u.effect));
+      if (u.type === 'prestige') prestige += u.effect;
+      if (u.type === 'multi') { clickPower *= (1 + u.effect); gps *= (1 + u.effect); }
+
+      if (u.id === 'auto' && u.owned === 1) startAutoClicker();
+
+      renderUpgrades();
+      updateDisplay();
     }
 
     function prestigeReset(){
-      if (points >= 10000) {
-        prestige *= 2;
-        points = 0; gps = 0; clickPower = 1;
-        upgrades.forEach(u => { u.owned = 0; u.cost = [50,200,1000,5000][upgrades.indexOf(u)]; });
-        renderUpgrades();
-        updateDisplay();
-        showAchievement("PRESTIGED! x" + prestige + " Multiplier");
-      }
+      if (totalGoons < 50000) return showAchievement("Need 50K Total Goons to Prestige!");
+      prestige *= 2;
+      points = 0; gps = 0; clickPower = 1; clickInterval = 1000;
+      totalGoons = Math.floor(totalGoons * 0.1); // Keep 10%
+      upgrades.forEach(u => { u.owned = 0; u.cost = u.baseCost; });
+      autoClickerActive = false;
+      renderUpgrades();
+      updateDisplay();
+      showAchievement(`PRESTIGED! x${prestige} Multiplier Unlocked`);
     }
 
     function renderUpgrades(){
       $('upgrades').innerHTML = upgrades.map(u => `
-        <div class="upgrade ${u.owned >= 10 ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')">
+        <div class="upgrade ${u.owned >= 50 ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')">
           <div class="upgrade-name">${u.name}</div>
-          <div class="upgrade-cost">Cost: ${u.cost}</div>
-          <div class="upgrade-effect">Owned: ${u.owned}</div>
+          <div class="upgrade-cost">Cost: ${u.cost.toLocaleString()}</div>
+          <div class="upgrade-effect">
+            ${u.type === 'gps' ? `+${u.effect} GPS` :
+             u.type === 'click' ? `+${u.effect} Click Power` :
+             u.type === 'speed' ? `${(u.effect*100)}% Faster Clicks` :
+             u.type === 'prestige' ? `+${u.effect} Prestige` :
+             u.type === 'multi' ? `${(u.effect*100)}% Global Boost` : ''}
+          </div>
+          <div class="upgrade-level">Lv.${u.owned}</div>
         </div>
       `).join('');
     }
 
     function updateDisplay(){
       $('points').textContent = Math.floor(points).toLocaleString();
-      $('gps').textContent = `${gps.toFixed(1)} GPS`;
+      $('gps').textContent = `${gps.toFixed(2)} GPS`;
+      $('total-goons').textContent = `Total Goons: ${Math.floor(totalGoons).toLocaleString()}`;
+      $('prestige').textContent = `PRESTIGE (x${prestige} Multiplier)`;
+      $('prestige').disabled = totalGoons < 50000;
     }
 
-    function createParticles(){
-      for(let i=0; i<12; i++){
+    function createParticles(count = 12){
+      for(let i=0; i<count; i++){
         const p = document.createElement('div');
         p.style.cssText = `
           position:fixed;left:${Math.random()*100}vw;top:${Math.random()*100}vh;
@@ -367,12 +413,13 @@
     }
 
     function checkAchievements(){
-      if (points > 1000 && !localStorage.getItem('ach1')) { showAchievement("1000 GOON POINTS!"); localStorage.setItem('ach1','1'); }
-      if (gps > 10 && !localStorage.getItem('ach2')) { showAchievement("10 GPS! AUTO-GOONING!"); localStorage.setItem('ach2','1'); }
+      if (totalGoons > 1000 && !localStorage.getItem('ach1')) { showAchievement("1,000 TOTAL GOONS!"); localStorage.setItem('ach1','1'); }
+      if (gps > 50 && !localStorage.getItem('ach2')) { showAchievement("50 GPS! UNSTOPPABLE!"); localStorage.setItem('ach2','1'); }
+      if (prestige > 4 && !localStorage.getItem('ach3')) { showAchievement("PRESTIGE x4! GOON GOD!"); localStorage.setItem('ach3','1'); }
     }
 
     function saveGame(){
-      const save = { points, gps, clickPower, prestige, upgrades: upgrades.map(u => ({...u})) };
+      const save = { points, gps, clickPower, prestige, totalGoons, clickInterval, upgrades: upgrades.map(u => ({...u})), autoClickerActive };
       localStorage.setItem('goonSave', JSON.stringify(save));
     }
 
@@ -383,15 +430,33 @@
         gps = save.gps || 0;
         clickPower = save.clickPower || 1;
         prestige = save.prestige || 1;
+        totalGoons = save.totalGoons || 0;
+        clickInterval = save.clickInterval || 1000;
+        autoClickerActive = save.autoClickerActive || false;
         save.upgrades?.forEach((su, i) => {
           if (upgrades[i]) Object.assign(upgrades[i], su);
         });
+        if (autoClickerActive) startAutoClicker();
       }
     }
 
     $('prestige').onclick = prestigeReset;
 
-    // === LEADERBOARD ===
+    // === LEADERBOARD (Now by TOTAL GOONS) ===
+    const playerName = localStorage.getItem('goonName') || prompt("Enter your Goon Name:", "Gooner" + Math.floor(Math.random()*9999)) || "Anonymous";
+    if (!localStorage.getItem('goonName')) localStorage.setItem('goonName', playerName);
+
+    async function submitToLeaderboard() {
+      if (totalGoons < 100) return;
+      try {
+        await fetch('https://api.allorigins.ml/get?url=' + encodeURIComponent('YOUR_BACKEND_OR_DISCORD_WEBHOOK'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: playerName, totalGoons: Math.floor(totalGoons) })
+        });
+      } catch(e) {}
+    }
+
     async function fetchLeaderboard(){
       const loading = $('loading'), error = $('error'), board = $('board'), rows = $('rows'), updated = $('updated');
       loading.classList.remove('hidden');
@@ -405,20 +470,24 @@
         const list = Array.isArray(data) ? data : (data.leaderboard || []);
         const time = data.updated || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        const padded = Array(100).fill().map((_, i) => list[i] || { rank: i + 1 });
+        // Sort by totalGoons DESC
+        const sorted = [...list].sort((a,b) => (b.totalGoons || 0) - (a.totalGoons || 0));
+        const padded = Array(100).fill().map((_, i) => sorted[i] || { rank: i + 1, name: '— Empty —', totalGoons: 0 });
+
         rows.innerHTML = padded.map((p, idx) => {
           const av = p.discordId && p.avatar
             ? `https://cdn.discordapp.com/avatars/${p.discordId}/${p.avatar}.${p.avatar.startsWith('a_') ? 'gif' : 'webp'}?size=80`
             : 'https://cdn.discordapp.com/embed/avatars/0.png';
           const rank = p.rank || idx + 1;
           return `<tr>
-            <td class="rank">${rank}</td>
+            <td class="rank">#${rank}</td>
             <td class="name">
-              ${p.name ? `
+              ${p.name && p.name !== '— Empty —' ? `
                 <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name)}"></div>
                 <div style="font-weight:600;">${e(p.name)}</div>
               ` : `<div class="empty-slot">— Empty Slot —</div>`}
             </td>
+            <td class="total-goons">${(p.totalGoons || 0).toLocaleString()}</td>
           </tr>`;
         }).join('');
 
