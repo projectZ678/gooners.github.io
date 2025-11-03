@@ -22,7 +22,7 @@
       backdrop-filter:blur(14px);padding:18px 10px;display:flex;flex-direction:column;align-items:center;
       box-shadow:0 0 40px rgba(255,255,255,.08);flex-shrink:0;}
     #pfp{width:64px;height:64px;border-radius:50%;overflow:hidden;margin-bottom:10px;
-      border:2px solid var(--glow);box-shadow:0 0 18px var(--glow);}
+      border:2px solid var(--glow);box-shadow:0 0 18px var(--glow);background:#333;}
     #pfp img{width:100%;height:100%;object-fit:cover;}
     .sidebar-title{font-size:1.2rem;font-weight:800;letter-spacing:1.8px;color:var(--accent);
       margin-bottom:12px;text-shadow:0 0 10px rgba(255,255,255,.5);}
@@ -165,7 +165,7 @@
     <!-- SIDEBAR -->
     <div id="sidebar">
       <div id="pfp">
-        <img src="https://i.pinimg.com/1200x/65/ce/74/65ce749c9a3c75ee8f49bd698097a09.jpg" alt="PFP">
+        <img src="https://i.ibb.co/7tZ7X7k/goon-pfp.jpg" alt="PFP" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjMzMzIiByeD0iMzIiLz48dGV4dCB4PSIzMiIgeT0iNDAiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9PPC90ZXh0Pjwvc3ZnPg=='">
       </div>
       <div class="sidebar-title">GOONING</div>
       <div class="nav-btn active">CLICKER</div>
@@ -179,8 +179,8 @@
         <div id="current-goons">Current: 0</div>
         <div id="total-goons">Total: 0</div>
         <div id="ascension">Ascension: 0</div>
-        <div id="prestige-multi">×1 Multiplier</div>
-        <div id="next-prestige">Next: 200K</div>
+        <div id="prestige-multi">x1 Multiplier</div>
+        <div id="next-prestige">Next: 90M</div>
 
         <div id="goon-container">
           <div id="goon-dude-container" onclick="clickGoon(event)">
@@ -253,7 +253,7 @@
         <div class="goonstegie-container">
           <div class="goonstegie-bar">
             <div class="goonstegie-fill" id="goonstegie-fill"></div>
-            <div class="goonstegie-text" id="goonstegie-text">Need 200K</div>
+            <div class="goonstegie-text" id="goonstegie-text">Need 90M</div>
           </div>
         </div>
 
@@ -285,14 +285,16 @@
     }
     setInterval(addStar,400);
 
+    // === ROBUST LOADER ===
     function enterHub(){
       const loader = $('loader');
+      const app = $('app');
       loader.style.opacity = '0';
       setTimeout(() => {
         loader.classList.add('hidden');
-        $('app').classList.remove('hidden');
+        app.classList.remove('hidden');
         initGame();
-      }, 450);
+      }, 500);
     }
 
     const loader = $('loader');
@@ -304,13 +306,9 @@
       }
     });
 
-    const focusLoader = () => loader.focus();
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', focusLoader);
-    } else {
-      focusLoader();
-    }
-    window.addEventListener('load', focusLoader);
+    window.addEventListener('load', () => {
+      loader.focus();
+    });
 
     // === GAME STATE ===
     let points = 0, gps = 0, clickPower = 1, prestigeLevel = 0, ascension = 0;
@@ -321,6 +319,9 @@
     // Cost multipliers
     let prestigeCostMult = 1;
     let ascensionCostMult = 1;
+
+    // Prestige target: 90M base, +90M per prestige
+    let prestigeTargetBase = 90000000; // 90M
 
     const badges = [
       {name:"Bronze",req:2000,icon:"B",color:"#cd7f32",unlocked:false},
@@ -367,7 +368,7 @@
       {id:'double',name:'Double Click',baseCost:200,cost:200,effect:10,owned:0,type:'click',max:150, persistent:false},
       {id:'neon',name:'Neon Boost',baseCost:1000,cost:1000,effect:100,owned:0,type:'gps',max:100, persistent:false},
       {id:'vault',name:'Vault Pass',baseCost:5000,cost:5000,effect:0.5,owned:0,type:'prestige',max:10, persistent:true},
-      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:600,owned:0,type:'click',max:80, persistent:false}, // ← +600
+      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:600,owned:0,type:'click',max:80, persistent:false},
       {id:'hyper',name:'Hyper GPS',baseCost:100000,cost:100000,effect:1000,owned:0,type:'gps',max:60, persistent:false},
       {id:'god',name:'God Mode',baseCost:500000,cost:500000,effect:0.2,owned:0,type:'multi',max:25, persistent:false},
       {id:'quantum',name:'Quantum Edge',baseCost:1e6,cost:1e6,effect:0.5,owned:0,type:'clickMulti',max:30, persistent:false},
@@ -416,7 +417,7 @@
     }
 
     function getPrestigeTarget() {
-      return 200000 + (300000000 * prestigeLevel);
+      return prestigeTargetBase + (prestigeLevel * 90000000); // +90M per prestige
     }
 
     function getAscensionTarget() {
@@ -504,10 +505,10 @@
 
       prestigeSplat();
       prestigeLevel++;
+      prestigeTargetBase += 90000000; // +90M
       points = 0;
       currentGoons = 0;
 
-      // Apply ×10 cost multiplier
       prestigeCostMult *= 10;
 
       upgrades.forEach(u => {
@@ -531,11 +532,11 @@
       prestigeSplat();
       ascension++;
       prestigeLevel = 0;
+      prestigeTargetBase = 90000000; // Reset to 90M
       points = 0; gps = 0; clickPower = 1; currentGoons = 0; totalGoons = 0;
 
-      // Apply ×20 cost multiplier
       ascensionCostMult *= 20;
-      prestigeCostMult = 1; // Reset prestige cost mult on ascend
+      prestigeCostMult = 1;
 
       upgrades.forEach(u => { 
         u.owned = 0; 
@@ -622,7 +623,7 @@
 
     function updateAllCosmetics(){
       cosmetics.forEach(c => {
-        const met = (c.type === 'goons' && totalGoons >= c.req) ||
+        const met = ( آبc.type === 'goons' && totalGoons >= c.req) ||
                    (c.type === 'prestige' && prestigeLevel >= c.req) ||
                    (c.type === 'ascension' && ascension >= c.req);
         if (met && !c.unlocked) {
@@ -664,7 +665,7 @@
     function saveGame(){
       const save = {
         points, prestigeLevel, ascension, totalGoons, currentGoons,
-        prestigeCostMult, ascensionCostMult,
+        prestigeCostMult, ascensionCostMult, prestigeTargetBase,
         upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost, persistent:u.persistent})),
         badges: badges.map(b=>({name:b.name,unlocked:b.unlocked})),
         cosmetics: cosmetics.map(c=>({req:c.req,type:c.type,unlocked:c.unlocked}))
@@ -673,8 +674,10 @@
     }
 
     function loadGame(){
-      const save = JSON.parse(localStorage.getItem('goonSave') || '{}');
-      if (save) {
+      try {
+        const save = JSON.parse(localStorage.getItem('goonSave') || '{}');
+        if (!save || !save.upgrades) return;
+
         points = save.points || 0;
         prestigeLevel = save.prestigeLevel || 0;
         ascension = save.ascension || 0;
@@ -682,6 +685,7 @@
         currentGoons = save.currentGoons || 0;
         prestigeCostMult = save.prestigeCostMult || 1;
         ascensionCostMult = save.ascensionCostMult || 1;
+        prestigeTargetBase = save.prestigeTargetBase || 90000000;
 
         save.upgrades?.forEach(su => {
           const u = upgrades.find(x => x.id === su.id);
@@ -698,6 +702,9 @@
         recalculateStats();
         updateAllCosmetics();
         renderBadges();
+      } catch(e) {
+        console.error("Load failed:", e);
+        localStorage.removeItem('goonSave');
       }
     }
 
