@@ -139,8 +139,14 @@
       animation:giantSplat 1s ease-out forwards;}
     @keyframes giantSplat{0%{transform:scale(0);opacity:1;}60%{transform:scale(1.2);opacity:0.9;}100%{transform:scale(1.4);opacity:0;}}
     /* LOADER */
-    #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
-      align-items:center;justify-content:center;z-index:100;cursor:pointer;transition:opacity 0.7s ease;}
+    #loader{
+      position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
+      align-items:center;justify-content:center;z-index:100;cursor:pointer;transition:opacity 0.7s ease;
+      outline:none;
+    }
+    #loader:focus{
+      box-shadow:0 0 0 3px rgba(255,255,255,0.3);
+    }
     #logo{font-size:3.8rem;font-weight:900;color:var(--accent);text-shadow:0 0 18px #fff;
       animation:glow 2s infinite alternate;}
     @keyframes glow{from{text-shadow:0 0 18px #fff;}to{text-shadow:0 0 55px #fff,0 0 110px #fff;}}
@@ -153,7 +159,7 @@
   <!-- LOADER -->
   <div id="loader" tabindex="0" role="button" aria-label="Enter Hub">
     <div id="logo">GOONING</div>
-    <div style="margin-top:12px;color:#aaa;font-size:0.95rem;">Click or press Enter</div>
+    <div style="margin-top:12px;color:#aaa;font-size:0.95rem;">Click or press Enter / Space</div>
   </div>
   <div id="app" class="hidden">
     <!-- SIDEBAR -->
@@ -186,7 +192,7 @@
               <rect class="void-wings" width="200" height="270"/>
               <rect class="nebula-wings" width="200" height="270"/>
               <rect class="celestial-crown" width="200" height="270"/>
-              <rect{p class="titan-armor" width="200" height="270"/>
+              <rect class="titan-armor" width="200" height="270"/>
               <rect class="dragon" width="200" height="270"/>
               <rect class="phoenix" width="200" height="270"/>
               <rect class="divine-light" width="200" height="270"/>
@@ -288,6 +294,8 @@
         initGame();
       }, 450);
     }
+
+    // === FIXED LOADER LOGIC ===
     const loader = $('loader');
     loader.addEventListener('click', enterHub);
     loader.addEventListener('keydown', e => {
@@ -296,7 +304,15 @@
         enterHub();
       }
     });
-    loader.focus();
+
+    // Ensure focus on load
+    const focusLoader = () => loader.focus();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', focusLoader);
+    } else {
+      focusLoader();
+    }
+    window.addEventListener('load', focusLoader);
 
     // === GAME STATE ===
     let points = 0, gps = 0, clickPower = 1, prestigeLevel = 0, ascension = 0;
@@ -349,11 +365,11 @@
       {id:'double',name:'Double Click',baseCost:200,cost:200,effect:10,owned:0,type:'click',max:150, persistent:false},
       {id:'neon',name:'Neon Boost',baseCost:1000,cost:1000,effect:100,owned:0,type:'gps',max:100, persistent:false},
       {id:'vault',name:'Vault Pass',baseCost:5000,cost:5000,effect:0.5,owned:0,type:'prestige',max:10, persistent:true},
-      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:325,owned:0,type:'click',max:80, persistent:false}, // +325
+      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:325,owned:0,type:'click',max:80, persistent:false},
       {id:'hyper',name:'Hyper GPS',baseCost:100000,cost:100000,effect:1000,owned:0,type:'gps',max:60, persistent:false},
       {id:'god',name:'God Mode',baseCost:500000,cost:500000,effect:0.2,owned:0,type:'multi',max:25, persistent:false},
       {id:'quantum',name:'Quantum Edge',baseCost:1e6,cost:1e6,effect:0.5,owned:0,type:'clickMulti',max:30, persistent:false},
-      {id:'void',name:'Void Engine',baseCost:5e6,c 5e6,effect:5000,owned:0,type:'gps',max:40, persistent:false},
+      {id:'void',name:'Void Engine',baseCost:5e6,cost:5e6,effect:5000,owned:0,type:'gps',max:40, persistent:false},
       {id:'pulse',name:'Goon Pulse',baseCost:2e7,cost:2e7,effect:2,owned:0,type:'gpsMulti',max:20, persistent:false},
       {id:'dark',name:'Dark Matter',baseCost:1e8,cost:1e8,effect:10000,owned:0,type:'click',max:25, persistent:false},
       {id:'singularity',name:'Singularity',baseCost:5e8,cost:5e8,effect:10,owned:0,type:'multi',max:15, persistent:false},
@@ -375,7 +391,6 @@
       {id:'galaxy',name:'Galaxy Core',baseCost:1e33,cost:1e33,effect:1e10,owned:0,type:'gps',max:2, persistent:false},
       {id:'eternity',name:'Eternity Gate',baseCost:1e36,cost:1e36,effect:10,owned:0,type:'prestige',max:5, persistent:true},
       {id:'voidlord',name:'Void Lord',baseCost:1e40,cost:1e40,effect:100,owned:0,type:'multi',max:3, persistent:false},
-      // === NEW EPIC UPGRADES ===
       {id:'phoenix',name:'Phoenix Rebirth',baseCost:1e45,cost:1e45,effect:1e12,owned:0,type:'gps',max:1, persistent:true},
       {id:'dragon',name:'Dragon Fury',baseCost:1e50,cost:1e50,effect:1e13,owned:0,type:'click',max:1, persistent:true},
       {id:'titan',name:'Titan Strength',baseCost:1e55,cost:1e55,effect:500,owned:0,type:'multi',max:2, persistent:true},
@@ -399,7 +414,7 @@
     }
 
     function getPrestigeTarget() {
-      return 200000 + (40000000 * prestigeLevel); // +40M per level
+      return 200000 + (300000000 * prestigeLevel);
     }
 
     function getAscensionTarget() {
