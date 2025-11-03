@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gooning Hub</title>
+  <033<title>Gooning Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
   <style>
     :root{
@@ -17,7 +17,6 @@
     .star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:fall linear infinite;}
     @keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0;}10%{opacity:1;}90%{opacity:.3;}100%{transform:translateY(100vh) scale(.8);opacity:0;}}
     #app{display:flex;height:100vh;position:relative;z-index:1;}
-
     /* SIDEBAR - MINIMAL */
     #sidebar{width:160px;background:var(--glass);border-right:1px solid var(--glass-border);
       backdrop-filter:blur(14px);padding:18px 10px;display:flex;flex-direction:column;align-items:center;
@@ -33,20 +32,17 @@
       font-size:0.78rem;}
     .nav-btn:hover{background:rgba(255,255,255,.14);transform:translateX(2px);}
     .nav-btn.active{background:rgba(255,255,255,.2);border-color:var(--glow);color:var(--glow);}
-
     /* MAIN - OPTIMIZED */
     #main{flex:1;display:flex;flex-direction:column;padding:14px 18px;background:rgba(0,0,0,.35);
       backdrop-filter:blur(10px);gap:8px;}
     h1{font-weight:800;font-size:1.7rem;letter-spacing:2.8px;color:var(--accent);
       text-shadow:0 0 28px rgba(255,255,255,.5);margin-bottom:4px;text-align:center;}
-
     /* CLICKER PANEL */
     .clicker-panel{display:flex;flex-direction:column;align-items:center;gap:8px;}
     #goon-container{display:flex;align-items:center;gap:10px;}
     #goon-dude-container{width:200px;height:270px;position:relative;cursor:pointer;}
     #goon-dude{width:100%;height:100%;filter:drop-shadow(0 0 22px #fff);transition:.1s;}
     #goon-dude:active{transform:scale(0.94);}
-
     /* ANIMATIONS */
     .goon-head{animation:headBob 3s ease-in-out infinite;}
     @keyframes headBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-2.5px);}}
@@ -54,7 +50,6 @@
     @keyframes idleStroke{0%,100%{transform:rotate(0deg);}50%{transform:rotate(-17deg);}}
     .stroking-arm.click{animation:strongStroke 0.32s ease-out;}
     @keyframes strongStroke{0%{transform:rotate(0deg);}50%{transform:rotate(-72deg);}100%{transform:rotate(0deg);}}
-
     /* COSMETICS - OPTIMIZED */
     .armor,.crown,.wings,.aura,.diamond-helmet,.cosmic-cape,.god-aura,.void-emperor,.cosmic-nexus{display:none;position:absolute;}
     .armor{top:155px;left:52px;width:96px;height:110px;}
@@ -76,7 +71,6 @@
     @keyframes pulseAura{0%,100%{opacity:0.6;}50%{opacity:0.9;}}
     @keyframes voidPulse{0%,100%{transform:scale(1);opacity:0.7;}50%{transform:scale(1.4);opacity:0.3;}}
     @keyframes galaxy{0%{transform:rotate(0deg) scale(1);}100%{transform:rotate(360deg) scale(1.15);}}
-
     /* BADGES */
     .badges{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
     .badge{width:38px;height:38px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -86,19 +80,17 @@
     .badge.bronze{background:#cd7f32;border:2px solid #a9712a;}
     .badge.gold{background:#ffd700;border:2px solid #d4af37;box-shadow:0 0 14px #ff0;}
     .badge.hof{background:linear-gradient(45deg,#ff0,#f0f,#0ff);border:2px solid #fff;box-shadow:0 0 18px #fff;}
-
     /* STATS */
     #points{font-size:2rem;font-weight:800;color:#fff;text-shadow:0 0 18px #fff;margin:1px 0;}
-    #gps,#current-goons,#total-goons,#ascension{font-size:0.85rem;margin:1px 0;}
+
+   34    #gps,#current-goons,#total-goons,#ascension{font-size:0.85rem;margin:1px 0;}
     #total-goons{color:#0f0;font-weight:700;}
     #ascension{color:#f0f;font-weight:700;}
-
     /* GOONSTEGIE BAR */
     .goonstegie-container{width:100%;max-width:580px;display:flex;flex-direction:column;gap:3px;}
     .goonstegie-bar{height:14px;background:rgba(255,255,255,.1);border:1px solid var(--glass-border);border-radius:7px;overflow:hidden;position:relative;}
     .goonstegie-fill{height:100%;background:linear-gradient(90deg,#0f0,#0f8);width:0%;transition:width 0.28s ease;}
     .goonstegie-text{position:absolute;top:0;left:0;right:0;text-align:center;line-height:14px;font-weight:700;color:#fff;text-shadow:0 0 5px #000;font-size:0.72rem;}
-
     /* UPGRADES GRID */
     .upgrades-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;width:100%;max-width:780px;}
     .upgrade{background:rgba(255,255,255,.07);border:1px solid var(--glass-border);border-radius:8px;
@@ -110,12 +102,10 @@
     .upgrade-effect{font-size:0.62rem;color:#888;}
     .upgrade-level{position:absolute;top:3px;right:3px;background:#fff;color:#000;padding:1px 4px;
       border-radius:4px;font-size:0.58rem;font-weight:800;}
-
     .prestige-btn,.ascend-btn{padding:8px 22px;background:#fff;color:#000;border:none;
       border-radius:10px;font-weight:800;cursor:pointer;transition:.22s;box-shadow:0 0 22px #fff;font-size:0.86rem;margin:2px;}
     .prestige-btn:hover,.ascend-btn:hover{transform:scale(1.05);box-shadow:0 0 45px #fff;}
     .prestige-btn:disabled,.ascend-btn:disabled{opacity:0.5;cursor:not-allowed;}
-
     /* SPLAT */
     .splat{position:fixed;pointer-events:none;z-index:9999;opacity:0;
       width:46px;height:46px;background:#fff;border-radius:50%;filter:blur(5px);
@@ -123,8 +113,8 @@
     @keyframes splatAnim{0%{transform:scale(0);opacity:1;}70%{transform:scale(1.5);opacity:0.8;}100%{transform:scale(1.9);opacity:0;}}
     .giant-splat{position:fixed;inset:0;background:#fff;z-index:10000;opacity:0;
       animation:giantSplat 1s ease-out forwards;}
-    @keyframes giantSplat{0%{transform:scale(0);opacity:1;}60%{transform:scale(1.2);opacity:0.9;}100%{transform:scale(1.4);opacity:0;}}
-
+    @keyframes giantSplat{0%{transform:scale(0);opacity:1;}60%{transform:scale(1.2);opacity:0.9;}
+    100%{transform:scale(1.4);opacity:0;}}
     /* LOADER */
     #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
       align-items:center;justify-content:center;z-index:100;cursor:pointer;transition:opacity 0.7s ease;}
@@ -132,19 +122,16 @@
       animation:glow 2s infinite alternate;}
     @keyframes glow{from{text-shadow:0 0 18px #fff;}to{text-shadow:0 0 55px #fff,0 0 110px #fff;}}
     .hidden{display:none!important;}
-
     @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-7px);}75%{transform:translateX(7px);}}
   </style>
 </head>
 <body>
   <div class="stars" id="stars"></div>
-
   <!-- LOADER -->
   <div id="loader" tabindex="0" role="button" aria-label="Enter Hub">
     <div id="logo">GOONING</div>
     <div style="margin-top:12px;color:#aaa;font-size:0.95rem;">Click or press Enter</div>
   </div>
-
   <div id="app" class="hidden">
     <!-- SIDEBAR -->
     <div id="sidebar">
@@ -154,7 +141,6 @@
       <div class="sidebar-title">GOONING</div>
       <div class="nav-btn active">CLICKER</div>
     </div>
-
     <!-- MAIN -->
     <div id="main">
       <h1>GOON CLICKER</h1>
@@ -164,7 +150,6 @@
         <div id="current-goons">Current: 0</div>
         <div id="total-goons">Total: 0</div>
         <div id="ascension">Ascension: 0</div>
-
         <div id="goon-container">
           <div id="goon-dude-container" onclick="clickGoon(event)">
             <svg id="goon-dude" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
@@ -210,7 +195,6 @@
           </div>
           <div class="badges" id="badges"></div>
         </div>
-
         <!-- GOONSTEGIE BAR -->
         <div class="goonstegie-container">
           <div class="goonstegie-bar">
@@ -218,7 +202,6 @@
             <div class="goonstegie-text" id="goonstegie-text">Need 100K</div>
           </div>
         </div>
-
         <div class="upgrades-grid" id="upgrades"></div>
         <div style="display:flex;gap:6px;justify-content:center;">
           <button class="prestige-btn" id="prestige">PRESTIGE</button>
@@ -291,36 +274,36 @@
     ];
 
     const upgrades = [
-      {id:'auto',name:'Auto-Gooner',baseCost:50,cost:50,effect:35,owned:0,type:'gps',max:200},
-      {id:'double',name:'Double Click',baseCost:200,cost:200,effect:10,owned:0,type:'click',max:150},
-      {id:'neon',name:'Neon Boost',baseCost:1000,cost:1000,effect:100,owned:0,type:'gps',max:100},
-      {id:'vault',name:'Vault Pass',baseCost:5000,cost:5000,effect:0.5,owned:0,type:'prestige',max:10},
-      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:120,owned:0,type:'click',max:80},
-      {id:'hyper',name:'Hyper GPS',baseCost:100000,cost:100000,effect:1000,owned:0,type:'gps',max:60},
-      {id:'god',name:'God Mode',baseCost:500000,cost:500000,effect:0.2,owned:0,type:'multi',max:25},
-      {id:'quantum',name:'Quantum Edge',baseCost:1e6,cost:1e6,effect:0.5,owned:0,type:'clickMulti',max:30},
-      {id:'void',name:'Void Engine',baseCost:5e6,cost:5e6,effect:5000,owned:0,type:'gps',max:40},
-      {id:'pulse',name:'Goon Pulse',baseCost:2e7,cost:2e7,effect:2,owned:0,type:'gpsMulti',max:20},
-      {id:'dark',name:'Dark Matter',baseCost:1e8,cost:1e8,effect:10000,owned:0,type:'click',max:25},
-      {id:'singularity',name:'Singularity',baseCost:5e8,cost:5e8,effect:10,owned:0,type:'multi',max:15},
-      {id:'infinity',name:'Infinity Loop',baseCost:2e9,cost:2e9,effect:100000,owned:0,type:'gps',max:15},
-      {id:'rift',name:'Cosmic Rift',baseCost:1e10,cost:1e10,effect:1e6,owned:0,type:'click',max:10},
-      {id:'eternal',name:'Eternal Flame',baseCost:1e12,cost:1e12,effect:0.5,owned:0,type:'multi',max:20},
-      {id:'nebula',name:'Nebula Core',baseCost:1e14,cost:1e14,effect:5e6,owned:0,type:'gps',max:8},
-      {id:'titan',name:'Titan Click',baseCost:3e14,cost:3e14,effect:300000,owned:0,type:'click',max:5},
-      {id:'nova',name:'Nova Burst',baseCost:1e16,cost:1e16,effect:1e7,owned:0,type:'gps',max:6},
-      {id:'echo',name:'Echo Click',baseCost:5e16,cost:5e16,effect:5e6,owned:0,type:'click',max:4},
-      {id:'flux',name:'Flux Multiplier',baseCost:1e18,cost:1e18,effect:0.8,owned:0,type:'multi',max:10},
-      {id:'paradise',name:"UZI'S GOON PARADISE",baseCost:2e18,cost:2e18,effect:60000000,owned:0,type:'gps',max:1},
-      {id:'laser',name:'Laser Focus',baseCost:1e20,cost:1e20,effect:1e8,owned:0,type:'click',max:3},
-      {id:'warp',name:'Warp Drive',baseCost:5e21,cost:5e21,effect:5e8,owned:0,type:'gps',max:3},
-      {id:'soul',name:'Soul Harvest',baseCost:1e23,cost:1e23,effect:0.3,owned:0,type:'multi',max:8},
-      {id:'nexus',name:'Nexus Link',baseCost:1e25,cost:1e25,effect:1.5,owned:0,type:'gpsMulti',max:5},
-      {id:'chrono',name:'Chrono Boost',baseCost:1e27,cost:1e27,effect:2,owned:0,type:'clickMulti',max:4},
-      {id:'divine',name:'Divine Touch',baseCost:1e30,cost:1e30,effect:1e9,owned:0,type:'click',max:2},
-      {id:'galaxy',name:'Galaxy Core',baseCost:1e33,cost:1e33,effect:1e10,owned:0,type:'gps',max:2},
-      {id:'eternity',name:'Eternity Gate',baseCost:1e36,cost:1e36,effect:10,owned:0,type:'prestige',max:5},
-      {id:'voidlord',name:'Void Lord',baseCost:1e40,cost:1e40,effect:100,owned:0,type:'multi',max:3}
+      {id:'auto',name:'Auto-Gooner',baseCost:50,cost:50,effect:35,owned:0,type:'gps',max:200, persistent: false},
+      {id:'double',name:'Double Click',baseCost:200,cost:200,effect:10,owned:0,type:'click',max:150, persistent: false},
+      {id:'neon',name:'Neon Boost',baseCost:1000,cost:1000,effect:100,owned:0,type:'gps',max:100, persistent: false},
+      {id:'vault',name:'Vault Pass',baseCost:5000,cost:5000,effect:0.5,owned:0,type:'prestige',max:10, persistent: true},
+      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:120,owned:0,type:'click',max:80, persistent: false},
+      {id:'hyper',name:'Hyper GPS',baseCost:100000,cost:100000,effect:1000,owned:0,type:'gps',max:60, persistent: false},
+      {id:'god',name:'God Mode',baseCost:500000,cost:500000,effect:0.2,owned:0,type:'multi',max:25, persistent: false},
+      {id:'quantum',name:'Quantum Edge',baseCost:1e6,cost:1e6,effect:0.5,owned:0,type:'clickMulti',max:30, persistent: false},
+      {id:'void',name:'Void Engine',baseCost:5e6,cost:5e6,effect:5000,owned:0,type:'gps',max:40, persistent: false},
+      {id:'pulse',name:'Goon Pulse',baseCost:2e7,cost:2e7,effect:2,owned:0,type:'gpsMulti',max:20, persistent: false},
+      {id:'dark',name:'Dark Matter',baseCost:1e8,cost:1e8,effect:10000,owned:0,type:'click',max:25, persistent: false},
+      {id:'singularity',name:'Singularity',baseCost:5e8,cost:5e8,effect:10,owned:0,type:'multi',max:15, persistent: false},
+      {id:'infinity',name:'Infinity Loop',baseCost:2e9,cost:2e9,effect:100000,owned:0,type:'gps',max:15, persistent: false},
+      {id:'rift',name:'Cosmic Rift',baseCost:1e10,cost:1e10,effect:1e6,owned:0,type:'click',max:10, persistent: false},
+      {id:'eternal',name:'Eternal Flame',baseCost:1e12,cost:1e12,effect:0.5,owned:0,type:'multi',max:20, persistent: false},
+      {id:'nebula',name:'Nebula Core',baseCost:1e14,cost:1e14,effect:5e6,owned:0,type:'gps',max:8, persistent: false},
+      {id:'titan',name:'Titan Click',baseCost:3e14,cost:3e14,effect:300000,owned:0,type:'click',max:5, persistent: false},
+      {id:'nova',name:'Nova Burst',baseCost:1e16,cost:1e16,effect:1e7,owned:0,type:'gps',max:6, persistent: false},
+      {id:'echo',name:'Echo Click',baseCost:5e16,cost:5e16,effect:5e6,owned:0,type:'click',max:4, persistent: false},
+      {id:'flux',name:'Flux Multiplier',baseCost:1e18,cost:1e18,effect:0.8,owned:0,type:'multi',max:10, persistent: false},
+      {id:'paradise',name:"UZI'S GOON PARADISE",baseCost:2e18,cost:2e18,effect:60000000,owned:0,type:'gps',max:1, persistent: true},
+      {id:'laser',name:'Laser Focus',baseCost:1e20,cost:1e20,effect:1e8,owned:0,type:'click',max:3, persistent: false},
+      {id:'warp',name:'Warp Drive',baseCost:5e21,cost:5e21,effect:5e8,owned:0,type:'gps',max:3, persistent: false},
+      {id:'soul',name:'Soul Harvest',baseCost:1e23,cost:1e23,effect:0.3,owned:0,type:'multi',max:8, persistent: false},
+      {id:'nexus',name:'Nexus Link',baseCost:1e25,cost:1e25,effect:1.5,owned:0,type:'gpsMulti',max:5, persistent: false},
+      {id:'chrono',name:'Chrono Boost',baseCost:1e27,cost:1e27,effect:2,owned:0,type:'clickMulti',max:4, persistent: false},
+      {id:'divine',name:'Divine Touch',baseCost:1e30,cost:1e30,effect:1e9,owned:0,type:'click',max:2, persistent: false},
+      {id:'galaxy',name:'Galaxy Core',baseCost:1e33,cost:1e33,effect:1e10,owned:0,type:'gps',max:2, persistent: false},
+      {id:'eternity',name:'Eternity Gate',baseCost:1e36,cost:1e36,effect:10,owned:0,type:'prestige',max:5, persistent: true},
+      {id:'voidlord',name:'Void Lord',baseCost:1e40,cost:1e40,effect:100,owned:0,type:'multi',max:3, persistent: false}
     ];
 
     function initGame(){
@@ -402,7 +385,7 @@
 
       points -= u.cost;
       u.owned++;
-      u.cost = u.id === 'paradise' ? u.baseCost : Math.floor(u.baseCost * Math.pow(1.6, u.owned));
+      u.cost = u.baseCost * Math.pow(1.6, u.owned);  // Fixed cost scaling
 
       recalculateStats();
       renderUpgrades();
@@ -416,8 +399,17 @@
       if (currentGoons < target) return showAchievement(`Need ${formatNumber(target)} Current Goons!`);
       prestigeSplat();
       prestigeLevel++;
-      points = 0; currentGoons = 0;
-      upgrades.forEach(u => { if (u.id !== 'paradise') { u.owned = 0; u.cost = u.baseCost; } });
+      points = 0; 
+      currentGoons = 0;
+
+      // Only reset non-persistent upgrades
+      upgrades.forEach(u => {
+        if (!u.persistent) {
+          u.owned = 0;
+          u.cost = u.baseCost;
+        }
+      });
+
       recalculateStats();
       renderUpgrades();
       updateDisplay();
@@ -432,9 +424,13 @@
       prestigeSplat();
       ascension++;
       prestigeLevel = 0;
-      prestige = 1;
-      points = 0; gps = 0; clickPower = 1; currentGoons = 0;
-      upgrades.forEach(u => { u.owned = 0; u.cost = u.baseCost; });
+      points = 0; gps = 0; clickPower = 1; currentGoons = 0; totalGoons = 0;
+
+      upgrades.forEach(u => { 
+        u.owned = 0; 
+        u.cost = u.baseCost; 
+      });
+
       recalculateStats();
       renderUpgrades();
       updateDisplay();
@@ -548,7 +544,7 @@
     function saveGame(){
       const save = { 
         points, prestigeLevel, ascension, totalGoons, currentGoons,
-        upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost})), 
+        upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost, persistent: u.persistent})), 
         badges: badges.map(b=>({name:b.name,unlocked:b.unlocked})),
         cosmetics: cosmetics.map(c=>({req:c.req,type:c.type,unlocked:c.unlocked}))
       };
@@ -565,7 +561,10 @@
         currentGoons = save.currentGoons || 0;
         save.upgrades?.forEach(su => {
           const u = upgrades.find(x => x.id === su.id);
-          if (u) { u.owned = su.owned; u.cost = su.cost; }
+          if (u) { 
+            u.owned = su.owned || 0; 
+            u.cost = su.cost || u.baseCost;
+          }
         });
         save.badges?.forEach(sb => {
           const b = badges.find(x => x.name === sb.name);
