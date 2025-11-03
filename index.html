@@ -165,7 +165,7 @@
     <!-- SIDEBAR -->
     <div id="sidebar">
       <div id="pfp">
-        <img src="https://i.ibb.co/7tZ7X7k/goon-pfp.jpg" alt="PFP" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjMzMzIiByeD0iMzIiLz48dGV4dCB4PSIzMiIgeT0iNDAiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9PPC90ZXh0Pjwvc3ZnPg=='">
+        <img src="https://i.pinimg.com/736x/6b/d5/67/6bd5675ebe04084cdcda4ac4c827866e.jpg" alt="PFP" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjMzMzIiByeD0iMzIiLz48dGV4dCB4PSIzMiIgeT0iNDAiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9PPC90ZXh0Pjwvc3ZnPg=='">
       </div>
       <div class="sidebar-title">GOONING</div>
       <div class="nav-btn active">CLICKER</div>
@@ -214,7 +214,7 @@
               <ellipse class="aura" cx="100" cy="135" rx="85" ry="115"/>
               <g class="wings">
                 <path d="M25 140 Q5 120 17 100 Q30 80 50 100 Q65 120 50 140" fill="#fff" opacity="0.9"/>
-                <path d="M175 140 Q195 120 183 100 Q170 80 150 100 Q135 120 150 140" fill="#fff" opacity="0.9"/>
+                <path d="M175 140 Q195 120 183 100 Q170 80 150 100 Q135 120 150 140" fill="#fff" opacity:="0.9"/>
               </g>
               <g class="diamond-helmet">
                 <path d="M70 45 L100 30 L130 45 L130 60 L70 60 Z" fill="#b9f2ff" stroke="#fff" stroke-width="2.5"/>
@@ -285,7 +285,7 @@
     }
     setInterval(addStar,400);
 
-    // === ROBUST LOADER ===
+    // === LOADER ===
     function enterHub(){
       const loader = $('loader');
       const app = $('app');
@@ -306,9 +306,7 @@
       }
     });
 
-    window.addEventListener('load', () => {
-      loader.focus();
-    });
+    window.addEventListener('load', () => loader.focus());
 
     // === GAME STATE ===
     let points = 0, gps = 0, clickPower = 1, prestigeLevel = 0, ascension = 0;
@@ -316,12 +314,9 @@
     let prestigeMultiplier = 1;
     const arm = document.querySelector('.stroking-arm');
 
-    // Cost multipliers
     let prestigeCostMult = 1;
     let ascensionCostMult = 1;
-
-    // Prestige target: 90M base, +90M per prestige
-    let prestigeTargetBase = 90000000; // 90M
+    let prestigeTargetBase = 90000000;
 
     const badges = [
       {name:"Bronze",req:2000,icon:"B",color:"#cd7f32",unlocked:false},
@@ -417,7 +412,7 @@
     }
 
     function getPrestigeTarget() {
-      return prestigeTargetBase + (prestigeLevel * 90000000); // +90M per prestige
+      return prestigeTargetBase + (prestigeLevel * 90000000);
     }
 
     function getAscensionTarget() {
@@ -441,10 +436,9 @@
     }
 
     function gainGoons(amount) {
-      const earned = amount;
-      points += earned;
-      currentGoons += earned;
-      totalGoons += earned;
+      points += amount;
+      currentGoons += amount;
+      totalGoons += amount;
       updateDisplay();
       checkBadges();
       updateAllCosmetics();
@@ -483,9 +477,8 @@
       const u = upgrades.find(x => x.id === id);
       if (!u || points < u.cost || u.owned >= u.max) return;
 
-      const cost = u.cost;
-      points -= cost;
-      currentGoons -= cost;
+      points -= u.cost;
+      currentGoons -= u.cost;
       u.owned++;
       u.cost = u.baseCost * Math.pow(1.6, u.owned) * prestigeCostMult * ascensionCostMult;
 
@@ -505,10 +498,9 @@
 
       prestigeSplat();
       prestigeLevel++;
-      prestigeTargetBase += 90000000; // +90M
+      prestigeTargetBase += 90000000;
       points = 0;
       currentGoons = 0;
-
       prestigeCostMult *= 10;
 
       upgrades.forEach(u => {
@@ -532,9 +524,8 @@
       prestigeSplat();
       ascension++;
       prestigeLevel = 0;
-      prestigeTargetBase = 90000000; // Reset to 90M
+      prestigeTargetBase = 90000000;
       points = 0; gps = 0; clickPower = 1; currentGoons = 0; totalGoons = 0;
-
       ascensionCostMult *= 20;
       prestigeCostMult = 1;
 
@@ -623,7 +614,7 @@
 
     function updateAllCosmetics(){
       cosmetics.forEach(c => {
-        const met = ( آبc.type === 'goons' && totalGoons >= c.req) ||
+        const met = (c.type === 'goons' && totalGoons >= c.req) ||
                    (c.type === 'prestige' && prestigeLevel >= c.req) ||
                    (c.type === 'ascension' && ascension >= c.req);
         if (met && !c.unlocked) {
