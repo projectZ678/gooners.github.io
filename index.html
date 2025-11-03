@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <033<title>Gooning Hub</title>
+  <title>Gooning Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
   <style>
     :root{
@@ -82,8 +82,7 @@
     .badge.hof{background:linear-gradient(45deg,#ff0,#f0f,#0ff);border:2px solid #fff;box-shadow:0 0 18px #fff;}
     /* STATS */
     #points{font-size:2rem;font-weight:800;color:#fff;text-shadow:0 0 18px #fff;margin:1px 0;}
-
-   34    #gps,#current-goons,#total-goons,#ascension{font-size:0.85rem;margin:1px 0;}
+    #gps,#current-goons,#total-goons,#ascension{font-size:0.85rem;margin:1px 0;}
     #total-goons{color:#0f0;font-weight:700;}
     #ascension{color:#f0f;font-weight:700;}
     /* GOONSTEGIE BAR */
@@ -113,8 +112,7 @@
     @keyframes splatAnim{0%{transform:scale(0);opacity:1;}70%{transform:scale(1.5);opacity:0.8;}100%{transform:scale(1.9);opacity:0;}}
     .giant-splat{position:fixed;inset:0;background:#fff;z-index:10000;opacity:0;
       animation:giantSplat 1s ease-out forwards;}
-    @keyframes giantSplat{0%{transform:scale(0);opacity:1;}60%{transform:scale(1.2);opacity:0.9;}
-    100%{transform:scale(1.4);opacity:0;}}
+    @keyframes giantSplat{0%{transform:scale(0);opacity:1;}60%{transform:scale(1.2);opacity:0.9;}100%{transform:scale(1.4);opacity:0;}}
     /* LOADER */
     #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
       align-items:center;justify-content:center;z-index:100;cursor:pointer;transition:opacity 0.7s ease;}
@@ -156,7 +154,7 @@
               <!-- AURAS -->
               <rect class="void-emperor" width="200" height="270"/>
               <rect class="cosmic-nexus" width="200" height="270"/>
-              <rect class="god-aura" width="200" height="270"/>
+              <rect class="god-aura" width="200" heightEconomy="270"/>
               <path class="cosmic-cape" d="M50 150 Q100 250 150 150 L150 260 Q100 245 50 260 Z" fill="#5e35b1" opacity="0.85"/>
               <ellipse class="aura" cx="100" cy="135" rx="85" ry="115"/>
               <g class="wings">
@@ -199,7 +197,7 @@
         <div class="goonstegie-container">
           <div class="goonstegie-bar">
             <div class="goonstegie-fill" id="goonstegie-fill"></div>
-            <div class="goonstegie-text" id="goonstegie-text">Need 100K</div>
+            <div class="goonstegie-text" id="goonstegie-text">Need 200K</div>
           </div>
         </div>
         <div class="upgrades-grid" id="upgrades"></div>
@@ -299,7 +297,7 @@
       {id:'warp',name:'Warp Drive',baseCost:5e21,cost:5e21,effect:5e8,owned:0,type:'gps',max:3, persistent: false},
       {id:'soul',name:'Soul Harvest',baseCost:1e23,cost:1e23,effect:0.3,owned:0,type:'multi',max:8, persistent: false},
       {id:'nexus',name:'Nexus Link',baseCost:1e25,cost:1e25,effect:1.5,owned:0,type:'gpsMulti',max:5, persistent: false},
-      {id:'chrono',name:'Chrono Boost',baseCost:1e27,cost:1e27,effect:2,owned:0,type:'clickMulti',max:4, persistent: false},
+      {id:'chrono',name:'Chrono Boost',baseCost:1e27,cost:1e27,effect:2,owned:0,type:'成人Multi',max:4, persistent: false},
       {id:'divine',name:'Divine Touch',baseCost:1e30,cost:1e30,effect:1e9,owned:0,type:'click',max:2, persistent: false},
       {id:'galaxy',name:'Galaxy Core',baseCost:1e33,cost:1e33,effect:1e10,owned:0,type:'gps',max:2, persistent: false},
       {id:'eternity',name:'Eternity Gate',baseCost:1e36,cost:1e36,effect:10,owned:0,type:'prestige',max:5, persistent: true},
@@ -320,8 +318,9 @@
       setInterval(updateGoonstegieBar, 100);
     }
 
+    // NEW: +200K per prestige, no cap
     function getPrestigeTarget() {
-      return 100000 + (prestigeLevel * 6000000);
+      return 200000 * (prestigeLevel + 1); // 200K, 400K, 600K, ...
     }
 
     function getAscensionTarget() {
@@ -338,7 +337,7 @@
         if (u.type === 'clickMulti') clickPower *= Math.pow(1 + u.effect, u.owned);
         if (u.type === 'gpsMulti') gps *= Math.pow(1 + u.effect, u.owned);
       });
-      prestige = Math.min(65, prestige);
+      // REMOVED CAP: prestige = Math.min(65, prestige);
     }
 
     function gainGoons(amount) {
@@ -385,11 +384,12 @@
 
       points -= u.cost;
       u.owned++;
-      u.cost = u.baseCost * Math.pow(1.6, u.owned);  // Fixed cost scaling
+      u.cost = u.baseCost * Math.pow(1.6, u.owned);
 
       recalculateStats();
       renderUpgrades();
       updateDisplay();
+      updateGoonstegieBar(); // UPDATE BAR AFTER SPENDING
       updateAscension();
       if (u.id === 'paradise') showAchievement("UZI'S GOON PARADISE: +60M GPS!");
     }
@@ -402,7 +402,6 @@
       points = 0; 
       currentGoons = 0;
 
-      // Only reset non-persistent upgrades
       upgrades.forEach(u => {
         if (!u.persistent) {
           u.owned = 0;
@@ -426,10 +425,7 @@
       prestigeLevel = 0;
       points = 0; gps = 0; clickPower = 1; currentGoons = 0; totalGoons = 0;
 
-      upgrades.forEach(u => { 
-        u.owned = 0; 
-        u.cost = u.baseCost; 
-      });
+      upgrades.forEach(u => { u.owned = 0; u.cost = u.baseCost; });
 
       recalculateStats();
       renderUpgrades();
