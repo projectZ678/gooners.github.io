@@ -63,6 +63,14 @@
     @keyframes idleStroke{0%,100%{transform:rotate(0deg);}50%{transform:rotate(-18deg);}}
     .stroking-arm.click{animation:strongStroke 0.35s ease-out;}
 
+    /* COSMETICS */
+    .armor,.crown,.wings,.aura{display:none;position:absolute;}
+    .armor{top:180px;left:70px;width:100px;height:120px;}
+    .crown{top:30px;left:90px;width:60px;height:60px;}
+    .wings{top:160px;left:30px;width:180px;height:140px;}
+    .aura{top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;
+      background:radial-gradient(circle at center, rgba(255,100,0,0.6), transparent 70%);opacity:0;}
+
     /* 2K-STYLE GOON BADGES */
     .badges{display:flex;gap:10px;flex-wrap:wrap;}
     .badge{width:52px;height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -130,6 +138,7 @@
       50%{transform:rotate(-75deg);}
       100%{transform:rotate(0deg);}
     }
+    @keyframes pulseAura{0%,100%{opacity:0.4;}50%{opacity:0.7;}}
   </style>
 </head>
 <body>
@@ -167,15 +176,34 @@
           <div id="gps">0 GPS</div>
           <div id="current-goons">Current: 0</div>
 
-          <!-- GOON + BADGES -->
+          <!-- GOON + COSMETICS + BADGES -->
           <div id="goon-container">
             <div id="goon-dude-container" onclick="clickGoon(event)">
               <svg id="goon-dude" viewBox="0 0 240 300" xmlns="http://www.w3.org/2000/svg">
+                <!-- AURA -->
+                <ellipse class="aura" cx="120" cy="150" rx="100" ry="140" fill="url(#fireGrad)"/>
+
+                <!-- WINGS -->
+                <g class="wings">
+                  <path d="M30 160 Q10 140 20 120 Q30 100 50 120 Q60 140 50 160" fill="#fff" opacity="0.8"/>
+                  <path d="M210 160 Q230 140 220 120 Q210 100 190 120 Q180 140 190 160" fill="#fff" opacity="0.8"/>
+                </g>
+
                 <!-- Body -->
                 <ellipse cx="120" cy="190" rx="55" ry="80" fill="#ffdbac"/>
+                <!-- Armor -->
+                <ellipse class="armor" cx="120" cy="190" rx="60" ry="90" fill="#444" stroke="#222" stroke-width="4"/>
+                <rect class="armor" x="85" y="170" width="70" height="40" rx="10" fill="#555"/>
+                <circle class="armor" cx="120" cy="190" r="15" fill="#666"/>
+
                 <!-- Head -->
                 <g class="goon-head">
                   <circle cx="120" cy="90" r="48" fill="#ffdbac"/>
+                  <!-- Crown -->
+                  <g class="crown">
+                    <path d="M90 50 L100 40 L110 50 L120 40 L130 50 L140 40 L150 50" stroke="#ffd700" stroke-width="6" fill="none"/>
+                    <rect x="95" y="50" width="50" height="15" fill="#ffd700"/>
+                  </g>
                   <!-- Eyes -->
                   <g class="goon-eye">
                     <circle cx="105" cy="82" r="10" fill="#000"/>
@@ -186,6 +214,7 @@
                   <!-- Hair -->
                   <path d="M80 60 Q120 45 160 60" fill="#8B4513"/>
                 </g>
+
                 <!-- Arm -->
                 <g class="stroking-arm">
                   <rect x="150" y="150" width="32" height="80" rx="16" fill="#ffdbac"/>
@@ -267,9 +296,16 @@
     const arm = document.querySelector('.stroking-arm');
 
     const badges = [
-      {name:"Bronze",req:2000,icon:"B",color:"#cd7f32"},
-      {name:"Gold",req:100000,icon:"G",color:"#ffd700"},
-      {name:"Hall of Fame",req:1000000,icon:"HOF",color:"linear-gradient(45deg,#ff0,#f0f,#0ff)"}
+      {name:"Bronze",req:2000,icon:"B",color:"#cd7f32",unlocked:false},
+      {name:"Gold",req:100000,icon:"G",color:"#ffd700",unlocked:false},
+      {name:"Hall of Fame",req:1000000,icon:"HOF",color:"linear-gradient(45deg,#ff0,#f0f,#0ff)",unlocked:false}
+    ];
+
+    const cosmetics = [
+      {req:600000, elem:'.armor', name:"GOON ARMOR"},
+      {req:5000000, elem:'.crown', name:"GOLDEN CROWN"},
+      {req:10000000, elem:'.wings', name:"ANGEL WINGS"},
+      {req:50000000, elem:'.aura', name:"FIRE AURA", effect:() => $('.aura').style.animation = 'pulseAura 2s infinite'}
     ];
 
     const upgrades = [
@@ -297,6 +333,7 @@
       loadGame();
       renderUpgrades();
       renderBadges();
+      updateCosmetics();
       updateDisplay();
       updatePrestigeTarget();
       setInterval(autoEarn, 100);
@@ -315,6 +352,7 @@
       totalGoons += earned;
       updateDisplay();
       checkBadges();
+      updateCosmetics();
     }
 
     function clickGoon(e) {
@@ -424,8 +462,8 @@
     }
 
     function renderBadges(){
-      $('badges').innerHTML = badges.map(b => `
-        <div class="badge ${b.unlocked?'unlocked':''} ${b.name.toLowerCase()}" style="background:${b.color};border-color:${b.color.includes('gradient')?'#fff':b.color};">
+      $('badges').innerHTML = badges.filter(b => b.unlocked).map(b => `
+        <div class="badge unlocked ${b.name.toLowerCase()}" style="background:${b.color};">
           <div>${b.icon}</div>
         </div>
       `).join('');
@@ -437,6 +475,17 @@
           b.unlocked = true;
           renderBadges();
           showAchievement(`${b.name} GOON BADGE!`);
+        }
+      });
+    }
+
+    function updateCosmetics(){
+      cosmetics.forEach(c => {
+        if (totalGoons >= c.req && !c.unlocked) {
+          c.unlocked = true;
+          document.querySelectorAll(c.elem).forEach(el => el.style.display = 'block');
+          if (c.effect) c.effect();
+          showAchievement(`${c.name} UNLOCKED!`);
         }
       });
     }
@@ -464,7 +513,12 @@
     }
 
     function saveGame(){
-      const save = { points, gps, clickPower, prestige, prestigeLevel, totalGoons, currentGoons, upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost})), badges: badges.map(b=>({name:b.name,unlocked:b.unlocked})) };
+      const save = { 
+        points, gps, clickPower, prestige, prestigeLevel, totalGoons, currentGoons, 
+        upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost})), 
+        badges: badges.map(b=>({name:b.name,unlocked:b.unlocked})),
+        cosmetics: cosmetics.map(c=>({req:c.req,unlocked:c.unlocked}))
+      };
       localStorage.setItem('goonSave', JSON.stringify(save));
     }
 
@@ -486,6 +540,12 @@
           const b = badges.find(x => x.name === sb.name);
           if (b) b.unlocked = sb.unlocked;
         });
+        save.cosmetics?.forEach(sc => {
+          const c = cosmetics.find(x => x.req === sc.req);
+          if (c) c.unlocked = sc.unlocked;
+        });
+        updateCosmetics();
+        renderBadges();
       }
     }
 
