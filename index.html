@@ -132,8 +132,13 @@
     .gamemode-title{font-weight:700;font-size:1rem;color:var(--accent);margin-bottom:4px;}
     .gamemode-desc{font-size:0.75rem;color:#ccc;margin-bottom:8px;}
     .gamemode-reward{font-size:0.7rem;color:#0f0;font-weight:600;}
-    .bot-list{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
-    .bot-item{background:rgba(0,0,0,.3);padding:6px;border-radius:6px;font-size:0.72rem;}
+
+    /* BATTLE SCREEN */
+    #battle-screen{position:fixed;inset:0;background:#000;z-index:999;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;
+      font-family:Inter,sans-serif;gap:20px;}
+    #battle-goon{width:180px;height:240px;cursor:pointer;}
+    #battle-goon:active{transform:scale(0.94);}
   </style>
 </head>
 <body>
@@ -273,7 +278,7 @@
     // === GAME ===
     let points = 0, gps = 0, clickPower = 1, prestige = 1, totalGoons = 0, currentGoons = 0;
     let prestigeLevel = 0, ascension = 0;
-    let currentMode = 'clicker'; // Track current mode
+    let currentMode = 'clicker';
     const arm = document.querySelector('.stroking-arm');
 
     const badges = [
@@ -295,7 +300,6 @@
       {req:2, type:'ascension', elem:'.cosmic-nexus', name:"COSMIC NEXUS", effect:() => $('.cosmic-nexus').style.opacity = '0.7', unlocked:false}
     ];
 
-    // GAMEMODES DATA
     const gamemodes = [
       {
         id: 'easy-bot',
@@ -305,7 +309,8 @@
         reward: '+50% Click Power for 1 hour',
         difficulty: 'Easy',
         unlocked: false,
-        beaten: false
+        beaten: false,
+        botSpeed: 0.8
       },
       {
         id: 'medium-bot',
@@ -315,7 +320,8 @@
         reward: '+100 GPS permanent',
         difficulty: 'Medium',
         unlocked: false,
-        beaten: false
+        beaten: false,
+        botSpeed: 1.2
       },
       {
         id: 'hard-bot',
@@ -325,7 +331,8 @@
         reward: 'Unlock Golden Crown Cosmetic',
         difficulty: 'Hard',
         unlocked: false,
-        beaten: false
+        beaten: false,
+        botSpeed: 1.6
       },
       {
         id: 'expert-bot',
@@ -335,7 +342,8 @@
         reward: '+1 Prestige Level',
         difficulty: 'Expert',
         unlocked: false,
-        beaten: false
+        beaten: false,
+        botSpeed: 2.0
       }
     ];
 
@@ -387,20 +395,17 @@
       setInterval(updateGoonstegieBar, 100);
     }
 
-    // NEW: Switch between modes
     function switchMode(mode) {
       currentMode = mode;
       document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
       $('clicker-mode').classList.toggle('hidden', mode !== 'clicker');
       $('gamemodes-mode').classList.toggle('hidden', mode !== 'gamemodes');
-      if (mode === 'gamemodes') {
-        renderGamemodes();
-      }
+      if (mode === 'gamemodes') renderGamemodes();
     }
 
     function getPrestigeTarget() {
-      return 200000 * (prestigeLevel + 1); // 200K, 400K, 600K, ...
+      return 200000 * (prestigeLevel + 1);
     }
 
     function getAscensionTarget() {
@@ -428,10 +433,9 @@
       checkBadges();
       checkGamemodesUnlocks();
       updateAllCosmetics();
-      updateGoonstegieBar(); // UPDATE BAR ON EARN
+      updateGoonstegieBar();
     }
 
-    // NEW: Check unlocks for gamemodes
     function checkGamemodesUnlocks() {
       gamemodes.forEach(gm => {
         if (totalGoons >= gm.req && !gm.unlocked) {
@@ -442,33 +446,106 @@
       renderGamemodes();
     }
 
-    // NEW: Render gamemodes list
     function renderGamemodes() {
       $('gamemodes-list').innerHTML = gamemodes.map(gm => `
-        <div class="gamemode-card ${gm.unlocked ? 'unlocked' : 'locked'}" onclick="${gm.unlocked ? `playGamemode('${gm.id}')` : ''}">
+        <div class="gamemode-card ${gm.unlocked ? 'unlocked' : 'locked'}" onclick="${gm.unlocked && !gm.beaten ? `playGamemode('${gm.id}')` : ''}">
           <div class="gamemode-title">${gm.name}</div>
           <div class="gamemode-desc">${gm.desc}</div>
           <div class="gamemode-reward">Reward: ${gm.reward}</div>
-          <div style="font-size:0.7rem;color:#888;">${gm.difficulty} | ${gm.beaten ? 'Beaten' : gm.unlocked ? 'Ready!' : `Unlock at ${formatNumber(gm.req)} Total Goons`}</div>
+          <div style="font-size:0.7rem;color:#888;">
+            ${gm.beaten ? 'Beaten' : gm.unlocked ? 'Ready!' : `Unlock at ${formatNumber(gm.req)} Total Goons`}
+          </div>
         </div>
       `).join('');
     }
 
-    // NEW: Simulate gamemode challenge
     function playGamemode(id) {
       const gm = gamemodes.find(g => g.id === id);
       if (!gm || !gm.unlocked || gm.beaten) return;
-      showAchievement(`Starting 1v1 vs ${gm.name}...`);
-      setTimeout(() => {
-        gm.beaten = true;
-        applyGamemodeReward(gm);
-        showAchievement(`VICTORY! ${gm.reward}`);
-        renderGamemodes();
-        saveGame();
-      }, 3000);
+
+      // Hide main UI
+      $('clicker-mode').classList.add('hidden');
+      $('gamemodes-mode').classList.add('hidden');
+
+      // Create battle screen
+      const battle = document.createElement('div');
+      battle.id = 'battle-screen';
+      battle.innerHTML = `
+        <h2 style="font-size:2rem;">1v1 vs ${gm.name}</h2>
+        <div style="font-size:1.2rem;">Click the GOON as fast as you can!</div>
+        <div id="battle-goon" onclick="battleClick()">
+          <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
+            <g class="goon-head"><circle cx="100" cy="80" r="40" fill="#ffdbac"/></g>
+            <g class="stroking-arm"><rect x="130" y="130" width="26" height="72" rx="14" fill="#ffdbac"/></g>
+          </svg>
+        </div>
+        <div style="display:flex;gap:30px;font-size:1.5rem;">
+          <div>You: <span id="player-clicks">0</span></div>
+          <div>Bot: <span id="bot-clicks">0</span></div>
+        </div>
+        <div id="battle-timer" style="font-size:1.3rem;">10</div>
+      `;
+      document.body.appendChild(battle);
+
+      let playerClicks = 0;
+      let botClicks = 0;
+      let timeLeft = 10;
+      let botInterval;
+
+      const playerEl = $('player-clicks');
+      const botEl = $('bot-clicks');
+      const timerEl = $('battle-timer');
+
+      window.battleClick = () => {
+        playerClicks++;
+        playerEl.textContent = playerClicks;
+        const goon = $('battle-goon');
+        goon.style.transform = 'scale(0.94)';
+        setTimeout(() => goon.style.transform = '', 100);
+      };
+
+      botInterval = setInterval(() => {
+        botClicks += gm.botSpeed;
+        botEl.textContent = Math.floor(botClicks);
+      }, 1000);
+
+      const countdown = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          clearInterval(botInterval);
+          endBattle(gm, playerClicks, Math.floor(botClicks));
+        }
+      }, 1000);
     }
 
-    // NEW: Apply reward
+    function endBattle(gm, player, bot) {
+      const won = player > bot;
+      gm.beaten = true;
+      if (won) applyGamemodeReward(gm);
+
+      const result = document.createElement('div');
+      result.style.cssText = 'position:fixed;inset:0;background:#000;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-family:Inter,sans-serif;gap:20px;';
+      result.innerHTML = `
+        <h2 style="font-size:2.5rem;">${won ? 'VICTORY!' : 'DEFEAT'}</h2>
+        <div style="font-size:1.5rem;">You: ${player} | Bot: ${bot}</div>
+        <div style="font-size:1.2rem;">${won ? gm.reward : 'Try again later!'}</div>
+        <button onclick="exitBattle()" style="padding:12px 30px;background:#fff;color:#000;border:none;border-radius:10px;font-weight:800;cursor:pointer;">
+          BACK TO HUB
+        </button>
+      `;
+      document.body.appendChild(result);
+    }
+
+    window.exitBattle = () => {
+      document.querySelectorAll('#battle-screen, .result').forEach(el => el.remove());
+      $('clicker-mode').classList.remove('hidden');
+      $('gamemodes-mode').classList.remove('hidden');
+      renderGamemodes();
+      saveGame();
+    };
+
     function applyGamemodeReward(gm) {
       if (gm.reward.includes('Click Power')) clickPower *= 1.5;
       if (gm.reward.includes('GPS')) gps += 100;
@@ -521,7 +598,7 @@
       recalculateStats();
       renderUpgrades();
       updateDisplay();
-      updateGoonstegieBar(); // UPDATE BAR ON SPEND
+      updateGoonstegieBar();
       updateAscension();
       if (u.id === 'paradise') showAchievement("UZI'S GOON PARADISE: +60M GPS!");
     }
