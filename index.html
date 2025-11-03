@@ -243,7 +243,7 @@
           <p>Design • Code • Monochrome Dreams</p>
           <p><a href="https://github.com/projectZ678" target="_blank" style="color:#ccc;">github.com/projectZ678</a></p>
           <p style="margin-top:30px;font-size:.9rem;color:#888;">
-            Auto-refreshed • <a href="users.json" target="_blank">view raw JSON</a>
+            Live via Google Sheets
           </p>
         </div>
       </div>
@@ -278,7 +278,7 @@
     function showApp() {
       loginOverlay.classList.add('hidden');
       $('loader').classList.remove('hidden');
-      setTimeout(enterHub, 500); // Delay for smooth transition
+      setTimeout(enterHub, 500);
     }
 
     if (currentUser) {
@@ -337,7 +337,7 @@
 
     // === GOON CLICKER ===
     let points = 0, gps = 0, clickPower = 1, prestige = 1, totalGoons = 0;
-    let clickInterval = 1000; // ms per click (for 2x speed)
+    let clickInterval = 1000;
     let autoClickerActive = false;
     let submitInterval;
 
@@ -360,7 +360,7 @@
       setInterval(saveGame, 5000);
       submitInterval = setInterval(() => {
         if (totalGoons > 100) submitToLeaderboard();
-      }, 10000); // Auto-submit every 10s
+      }, 10000);
       if (autoClickerActive) startAutoClicker();
     }
 
@@ -417,13 +417,13 @@
       if (totalGoons < 50000) return showAchievement("Need 50K Total Goons to Prestige!");
       prestige *= 2;
       points = 0; gps = 0; clickPower = 1; clickInterval = 1000;
-      totalGoons = Math.floor(totalGoons * 0.1); // Keep 10%
+      totalGoons = Math.floor(totalGoons * 0.1);
       upgrades.forEach(u => { u.owned = 0; u.cost = u.baseCost; });
       autoClickerActive = false;
       renderUpgrades();
       updateDisplay();
       showAchievement(`PRESTIGED! x${prestige} Multiplier Unlocked`);
-      submitToLeaderboard(); // Submit after prestige
+      submitToLeaderboard();
     }
 
     function renderUpgrades(){
@@ -508,37 +508,21 @@
 
     $('prestige').onclick = prestigeReset;
 
-    // === SUBMIT TO LEADERBOARD (Users.json) ===
+    // === GOOGLE SHEETS LIVE LEADERBOARD ===
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyVjOzZFpeP9bmYdHsQdg7qoKWnHgT487XJnzSVkU5oML6BKfYVv3aapOFmSLi16NdHRQ/exec';
+
     async function submitToLeaderboard() {
       if (!currentUser || totalGoons < 100) return;
       try {
-        // Fetch current users.json
-        const r = await fetch('users.json?' + Date.now());
-        const data = await r.json();
-        let users = data.users || [];
-
-        // Update or add user
-        const existing = users.find(u => u.username === currentUser);
-        if (existing) {
-          existing.totalGoons = Math.max(existing.totalGoons, totalGoons);
-          existing.lastUpdated = new Date().toISOString();
-        } else {
-          users.push({ username: currentUser, totalGoons, lastUpdated: new Date().toISOString() });
-        }
-
-        // POST updated users.json (replace with real backend endpoint like /api/update-users)
-        await fetch('users.json', { // Simulate; use real endpoint
+        await fetch(SHEET_URL + '?action=submit', {
           method: 'POST',
+          mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ users })
+          body: JSON.stringify({ username: currentUser, totalGoons: Math.floor(totalGoons) })
         });
-        console.log('Submitted to leaderboard:', currentUser, totalGoons);
-      } catch(e) {
-        console.error('Submit failed:', e);
-      }
+      } catch(e) {}
     }
 
-    // === LEADERBOARD (From users.json) ===
     async function fetchLeaderboard(){
       const loading = $('loading'), error = $('error'), board = $('board'), rows = $('rows'), updated = $('updated');
       loading.classList.remove('hidden');
@@ -546,26 +530,21 @@
       board.classList.add('hidden');
 
       try {
-        const r = await fetch('users.json?' + Date.now());
-        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const r = await fetch(SHEET_URL + '?t=' + Date.now());
         const data = await r.json();
         let list = data.users || [];
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // Sort by totalGoons DESC
-        const sorted = [...list].sort((a,b) => (b.totalGoons || 0) - (a.totalGoons || 0));
-
-        // Pad to 100
-        const padded = Array(100).fill().map((_, i) => sorted[i] || { name: null, totalGoons: 0 });
+        const padded = Array(100).fill().map((_, i) => list[i] || { username: null, totalGoons: 0 });
 
         rows.innerHTML = padded.map((p, idx) => {
           const rank = idx + 1;
           return `<tr>
             <td class="rank">#${rank}</td>
             <td class="name">
-              ${p.name ? `
-                <div class="avatar"><img src="https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random()*6)}.png" alt="${e(p.name)}"></div>
-                <div style="font-weight:600;">${e(p.name)}</div>
+              ${p.username ? `
+                <div class="avatar"><img src="https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random()*6)}.png" alt="${e(p.username)}"></div>
+                <div style="font-weight:600;">${e(p.username)}</div>
               ` : `<div class="empty-slot">— Empty Slot —</div>`}
             </td>
             <td class="total-goons">${(p.totalGoons || 0).toLocaleString()}</td>
@@ -576,7 +555,6 @@
         loading.classList.add('hidden');
         board.classList.remove('hidden');
       } catch (err) {
-        console.error(err);
         loading.classList.add('hidden');
         error.classList.remove('hidden');
       }
