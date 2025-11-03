@@ -90,7 +90,7 @@
     #points{font-size:2.6rem;font-weight:800;color:#fff;text-shadow:0 0 25px #fff;margin:4px 0;}
     #gps{font-size:1.1rem;color:#aaa;}
     #current-goons{font-size:1rem;color:#ccc;}
-    #total-goons{font-size:1rem;color:#0f0;font-weight:700;} /* NEW: TOTAL GOONS */
+    #total-goons{font-size:1rem;color:#0f0;font-weight:700;}
 
     /* GOONSTEGIE BAR */
     .goonstegie-container{width:100%;max-width:700px;display:flex;flex-direction:column;gap:6px;}
@@ -191,7 +191,7 @@
           <div id="points">0</div>
           <div id="gps">0 GPS</div>
           <div id="current-goons">Current: 0</div>
-          <div id="total-goons">Total: 0</div> <!-- NEW: TOTAL GOONS -->
+          <div id="total-goons">Total: 0</div>
 
           <!-- GOON + COSMETICS + BADGES -->
           <div id="goon-container">
@@ -357,7 +357,7 @@
       {id:'double',name:'Double Click',baseCost:200,cost:200,effect:10,owned:0,type:'click',max:150},
       {id:'neon',name:'Neon Boost',baseCost:1000,cost:1000,effect:100,owned:0,type:'gps',max:100},
       {id:'vault',name:'Vault Pass',baseCost:5000,cost:5000,effect:0.5,owned:0,type:'prestige',max:10},
-      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:500,owned:0,type:'click',max:80},
+      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:120,owned:0,type:'click',max:80}, // FIXED: was 500 → now 120
       {id:'hyper',name:'Hyper GPS',baseCost:100000,cost:100000,effect:1000,owned:0,type:'gps',max:60},
       {id:'god',name:'God Mode',baseCost:500000,cost:500000,effect:0.2,owned:0,type:'multi',max:25},
       {id:'quantum',name:'Quantum Edge',baseCost:1e6,cost:1e6,effect:0.5,owned:0,type:'clickMulti',max:30},
@@ -561,7 +561,7 @@
       $('points').textContent = formatNumber(Math.floor(points));
       $('gps').textContent = `${formatNumber(gps)} GPS`;
       $('current-goons').textContent = `Current: ${formatNumber(Math.floor(currentGoons))}`;
-      $('total-goons').textContent = `Total: ${formatNumber(Math.floor(totalGoons))}`; // NEW
+      $('total-goons').textContent = `Total: ${formatNumber(Math.floor(totalGoons))}`;
       $('prestige').textContent = `PRESTIGE #${prestigeLevel + 1}`;
     }
 
