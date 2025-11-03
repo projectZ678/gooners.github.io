@@ -69,6 +69,12 @@
     #gps{font-size:1.5rem;color:#aaa;margin-top:10px;}
     #total-goons{font-size:1.2rem;color:#ccc;margin-top:8px;}
 
+    /* GOONSTEGIE BAR */
+    .goonstegie-container{width:100%;max-width:900px;margin:20px 0;display:flex;flex-direction:column;gap:8px;}
+    .goonstegie-bar{height:24px;background:rgba(255,255,255,.1);border:1px solid var(--glass-border);border-radius:12px;overflow:hidden;position:relative;}
+    .goonstegie-fill{height:100%;background:linear-gradient(90deg,#0f0,#0f8);width:0%;transition:width 0.4s ease;}
+    .goonstegie-text{position:absolute;top:0;left:0;right:0;text-align:center;line-height:24px;font-weight:700;color:#fff;text-shadow:0 0 10px #000;font-size:0.9rem;}
+
     .upgrades-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;width:100%;max-width:1200px;}
     .upgrade{background:rgba(255,255,255,.08);border:1px solid var(--glass-border);border-radius:16px;
       padding:18px;text-align:center;transition:.3s;cursor:pointer;position:relative;overflow:hidden;}
@@ -80,7 +86,7 @@
     .upgrade-level{position:absolute;top:8px;right:8px;background:#fff;color:#000;padding:2px 8px;
       border-radius:8px;font-size:0.7rem;font-weight:800;}
 
-    .prestige-btn{margin-top:30px;padding:16px 40px;background:#fff;color:#000;border:none;
+    .prestige-btn{margin-top:20px;padding:16px 40px;background:#fff;color:#000;border:none;
       border-radius:16px;font-weight:800;cursor:pointer;transition:.4s;box-shadow:0 0 40px #fff;}
     .prestige-btn:hover{transform:scale(1.1);box-shadow:0 0 80px #fff;}
     .prestige-btn:disabled{opacity:0.5;cursor:not-allowed;}
@@ -166,8 +172,17 @@
           <div id="gps">0 GPS</div>
           <div id="total-goons">Total Goons: 0</div>
           <div id="goon-btn">CLICK TO GOON</div>
+
+          <!-- GOONSTEGIE BAR -->
+          <div class="goonstegie-container">
+            <div class="goonstegie-bar">
+              <div class="goonstegie-fill" id="goonstegie-fill"></div>
+              <div class="goonstegie-text" id="goonstegie-text">Next Prestige: 100K Goons</div>
+            </div>
+          </div>
+
           <div class="upgrades-grid" id="upgrades"></div>
-          <button class="prestige-btn" id="prestige">PRESTIGE (x2 → x8 Max)</button>
+          <button class="prestige-btn" id="prestige">PRESTIGE (x2 to x8 Max)</button>
         </div>
       </div>
 
@@ -213,10 +228,10 @@
       <div id="credits" class="panel">
         <div style="text-align:center;">
           <h2>Made with love by <span style="color:#fff">Xen</span></h2>
-          <p>Design • Code • Monochrome Dreams</p>
+          <p>Design to Code to Monochrome Dreams</p>
           <p><a href="https://github.com/projectZ678" target="_blank" style="color:#ccc;">github.com/projectZ678</a></p>
           <p style="margin-top:30px;font-size:.9rem;color:#888;">
-            Auto-refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
+            Auto-refreshed to <a href="leaderboard.json" target="_blank">view raw JSON</a>
           </p>
         </div>
       </div>
@@ -278,32 +293,33 @@
     let points = 0, gps = 0, clickPower = 1, prestige = 1, totalGoons = 0;
 
     const upgrades = [
-      {id:'auto',name:'Auto-Gooner',baseCost:50,cost:50,effect:0.1,owned:0,type:'gps',max:100},
-      {id:'double',name:'Double Click',baseCost:200,cost:200,effect:1,owned:0,type:'click',max:100},
-      {id:'neon',name:'Neon Boost',baseCost:1000,cost:1000,effect:2,owned:0,type:'gps',max:100},
+      {id:'auto',name:'Auto-Gooner',baseCost:50,cost:50,effect:35,owned:0,type:'gps',max:200},
+      {id:'double',name:'Double Click',baseCost:200,cost:200,effect:10,owned:0,type:'click',max:150},
+      {id:'neon',name:'Neon Boost',baseCost:1000,cost:1000,effect:100,owned:0,type:'gps',max:100},
       {id:'vault',name:'Vault Pass',baseCost:5000,cost:5000,effect:0.5,owned:0,type:'prestige',max:10},
-      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:10,owned:0,type:'click',max:50},
-      {id:'hyper',name:'Hyper GPS',baseCost:100000,cost:100000,effect:10,owned:0,type:'gps',max:50},
-      {id:'god',name:'God Mode',baseCost:500000,cost:500000,effect:0.05,owned:0,type:'multi',max:20},
-      {id:'quantum',name:'Quantum Edge',baseCost:1e6,cost:1e6,effect:0.25,owned:0,type:'clickMulti',max:20},
-      {id:'void',name:'Void Engine',baseCost:5e6,cost:5e6,effect:50,owned:0,type:'gps',max:30},
-      {id:'pulse',name:'Goon Pulse',baseCost:2e7,cost:2e7,effect:1,owned:0,type:'gpsMulti',max:15},
-      {id:'dark',name:'Dark Matter',baseCost:1e8,cost:1e8,effect:200,owned:0,type:'click',max:20},
-      {id:'singularity',name:'Singularity',baseCost:5e8,cost:5e8,effect:5,owned:0,type:'multi',max:10},
-      {id:'infinity',name:'Infinity Loop',baseCost:2e9,cost:2e9,effect:1000,owned:0,type:'gps',max:10},
-      {id:'rift',name:'Cosmic Rift',baseCost:1e10,cost:1e10,effect:10000,owned:0,type:'click',max:8},
-      {id:'eternal',name:'Eternal Flame',baseCost:1e12,cost:1e12,effect:0.1,owned:0,type:'multi',max:15},
-      {id:'nebula',name:'Nebula Core',baseCost:1e14,cost:1e14,effect:50000,owned:0,type:'gps',max:5},
-      {id:'titan',name:'Titan Click',baseCost:1e16,cost:1e16,effect:1e6,owned:0,type:'click',max:3},
-      {id:'paradise',name:"UZI'S GOON PARADISE",baseCost:2e18,cost:2e18,effect:1e6,owned:0,type:'paradise',max:1}
+      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:500,owned:0,type:'click',max:80},
+      {id:'hyper',name:'Hyper GPS',baseCost:100000,cost:100000,effect:1000,owned:0,type:'gps',max:60},
+      {id:'god',name:'God Mode',baseCost:500000,cost:500000,effect:0.2,owned:0,type:'multi',max:25},
+      {id:'quantum',name:'Quantum Edge',baseCost:1e6,cost:1e6,effect:0.5,owned:0,type:'clickMulti',max:30},
+      {id:'void',name:'Void Engine',baseCost:5e6,cost:5e6,effect:5000,owned:0,type:'gps',max:40},
+      {id:'pulse',name:'Goon Pulse',baseCost:2e7,cost:2e7,effect:2,owned:0,type:'gpsMulti',max:20},
+      {id:'dark',name:'Dark Matter',baseCost:1e8,cost:1e8,effect:10000,owned:0,type:'click',max:25},
+      {id:'singularity',name:'Singularity',baseCost:5e8,cost:5e8,effect:10,owned:0,type:'multi',max:15},
+      {id:'infinity',name:'Infinity Loop',baseCost:2e9,cost:2e9,effect:100000,owned:0,type:'gps',max:15},
+      {id:'rift',name:'Cosmic Rift',baseCost:1e10,cost:1e10,effect:1e6,owned:0,type:'click',max:10},
+      {id:'eternal',name:'Eternal Flame',baseCost:1e12,cost:1e12,effect:0.5,owned:0,type:'multi',max:20},
+      {id:'nebula',name:'Nebula Core',baseCost:1e14,cost:1e14,effect:5e6,owned:0,type:'gps',max:8},
+      {id:'titan',name:'Titan Click',baseCost:1e16,cost:1e16,effect:1e8,owned:0,type:'click',max:5},
+      {id:'paradise',name:"UZI'S GOON PARADISE",baseCost:2e18,cost:2e18,effect:1e7,owned:0,type:'paradise',max:1}
     ];
 
     function initClicker(){
       loadGame();
       renderUpgrades();
       updateDisplay();
-      setInterval(autoEarn, 1000);
+      setInterval(autoEarn, 100);  // 10x per second!
       setInterval(saveGame, 5000);
+      setInterval(updateGoonstegieBar, 100);
     }
 
     function gainGoons(amount) {
@@ -321,7 +337,7 @@
     };
 
     function autoEarn(){
-      if (gps > 0) gainGoons(gps);
+      if (gps > 0) gainGoons(gps / 10);  // 10 ticks/sec → divide by 10
     }
 
     function buyUpgrade(id){
@@ -339,8 +355,8 @@
       if (u.type === 'clickMulti') clickPower *= (1 + u.effect);
       if (u.type === 'gpsMulti') gps *= (1 + u.effect);
       if (u.type === 'paradise') {
-        gps += 1e6;
-        clickPower *= 10;
+        gps += 1e7;
+        clickPower *= 100;
         prestige = 8;
         showAchievement("UZI'S GOON PARADISE UNLOCKED!");
       }
@@ -360,6 +376,19 @@
       showAchievement(`PRESTIGED! x${prestige} Multiplier`);
     }
 
+    function updateGoonstegieBar(){
+      const target = 100000;
+      const progress = Math.min(totalGoons / target, 1);
+      $('goonstegie-fill').style.width = `${progress * 100}%`;
+      $('goonstegie-text').textContent = `Next Prestige: ${formatNumber(target - totalGoons)} to go`;
+      if (totalGoons >= target) {
+        $('goonstegie-text').textContent = "PRESTIGE READY!";
+        $('prestige').disabled = false;
+      } else {
+        $('prestige').disabled = true;
+      }
+    }
+
     function formatNumber(n) {
       if (n >= 1e18) return (n/1e18).toFixed(2) + 'Q';
       if (n >= 1e15) return (n/1e15).toFixed(2) + 'P';
@@ -367,12 +396,12 @@
       if (n >= 1e9) return (n/1e9).toFixed(2) + 'B';
       if (n >= 1e6) return (n/1e6).toFixed(2) + 'M';
       if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
-      return n.toLocaleString();
+      return Math.floor(n).toLocaleString();
     }
 
     function renderUpgrades(){
       $('upgrades').innerHTML = upgrades.map(u => `
-        <div class="upgrade ${u.owned >= u.max ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')" style="${u.id==='paradise'?'border:2px solid gold;':''}">
+        <div class="upgrade ${u.owned >= u.max ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')" style="${u.id==='paradise'?'border:3px solid gold;':''}">
           <div class="upgrade-name" style="${u.id==='paradise'?'color:gold;font-weight:900;':''}">${u.name}</div>
           <div class="upgrade-cost">Cost: ${formatNumber(u.cost)}</div>
           <div class="upgrade-effect">
@@ -382,7 +411,7 @@
              u.type === 'multi' ? `+${(u.effect*100).toFixed(0)}% All` :
              u.type === 'clickMulti' ? `+${(u.effect*100).toFixed(0)}% Click` :
              u.type === 'gpsMulti' ? `+${(u.effect*100).toFixed(0)}% GPS` :
-             u.type === 'paradise' ? `+1M GPS | x10 Click | x8 Prestige` : ''}
+             u.type === 'paradise' ? `+10M GPS | x100 Click | x8 Prestige` : ''}
           </div>
           <div class="upgrade-level">Lv.${u.owned}/${u.max}</div>
         </div>
@@ -393,16 +422,15 @@
       $('points').textContent = formatNumber(Math.floor(points));
       $('gps').textContent = `${formatNumber(gps)} GPS`;
       $('total-goons').textContent = `Total Goons: ${formatNumber(Math.floor(totalGoons))}`;
-      $('prestige').textContent = `PRESTIGE (x${prestige} → x8 Max)`;
-      $('prestige').disabled = totalGoons < 100000;
+      $('prestige').textContent = `PRESTIGE (x${prestige} to x8 Max)`;
     }
 
     function createParticles(){
-      for(let i=0; i<16; i++){
+      for(let i=0; i<20; i++){
         const p = document.createElement('div');
         p.style.cssText = `
           position:fixed;left:${Math.random()*100}vw;top:${Math.random()*100}vh;
-          width:10px;height:10px;background:#fff;border-radius:50%;pointer-events:none;
+          width:12px;height:12px;background:#fff;border-radius:50%;pointer-events:none;
           animation:particle 1.2s ease-out forwards;
         `;
         document.body.appendChild(p);
@@ -426,7 +454,7 @@
 
     function checkAchievements(){
       if (totalGoons > 1e6 && !localStorage.getItem('ach1')) { showAchievement("1 MILLION GOONS!"); localStorage.setItem('ach1','1'); }
-      if (totalGoons > 1e9 && !localStorage.getItem('ach2')) { showAchievement("1 BILLION GOONS!"); localStorage.setItem('ach2','1'); }
+      if (totalGoons > 1e12 && !localStorage.getItem('ach2')) { showAchievement("1 TRILLION GOONS!"); localStorage.setItem('ach2','1'); }
       if (prestige >= 8 && !localStorage.getItem('ach3')) { showAchievement("MAX PRESTIGE x8!"); localStorage.setItem('ach3','1'); }
       if (upgrades.find(u => u.id === 'paradise')?.owned > 0 && !localStorage.getItem('ach4')) {
         showAchievement("UZI'S GOON PARADISE UNLOCKED!");
