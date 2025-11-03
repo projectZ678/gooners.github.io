@@ -23,7 +23,7 @@
     #sidebar{width:280px;background:var(--glass);border-right:1px solid var(--glass-border);
       backdrop-filter:blur(20px);padding:40px 24px;display:flex;flex-direction:column;align-items:center;
       box-shadow:0 0 60px rgba(255,255,255,.12);flex-shrink:0;}
-    #pfp{width:130px;height:130px;border-radius:50%;overflow:hidden;margin-bottom:8px;
+    #pfp{width:130px;height:130px;border-radius:50%;overflow:hidden;margin-bottom:24px;
       border:3px solid var(--glow);box-shadow:0 0 40px var(--glow),0 0 80px rgba(255,255,255,.3);
       animation:pulsePfp 3s infinite alternate;}
     @keyframes pulsePfp{0%{box-shadow:0 0 40px var(--glow),0 0 80px rgba(255,255,255,.3);}
@@ -69,15 +69,15 @@
     #gps{font-size:1.5rem;color:#aaa;margin-top:10px;}
     #total-goons{font-size:1.2rem;color:#ccc;margin-top:8px;}
 
-    .upgrades-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;width:100%;max-width:1000px;}
+    .upgrades-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;width:100%;max-width:900px;}
     .upgrade{background:rgba(255,255,255,.08);border:1px solid var(--glass-border);border-radius:16px;
-      padding:18px;text-align:center;transition:.3s;cursor:pointer;position:relative;overflow:hidden;}
+      padding:16px;text-align:center;transition:.3s;cursor:pointer;position:relative;}
     .upgrade:hover{background:rgba(255,255,255,.15);transform:translateY(-4px);box-shadow:0 0 30px #fff;}
     .upgrade.bought{opacity:0.6;pointer-events:none;}
-    .upgrade-name{font-weight:700;color:#fff;font-size:1.1rem;}
-    .upgrade-cost{font-size:0.95rem;color:#ccc;margin-top:6px;}
-    .upgrade-effect{font-size:0.85rem;color:#888;margin-top:8px;}
-    .upgrade-level{position:absolute;top:8px;right:8px;background:#fff;color:#000;padding:2px 8px;
+    .upgrade-name{font-weight:700;color:#fff;}
+    .upgrade-cost{font-size:0.9rem;color:#ccc;margin-top:4px;}
+    .upgrade-effect{font-size:0.8rem;color:#888;margin-top:8px;}
+    .upgrade-level{position:absolute;top:6px;right:6px;background:#fff;color:#000;padding:2px 6px;
       border-radius:8px;font-size:0.7rem;font-weight:800;}
 
     .prestige-btn{margin-top:30px;padding:16px 40px;background:#fff;color:#000;border:none;
@@ -125,6 +125,7 @@
     #logo{font-size:6rem;font-weight:900;color:var(--accent);text-shadow:0 0 30px #fff;
       animation:glow 2.5s infinite alternate;}
     @keyframes glow{from{text-shadow:0 0 30px #fff;}to{text-shadow:0 0 80px #fff,0 0 160px #fff;}}
+    .hidden{display:none!important;}
 
     @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-10px);}75%{transform:translateX(10px);}}
     @keyframes particle{0%{transform:scale(1) translateY(0);opacity:1;}100%{transform:scale(0) translateY(-100px);opacity:0;}}
@@ -215,7 +216,7 @@
           <p>Design • Code • Monochrome Dreams</p>
           <p><a href="https://github.com/projectZ678" target="_blank" style="color:#ccc;">github.com/projectZ678</a></p>
           <p style="margin-top:30px;font-size:.9rem;color:#888;">
-            Static leaderboard • <a href="leaderboard.json" target="_blank">view JSON</a>
+            Auto-refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
           </p>
         </div>
       </div>
@@ -249,6 +250,7 @@
         $('app').classList.remove('hidden');
         initClicker();
         fetchLeaderboard();
+        setInterval(fetchLeaderboard, 60000);
       }, 800);
     }
 
@@ -260,38 +262,45 @@
         enterHub();
       }
     });
+    loader.focus();
 
-    // === PANEL SWITCHING (FIXED) ===
+    // Panel switching
     document.querySelectorAll('.nav-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
-        const panelId = btn.getAttribute('data-panel');
-        $(panelId).classList.add('active');
+        $(btn.dataset.panel).classList.add('active');
       });
     });
 
-    // === GOON CLICKER (FIXED) ===
+    // === GOON CLICKER ===
     let points = 0, gps = 0, clickPower = 1, prestige = 1, totalGoons = 0;
-    let clickInterval = 1000;
-    let autoClickerActive = false;
 
     const upgrades = [
-      {id:'auto',name:'Auto-Gooner',cost:50,baseCost:50,effect:0.1,owned:0,type:'gps',max:50},
-      {id:'double',name:'Double Click',cost:200,baseCost:200,effect:1,owned:0,type:'click',max:50},
-      {id:'speed',name:'2x Goon Speed',cost:800,baseCost:800,effect:0.5,owned:0,type:'speed',max:5},
-      {id:'neon',name:'Neon Boost',cost:2000,baseCost:2000,effect:2,owned:0,type:'gps',max:50},
-      {id:'vault',name:'Vault Pass',cost:10000,baseCost:10000,effect:0.5,owned:0,type:'prestige',max:10}
+      {id:'auto',name:'Auto-Gooner',baseCost:50,cost:50,effect:0.1,owned:0,type:'gps',max:50},
+      {id:'double',name:'Double Click',baseCost:200,cost:200,effect:1,owned:0,type:'click',max:50},
+      {id:'neon',name:'Neon Boost',baseCost:1000,cost:1000,effect:2,owned:0,type:'gps',max:50},
+      {id:'vault',name:'Vault Pass',baseCost:5000,cost:5000,effect:0.5,owned:0,type:'prestige',max:10},
+      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:10,owned:0,type:'click',max:30},
+      {id:'hyper',name:'Hyper GPS',baseCost:100000,cost:100000,effect:10,owned:0,type:'gps',max:30},
+      {id:'god',name:'God Mode',baseCost:500000,cost:500000,effect:0.05,owned:0,type:'multi',max:10},
+      {id:'quantum',name:'Quantum Edge',baseCost:1000000,cost:1000000,effect:0.25,owned:0,type:'clickMulti',max:15},
+      {id:'void',name:'Void Engine',baseCost:5000000,cost:5000000,effect:50,owned:0,type:'gps',max:20},
+      {id:'pulse',name:'Goon Pulse',baseCost:20000000,cost:20000000,effect:1,owned:0,type:'gpsMulti',max:8},
+      {id:'dark',name:'Dark Matter',baseCost:100000000,cost:100000000,effect:200,owned:0,type:'click',max:10},
+      {id:'singularity',name:'Singularity',baseCost:500000000,cost:500000000,effect:5,owned:0,type:'multi',max:5},
+      {id:'infinity',name:'Infinity Loop',baseCost:2000000000,cost:2000000000,effect:1000,owned:0,type:'gps',max:5},
+      {id:'rift',name:'Cosmic Rift',baseCost:10000000000,cost:10000000000,effect:10000,owned:0,type:'click',max:3},
+      {id:'ascension',name:'Final Ascension',baseCost:1000000000000,cost:1000000000000,effect:1,owned:0,type:'unlock',max:1}
     ];
 
     function initClicker(){
       loadGame();
       renderUpgrades();
       updateDisplay();
-      setInterval(autoEarn, 1000); // Fixed: was 100ms
+      setInterval(autoEarn, 1000);
       setInterval(saveGame, 5000);
-      if (upgrades.find(u => u.id === 'auto').owned > 0) startAutoClicker();
     }
 
     function gainGoons(amount) {
@@ -302,26 +311,14 @@
       checkAchievements();
     }
 
-    // === CLICK WORKS ===
-    $('goon-btn').addEventListener('click', () => {
+    $('goon-btn').onclick = () => {
       gainGoons(clickPower);
       createParticles();
       screenShake();
-    });
+    };
 
     function autoEarn(){
       if (gps > 0) gainGoons(gps);
-    }
-
-    function startAutoClicker() {
-      if (autoClickerActive) return;
-      autoClickerActive = true;
-      setInterval(() => {
-        if (document.visibilityState === 'visible') {
-          gainGoons(clickPower);
-          createParticles(3);
-        }
-      }, clickInterval);
     }
 
     function buyUpgrade(id){
@@ -334,10 +331,11 @@
 
       if (u.type === 'gps') gps += u.effect;
       if (u.type === 'click') clickPower += u.effect;
-      if (u.type === 'speed') clickInterval = Math.max(100, clickInterval * (1 - u.effect));
       if (u.type === 'prestige') prestige = Math.min(8, prestige + u.effect);
-
-      if (u.id === 'auto' && u.owned === 1) startAutoClicker();
+      if (u.type === 'multi') { clickPower *= (1 + u.effect); gps *= (1 + u.effect); }
+      if (u.type === 'clickMulti') clickPower *= (1 + u.effect);
+      if (u.type === 'gpsMulti') gps *= (1 + u.effect);
+      if (u.type === 'unlock') prestige = 8;
 
       renderUpgrades();
       updateDisplay();
@@ -346,29 +344,38 @@
     function prestigeReset(){
       if (totalGoons < 100000) return showAchievement("Need 100K Total Goons!");
       prestige = Math.min(8, prestige + 1);
-      points = 0; gps = 0; clickPower = 1; clickInterval = 1000;
+      points = 0; gps = 0; clickPower = 1;
       totalGoons = Math.floor(totalGoons * 0.1);
       upgrades.forEach(u => { u.owned = 0; u.cost = u.baseCost; });
-      autoClickerActive = false;
       renderUpgrades();
       updateDisplay();
-      showAchievement(`PRESTIGED! x${prestige}`);
+      showAchievement(`PRESTIGED! x${prestige} Multiplier`);
     }
 
     function renderUpgrades(){
       $('upgrades').innerHTML = upgrades.map(u => `
         <div class="upgrade ${u.owned >= u.max ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')">
           <div class="upgrade-name">${u.name}</div>
-          <div class="upgrade-cost">Cost: ${u.cost.toLocaleString()}</div>
+          <div class="upgrade-cost">Cost: ${formatNumber(u.cost)}</div>
           <div class="upgrade-effect">
             ${u.type === 'gps' ? `+${u.effect} GPS` :
              u.type === 'click' ? `+${u.effect} Click` :
-             u.type === 'speed' ? `-${(u.effect*100)}% Delay` :
-             u.type === 'prestige' ? `+${u.effect} Prestige` : ''}
+             u.type === 'prestige' ? `+${u.effect} Prestige` :
+             u.type === 'multi' ? `+${(u.effect*100)}% All` :
+             u.type === 'clickMulti' ? `+${(u.effect*100)}% Click` :
+             u.type === 'gpsMulti' ? `+${(u.effect*100)}% GPS` :
+             u.type === 'unlock' ? `Unlock x8 Cap` : ''}
           </div>
           <div class="upgrade-level">Lv.${u.owned}/${u.max}</div>
         </div>
       `).join('');
+    }
+
+    function formatNumber(n) {
+      if (n >= 1e12) return (n/1e12).toFixed(1) + 'T';
+      if (n >= 1e9) return (n/1e9).toFixed(1) + 'B';
+      if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+      return n.toLocaleString();
     }
 
     function updateDisplay(){
@@ -379,12 +386,14 @@
       $('prestige').disabled = totalGoons < 100000;
     }
 
-    function createParticles(count = 12){
-      for(let i=0; i<count; i++){
+    function createParticles(){
+      for(let i=0; i<12; i++){
         const p = document.createElement('div');
-        p.style.cssText = `position:fixed;left:${Math.random()*100}vw;top:${Math.random()*100}vh;
+        p.style.cssText = `
+          position:fixed;left:${Math.random()*100}vw;top:${Math.random()*100}vh;
           width:8px;height:8px;background:#fff;border-radius:50%;pointer-events:none;
-          animation:particle 1s ease-out forwards;`;
+          animation:particle 1s ease-out forwards;
+        `;
         document.body.appendChild(p);
         setTimeout(() => p.remove(), 1000);
       }
@@ -406,11 +415,12 @@
 
     function checkAchievements(){
       if (totalGoons > 1000 && !localStorage.getItem('ach1')) { showAchievement("1K GOONS!"); localStorage.setItem('ach1','1'); }
-      if (totalGoons > 100000 && !localStorage.getItem('ach2')) { showAchievement("100K GOONS!"); localStorage.setItem('ach2','1'); }
+      if (totalGoons > 100000 && !localStorage.getItem('ach2')) { showAchievement("100K GOONS! GOD TIER!"); localStorage.setItem('ach2','1'); }
+      if (prestige >= 8 && !localStorage.getItem('ach3')) { showAchievement("MAX PRESTIGE x8!"); localStorage.setItem('ach3','1'); }
     }
 
     function saveGame(){
-      const save = { points, gps, clickPower, prestige, totalGoons, clickInterval, upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost})), autoClickerActive };
+      const save = { points, gps, clickPower, prestige, totalGoons, upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost})) };
       localStorage.setItem('goonSave', JSON.stringify(save));
     }
 
@@ -422,19 +432,16 @@
         clickPower = save.clickPower || 1;
         prestige = save.prestige || 1;
         totalGoons = save.totalGoons || 0;
-        clickInterval = save.clickInterval || 1000;
-        autoClickerActive = save.autoClickerActive || false;
         save.upgrades?.forEach(su => {
           const u = upgrades.find(x => x.id === su.id);
           if (u) { u.owned = su.owned; u.cost = su.cost; }
         });
-        if (autoClickerActive) startAutoClicker();
       }
     }
 
     $('prestige').onclick = prestigeReset;
 
-    // === LEADERBOARD (FIXED) ===
+    // === LEADERBOARD ===
     async function fetchLeaderboard(){
       const loading = $('loading'), error = $('error'), board = $('board'), rows = $('rows'), updated = $('updated');
       loading.classList.remove('hidden');
