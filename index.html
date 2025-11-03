@@ -263,7 +263,7 @@
           <div class="goonstegie-container">
             <div class="goonstegie-bar">
               <div class="goonstegie-fill" id="goonstegie-fill"></div>
-              <div class="goonstegie-text" id="goonstegie-text">Need 300K</div>
+              <div class="goonstegie-text" id="goonstegie-text">Need 100K</div>
             </div>
           </div>
 
@@ -293,7 +293,7 @@
     const stars = $('#stars');
     let starCnt = 0;
 
-    // === CHANGE THIS TO YOUR GITHUB JSON ===
+    // CHANGE THIS TO YOUR GITHUB JSON
     const LEADERBOARD_URL = 'https://raw.githubusercontent.com/YOURNAME/REPO/main/leaderboard.json';
 
     function addStar(){
@@ -390,7 +390,7 @@
       loadGame();
       renderUpgrades();
       renderBadges();
-      updateCosmetics(); // ON LOAD
+      updateCosmetics();
       updateDisplay();
       updatePrestigeTarget();
       updateAscension();
@@ -404,7 +404,7 @@
     async function fetchLeaderboard(){
       try {
         const res = await fetch(LEADERBOARD_URL);
-        if (!res.ok) throw new Error("Failed to fetch");
+        if (!res.ok) throw new Error("Failed");
         const players = await res.json();
         const list = $('leaderboard-list');
         list.innerHTML = players.slice(0,10).map((p, i) => `
@@ -419,8 +419,9 @@
       }
     }
 
+    // NEW INFINITE GOONSTEGIE
     function getPrestigeTarget() {
-      return 100000 + (prestigeLevel * 200000);
+      return 100000 + (prestigeLevel * 45000000);
     }
 
     function gainGoons(amount) {
@@ -430,7 +431,7 @@
       totalGoons += earned;
       updateDisplay();
       checkBadges();
-      updateCosmetics(); // REAL-TIME
+      updateCosmetics();
     }
 
     function clickGoon(e) {
@@ -647,7 +648,7 @@
           const c = cosmetics.find(x => x.req === sc.req && x.type === sc.type);
           if (c) c.unlocked = sc.unlocked;
         });
-        updateCosmetics(); // ON LOAD
+        updateCosmetics();
         renderBadges();
       }
     }
