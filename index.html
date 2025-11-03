@@ -19,22 +19,6 @@
     @keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0;}10%{opacity:1;}90%{opacity:.3;}100%{transform:translateY(100vh) scale(.8);opacity:0;}}
     #app{display:flex;height:100vh;width:100vw;position:relative;z-index:1;}
 
-    /* LOGIN OVERLAY */
-    #login-overlay{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
-      align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(20px);}
-    #login-form{background:var(--glass);border:1px solid var(--glass-border);border-radius:24px;
-      padding:40px 32px;text-align:center;box-shadow:0 0 60px var(--glow);max-width:400px;width:90%;}
-    #login-form h2{font-size:2.5rem;font-weight:800;letter-spacing:3px;color:var(--accent);
-      margin-bottom:20px;text-shadow:0 0 30px var(--glow);}
-    #username-input{width:100%;padding:14px;border:1px solid var(--glass-border);border-radius:12px;
-      background:rgba(255,255,255,.05);color:var(--text);font-size:1.1rem;text-align:center;
-      margin-bottom:16px;backdrop-filter:blur(8px);}
-    #username-input::placeholder{color:var(--muted);}
-    #login-btn{padding:12px 32px;background:var(--glow);color:#000;border:none;border-radius:12px;
-      font-weight:700;cursor:pointer;transition:.3s;font-size:1rem;}
-    #login-btn:hover{transform:scale(1.05);box-shadow:0 0 40px var(--glow);}
-    .hidden{display:none!important;}
-
     /* SIDEBAR */
     #sidebar{width:280px;background:var(--glass);border-right:1px solid var(--glass-border);
       backdrop-filter:blur(20px);padding:40px 24px;display:flex;flex-direction:column;align-items:center;
@@ -45,8 +29,6 @@
     @keyframes pulsePfp{0%{box-shadow:0 0 40px var(--glow),0 0 80px rgba(255,255,255,.3);}
       100%{box-shadow:0 0 60px var(--glow),0 0 120px rgba(255,255,255,.4);}}
     #pfp img{width:100%;height:100%;object-fit:cover;}
-    #username-display{font-weight:600;color:var(--accent);margin-bottom:16px;text-align:center;
-      text-shadow:0 0 10px var(--glow);}
     .sidebar-title{font-size:1.8rem;font-weight:800;letter-spacing:4px;color:var(--accent);
       margin-bottom:32px;text-shadow:0 0 20px rgba(255,255,255,.6);}
     .nav-btn{display:flex;align-items:center;gap:14px;width:100%;padding:14px 18px;
@@ -151,17 +133,8 @@
 <body>
   <div class="stars" id="stars"></div>
 
-  <!-- LOGIN OVERLAY -->
-  <div id="login-overlay">
-    <div id="login-form">
-      <h2>Enter the Goon Vault</h2>
-      <input type="text" id="username-input" placeholder="Your Goon Name..." maxlength="20">
-      <button id="login-btn">GOON IN</button>
-    </div>
-  </div>
-
   <!-- LOADER -->
-  <div id="loader" class="hidden" tabindex="0" role="button" aria-label="Enter Hub">
+  <div id="loader" tabindex="0" role="button" aria-label="Enter Hub">
     <div id="logo">GOONING</div>
     <div style="margin-top:22px;color:#aaa;font-size:1.3rem;">Click or press Enter</div>
   </div>
@@ -172,7 +145,6 @@
       <div id="pfp">
         <img src="https://i.pinimg.com/1200x/65/ce/74/65ce749c9a83c75ee8f49bd698097a09.jpg" alt="PFP">
       </div>
-      <div id="username-display"></div>
       <div class="sidebar-title">GOONING</div>
       <div class="nav-btn active" data-panel="clicker">GOON CLICKER</div>
       <div class="nav-btn" data-panel="home">Leaderboard</div>
@@ -221,7 +193,7 @@
         <div class="last-updated" id="updated"></div>
       </div>
 
-      <!-- PROMO / CREDITS (unchanged) -->
+      <!-- PROMO -->
       <div id="promo" class="panel">
         <div style="text-align:center;max-width:600px;margin:0 auto;">
           <h1>VAULT 13</h1>
@@ -236,13 +208,14 @@
         </div>
       </div>
 
+      <!-- CREDITS -->
       <div id="credits" class="panel">
         <div style="text-align:center;">
           <h2>Made with love by <span style="color:#fff">Xen</span></h2>
           <p>Design • Code • Monochrome Dreams</p>
           <p><a href="https://github.com/projectZ678" target="_blank" style="color:#ccc;">github.com/projectZ678</a></p>
           <p style="margin-top:30px;font-size:.9rem;color:#888;">
-            Live via Google Sheets
+            Static leaderboard • <a href="leaderboard.json" target="_blank">view JSON</a>
           </p>
         </div>
       </div>
@@ -253,6 +226,7 @@
     const $ = id => document.getElementById(id);
     const stars = $('#stars');
     let starCnt = 0;
+
     function addStar(){
       if(starCnt>120) return;
       const s=document.createElement('div'); s.className='star';
@@ -266,50 +240,7 @@
     }
     setInterval(addStar,250);
 
-    /* -------------------------------------------------
-       LOGIN – ENTER KEY FIXED + AUTO-REGISTER NEW USER
-       ------------------------------------------------- */
-    let currentUser = localStorage.getItem('goonUsername');
-    const loginOverlay = $('#login-overlay');
-    const loginInput   = $('#username-input');
-    const loginBtn     = $('#login-btn');
-    const usernameDisp = $('#username-display');
-
-    function finishLogin(name){
-      currentUser = name;
-      localStorage.setItem('goonUsername', name);
-      usernameDisp.textContent = name;
-      loginOverlay.classList.add('hidden');
-      $('loader').classList.remove('hidden');
-      setTimeout(enterHub, 500);
-    }
-
-    if (currentUser) {
-      usernameDisp.textContent = currentUser;
-      loginOverlay.classList.add('hidden');
-      $('loader').classList.remove('hidden');
-      enterHub();
-    } else {
-      loginOverlay.classList.remove('hidden');
-      loginInput.focus();
-
-      // ENTER KEY
-      loginInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          loginBtn.click();
-        }
-      });
-
-      loginBtn.onclick = () => {
-        const name = loginInput.value.trim();
-        if (name) finishLogin(name);
-      };
-    }
-
-    /* -------------------------------------------------
-       LOADER
-       ------------------------------------------------- */
+    // === LOADER ===
     function enterHub(){
       const loader = $('loader');
       loader.style.opacity = '0';
@@ -318,9 +249,9 @@
         $('app').classList.remove('hidden');
         initClicker();
         fetchLeaderboard();
-        setInterval(fetchLeaderboard, 60000);
       }, 800);
     }
+
     const loader = $('loader');
     loader.addEventListener('click', enterHub);
     loader.addEventListener('keydown', e => {
@@ -330,9 +261,7 @@
       }
     });
 
-    /* -------------------------------------------------
-       PANEL SWITCHING
-       ------------------------------------------------- */
+    // Panel switching
     document.querySelectorAll('.nav-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -342,12 +271,10 @@
       });
     });
 
-    /* -------------------------------------------------
-       GOON CLICKER (unchanged core)
-       ------------------------------------------------- */
+    // === GOON CLICKER ===
     let points = 0, gps = 0, clickPower = 1, prestige = 1, totalGoons = 0;
-    let clickInterval = 1000, autoClickerActive = false;
-    let submitInterval;
+    let clickInterval = 1000;
+    let autoClickerActive = false;
 
     const upgrades = [
       {id:'auto',name:'Auto-Gooner',cost:50,baseCost:50,effect:0.1,owned:0,type:'gps'},
@@ -366,11 +293,10 @@
       updateDisplay();
       setInterval(autoEarn, 100);
       setInterval(saveGame, 5000);
-      submitInterval = setInterval(() => submitToLeaderboard(), 10000);
       if (autoClickerActive) startAutoClicker();
     }
 
-    function gainGoons(amount){
+    function gainGoons(amount) {
       const earned = amount * prestige;
       points += earned;
       totalGoons += earned;
@@ -388,11 +314,11 @@
       if (gps > 0) gainGoons(gps / 10);
     }
 
-    function startAutoClicker(){
+    function startAutoClicker() {
       if (autoClickerActive) return;
       autoClickerActive = true;
       setInterval(() => {
-        if (document.visibilityState === 'visible'){
+        if (document.visibilityState === 'visible') {
           gainGoons(clickPower);
           createParticles(6);
         }
@@ -400,20 +326,23 @@
     }
 
     function buyUpgrade(id){
-      const u = upgrades.find(x => x.id===id);
-      if (!u || points < u.cost || u.owned>=50) return;
+      const u = upgrades.find(x => x.id === id);
+      if (!u || points < u.cost || u.owned >= 50) return;
+
       points -= u.cost;
       u.owned++;
       u.cost = Math.floor(u.baseCost * Math.pow(1.5, u.owned));
 
-      if (u.type==='gps') gps += u.effect;
-      if (u.type==='click') clickPower += u.effect;
-      if (u.type==='speed') clickInterval = Math.max(200, clickInterval * (1-u.effect));
-      if (u.type==='prestige') prestige += u.effect;
-      if (u.type==='multi'){ clickPower *= (1+u.effect); gps *= (1+u.effect); }
+      if (u.type === 'gps') gps += u.effect;
+      if (u.type === 'click') clickPower += u.effect;
+      if (u.type === 'speed') clickInterval = Math.max(200, clickInterval * (1 - u.effect));
+      if (u.type === 'prestige') prestige += u.effect;
+      if (u.type === 'multi') { clickPower *= (1 + u.effect); gps *= (1 + u.effect); }
 
-      if (u.id==='auto' && u.owned===1) startAutoClicker();
-      renderUpgrades(); updateDisplay();
+      if (u.id === 'auto' && u.owned === 1) startAutoClicker();
+
+      renderUpgrades();
+      updateDisplay();
     }
 
     function prestigeReset(){
@@ -421,27 +350,28 @@
       prestige *= 2;
       points = 0; gps = 0; clickPower = 1; clickInterval = 1000;
       totalGoons = Math.floor(totalGoons * 0.1);
-      upgrades.forEach(u=>{u.owned=0;u.cost=u.baseCost;});
+      upgrades.forEach(u => { u.owned = 0; u.cost = u.baseCost; });
       autoClickerActive = false;
-      renderUpgrades(); updateDisplay();
+      renderUpgrades();
+      updateDisplay();
       showAchievement(`PRESTIGED! x${prestige} Multiplier Unlocked`);
-      submitToLeaderboard();
     }
 
     function renderUpgrades(){
-      $('upgrades').innerHTML = upgrades.map(u=>`
-        <div class="upgrade ${u.owned>=50?'bought':''}" onclick="buyUpgrade('${u.id}')">
+      $('upgrades').innerHTML = upgrades.map(u => `
+        <div class="upgrade ${u.owned >= 50 ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')">
           <div class="upgrade-name">${u.name}</div>
           <div class="upgrade-cost">Cost: ${u.cost.toLocaleString()}</div>
           <div class="upgrade-effect">
-            ${u.type==='gps'?`+${u.effect} GPS`:
-             u.type==='click'?`+${u.effect} Click Power`:
-             u.type==='speed'?`${(u.effect*100)}% Faster Clicks`:
-             u.type==='prestige'?`+${u.effect} Prestige`:
-             u.type==='multi'?`${(u.effect*100)}% Global Boost`:''}
+            ${u.type === 'gps' ? `+${u.effect} GPS` :
+             u.type === 'click' ? `+${u.effect} Click Power` :
+             u.type === 'speed' ? `${(u.effect*100)}% Faster Clicks` :
+             u.type === 'prestige' ? `+${u.effect} Prestige` :
+             u.type === 'multi' ? `${(u.effect*100)}% Global Boost` : ''}
           </div>
           <div class="upgrade-level">Lv.${u.owned}</div>
-        </div>`).join('');
+        </div>
+      `).join('');
     }
 
     function updateDisplay(){
@@ -452,129 +382,123 @@
       $('prestige').disabled = totalGoons < 50000;
     }
 
-    function createParticles(c=12){
-      for(let i=0;i<c;i++){
-        const p=document.createElement('div');
-        p.style.cssText=`position:fixed;left:${Math.random()*100}vw;top:${Math.random()*100}vh;
+    function createParticles(count = 12){
+      for(let i=0; i<count; i++){
+        const p = document.createElement('div');
+        p.style.cssText = `
+          position:fixed;left:${Math.random()*100}vw;top:${Math.random()*100}vh;
           width:8px;height:8px;background:#fff;border-radius:50%;pointer-events:none;
-          animation:particle 1s ease-out forwards;`;
+          animation:particle 1s ease-out forwards;
+        `;
         document.body.appendChild(p);
-        setTimeout(()=>p.remove(),1000);
+        setTimeout(() => p.remove(), 1000);
       }
     }
 
     function screenShake(){
-      document.body.style.animation='shake 0.3s';
-      setTimeout(()=>document.body.style.animation='',300);
+      document.body.style.animation = 'shake 0.3s';
+      setTimeout(() => document.body.style.animation = '', 300);
     }
 
-    function showAchievement(txt){
-      const a=document.createElement('div');
-      a.className='achievement'; a.textContent=txt;
+    function showAchievement(text){
+      const a = document.createElement('div');
+      a.className = 'achievement';
+      a.textContent = text;
       document.body.appendChild(a);
-      setTimeout(()=>a.style.opacity=1,100);
-      setTimeout(()=>{a.style.opacity=0;setTimeout(()=>a.remove(),500);},3000);
+      setTimeout(() => a.style.opacity = 1, 100);
+      setTimeout(() => { a.style.opacity = 0; setTimeout(() => a.remove(), 500); }, 3000);
     }
 
     function checkAchievements(){
-      if(totalGoons>1000 && !localStorage.getItem('ach1')){showAchievement("1,000 TOTAL GOONS!");localStorage.setItem('ach1','1');}
-      if(gps>50 && !localStorage.getItem('ach2')){showAchievement("50 GPS! UNSTOPPABLE!");localStorage.setItem('ach2','1');}
-      if(prestige>4 && !localStorage.getItem('ach3')){showAchievement("PRESTIGE x4! GOON GOD!");localStorage.setItem('ach3','1');}
+      if (totalGoons > 1000 && !localStorage.getItem('ach1')) { showAchievement("1,000 TOTAL GOONS!"); localStorage.setItem('ach1','1'); }
+      if (gps > 50 && !localStorage.getItem('ach2')) { showAchievement("50 GPS! UNSTOPPABLE!"); localStorage.setItem('ach2','1'); }
+      if (prestige > 4 && !localStorage.getItem('ach3')) { showAchievement("PRESTIGE x4! GOON GOD!"); localStorage.setItem('ach3','1'); }
     }
 
     function saveGame(){
-      const s={points,gps,clickPower,prestige,totalGoons,clickInterval,upgrades:upgrades.map(u=>({...u})),autoClickerActive};
-      localStorage.setItem('goonSave',JSON.stringify(s));
+      const save = { points, gps, clickPower, prestige, totalGoons, clickInterval, upgrades: upgrades.map(u => ({...u})), autoClickerActive };
+      localStorage.setItem('goonSave', JSON.stringify(save));
     }
 
     function loadGame(){
-      const s=JSON.parse(localStorage.getItem('goonSave')||'{}');
-      if(s){points=s.points||0;gps=s.gps||0;clickPower=s.clickPower||1;prestige=s.prestige||1;
-            totalGoons=s.totalGoons||0;clickInterval=s.clickInterval||1000;autoClickerActive=s.autoClickerActive||false;
-            s.upgrades?.forEach((su,i)=>{if(upgrades[i])Object.assign(upgrades[i],su);});
-            if(autoClickerActive) startAutoClicker();}
+      const save = JSON.parse(localStorage.getItem('goonSave') || '{}');
+      if (save) {
+        points = save.points || 0;
+        gps = save.gps || 0;
+        clickPower = save.clickPower || 1;
+        prestige = save.prestige || 1;
+        totalGoons = save.totalGoons || 0;
+        clickInterval = save.clickInterval || 1000;
+        autoClickerActive = save.autoClickerActive || false;
+        save.upgrades?.forEach((su, i) => {
+          if (upgrades[i]) Object.assign(upgrades[i], su);
+        });
+        if (autoClickerActive) startAutoClicker();
+      }
     }
 
     $('prestige').onclick = prestigeReset;
 
-    /* -------------------------------------------------
-       GOOGLE SHEETS LIVE LEADERBOARD
-       ------------------------------------------------- */
-    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyVjOzZFpeP9bmYdHsQdg7qoKWnHgT487XJnzSVkU5oML6BKfYVv3aapOFmSLi16NdHRQ/exec';
-
-    // Called on login *and* every 10 s
-    async function submitToLeaderboard(){
-      if (!currentUser) return;
-      try{
-        await fetch(`${SHEET_URL}?action=submit`,{
-          method:'POST',mode:'no-cors',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({username:currentUser,totalGoons:Math.floor(totalGoons)})
-        });
-      }catch(e){}
-    }
-
+    // === STATIC LEADERBOARD (from leaderboard.json) ===
     async function fetchLeaderboard(){
-      const loading=$('loading'),error=$('error'),board=$('board'),rows=$('rows'),upd=$('updated');
-      loading.classList.remove('hidden'); error.classList.add('hidden'); board.classList.add('hidden');
+      const loading = $('loading'), error = $('error'), board = $('board'), rows = $('rows'), updated = $('updated');
+      loading.classList.remove('hidden');
+      error.classList.add('hidden');
+      board.classList.add('hidden');
 
-      try{
-        const r = await fetch(`${SHEET_URL}?t=${Date.now()}`);
+      try {
+        const r = await fetch('leaderboard.json?' + Date.now());
+        if (!r.ok) throw new Error();
         const data = await r.json();
-        const list = (data.users||[]).sort((a,b)=> (b.totalGoons||0)-(a.totalGoons||0));
-        const time = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+        const list = data.leaderboard || [];
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // Pad to 100 slots
-        const padded = Array(100).fill().map((_,i)=> list[i] || {username:null,totalGoons:0});
+        // Sort by totalGoons
+        const sorted = [...list].sort((a,b) => (b.totalGoons || 0) - (a.totalGoons || 0));
+        const padded = Array(100).fill().map((_, i) => sorted[i] || { name: null, totalGoons: 0 });
 
-        rows.innerHTML = padded.map((p,idx)=>{
-          const rank = idx+1;
+        rows.innerHTML = padded.map((p, idx) => {
+          const rank = idx + 1;
           return `<tr>
             <td class="rank">#${rank}</td>
             <td class="name">
-              ${p.username?`
-                <div class="avatar"><img src="https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random()*6)}.png" alt="${e(p.username)}"></div>
-                <div style="font-weight:600;">${e(p.username)}</div>
-              `:`<div class="empty-slot">— Empty Slot —</div>`}
+              ${p.name ? `
+                <div class="avatar"><img src="https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random()*6)}.png" alt="${e(p.name)}"></div>
+                <div style="font-weight:600;">${e(p.name)}</div>
+              ` : `<div class="empty-slot">— Empty Slot —</div>`}
             </td>
-            <td class="total-goons">${(p.totalGoons||0).toLocaleString()}</td>
+            <td class="total-goons">${(p.totalGoons || 0).toLocaleString()}</td>
           </tr>`;
         }).join('');
 
-        upd.textContent = `Last updated: ${time}`;
+        updated.textContent = `Last updated: ${time}`;
         loading.classList.add('hidden');
         board.classList.remove('hidden');
-      }catch(err){
+      } catch (err) {
         loading.classList.add('hidden');
         error.classList.remove('hidden');
       }
     }
 
     function e(t){
-      const d=document.createElement('div');
-      d.textContent=t;
+      const d = document.createElement('div');
+      d.textContent = t;
       return d.innerHTML;
     }
 
-    /* -------------------------------------------------
-       ZOOM
-       ------------------------------------------------- */
-    const board=$('board'), zoomP=$('#zoomPercent');
-    let scale=0.5;
-    function updZoom(){board.style.transform=`scale(${scale})`;board.style.transformOrigin='top left';zoomP.textContent=`${Math.round(scale*100)}%`;}
-    $('#zoomIn').onclick = ()=>{scale=Math.min(scale+0.1,2);updZoom();};
-    $('#zoomOut').onclick = ()=>{scale=Math.max(scale-0.1,0.3);updZoom();};
-    $('#zoomReset').onclick = ()=>{scale=0.5;updZoom();};
-    updZoom();
-
-    /* -------------------------------------------------
-       AFTER LOGIN – register the user immediately
-       ------------------------------------------------- */
-    // This runs **once** right after the login finishes
-    if (currentUser) {
-      // Ensure the sheet knows about this brand-new player (even with 0 goons)
-      submitToLeaderboard();
+    // Zoom
+    const board = $('board');
+    const zoomPercent = $('#zoomPercent');
+    let scale = 0.5;
+    function updateZoom(){
+      board.style.transform = `scale(${scale})`;
+      board.style.transformOrigin = 'top left';
+      zoomPercent.textContent = `${Math.round(scale*100)}%`;
     }
+    $('#zoomIn').onclick = () => { scale = Math.min(scale + 0.1, 2); updateZoom(); };
+    $('#zoomOut').onclick = () => { scale = Math.max(scale - 0.1, 0.3); updateZoom(); };
+    $('#zoomReset').onclick = () => { scale = 0.5; updateZoom(); };
+    updateZoom();
   </script>
 </body>
 </html>
