@@ -19,16 +19,34 @@
     @keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0;}10%{opacity:1;}90%{opacity:.3;}100%{transform:translateY(100vh) scale(.8);opacity:0;}}
     #app{display:flex;height:100vh;width:100vw;position:relative;z-index:1;}
 
+    /* LOGIN OVERLAY */
+    #login-overlay{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
+      align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(20px);}
+    #login-form{background:var(--glass);border:1px solid var(--glass-border);border-radius:24px;
+      padding:40px 32px;text-align:center;box-shadow:0 0 60px var(--glow);max-width:400px;width:90%;}
+    #login-form h2{font-size:2.5rem;font-weight:800;letter-spacing:3px;color:var(--accent);
+      margin-bottom:20px;text-shadow:0 0 30px var(--glow);}
+    #username-input{width:100%;padding:14px;border:1px solid var(--glass-border);border-radius:12px;
+      background:rgba(255,255,255,.05);color:var(--text);font-size:1.1rem;text-align:center;
+      margin-bottom:16px;backdrop-filter:blur(8px);}
+    #username-input::placeholder{color:var(--muted);}
+    #login-btn{padding:12px 32px;background:var(--glow);color:#000;border:none;border-radius:12px;
+      font-weight:700;cursor:pointer;transition:.3s;font-size:1rem;}
+    #login-btn:hover{transform:scale(1.05);box-shadow:0 0 40px var(--glow);}
+    .hidden{display:none!important;}
+
     /* SIDEBAR */
     #sidebar{width:280px;background:var(--glass);border-right:1px solid var(--glass-border);
       backdrop-filter:blur(20px);padding:40px 24px;display:flex;flex-direction:column;align-items:center;
       box-shadow:0 0 60px rgba(255,255,255,.12);flex-shrink:0;}
-    #pfp{width:130px;height:130px;border-radius:50%;overflow:hidden;margin-bottom:24px;
+    #pfp{width:130px;height:130px;border-radius:50%;overflow:hidden;margin-bottom:8px;
       border:3px solid var(--glow);box-shadow:0 0 40px var(--glow),0 0 80px rgba(255,255,255,.3);
       animation:pulsePfp 3s infinite alternate;}
     @keyframes pulsePfp{0%{box-shadow:0 0 40px var(--glow),0 0 80px rgba(255,255,255,.3);}
       100%{box-shadow:0 0 60px var(--glow),0 0 120px rgba(255,255,255,.4);}}
     #pfp img{width:100%;height:100%;object-fit:cover;}
+    #username-display{font-weight:600;color:var(--accent);margin-bottom:16px;text-align:center;
+      text-shadow:0 0 10px var(--glow);}
     .sidebar-title{font-size:1.8rem;font-weight:800;letter-spacing:4px;color:var(--accent);
       margin-bottom:32px;text-shadow:0 0 20px rgba(255,255,255,.6);}
     .nav-btn{display:flex;align-items:center;gap:14px;width:100%;padding:14px 18px;
@@ -83,6 +101,7 @@
     .prestige-btn{margin-top:30px;padding:16px 40px;background:#fff;color:#000;border:none;
       border-radius:16px;font-weight:800;cursor:pointer;transition:.4s;box-shadow:0 0 40px #fff;}
     .prestige-btn:hover{transform:scale(1.1);box-shadow:0 0 80px #fff;}
+    .prestige-btn:disabled{opacity:0.5;cursor:not-allowed;}
 
     /* LEADERBOARD */
     .zoom-controls{position:absolute;top:12px;right:12px;background:rgba(30,30,30,.9);border-radius:12px;
@@ -124,7 +143,6 @@
     #logo{font-size:6rem;font-weight:900;color:var(--accent);text-shadow:0 0 30px #fff;
       animation:glow 2.5s infinite alternate;}
     @keyframes glow{from{text-shadow:0 0 30px #fff;}to{text-shadow:0 0 80px #fff,0 0 160px #fff;}}
-    .hidden{display:none!important;}
 
     @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-10px);}75%{transform:translateX(10px);}}
     @keyframes particle{0%{transform:scale(1) translateY(0);opacity:1;}100%{transform:scale(0) translateY(-100px);opacity:0;}}
@@ -133,8 +151,17 @@
 <body>
   <div class="stars" id="stars"></div>
 
+  <!-- LOGIN OVERLAY -->
+  <div id="login-overlay">
+    <div id="login-form">
+      <h2>Enter the Goon Vault</h2>
+      <input type="text" id="username-input" placeholder="Your Goon Name..." maxlength="20">
+      <button id="login-btn">GOON IN</button>
+    </div>
+  </div>
+
   <!-- LOADER -->
-  <div id="loader" tabindex="0" role="button" aria-label="Enter Hub">
+  <div id="loader" class="hidden" tabindex="0" role="button" aria-label="Enter Hub">
     <div id="logo">GOONING</div>
     <div style="margin-top:22px;color:#aaa;font-size:1.3rem;">Click or press Enter</div>
   </div>
@@ -145,6 +172,7 @@
       <div id="pfp">
         <img src="https://i.pinimg.com/1200x/65/ce/74/65ce749c9a83c75ee8f49bd698097a09.jpg" alt="PFP">
       </div>
+      <div id="username-display"></div>
       <div class="sidebar-title">GOONING</div>
       <div class="nav-btn active" data-panel="clicker">GOON CLICKER</div>
       <div class="nav-btn" data-panel="home">Leaderboard</div>
@@ -215,7 +243,7 @@
           <p>Design • Code • Monochrome Dreams</p>
           <p><a href="https://github.com/projectZ678" target="_blank" style="color:#ccc;">github.com/projectZ678</a></p>
           <p style="margin-top:30px;font-size:.9rem;color:#888;">
-            Auto-refreshed • <a href="leaderboard.json" target="_blank">view raw JSON</a>
+            Auto-refreshed • <a href="users.json" target="_blank">view raw JSON</a>
           </p>
         </div>
       </div>
@@ -240,6 +268,41 @@
     }
     setInterval(addStar,250);
 
+    // === LOGIN SYSTEM ===
+    let currentUser = localStorage.getItem('goonUsername');
+    const loginOverlay = $('#login-overlay');
+    const loginInput = $('#username-input');
+    const loginBtn = $('#login-btn');
+    const usernameDisplay = $('#username-display');
+
+    function showApp() {
+      loginOverlay.classList.add('hidden');
+      $('loader').classList.remove('hidden');
+      setTimeout(enterHub, 500); // Delay for smooth transition
+    }
+
+    if (currentUser) {
+      usernameDisplay.textContent = currentUser;
+      loginOverlay.classList.add('hidden');
+      $('loader').classList.remove('hidden');
+      enterHub();
+    } else {
+      loginOverlay.classList.remove('hidden');
+      loginInput.focus();
+      loginBtn.onclick = () => {
+        const username = loginInput.value.trim();
+        if (username) {
+          currentUser = username;
+          localStorage.setItem('goonUsername', currentUser);
+          usernameDisplay.textContent = currentUser;
+          showApp();
+        }
+      };
+      loginInput.onkeydown = (e) => {
+        if (e.key === 'Enter') loginBtn.click();
+      };
+    }
+
     // === LOADER ===
     function enterHub(){
       const loader = $('loader');
@@ -261,7 +324,6 @@
         enterHub();
       }
     });
-    loader.focus();
 
     // Panel switching
     document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -277,6 +339,7 @@
     let points = 0, gps = 0, clickPower = 1, prestige = 1, totalGoons = 0;
     let clickInterval = 1000; // ms per click (for 2x speed)
     let autoClickerActive = false;
+    let submitInterval;
 
     const upgrades = [
       {id:'auto',name:'Auto-Gooner',cost:50,baseCost:50,effect:0.1,owned:0,type:'gps'},
@@ -295,6 +358,9 @@
       updateDisplay();
       setInterval(autoEarn, 100);
       setInterval(saveGame, 5000);
+      submitInterval = setInterval(() => {
+        if (totalGoons > 100) submitToLeaderboard();
+      }, 10000); // Auto-submit every 10s
       if (autoClickerActive) startAutoClicker();
     }
 
@@ -304,7 +370,6 @@
       totalGoons += earned;
       updateDisplay();
       checkAchievements();
-      submitToLeaderboard(); // Auto-submit on gain
     }
 
     $('goon-btn').onclick = () => {
@@ -358,6 +423,7 @@
       renderUpgrades();
       updateDisplay();
       showAchievement(`PRESTIGED! x${prestige} Multiplier Unlocked`);
+      submitToLeaderboard(); // Submit after prestige
     }
 
     function renderUpgrades(){
@@ -424,7 +490,7 @@
     }
 
     function loadGame(){
-      const save = JSON.parse(localStorage.getItem('goonSave'));
+      const save = JSON.parse(localStorage.getItem('goonSave') || '{}');
       if (save) {
         points = save.points || 0;
         gps = save.gps || 0;
@@ -442,21 +508,37 @@
 
     $('prestige').onclick = prestigeReset;
 
-    // === LEADERBOARD (Now by TOTAL GOONS) ===
-    const playerName = localStorage.getItem('goonName') || prompt("Enter your Goon Name:", "Gooner" + Math.floor(Math.random()*9999)) || "Anonymous";
-    if (!localStorage.getItem('goonName')) localStorage.setItem('goonName', playerName);
-
+    // === SUBMIT TO LEADERBOARD (Users.json) ===
     async function submitToLeaderboard() {
-      if (totalGoons < 100) return;
+      if (!currentUser || totalGoons < 100) return;
       try {
-        await fetch('https://api.allorigins.ml/get?url=' + encodeURIComponent('YOUR_BACKEND_OR_DISCORD_WEBHOOK'), {
+        // Fetch current users.json
+        const r = await fetch('users.json?' + Date.now());
+        const data = await r.json();
+        let users = data.users || [];
+
+        // Update or add user
+        const existing = users.find(u => u.username === currentUser);
+        if (existing) {
+          existing.totalGoons = Math.max(existing.totalGoons, totalGoons);
+          existing.lastUpdated = new Date().toISOString();
+        } else {
+          users.push({ username: currentUser, totalGoons, lastUpdated: new Date().toISOString() });
+        }
+
+        // POST updated users.json (replace with real backend endpoint like /api/update-users)
+        await fetch('users.json', { // Simulate; use real endpoint
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: playerName, totalGoons: Math.floor(totalGoons) })
+          body: JSON.stringify({ users })
         });
-      } catch(e) {}
+        console.log('Submitted to leaderboard:', currentUser, totalGoons);
+      } catch(e) {
+        console.error('Submit failed:', e);
+      }
     }
 
+    // === LEADERBOARD (From users.json) ===
     async function fetchLeaderboard(){
       const loading = $('loading'), error = $('error'), board = $('board'), rows = $('rows'), updated = $('updated');
       loading.classList.remove('hidden');
@@ -464,26 +546,25 @@
       board.classList.add('hidden');
 
       try {
-        const r = await fetch('leaderboard.json?' + Date.now());
+        const r = await fetch('users.json?' + Date.now());
         if (!r.ok) throw new Error('HTTP ' + r.status);
         const data = await r.json();
-        const list = Array.isArray(data) ? data : (data.leaderboard || []);
-        const time = data.updated || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        let list = data.users || [];
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
         // Sort by totalGoons DESC
         const sorted = [...list].sort((a,b) => (b.totalGoons || 0) - (a.totalGoons || 0));
-        const padded = Array(100).fill().map((_, i) => sorted[i] || { rank: i + 1, name: '— Empty —', totalGoons: 0 });
+
+        // Pad to 100
+        const padded = Array(100).fill().map((_, i) => sorted[i] || { name: null, totalGoons: 0 });
 
         rows.innerHTML = padded.map((p, idx) => {
-          const av = p.discordId && p.avatar
-            ? `https://cdn.discordapp.com/avatars/${p.discordId}/${p.avatar}.${p.avatar.startsWith('a_') ? 'gif' : 'webp'}?size=80`
-            : 'https://cdn.discordapp.com/embed/avatars/0.png';
-          const rank = p.rank || idx + 1;
+          const rank = idx + 1;
           return `<tr>
             <td class="rank">#${rank}</td>
             <td class="name">
-              ${p.name && p.name !== '— Empty —' ? `
-                <div class="avatar"><img src="${av}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="${e(p.name)}"></div>
+              ${p.name ? `
+                <div class="avatar"><img src="https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random()*6)}.png" alt="${e(p.name)}"></div>
                 <div style="font-weight:600;">${e(p.name)}</div>
               ` : `<div class="empty-slot">— Empty Slot —</div>`}
             </td>
