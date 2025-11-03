@@ -166,7 +166,7 @@
           <div id="total-goons">Total Goons: 0</div>
           <div id="goon-btn">CLICK TO GOON</div>
           <div class="upgrades-grid" id="upgrades"></div>
-          <button class="prestige-btn" id="prestige">PRESTIGE (x2 Multiplier)</button>
+          <button class="prestige-btn" id="prestige">PRESTIGE (x2 → x8 Max)</button>
         </div>
       </div>
 
@@ -193,7 +193,7 @@
         <div class="last-updated" id="updated"></div>
       </div>
 
-      <!-- PROMO -->
+      <!-- PROMO / CREDITS -->
       <div id="promo" class="panel">
         <div style="text-align:center;max-width:600px;margin:0 auto;">
           <h1>VAULT 13</h1>
@@ -208,7 +208,6 @@
         </div>
       </div>
 
-      <!-- CREDITS -->
       <div id="credits" class="panel">
         <div style="text-align:center;">
           <h2>Made with love by <span style="color:#fff">Xen</span></h2>
@@ -277,14 +276,24 @@
     let autoClickerActive = false;
 
     const upgrades = [
-      {id:'auto',name:'Auto-Gooner',cost:50,baseCost:50,effect:0.1,owned:0,type:'gps'},
-      {id:'double',name:'Double Click',cost:200,baseCost:200,effect:1,owned:0,type:'click'},
-      {id:'speed',name:'2x Goon Speed',cost:800,baseCost:800,effect:0.5,owned:0,type:'speed'},
-      {id:'neon',name:'Neon Boost',cost:2000,baseCost:2000,effect:2,owned:0,type:'gps'},
-      {id:'vault',name:'Vault Pass',cost:10000,baseCost:10000,effect:0.5,owned:0,type:'prestige'},
-      {id:'mega',name:'Mega Click',cost:50000,baseCost:50000,effect:10,owned:0,type:'click'},
-      {id:'hyper',name:'Hyper GPS',cost:100000,baseCost:100000,effect:10,owned:0,type:'gps'},
-      {id:'god',name:'God Mode',cost:500000,baseCost:500000,effect:5,owned:0,type:'multi'}
+      {id:'auto',name:'Auto-Gooner',cost:50,baseCost:50,effect:0.1,owned:0,type:'gps',max:50},
+      {id:'double',name:'Double Click',cost:200,baseCost:200,effect:1,owned:0,type:'click',max:50},
+      {id:'speed',name:'2x Goon Speed',cost:800,baseCost:800,effect:0.5,owned:0,type:'speed',max:5},
+      {id:'neon',name:'Neon Boost',cost:2000,baseCost:2000,effect:2,owned:0,type:'gps',max:50},
+      {id:'vault',name:'Vault Pass',cost:10000,baseCost:10000,effect:0.5,owned:0,type:'prestige',max:10},
+      {id:'mega',name:'Mega Click',cost:50000,baseCost:50000,effect:10,owned:0,type:'click',max:30},
+      {id:'hyper',name:'Hyper GPS',cost:100000,baseCost:100000,effect:10,owned:0,type:'gps',max:30},
+      {id:'god',name:'God Mode',cost:500000,baseCost:500000,effect:0.05,owned:0,type:'multi',max:10},
+      {id:'quantum',name:'Quantum Edge',cost:1000000,baseCost:1000000,effect:0.25,owned:0,type:'clickMulti',max:15},
+      {id:'void',name:'Void Engine',cost:5000000,baseCost:5000000,effect:50,owned:0,type:'gps',max:20},
+      {id:'pulse',name:'Goon Pulse',cost:20000000,baseCost:20000000,effect:1,owned:0,type:'gpsMulti',max:8},
+      {id:'dark',name:'Dark Matter',cost:100000000,baseCost:100000000,effect:200,owned:0,type:'click',max:10},
+      {id:'singularity',name:'Singularity',cost:500000000,baseCost:500000000,effect:5,owned:0,type:'multi',max:5},
+      {id:'infinity',name:'Infinity Loop',cost:2000000000,baseCost:2000000000,effect:1000,owned:0,type:'gps',max:5},
+      {id:'rift',name:'Cosmic Rift',cost:10000000000,baseCost:10000000000,effect:10000,owned:0,type:'click',max:3},
+      {id:'flame',name:'Eternal Flame',cost:50000000000,baseCost:50000000000,effect:0.25,owned:0,type:'prestige',max:5},
+      {id:'goongod',name:'Goon God',cost:100000000000,baseCost:100000000000,effect:0.5,owned:0,type:'multi',max:3},
+      {id:'ascension',name:'Final Ascension',cost:1000000000000,baseCost:1000000000000,effect:1,owned:0,type:'unlock',max:1}
     ];
 
     function initClicker(){
@@ -327,17 +336,20 @@
 
     function buyUpgrade(id){
       const u = upgrades.find(x => x.id === id);
-      if (!u || points < u.cost || u.owned >= 50) return;
+      if (!u || points < u.cost || u.owned >= u.max) return;
 
       points -= u.cost;
       u.owned++;
-      u.cost = Math.floor(u.baseCost * Math.pow(1.5, u.owned));
+      u.cost = Math.floor(u.baseCost * Math.pow(1.6, u.owned));
 
       if (u.type === 'gps') gps += u.effect;
       if (u.type === 'click') clickPower += u.effect;
-      if (u.type === 'speed') clickInterval = Math.max(200, clickInterval * (1 - u.effect));
-      if (u.type === 'prestige') prestige += u.effect;
+      if (u.type === 'speed') clickInterval = Math.max(100, clickInterval * (1 - u.effect));
+      if (u.type === 'prestige') prestige = Math.min(8, prestige + u.effect);
       if (u.type === 'multi') { clickPower *= (1 + u.effect); gps *= (1 + u.effect); }
+      if (u.type === 'clickMulti') clickPower *= (1 + u.effect);
+      if (u.type === 'gpsMulti') gps *= (1 + u.effect);
+      if (u.type === 'unlock') prestige = 8;
 
       if (u.id === 'auto' && u.owned === 1) startAutoClicker();
 
@@ -346,30 +358,33 @@
     }
 
     function prestigeReset(){
-      if (totalGoons < 50000) return showAchievement("Need 50K Total Goons to Prestige!");
-      prestige *= 2;
+      if (totalGoons < 100000) return showAchievement("Need 100K Total Goons to Prestige!");
+      prestige = Math.min(8, prestige + 1);
       points = 0; gps = 0; clickPower = 1; clickInterval = 1000;
       totalGoons = Math.floor(totalGoons * 0.1);
       upgrades.forEach(u => { u.owned = 0; u.cost = u.baseCost; });
       autoClickerActive = false;
       renderUpgrades();
       updateDisplay();
-      showAchievement(`PRESTIGED! x${prestige} Multiplier Unlocked`);
+      showAchievement(`PRESTIGED! Multiplier: x${prestige}`);
     }
 
     function renderUpgrades(){
       $('upgrades').innerHTML = upgrades.map(u => `
-        <div class="upgrade ${u.owned >= 50 ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')">
+        <div class="upgrade ${u.owned >= u.max ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')">
           <div class="upgrade-name">${u.name}</div>
-          <div class="upgrade-cost">Cost: ${u.cost.toLocaleString()}</div>
+          <div class="upgrade-cost">Cost: ${u.cost >= 1e12 ? (u.cost/1e12).toFixed(1)+'T' : u.cost >= 1e9 ? (u.cost/1e9).toFixed(1)+'B' : u.cost >= 1e6 ? (u.cost/1e6).toFixed(1)+'M' : u.cost.toLocaleString()}</div>
           <div class="upgrade-effect">
             ${u.type === 'gps' ? `+${u.effect} GPS` :
-             u.type === 'click' ? `+${u.effect} Click Power` :
-             u.type === 'speed' ? `${(u.effect*100)}% Faster Clicks` :
+             u.type === 'click' ? `+${u.effect} Click` :
+             u.type === 'speed' ? `-${(u.effect*100)}% Delay` :
              u.type === 'prestige' ? `+${u.effect} Prestige` :
-             u.type === 'multi' ? `${(u.effect*100)}% Global Boost` : ''}
+             u.type === 'multi' ? `+${(u.effect*100)}% All` :
+             u.type === 'clickMulti' ? `+${(u.effect*100)}% Click` :
+             u.type === 'gpsMulti' ? `+${(u.effect*100)}% GPS` :
+             u.type === 'unlock' ? `Unlock x8 Cap` : ''}
           </div>
-          <div class="upgrade-level">Lv.${u.owned}</div>
+          <div class="upgrade-level">Lv.${u.owned}/${u.max}</div>
         </div>
       `).join('');
     }
@@ -378,8 +393,8 @@
       $('points').textContent = Math.floor(points).toLocaleString();
       $('gps').textContent = `${gps.toFixed(2)} GPS`;
       $('total-goons').textContent = `Total Goons: ${Math.floor(totalGoons).toLocaleString()}`;
-      $('prestige').textContent = `PRESTIGE (x${prestige} Multiplier)`;
-      $('prestige').disabled = totalGoons < 50000;
+      $('prestige').textContent = `PRESTIGE (x${prestige} → x8 Max)`;
+      $('prestige').disabled = totalGoons < 100000;
     }
 
     function createParticles(count = 12){
@@ -410,13 +425,13 @@
     }
 
     function checkAchievements(){
-      if (totalGoons > 1000 && !localStorage.getItem('ach1')) { showAchievement("1,000 TOTAL GOONS!"); localStorage.setItem('ach1','1'); }
-      if (gps > 50 && !localStorage.getItem('ach2')) { showAchievement("50 GPS! UNSTOPPABLE!"); localStorage.setItem('ach2','1'); }
-      if (prestige > 4 && !localStorage.getItem('ach3')) { showAchievement("PRESTIGE x4! GOON GOD!"); localStorage.setItem('ach3','1'); }
+      if (totalGoons > 1000 && !localStorage.getItem('ach1')) { showAchievement("1K GOONS!"); localStorage.setItem('ach1','1'); }
+      if (totalGoons > 100000 && !localStorage.getItem('ach2')) { showAchievement("100K GOONS! GOD TIER!"); localStorage.setItem('ach2','1'); }
+      if (prestige >= 8 && !localStorage.getItem('ach3')) { showAchievement("MAX PRESTIGE x8!"); localStorage.setItem('ach3','1'); }
     }
 
     function saveGame(){
-      const save = { points, gps, clickPower, prestige, totalGoons, clickInterval, upgrades: upgrades.map(u => ({...u})), autoClickerActive };
+      const save = { points, gps, clickPower, prestige, totalGoons, clickInterval, upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost})), autoClickerActive };
       localStorage.setItem('goonSave', JSON.stringify(save));
     }
 
@@ -430,8 +445,9 @@
         totalGoons = save.totalGoons || 0;
         clickInterval = save.clickInterval || 1000;
         autoClickerActive = save.autoClickerActive || false;
-        save.upgrades?.forEach((su, i) => {
-          if (upgrades[i]) Object.assign(upgrades[i], su);
+        save.upgrades?.forEach(su => {
+          const u = upgrades.find(x => x.id === su.id);
+          if (u) { u.owned = su.owned; u.cost = su.cost; }
         });
         if (autoClickerActive) startAutoClicker();
       }
@@ -439,7 +455,7 @@
 
     $('prestige').onclick = prestigeReset;
 
-    // === STATIC LEADERBOARD (from leaderboard.json) ===
+    // === STATIC LEADERBOARD ===
     async function fetchLeaderboard(){
       const loading = $('loading'), error = $('error'), board = $('board'), rows = $('rows'), updated = $('updated');
       loading.classList.remove('hidden');
@@ -453,7 +469,6 @@
         const list = data.leaderboard || [];
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // Sort by totalGoons
         const sorted = [...list].sort((a,b) => (b.totalGoons || 0) - (a.totalGoons || 0));
         const padded = Array(100).fill().map((_, i) => sorted[i] || { name: null, totalGoons: 0 });
 
