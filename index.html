@@ -64,12 +64,17 @@
     .stroking-arm.click{animation:strongStroke 0.35s ease-out;}
 
     /* COSMETICS */
-    .armor,.crown,.wings,.aura{display:none;position:absolute;}
+    .armor,.crown,.wings,.aura,.neon-eyes,.diamond-helmet,.cosmic-cape,.god-aura{display:none;position:absolute;}
     .armor{top:180px;left:70px;width:100px;height:120px;}
     .crown{top:30px;left:90px;width:60px;height:60px;}
     .wings{top:160px;left:30px;width:180px;height:140px;}
     .aura{top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;
       background:radial-gradient(circle at center, rgba(255,100,0,0.6), transparent 70%);opacity:0;}
+    .diamond-helmet{top:35px;left:85px;width:70px;height:70px;}
+    .cosmic-cape{top:170px;left:60px;width:120px;height:140px;}
+    .god-aura{top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;
+      background:conic-gradient(from 0deg, #f0f, #0ff, #ff0, #f0f);opacity:0;animation:rainbow 3s linear infinite;}
+    @keyframes rainbow{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 
     /* 2K-STYLE GOON BADGES */
     .badges{display:flex;gap:10px;flex-wrap:wrap;}
@@ -106,6 +111,15 @@
       border-radius:14px;font-weight:800;cursor:pointer;transition:.3s;box-shadow:0 0 30px #fff;font-size:1rem;}
     .prestige-btn:hover{transform:scale(1.08);box-shadow:0 0 60px #fff;}
     .prestige-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+    /* LEADERBOARD */
+    .leaderboard-container{width:100%;max-width:600px;margin:20px 0;background:rgba(255,255,255,.05);border-radius:16px;padding:16px;}
+    .leaderboard-title{font-size:1.3rem;font-weight:800;margin-bottom:12px;text-align:center;color:#0f0;}
+    .leaderboard-list{list-style:none;}
+    .leaderboard-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,.08);border-radius:12px;margin-bottom:8px;}
+    .leaderboard-rank{font-weight:900;color:#fff;font-size:1.1rem;width:30px;}
+    .leaderboard-name{font-weight:600;color:#fff;flex:1;}
+    .leaderboard-score{font-weight:700;color:#0f0;}
 
     /* SPLAT */
     .splat{position:fixed;pointer-events:none;z-index:9999;opacity:0;
@@ -158,7 +172,7 @@
       </div>
       <div class="sidebar-title">GOONING</div>
       <div class="nav-btn active" data-panel="clicker">GOON CLICKER</div>
-      <div class="nav-btn" data-panel="home">Leaderboard</div>
+      <div class="nav-btn" data-panel="leaderboard">LEADERBOARD</div>
       <div class="nav-btn" data-panel="promo">Vault 13</div>
       <div class="nav-btn" data-panel="credits">Credits</div>
       <div class="socials">
@@ -180,6 +194,12 @@
           <div id="goon-container">
             <div id="goon-dude-container" onclick="clickGoon(event)">
               <svg id="goon-dude" viewBox="0 0 240 300" xmlns="http://www.w3.org/2000/svg">
+                <!-- GOD AURA -->
+                <rect class="god-aura" width="240" height="300" fill="url(#rainbowGrad)"/>
+
+                <!-- COSMIC CAPE -->
+                <path class="cosmic-cape" d="M60 170 Q120 290 180 170 L180 300 Q120 280 60 300 Z" fill="#5e35b1" opacity="0.8"/>
+
                 <!-- AURA -->
                 <ellipse class="aura" cx="120" cy="150" rx="100" ry="140" fill="url(#fireGrad)"/>
 
@@ -187,6 +207,12 @@
                 <g class="wings">
                   <path d="M30 160 Q10 140 20 120 Q30 100 50 120 Q60 140 50 160" fill="#fff" opacity="0.8"/>
                   <path d="M210 160 Q230 140 220 120 Q210 100 190 120 Q180 140 190 160" fill="#fff" opacity="0.8"/>
+                </g>
+
+                <!-- DIAMOND HELMET -->
+                <g class="diamond-helmet">
+                  <path d="M85 50 L120 35 L155 50 L155 70 L85 70 Z" fill="#b9f2ff" stroke="#fff" stroke-width="2"/>
+                  <circle cx="120" cy="55" r="8" fill="#fff"/>
                 </g>
 
                 <!-- Body -->
@@ -240,6 +266,17 @@
           <button class="prestige-btn" id="prestige">PRESTIGE</button>
         </div>
       </div>
+
+      <!-- LEADERBOARD PANEL -->
+      <div id="leaderboard" class="panel">
+        <h1>GOON LEADERBOARD</h1>
+        <div class="leaderboard-container">
+          <div class="leaderboard-title">Top 10 Gooners</div>
+          <ul class="leaderboard-list" id="leaderboard-list">
+            <li class="leaderboard-item"><div class="leaderboard-name">Loading...</div></li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -267,7 +304,7 @@
       setTimeout(() => {
         loader.classList.add('hidden');
         $('app').classList.remove('hidden');
-        initClicker();
+        initGame();
       }, 600);
     }
 
@@ -290,7 +327,7 @@
       });
     });
 
-    // === GOON CLICKER ===
+    // === GAME ===
     let points = 0, gps = 0, clickPower = 1, prestige = 1, totalGoons = 0, currentGoons = 0;
     let prestigeLevel = 0;
     const arm = document.querySelector('.stroking-arm');
@@ -302,10 +339,14 @@
     ];
 
     const cosmetics = [
-      {req:600000, elem:'.armor', name:"GOON ARMOR"},
-      {req:5000000, elem:'.crown', name:"GOLDEN CROWN"},
-      {req:10000000, elem:'.wings', name:"ANGEL WINGS"},
-      {req:50000000, elem:'.aura', name:"FIRE AURA", effect:() => $('.aura').style.animation = 'pulseAura 2s infinite'}
+      {req:600000, type:'goons', elem:'.armor', name:"GOON ARMOR", unlocked:false},
+      {req:5000000, type:'goons', elem:'.crown', name:"GOLDEN CROWN", unlocked:false},
+      {req:10000000, type:'goons', elem:'.wings', name:"ANGEL WINGS", unlocked:false},
+      {req:50000000, type:'goons', elem:'.aura', name:"FIRE AURA", effect:() => $('.aura').style.animation = 'pulseAura 2s infinite', unlocked:false},
+      {req:5, type:'prestige', elem:'.neon-eyes .goon-eye circle', name:"NEON GLOW EYES", effect:() => document.querySelectorAll('.goon-eye circle').forEach(c=>c.style.fill='#0ff'), unlocked:false},
+      {req:10, type:'prestige', elem:'.diamond-helmet', name:"DIAMOND HELMET", unlocked:false},
+      {req:20, type:'prestige', elem:'.cosmic-cape', name:"COSMIC CAPE", unlocked:false},
+      {req:54, type:'prestige', elem:'.god-aura', name:"GOD AURA", effect:() => $('.god-aura').style.opacity = '0.6', unlocked:false}
     ];
 
     const upgrades = [
@@ -329,20 +370,41 @@
       {id:'paradise',name:"UZI'S GOON PARADISE",baseCost:2e18,cost:2e18,effect:5e7,owned:0,type:'paradise',max:1}
     ];
 
-    function initClicker(){
+    function initGame(){
       loadGame();
       renderUpgrades();
       renderBadges();
       updateCosmetics();
       updateDisplay();
       updatePrestigeTarget();
+      fetchLeaderboard();
+      setInterval(fetchLeaderboard, 60000);
       setInterval(autoEarn, 100);
       setInterval(saveGame, 5000);
       setInterval(updateGoonstegieBar, 100);
     }
 
+    // === LEADERBOARD (FIXED) ===
+    async function fetchLeaderboard(){
+      try {
+        const res = await fetch('https://api.allorigins.ml/get?url=' + encodeURIComponent('https://goon-leaderboard.glitch.me/top10'));
+        const data = await res.json();
+        const players = JSON.parse(data.contents);
+        const list = $('leaderboard-list');
+        list.innerHTML = players.map((p, i) => `
+          <li class="leaderboard-item">
+            <div class="leaderboard-rank">${i+1}</div>
+            <div class="leaderboard-name">${p.name}</div>
+            <div class="leaderboard-score">${formatNumber(p.goons)}</div>
+          </li>
+        `).join('');
+      } catch(e) {
+        $('leaderboard-list').innerHTML = `<li class="leaderboard-item"><div class="leaderboard-name">Failed to load...</div></li>`;
+      }
+    }
+
     function getPrestigeTarget() {
-      return 100000 + (prestigeLevel * 200000); // 300K, 500K, 700K...
+      return 100000 + (prestigeLevel * 200000);
     }
 
     function gainGoons(amount) {
@@ -420,6 +482,7 @@
       renderUpgrades();
       updateDisplay();
       updatePrestigeTarget();
+      updateCosmetics();
       showAchievement(`PRESTIGE #${prestigeLevel} UNLOCKED! x${prestige}`);
     }
 
@@ -481,7 +544,8 @@
 
     function updateCosmetics(){
       cosmetics.forEach(c => {
-        if (totalGoons >= c.req && !c.unlocked) {
+        const met = (c.type === 'goons' && totalGoons >= c.req) || (c.type === 'prestige' && prestigeLevel >= c.req);
+        if (met && !c.unlocked) {
           c.unlocked = true;
           document.querySelectorAll(c.elem).forEach(el => el.style.display = 'block');
           if (c.effect) c.effect();
@@ -504,7 +568,6 @@
 
     function showAchievement(text){
       const a = document.createElement('div');
-      a.className = 'achievement';
       a.textContent = text;
       a.style.cssText = 'position:fixed;top:16px;right:16px;background:#fff;color:#000;padding:12px 20px;border-radius:12px;font-weight:800;box-shadow:0 0 30px #fff;z-index:1000;opacity:0;';
       document.body.appendChild(a);
@@ -517,7 +580,7 @@
         points, gps, clickPower, prestige, prestigeLevel, totalGoons, currentGoons, 
         upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost})), 
         badges: badges.map(b=>({name:b.name,unlocked:b.unlocked})),
-        cosmetics: cosmetics.map(c=>({req:c.req,unlocked:c.unlocked}))
+        cosmetics: cosmetics.map(c=>({req:c.req,type:c.type,unlocked:c.unlocked}))
       };
       localStorage.setItem('goonSave', JSON.stringify(save));
     }
@@ -541,7 +604,7 @@
           if (b) b.unlocked = sb.unlocked;
         });
         save.cosmetics?.forEach(sc => {
-          const c = cosmetics.find(x => x.req === sc.req);
+          const c = cosmetics.find(x => x.req === sc.req && x.type === sc.type);
           if (c) c.unlocked = sc.unlocked;
         });
         updateCosmetics();
