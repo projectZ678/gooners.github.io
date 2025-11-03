@@ -121,6 +121,19 @@
     @keyframes glow{from{text-shadow:0 0 18px #fff;}to{text-shadow:0 0 55px #fff,0 0 110px #fff;}}
     .hidden{display:none!important;}
     @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-7px);}75%{transform:translateX(7px);}}
+
+    /* GAMEMODES PANEL */
+    .gamemodes-panel{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px;}
+    .gamemode-card{background:rgba(255,255,255,.07);border:1px solid var(--glass-border);border-radius:12px;
+      padding:12px;width:100%;max-width:300px;text-align:center;transition:.22s;cursor:pointer;}
+    .gamemode-card:hover{background:rgba(255,255,255,.14);transform:translateY(-2px);}
+    .gamemode-card.locked{opacity:0.5;pointer-events:none;}
+    .gamemode-card.unlocked{box-shadow:0 0 20px rgba(255,255,255,.3);}
+    .gamemode-title{font-weight:700;font-size:1rem;color:var(--accent);margin-bottom:4px;}
+    .gamemode-desc{font-size:0.75rem;color:#ccc;margin-bottom:8px;}
+    .gamemode-reward{font-size:0.7rem;color:#0f0;font-weight:600;}
+    .bot-list{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+    .bot-item{background:rgba(0,0,0,.3);padding:6px;border-radius:6px;font-size:0.72rem;}
   </style>
 </head>
 <body>
@@ -137,74 +150,84 @@
         <img src="https://i.pinimg.com/1200x/65/ce/74/65ce749c9a83c75ee8f49bd698097a09.jpg" alt="PFP">
       </div>
       <div class="sidebar-title">GOONING</div>
-      <div class="nav-btn active">CLICKER</div>
+      <div class="nav-btn active" onclick="switchMode('clicker')">CLICKER</div>
+      <div class="nav-btn" onclick="switchMode('gamemodes')">GAMEMODES</div>
     </div>
     <!-- MAIN -->
     <div id="main">
-      <h1>GOON CLICKER</h1>
-      <div class="clicker-panel">
-        <div id="points">0</div>
-        <div id="gps">0 GPS</div>
-        <div id="current-goons">Current: 0</div>
-        <div id="total-goons">Total: 0</div>
-        <div id="ascension">Ascension: 0</div>
-        <div id="goon-container">
-          <div id="goon-dude-container" onclick="clickGoon(event)">
-            <svg id="goon-dude" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
-              <!-- AURAS -->
-              <rect class="void-emperor" width="200" height="270"/>
-              <rect class="cosmic-nexus" width="200" height="270"/>
-              <rect class="god-aura" width="200" heightEconomy="270"/>
-              <path class="cosmic-cape" d="M50 150 Q100 250 150 150 L150 260 Q100 245 50 260 Z" fill="#5e35b1" opacity="0.85"/>
-              <ellipse class="aura" cx="100" cy="135" rx="85" ry="115"/>
-              <g class="wings">
-                <path d="M25 140 Q5 120 17 100 Q30 80 50 100 Q65 120 50 140" fill="#fff" opacity="0.9"/>
-                <path d="M175 140 Q195 120 183 100 Q170 80 150 100 Q135 120 150 140" fill="#fff" opacity="0.9"/>
-              </g>
-              <g class="diamond-helmet">
-                <path d="M70 45 L100 30 L130 45 L130 60 L70 60 Z" fill="#b9f2ff" stroke="#fff" stroke-width="2.5"/>
-                <circle cx="100" cy="48" r="8" fill="#fff"/>
-              </g>
-              <!-- BODY -->
-              <ellipse cx="100" cy="170" rx="45" ry="72" fill="#ffdbac"/>
-              <ellipse class="armor" cx="100" cy="170" rx="51" ry="80" fill="#333" stroke="#111" stroke-width="4"/>
-              <rect class="armor" x="70" y="150" width="60" height="38" rx="10" fill="#444"/>
-              <circle class="armor" cx="100" cy="170" r="14" fill="#555"/>
-              <g class="goon-head">
-                <circle cx="100" cy="80" r="40" fill="#ffdbac"/>
-                <g class="crown">
-                  <path d="M75 40 L83 33 L91 40 L99 33 L107 40 L115 33 L123 40" stroke="#ffd700" stroke-width="6" fill="none"/>
-                  <rect x="80" y="40" width="40" height="14" fill="#ffd700"/>
+      <!-- CLICKER MODE (DEFAULT) -->
+      <div id="clicker-mode">
+        <h1>GOON CLICKER</h1>
+        <div class="clicker-panel">
+          <div id="points">0</div>
+          <div id="gps">0 GPS</div>
+          <div id="current-goons">Current: 0</div>
+          <div id="total-goons">Total: 0</div>
+          <div id="ascension">Ascension: 0</div>
+          <div id="goon-container">
+            <div id="goon-dude-container" onclick="clickGoon(event)">
+              <svg id="goon-dude" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
+                <!-- AURAS -->
+                <rect class="void-emperor" width="200" height="270"/>
+                <rect class="cosmic-nexus" width="200" height="270"/>
+                <rect class="god-aura" width="200" height="270"/>
+                <path class="cosmic-cape" d="M50 150 Q100 250 150 150 L150 260 Q100 245 50 260 Z" fill="#5e35b1" opacity="0.85"/>
+                <ellipse class="aura" cx="100" cy="135" rx="85" ry="115"/>
+                <g class="wings">
+                  <path d="M25 140 Q5 120 17 100 Q30 80 50 100 Q65 120 50 140" fill="#fff" opacity="0.9"/>
+                  <path d="M175 140 Q195 120 183 100 Q170 80 150 100 Q135 120 150 140" fill="#fff" opacity="0.9"/>
                 </g>
-                <g class="goon-eye">
-                  <circle cx="87" cy="73" r="8" fill="#000"/>
-                  <circle cx="113" cy="73" r="8" fill="#000"/>
+                <g class="diamond-helmet">
+                  <path d="M70 45 L100 30 L130 45 L130 60 L70 60 Z" fill="#b9f2ff" stroke="#fff" stroke-width="2.5"/>
+                  <circle cx="100" cy="48" r="8" fill="#fff"/>
                 </g>
-                <path d="M80 93 Q100 103 120 93" stroke="#000" stroke-width="3.5" fill="none"/>
-                <path d="M65 50 Q100 40 135 50" fill="#8B4513"/>
-              </g>
-              <g class="stroking-arm">
-                <rect x="130" y="130" width="26" height="72" rx="14" fill="#ffdbac"/>
-                <circle cx="143" cy="200" r="17" fill="#ffdbac"/>
-              </g>
-              <rect x="77" y="230" width="26" height="38" rx="13" fill="#ffdbac"/>
-              <rect x="105" y="230" width="26" height="38" rx="13" fill="#ffdbac"/>
-            </svg>
+                <!-- BODY -->
+                <ellipse cx="100" cy="170" rx="45" ry="72" fill="#ffdbac"/>
+                <ellipse class="armor" cx="100" cy="170" rx="51" ry="80" fill="#333" stroke="#111" stroke-width="4"/>
+                <rect class="armor" x="70" y="150" width="60" height="38" rx="10" fill="#444"/>
+                <circle class="armor" cx="100" cy="170" r="14" fill="#555"/>
+                <g class="goon-head">
+                  <circle cx="100" cy="80" r="40" fill="#ffdbac"/>
+                  <g class="crown">
+                    <path d="M75 40 L83 33 L91 40 L99 33 L107 40 L115 33 L123 40" stroke="#ffd700" stroke-width="6" fill="none"/>
+                    <rect x="80" y="40" width="40" height="14" fill="#ffd700"/>
+                  </g>
+                  <g class="goon-eye">
+                    <circle cx="87" cy="73" r="8" fill="#000"/>
+                    <circle cx="113" cy="73" r="8" fill="#000"/>
+                  </g>
+                  <path d="M80 93 Q100 103 120 93" stroke="#000" stroke-width="3.5" fill="none"/>
+                  <path d="M65 50 Q100 40 135 50" fill="#8B4513"/>
+                </g>
+                <g class="stroking-arm">
+                  <rect x="130" y="130" width="26" height="72" rx="14" fill="#ffdbac"/>
+                  <circle cx="143" cy="200" r="17" fill="#ffdbac"/>
+                </g>
+                <rect x="77" y="230" width="26" height="38" rx="13" fill="#ffdbac"/>
+                <rect x="105" y="230" width="26" height="38" rx="13" fill="#ffdbac"/>
+              </svg>
+            </div>
+            <div class="badges" id="badges"></div>
           </div>
-          <div class="badges" id="badges"></div>
-        </div>
-        <!-- GOONSTEGIE BAR -->
-        <div class="goonstegie-container">
-          <div class="goonstegie-bar">
-            <div class="goonstegie-fill" id="goonstegie-fill"></div>
-            <div class="goonstegie-text" id="goonstegie-text">Need 200K</div>
+          <!-- GOONSTEGIE BAR -->
+          <div class="goonstegie-container">
+            <div class="goonstegie-bar">
+              <div class="goonstegie-fill" id="goonstegie-fill"></div>
+              <div class="goonstegie-text" id="goonstegie-text">Need 200K</div>
+            </div>
+          </div>
+          <div class="upgrades-grid" id="upgrades"></div>
+          <div style="display:flex;gap:6px;justify-content:center;">
+            <button class="prestige-btn" id="prestige">PRESTIGE</button>
+            <button class="ascend-btn" id="ascend">ASCEND</button>
           </div>
         </div>
-        <div class="upgrades-grid" id="upgrades"></div>
-        <div style="display:flex;gap:6px;justify-content:center;">
-          <button class="prestige-btn" id="prestige">PRESTIGE</button>
-          <button class="ascend-btn" id="ascend">ASCEND</button>
-        </div>
+      </div>
+
+      <!-- GAMEMODES MODE -->
+      <div id="gamemodes-mode" class="gamemodes-panel hidden">
+        <h1>GAMEMODES</h1>
+        <div class="bot-list" id="gamemodes-list"></div>
       </div>
     </div>
   </div>
@@ -250,6 +273,7 @@
     // === GAME ===
     let points = 0, gps = 0, clickPower = 1, prestige = 1, totalGoons = 0, currentGoons = 0;
     let prestigeLevel = 0, ascension = 0;
+    let currentMode = 'clicker'; // Track current mode
     const arm = document.querySelector('.stroking-arm');
 
     const badges = [
@@ -269,6 +293,50 @@
       {req:54, type:'prestige', elem:'.god-aura', name:"GOD AURA", effect:() => $('.god-aura').style.opacity = '0.6', unlocked:false},
       {req:1, type:'ascension', elem:'.void-emperor', name:"VOID EMPEROR", effect:() => $('.void-emperor').style.opacity = '0.8', unlocked:false},
       {req:2, type:'ascension', elem:'.cosmic-nexus', name:"COSMIC NEXUS", effect:() => $('.cosmic-nexus').style.opacity = '0.7', unlocked:false}
+    ];
+
+    // GAMEMODES DATA
+    const gamemodes = [
+      {
+        id: 'easy-bot',
+        name: 'Easy Goon Bot',
+        desc: 'Beat the newbie gooner in a 1v1 click race!',
+        req: 1000,
+        reward: '+50% Click Power for 1 hour',
+        difficulty: 'Easy',
+        unlocked: false,
+        beaten: false
+      },
+      {
+        id: 'medium-bot',
+        name: 'Medium Goon Bot',
+        desc: 'Challenge the average gooner - faster clicks!',
+        req: 10000,
+        reward: '+100 GPS permanent',
+        difficulty: 'Medium',
+        unlocked: false,
+        beaten: false
+      },
+      {
+        id: 'hard-bot',
+        name: 'Hard Goon Bot',
+        desc: 'Face the pro gooner with upgrades!',
+        req: 50000,
+        reward: 'Unlock Golden Crown Cosmetic',
+        difficulty: 'Hard',
+        unlocked: false,
+        beaten: false
+      },
+      {
+        id: 'expert-bot',
+        name: 'Expert Goon Bot',
+        desc: 'Ultimate 1v1 - beat the legend!',
+        req: 250000,
+        reward: '+1 Prestige Level',
+        difficulty: 'Expert',
+        unlocked: false,
+        beaten: false
+      }
     ];
 
     const upgrades = [
@@ -297,7 +365,7 @@
       {id:'warp',name:'Warp Drive',baseCost:5e21,cost:5e21,effect:5e8,owned:0,type:'gps',max:3, persistent: false},
       {id:'soul',name:'Soul Harvest',baseCost:1e23,cost:1e23,effect:0.3,owned:0,type:'multi',max:8, persistent: false},
       {id:'nexus',name:'Nexus Link',baseCost:1e25,cost:1e25,effect:1.5,owned:0,type:'gpsMulti',max:5, persistent: false},
-      {id:'chrono',name:'Chrono Boost',baseCost:1e27,cost:1e27,effect:2,owned:0,type:'成人Multi',max:4, persistent: false},
+      {id:'chrono',name:'Chrono Boost',baseCost:1e27,cost:1e27,effect:2,owned:0,type:'clickMulti',max:4, persistent: false},
       {id:'divine',name:'Divine Touch',baseCost:1e30,cost:1e30,effect:1e9,owned:0,type:'click',max:2, persistent: false},
       {id:'galaxy',name:'Galaxy Core',baseCost:1e33,cost:1e33,effect:1e10,owned:0,type:'gps',max:2, persistent: false},
       {id:'eternity',name:'Eternity Gate',baseCost:1e36,cost:1e36,effect:10,owned:0,type:'prestige',max:5, persistent: true},
@@ -313,12 +381,24 @@
       updateDisplay();
       updateGoonstegieBar();
       updateAscension();
+      renderGamemodes();
       setInterval(autoEarn, 100);
       setInterval(saveGame, 5000);
       setInterval(updateGoonstegieBar, 100);
     }
 
-    // NEW: +200K per prestige, no cap
+    // NEW: Switch between modes
+    function switchMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      $('clicker-mode').classList.toggle('hidden', mode !== 'clicker');
+      $('gamemodes-mode').classList.toggle('hidden', mode !== 'gamemodes');
+      if (mode === 'gamemodes') {
+        renderGamemodes();
+      }
+    }
+
     function getPrestigeTarget() {
       return 200000 * (prestigeLevel + 1); // 200K, 400K, 600K, ...
     }
@@ -337,7 +417,6 @@
         if (u.type === 'clickMulti') clickPower *= Math.pow(1 + u.effect, u.owned);
         if (u.type === 'gpsMulti') gps *= Math.pow(1 + u.effect, u.owned);
       });
-      // REMOVED CAP: prestige = Math.min(65, prestige);
     }
 
     function gainGoons(amount) {
@@ -347,7 +426,60 @@
       totalGoons += earned;
       updateDisplay();
       checkBadges();
+      checkGamemodesUnlocks();
       updateAllCosmetics();
+      updateGoonstegieBar(); // UPDATE BAR ON EARN
+    }
+
+    // NEW: Check unlocks for gamemodes
+    function checkGamemodesUnlocks() {
+      gamemodes.forEach(gm => {
+        if (totalGoons >= gm.req && !gm.unlocked) {
+          gm.unlocked = true;
+          showAchievement(`${gm.name} UNLOCKED!`);
+        }
+      });
+      renderGamemodes();
+    }
+
+    // NEW: Render gamemodes list
+    function renderGamemodes() {
+      $('gamemodes-list').innerHTML = gamemodes.map(gm => `
+        <div class="gamemode-card ${gm.unlocked ? 'unlocked' : 'locked'}" onclick="${gm.unlocked ? `playGamemode('${gm.id}')` : ''}">
+          <div class="gamemode-title">${gm.name}</div>
+          <div class="gamemode-desc">${gm.desc}</div>
+          <div class="gamemode-reward">Reward: ${gm.reward}</div>
+          <div style="font-size:0.7rem;color:#888;">${gm.difficulty} | ${gm.beaten ? 'Beaten' : gm.unlocked ? 'Ready!' : `Unlock at ${formatNumber(gm.req)} Total Goons`}</div>
+        </div>
+      `).join('');
+    }
+
+    // NEW: Simulate gamemode challenge
+    function playGamemode(id) {
+      const gm = gamemodes.find(g => g.id === id);
+      if (!gm || !gm.unlocked || gm.beaten) return;
+      showAchievement(`Starting 1v1 vs ${gm.name}...`);
+      setTimeout(() => {
+        gm.beaten = true;
+        applyGamemodeReward(gm);
+        showAchievement(`VICTORY! ${gm.reward}`);
+        renderGamemodes();
+        saveGame();
+      }, 3000);
+    }
+
+    // NEW: Apply reward
+    function applyGamemodeReward(gm) {
+      if (gm.reward.includes('Click Power')) clickPower *= 1.5;
+      if (gm.reward.includes('GPS')) gps += 100;
+      if (gm.reward.includes('Golden Crown')) {
+        const crown = cosmetics.find(c => c.name === 'GOLDEN CROWN');
+        if (crown) crown.unlocked = true;
+        document.querySelectorAll('.crown').forEach(el => el.style.display = 'block');
+      }
+      if (gm.reward.includes('Prestige')) prestigeLevel++;
+      recalculateStats();
+      updateDisplay();
     }
 
     function clickGoon(e) {
@@ -389,7 +521,7 @@
       recalculateStats();
       renderUpgrades();
       updateDisplay();
-      updateGoonstegieBar(); // UPDATE BAR AFTER SPENDING
+      updateGoonstegieBar(); // UPDATE BAR ON SPEND
       updateAscension();
       if (u.id === 'paradise') showAchievement("UZI'S GOON PARADISE: +60M GPS!");
     }
@@ -399,7 +531,7 @@
       if (currentGoons < target) return showAchievement(`Need ${formatNumber(target)} Current Goons!`);
       prestigeSplat();
       prestigeLevel++;
-      points = 0; 
+      points = 0;
       currentGoons = 0;
 
       upgrades.forEach(u => {
@@ -439,8 +571,14 @@
       const target = getPrestigeTarget();
       const progress = Math.min(currentGoons / target, 1);
       $('goonstegie-fill').style.width = `${progress * 100}%`;
-      $('goonstegie-text').textContent = currentGoons >= target ? "PRESTIGE READY!" : `Need ${formatNumber(target - currentGoons)}`;
-      $('prestige').disabled = currentGoons < target;
+      if (currentGoons >= target) {
+        $('goonstegie-text').textContent = "PRESTIGE READY!";
+        $('prestige').disabled = false;
+      } else {
+        const stillNeed = target - currentGoons;
+        $('goonstegie-text').textContent = `Need ${formatNumber(stillNeed)} more`;
+        $('prestige').disabled = true;
+      }
       updateAscension();
     }
 
@@ -539,10 +677,11 @@
 
     function saveGame(){
       const save = { 
-        points, prestigeLevel, ascension, totalGoons, currentGoons,
+        points, prestigeLevel, ascension, totalGoons, currentGoons, currentMode,
         upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost, persistent: u.persistent})), 
         badges: badges.map(b=>({name:b.name,unlocked:b.unlocked})),
-        cosmetics: cosmetics.map(c=>({req:c.req,type:c.type,unlocked:c.unlocked}))
+        cosmetics: cosmetics.map(c=>({req:c.req,type:c.type,unlocked:c.unlocked})),
+        gamemodes: gamemodes.map(gm=>({id:gm.id,unlocked:gm.unlocked,beaten:gm.beaten}))
       };
       localStorage.setItem('goonSave', JSON.stringify(save));
     }
@@ -555,6 +694,7 @@
         ascension = save.ascension || 0;
         totalGoons = save.totalGoons || 0;
         currentGoons = save.currentGoons || 0;
+        currentMode = save.currentMode || 'clicker';
         save.upgrades?.forEach(su => {
           const u = upgrades.find(x => x.id === su.id);
           if (u) { 
@@ -570,9 +710,17 @@
           const c = cosmetics.find(x => x.req === sc.req && x.type === sc.type);
           if (c) c.unlocked = sc.unlocked;
         });
+        save.gamemodes?.forEach(sgm => {
+          const gm = gamemodes.find(x => x.id === sgm.id);
+          if (gm) {
+            gm.unlocked = sgm.unlocked;
+            gm.beaten = sgm.beaten;
+          }
+        });
         recalculateStats();
         updateAllCosmetics();
         renderBadges();
+        switchMode(currentMode);
       }
     }
 
