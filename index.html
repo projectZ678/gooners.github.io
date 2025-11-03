@@ -105,15 +105,16 @@
     .badge.hof{background:linear-gradient(45deg,#ff0,#f0f,#0ff);border:2px solid #fff;box-shadow:0 0 18px #fff;}
     /* STATS */
     #points{font-size:2rem;font-weight:800;color:#fff;text-shadow:0 0 18px #fff;margin:1px 0;}
-    #gps,#current-goons,#total-goons,#ascension,#prestige-multi,#next-prestige{font-size:0.85rem;margin:1px 0;}
+    #gps,#cps,#current-goons,#total-goons,#ascension,#prestige-multi,#next-prestige{font-size:0.85rem;margin:1px 0;}
     #total-goons{color:#0f0;font-weight:700;}
     #ascension{color:#f0f;font-weight:700;}
     #prestige-multi{color:#ff0;font-weight:700;}
     #next-prestige{color:#0ff;font-weight:700;}
+    #cps{color:#f80;font-weight:700;}
     /* GOONSTEGIE BAR */
     .goonstegie-container{width:100%;max-width:580px;display:flex;flex-direction:column;gap:3px;}
     .goonstegie-bar{height:14px;background:rgba(255,255,255,.1);border:1px solid var(--glass-border);border-radius:7px;overflow:hidden;position:relative;}
-    .goonstegie-fill{height:100%;background:linear-gradient(90deg,#0f0,#0f8);width:0%;transition:width 0.28s ease;}
+    .goonstegie-fill{height:100%;background:linear-gradient(90deg,#0f0,#0f8);width:0%;transition:width 0.15s ease;}
     .goonstegie-text{position:absolute;top:0;left:0;right:0;text-align:center;line-height:14px;font-weight:700;color:#fff;text-shadow:0 0 5px #000;font-size:0.72rem;}
     /* UPGRADES GRID */
     .upgrades-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;width:100%;max-width:780px;}
@@ -176,6 +177,7 @@
       <div class="clicker-panel">
         <div id="points">0</div>
         <div id="gps">0 GPS</div>
+        <div id="cps">0 CPS</div>
         <div id="current-goons">Current: 0</div>
         <div id="total-goons">Total: 0</div>
         <div id="ascension">Ascension: 0</div>
@@ -214,7 +216,7 @@
               <ellipse class="aura" cx="100" cy="135" rx="85" ry="115"/>
               <g class="wings">
                 <path d="M25 140 Q5 120 17 100 Q30 80 50 100 Q65 120 50 140" fill="#fff" opacity="0.9"/>
-                <path d="M175 140 Q195 120 183 100 Q170 80 150 100 Q135 120 150 140" fill="#fff" opacity:="0.9"/>
+                <path d="M175 140 Q195 120 183 100 Q170 80 150 100 Q135 120 150 140" fill="#fff" opacity="0.9"/>
               </g>
               <g class="diamond-helmet">
                 <path d="M70 45 L100 30 L130 45 L130 60 L70 60 Z" fill="#b9f2ff" stroke="#fff" stroke-width="2.5"/>
@@ -318,6 +320,11 @@
     let ascensionCostMult = 1;
     let prestigeTargetBase = 90000000;
 
+    // CPS Tracking
+    let clicksThisSecond = 0;
+    let lastClickTime = 0;
+    let cps = 0;
+
     const badges = [
       {name:"Bronze",req:2000,icon:"B",color:"#cd7f32",unlocked:false},
       {name:"Gold",req:100000,icon:"G",color:"#ffd700",unlocked:false},
@@ -408,7 +415,8 @@
       updateAscension();
       setInterval(autoEarn, 100);
       setInterval(saveGame, 5000);
-      setInterval(updateGoonstegieBar, 100);
+      setInterval(updateGoonstegieBar, 50); // Fast bar update
+      setInterval(updateCPS, 1000); // CPS every second
     }
 
     function getPrestigeTarget() {
@@ -442,15 +450,28 @@
       updateDisplay();
       checkBadges();
       updateAllCosmetics();
-      updateGoonstegieBar();
+      updateGoonstegieBar(); // Live update
     }
 
     function clickGoon(e) {
+      const now = Date.now();
+      if (now - lastClickTime > 1000) {
+        clicksThisSecond = 0;
+      }
+      clicksThisSecond++;
+      lastClickTime = now;
+
       gainGoons(clickPower);
       createSplat(e.clientX, e.clientY);
       screenShake();
       arm.classList.add('click');
       setTimeout(() => arm.classList.remove('click'), 320);
+    }
+
+    function updateCPS() {
+      cps = clicksThisSecond;
+      clicksThisSecond = 0;
+      $('cps').textContent = `${formatNumber(cps)} CPS`;
     }
 
     function createSplat(x, y) {
