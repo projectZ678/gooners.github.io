@@ -165,7 +165,7 @@
     <!-- SIDEBAR -->
     <div id="sidebar">
       <div id="pfp">
-        <img src="https://i.pinimg.com/1200x/65/ce/74/65ce749c9a83c75ee8f49bd698097a09.jpg" alt="PFP">
+        <img src="https://i.pinimg.com/1200x/65/ce/74/65ce749c9a3c75ee8f49bd698097a09.jpg" alt="PFP">
       </div>
       <div class="sidebar-title">GOONING</div>
       <div class="nav-btn active">CLICKER</div>
@@ -295,7 +295,6 @@
       }, 450);
     }
 
-    // === FIXED LOADER LOGIC ===
     const loader = $('loader');
     loader.addEventListener('click', enterHub);
     loader.addEventListener('keydown', e => {
@@ -305,7 +304,6 @@
       }
     });
 
-    // Ensure focus on load
     const focusLoader = () => loader.focus();
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', focusLoader);
@@ -319,6 +317,10 @@
     let totalGoons = 0, currentGoons = 0;
     let prestigeMultiplier = 1;
     const arm = document.querySelector('.stroking-arm');
+
+    // Cost multipliers
+    let prestigeCostMult = 1;
+    let ascensionCostMult = 1;
 
     const badges = [
       {name:"Bronze",req:2000,icon:"B",color:"#cd7f32",unlocked:false},
@@ -365,7 +367,7 @@
       {id:'double',name:'Double Click',baseCost:200,cost:200,effect:10,owned:0,type:'click',max:150, persistent:false},
       {id:'neon',name:'Neon Boost',baseCost:1000,cost:1000,effect:100,owned:0,type:'gps',max:100, persistent:false},
       {id:'vault',name:'Vault Pass',baseCost:5000,cost:5000,effect:0.5,owned:0,type:'prestige',max:10, persistent:true},
-      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:325,owned:0,type:'click',max:80, persistent:false},
+      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:600,owned:0,type:'click',max:80, persistent:false}, // ← +600
       {id:'hyper',name:'Hyper GPS',baseCost:100000,cost:100000,effect:1000,owned:0,type:'gps',max:60, persistent:false},
       {id:'god',name:'God Mode',baseCost:500000,cost:500000,effect:0.2,owned:0,type:'multi',max:25, persistent:false},
       {id:'quantum',name:'Quantum Edge',baseCost:1e6,cost:1e6,effect:0.5,owned:0,type:'clickMulti',max:30, persistent:false},
@@ -484,7 +486,7 @@
       points -= cost;
       currentGoons -= cost;
       u.owned++;
-      u.cost = u.baseCost * Math.pow(1.6, u.owned);
+      u.cost = u.baseCost * Math.pow(1.6, u.owned) * prestigeCostMult * ascensionCostMult;
 
       recalculateStats();
       renderUpgrades();
@@ -505,10 +507,13 @@
       points = 0;
       currentGoons = 0;
 
+      // Apply ×10 cost multiplier
+      prestigeCostMult *= 10;
+
       upgrades.forEach(u => {
         if (!u.persistent) {
           u.owned = 0;
-          u.cost = u.baseCost;
+          u.cost = u.baseCost * prestigeCostMult * ascensionCostMult;
         }
       });
 
@@ -527,7 +532,16 @@
       ascension++;
       prestigeLevel = 0;
       points = 0; gps = 0; clickPower = 1; currentGoons = 0; totalGoons = 0;
-      upgrades.forEach(u => { u.owned = 0; u.cost = u.baseCost; });
+
+      // Apply ×20 cost multiplier
+      ascensionCostMult *= 20;
+      prestigeCostMult = 1; // Reset prestige cost mult on ascend
+
+      upgrades.forEach(u => { 
+        u.owned = 0; 
+        u.cost = u.baseCost * ascensionCostMult;
+      });
+
       recalculateStats();
       renderUpgrades();
       updateDisplay();
@@ -650,6 +664,7 @@
     function saveGame(){
       const save = {
         points, prestigeLevel, ascension, totalGoons, currentGoons,
+        prestigeCostMult, ascensionCostMult,
         upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost, persistent:u.persistent})),
         badges: badges.map(b=>({name:b.name,unlocked:b.unlocked})),
         cosmetics: cosmetics.map(c=>({req:c.req,type:c.type,unlocked:c.unlocked}))
@@ -665,6 +680,9 @@
         ascension = save.ascension || 0;
         totalGoons = save.totalGoons || 0;
         currentGoons = save.currentGoons || 0;
+        prestigeCostMult = save.prestigeCostMult || 1;
+        ascensionCostMult = save.ascensionCostMult || 1;
+
         save.upgrades?.forEach(su => {
           const u = upgrades.find(x => x.id === su.id);
           if (u) { u.owned = su.owned || 0; u.cost = su.cost || u.baseCost; }
