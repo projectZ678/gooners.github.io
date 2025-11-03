@@ -86,9 +86,11 @@
     .badge.gold{background:#ffd700;border:2px solid #d4af37;box-shadow:0 0 20px #ff0;}
     .badge.hof{background:linear-gradient(45deg,#ff0,#f0f,#0ff);border:2px solid #fff;box-shadow:0 0 25px #fff;}
 
+    /* STATS */
     #points{font-size:2.6rem;font-weight:800;color:#fff;text-shadow:0 0 25px #fff;margin:4px 0;}
     #gps{font-size:1.1rem;color:#aaa;}
     #current-goons{font-size:1rem;color:#ccc;}
+    #total-goons{font-size:1rem;color:#0f0;font-weight:700;} /* NEW: TOTAL GOONS */
 
     /* GOONSTEGIE BAR */
     .goonstegie-container{width:100%;max-width:700px;display:flex;flex-direction:column;gap:6px;}
@@ -189,6 +191,7 @@
           <div id="points">0</div>
           <div id="gps">0 GPS</div>
           <div id="current-goons">Current: 0</div>
+          <div id="total-goons">Total: 0</div> <!-- NEW: TOTAL GOONS -->
 
           <!-- GOON + COSMETICS + BADGES -->
           <div id="goon-container">
@@ -558,6 +561,7 @@
       $('points').textContent = formatNumber(Math.floor(points));
       $('gps').textContent = `${formatNumber(gps)} GPS`;
       $('current-goons').textContent = `Current: ${formatNumber(Math.floor(currentGoons))}`;
+      $('total-goons').textContent = `Total: ${formatNumber(Math.floor(totalGoons))}`; // NEW
       $('prestige').textContent = `PRESTIGE #${prestigeLevel + 1}`;
     }
 
