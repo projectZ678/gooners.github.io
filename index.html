@@ -50,7 +50,10 @@
     .stroking-arm.click{animation:strongStroke 0.32s ease-out;}
     @keyframes strongStroke{0%{transform:rotate(0deg);}50%{transform:rotate(-72deg);}100%{transform:rotate(0deg);}}
     /* COSMETICS */
-    .armor,.crown,.wings,.aura,.diamond-helmet,.cosmic-cape,.god-aura,.void-emperor,.cosmic-nexus{display:none;position:absolute;}
+    .armor,.crown,.wings,.aura,.diamond-helmet,.cosmic-cape,.god-aura,.void-emperor,.cosmic-nexus,
+    .plasma-wings,.neon-cape,.inferno-aura,.void-crown,.galaxy-helmet,.eternal-flame,.starfall,.thunder-aura,
+    .blood-cape,.demon-wings,.angelic-halo,.divine-light,.phoenix,.dragon,.titan-armor,.celestial-crown,
+    .nebula-wings,.void-wings,.infinity-aura,.oblivion,.final-form{display:none;position:absolute;}
     .armor{top:155px;left:52px;width:96px;height:110px;}
     .crown{top:32px;left:72px;width:56px;height:56px;}
     .wings{top:140px;left:22px;width:156px;height:126px;}
@@ -66,6 +69,27 @@
     .cosmic-nexus{top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;
       background:conic-gradient(from 0deg at 50% 50%, #00f, #0ff, #0f0, #ff0, #f0f, #00f);
       opacity:0;animation:galaxy 6s linear infinite;filter:blur(12px);}
+    .plasma-wings{top:140px;left:22px;width:156px;height:126px;opacity:0;}
+    .neon-cape{top:150px;left:50px;width:100px;height:110px;opacity:0;}
+    .inferno-aura{top:0;left:0;width:100%;height:100%;background:radial-gradient(circle, #f00, transparent 70%);opacity:0;animation:pulseAura 1.5s infinite;}
+    .void-crown{top:32px;left:72px;width:56px;height:56px;opacity:0;}
+    .galaxy-helmet{top:30px;left:70px;width:60px;height:60px;opacity:0;}
+    .eternal-flame{top:50px;left:70px;width:60px;height:60px;opacity:0;}
+    .starfall{top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;opacity:0;}
+    .thunder-aura{top:0;left:0;width:100%;height:100%;background:conic-gradient(#00f,#0ff);opacity:0;animation:rainbow 2s infinite;}
+    .blood-cape{top:150px;left:50px;width:100px;height:110px;opacity:0;}
+    .demon-wings{top:140px;left:22px;width:156px;height:126px;opacity:0;}
+    .angelic-halo{top:20px;left:70px;width:60px;height:30px;opacity:0;}
+    .divine-light{top:0;left:0;width:100%;height:100%;background:radial-gradient(circle, #fff, transparent);opacity:0;animation:pulseAura 3s infinite;}
+    .phoenix{top:100px;left:50px;width:100px;height:100px;opacity:0;}
+    .dragon{top:140px;left:22px;width:156px;height:126px;opacity:0;}
+    .titan-armor{top:155px;left:52px;width:96px;height:110px;opacity:0;}
+    .celestial-crown{top:32px;left:72px;width:56px;height:56px;opacity:0;}
+    .nebula-wings{top:140px;left:22px;width:156px;height:126px;opacity:0;}
+    .void-wings{top:140px;left:22px;width:156px;height:126px;opacity:0;}
+    .infinity-aura{top:0;left:0;width:100%;height:100%;background:conic-gradient(#fff,#000);opacity:0;animation:rainbow 4s infinite;}
+    .oblivion{top:0;left:0;width:100%;height:100%;background:#000;opacity:0;animation:pulseAura 5s infinite;}
+    .final-form{top:0;left:0;width:100%;height:100%;background:linear-gradient(45deg,#f0f,#0ff,#ff0);opacity:0;animation:rainbow 2s infinite;filter:blur(20px);}
     @keyframes rainbow{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
     @keyframes pulseAura{0%,100%{opacity:0.6;}50%{opacity:0.9;}}
     @keyframes voidPulse{0%,100%{transform:scale(1);opacity:0.7;}50%{transform:scale(1.4);opacity:0.3;}}
@@ -81,10 +105,11 @@
     .badge.hof{background:linear-gradient(45deg,#ff0,#f0f,#0ff);border:2px solid #fff;box-shadow:0 0 18px #fff;}
     /* STATS */
     #points{font-size:2rem;font-weight:800;color:#fff;text-shadow:0 0 18px #fff;margin:1px 0;}
-    #gps,#current-goons,#total-goons,#ascension,#prestige-multi{font-size:0.85rem;margin:1px 0;}
+    #gps,#current-goons,#total-goons,#ascension,#prestige-multi,#next-prestige{font-size:0.85rem;margin:1px 0;}
     #total-goons{color:#0f0;font-weight:700;}
     #ascension{color:#f0f;font-weight:700;}
     #prestige-multi{color:#ff0;font-weight:700;}
+    #next-prestige{color:#0ff;font-weight:700;}
     /* GOONSTEGIE BAR */
     .goonstegie-container{width:100%;max-width:580px;display:flex;flex-direction:column;gap:3px;}
     .goonstegie-bar{height:14px;background:rgba(255,255,255,.1);border:1px solid var(--glass-border);border-radius:7px;overflow:hidden;position:relative;}
@@ -149,11 +174,33 @@
         <div id="total-goons">Total: 0</div>
         <div id="ascension">Ascension: 0</div>
         <div id="prestige-multi">×1 Multiplier</div>
+        <div id="next-prestige">Next: 200K</div>
 
         <div id="goon-container">
           <div id="goon-dude-container" onclick="clickGoon(event)">
             <svg id="goon-dude" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
-              <!-- AURAS -->
+              <!-- AURAS & COSMETICS -->
+              <rect class="final-form" width="200" height="270"/>
+              <rect class="oblivion" width="200" height="270"/>
+              <rect class="infinity-aura" width="200" height="270"/>
+              <rect class="void-wings" width="200" height="270"/>
+              <rect class="nebula-wings" width="200" height="270"/>
+              <rect class="celestial-crown" width="200" height="270"/>
+              <rect{p class="titan-armor" width="200" height="270"/>
+              <rect class="dragon" width="200" height="270"/>
+              <rect class="phoenix" width="200" height="270"/>
+              <rect class="divine-light" width="200" height="270"/>
+              <rect class="angelic-halo" width="200" height="270"/>
+              <rect class="demon-wings" width="200" height="270"/>
+              <rect class="blood-cape" width="200" height="270"/>
+              <rect class="thunder-aura" width="200" height="270"/>
+              <rect class="starfall" width="200" height="270"/>
+              <rect class="eternal-flame" width="200" height="270"/>
+              <rect class="galaxy-helmet" width="200" height="270"/>
+              <rect class="void-crown" width="200" height="270"/>
+              <rect class="inferno-aura" width="200" height="270"/>
+              <rect class="neon-cape" width="200" height="270"/>
+              <rect class="plasma-wings" width="200" height="270"/>
               <rect class="void-emperor" width="200" height="270"/>
               <rect class="cosmic-nexus" width="200" height="270"/>
               <rect class="god-aura" width="200" height="270"/>
@@ -254,7 +301,7 @@
     // === GAME STATE ===
     let points = 0, gps = 0, clickPower = 1, prestigeLevel = 0, ascension = 0;
     let totalGoons = 0, currentGoons = 0;
-    let prestigeMultiplier = 1; // NEW: ×2 per prestige
+    let prestigeMultiplier = 1;
     const arm = document.querySelector('.stroking-arm');
 
     const badges = [
@@ -268,6 +315,27 @@
       {req:5000000, type:'goons', elem:'.crown', name:"GOLDEN CROWN", unlocked:false},
       {req:10000000, type:'goons', elem:'.wings', name:"ANGEL WINGS", unlocked:false},
       {req:50000000, type:'goons', elem:'.aura', name:"FIRE AURA", effect:() => $('.aura').style.opacity = '0.7', unlocked:false},
+      {req:1e8, type:'goons', elem:'.plasma-wings', name:"PLASMA WINGS", effect:() => $('.plasma-wings').style.opacity = '0.8', unlocked:false},
+      {req:5e8, type:'goons', elem:'.neon-cape', name:"NEON CAPE", effect:() => $('.neon-cape').style.opacity = '0.9', unlocked:false},
+      {req:1e9, type:'goons', elem:'.inferno-aura', name:"INFERNO AURA", effect:() => $('.inferno-aura').style.opacity = '0.7', unlocked:false},
+      {req:2e9, type:'goons', elem:'.void-crown', name:"VOID CROWN", effect:() => $('.void-crown').style.opacity = '1', unlocked:false},
+      {req:5e9, type:'goons', elem:'.galaxy-helmet', name:"GALAXY HELMET", effect:() => $('.galaxy-helmet').style.opacity = '1', unlocked:false},
+      {req:1e10, type:'goons', elem:'.eternal-flame', name:"ETERNAL FLAME", effect:() => $('.eternal-flame').style.opacity = '0.8', unlocked:false},
+      {req:2e10, type:'goons', elem:'.starfall', name:"STARFALL", effect:() => $('.starfall').style.opacity = '0.6', unlocked:false},
+      {req:5e10, type:'goons', elem:'.thunder-aura', name:"THUNDER AURA", effect:() => $('.thunder-aura').style.opacity = '0.7', unlocked:false},
+      {req:1e11, type:'goons', elem:'.blood-cape', name:"BLOOD CAPE", effect:() => $('.blood-cape').style.opacity = '0.9', unlocked:false},
+      {req:2e11, type:'goons', elem:'.demon-wings', name:"DEMON WINGS", effect:() => $('.demon-wings').style.opacity = '0.8', unlocked:false},
+      {req:5e11, type:'goons', elem:'.angelic-halo', name:"ANGELIC HALO", effect:() => $('.angelic-halo').style.opacity = '1', unlocked:false},
+      {req:1e12, type:'goons', elem:'.divine-light', name:"DIVINE LIGHT", effect:() => $('.divine-light').style.opacity = '0.7', unlocked:false},
+      {req:2e12, type:'goons', elem:'.phoenix', name:"PHOENIX", effect:() => $('.phoenix').style.opacity = '0.9', unlocked:false},
+      {req:5e12, type:'goons', elem:'.dragon', name:"DRAGON", effect:() => $('.dragon').style.opacity = '0.8', unlocked:false},
+      {req:1e13, type:'goons', elem:'.titan-armor', name:"TITAN ARMOR", effect:() => $('.titan-armor').style.opacity = '1', unlocked:false},
+      {req:2e13, type:'goons', elem:'.celestial-crown', name:"CELESTIAL CROWN", effect:() => $('.celestial-crown').style.opacity = '1', unlocked:false},
+      {req:5e13, type:'goons', elem:'.nebula-wings', name:"NEBULA WINGS", effect:() => $('.nebula-wings').style.opacity = '0.8', unlocked:false},
+      {req:1e14, type:'goons', elem:'.void-wings', name:"VOID WINGS", effect:() => $('.void-wings').style.opacity = '0.7', unlocked:false},
+      {req:2e14, type:'goons', elem:'.infinity-aura', name:"INFINITY AURA", effect:() => $('.infinity-aura').style.opacity = '0.7', unlocked:false},
+      {req:5e14, type:'goons', elem:'.oblivion', name:"OBLIVION", effect:() => $('.oblivion').style.opacity = '0.6', unlocked:false},
+      {req:1e15, type:'goons', elem:'.final-form', name:"FINAL FORM", effect:() => $('.final-form').style.opacity = '0.5', unlocked:false},
       {req:5, type:'prestige', elem:'.goon-eye circle', name:"NEON EYES", effect:() => document.querySelectorAll('.goon-eye circle').forEach(c=>c.style.fill='#0ff'), unlocked:false},
       {req:10, type:'prestige', elem:'.diamond-helmet', name:"DIAMOND HELMET", unlocked:false},
       {req:20, type:'prestige', elem:'.cosmic-cape', name:"COSMIC CAPE", unlocked:false},
@@ -281,11 +349,11 @@
       {id:'double',name:'Double Click',baseCost:200,cost:200,effect:10,owned:0,type:'click',max:150, persistent:false},
       {id:'neon',name:'Neon Boost',baseCost:1000,cost:1000,effect:100,owned:0,type:'gps',max:100, persistent:false},
       {id:'vault',name:'Vault Pass',baseCost:5000,cost:5000,effect:0.5,owned:0,type:'prestige',max:10, persistent:true},
-      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:120,owned:0,type:'click',max:80, persistent:false},
+      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:325,owned:0,type:'click',max:80, persistent:false}, // +325
       {id:'hyper',name:'Hyper GPS',baseCost:100000,cost:100000,effect:1000,owned:0,type:'gps',max:60, persistent:false},
       {id:'god',name:'God Mode',baseCost:500000,cost:500000,effect:0.2,owned:0,type:'multi',max:25, persistent:false},
       {id:'quantum',name:'Quantum Edge',baseCost:1e6,cost:1e6,effect:0.5,owned:0,type:'clickMulti',max:30, persistent:false},
-      {id:'void',name:'Void Engine',baseCost:5e6,cost:5e6,effect:5000,owned:0,type:'gps',max:40, persistent:false},
+      {id:'void',name:'Void Engine',baseCost:5e6,c 5e6,effect:5000,owned:0,type:'gps',max:40, persistent:false},
       {id:'pulse',name:'Goon Pulse',baseCost:2e7,cost:2e7,effect:2,owned:0,type:'gpsMulti',max:20, persistent:false},
       {id:'dark',name:'Dark Matter',baseCost:1e8,cost:1e8,effect:10000,owned:0,type:'click',max:25, persistent:false},
       {id:'singularity',name:'Singularity',baseCost:5e8,cost:5e8,effect:10,owned:0,type:'multi',max:15, persistent:false},
@@ -306,7 +374,14 @@
       {id:'divine',name:'Divine Touch',baseCost:1e30,cost:1e30,effect:1e9,owned:0,type:'click',max:2, persistent:false},
       {id:'galaxy',name:'Galaxy Core',baseCost:1e33,cost:1e33,effect:1e10,owned:0,type:'gps',max:2, persistent:false},
       {id:'eternity',name:'Eternity Gate',baseCost:1e36,cost:1e36,effect:10,owned:0,type:'prestige',max:5, persistent:true},
-      {id:'voidlord',name:'Void Lord',baseCost:1e40,cost:1e40,effect:100,owned:0,type:'multi',max:3, persistent:false}
+      {id:'voidlord',name:'Void Lord',baseCost:1e40,cost:1e40,effect:100,owned:0,type:'multi',max:3, persistent:false},
+      // === NEW EPIC UPGRADES ===
+      {id:'phoenix',name:'Phoenix Rebirth',baseCost:1e45,cost:1e45,effect:1e12,owned:0,type:'gps',max:1, persistent:true},
+      {id:'dragon',name:'Dragon Fury',baseCost:1e50,cost:1e50,effect:1e13,owned:0,type:'click',max:1, persistent:true},
+      {id:'titan',name:'Titan Strength',baseCost:1e55,cost:1e55,effect:500,owned:0,type:'multi',max:2, persistent:true},
+      {id:'celestial',name:'Celestial Power',baseCost:1e60,cost:1e60,effect:1000,owned:0,type:'gpsMulti',max:3, persistent:true},
+      {id:'oblivion',name:'Oblivion Gate',baseCost:1e70,cost:1e70,effect:1e15,owned:0,type:'click',max:1, persistent:true},
+      {id:'final',name:'FINAL FORM',baseCost:1e80,cost:1e80,effect:1e18,owned:0,type:'multi',max:1, persistent:true}
     ];
 
     function initGame(){
@@ -324,7 +399,7 @@
     }
 
     function getPrestigeTarget() {
-      return 200000 * (prestigeLevel + 1);
+      return 200000 + (40000000 * prestigeLevel); // +40M per level
     }
 
     function getAscensionTarget() {
@@ -333,7 +408,7 @@
 
     function recalculateStats(){
       gps = 0; clickPower = 1;
-      prestigeMultiplier = Math.pow(2, prestigeLevel); // NEW: ×2 per prestige
+      prestigeMultiplier = Math.pow(2, prestigeLevel);
 
       upgrades.forEach(u => {
         if (u.type === 'gps') gps += u.effect * u.owned;
@@ -343,7 +418,6 @@
         if (u.type === 'gpsMulti') gps *= Math.pow(1 + u.effect, u.owned);
       });
 
-      // Apply prestige multiplier
       clickPower *= prestigeMultiplier;
       gps *= prestigeMultiplier;
     }
@@ -356,7 +430,7 @@
       updateDisplay();
       checkBadges();
       updateAllCosmetics();
-      updateGoonstegieBar(); // Update bar on gain
+      updateGoonstegieBar();
     }
 
     function clickGoon(e) {
@@ -393,17 +467,18 @@
 
       const cost = u.cost;
       points -= cost;
-      currentGoons -= cost; // BAR GOES DOWN
+      currentGoons -= cost;
       u.owned++;
       u.cost = u.baseCost * Math.pow(1.6, u.owned);
 
       recalculateStats();
       renderUpgrades();
       updateDisplay();
-      updateGoonstegieBar(); // BAR UPDATES AFTER SPENDING
+      updateGoonstegieBar();
       updateAscension();
 
       if (u.id === 'paradise') showAchievement("UZI'S GOON PARADISE: +60M GPS!");
+      if (u.id === 'final') showAchievement("FINAL FORM UNLOCKED!");
     }
 
     function prestigeReset(){
@@ -450,6 +525,7 @@
       const target = getPrestigeTarget();
       const progress = Math.min(currentGoons / target, 1);
       $('goonstegie-fill').style.width = `${progress * 100}%`;
+      $('next-prestige').textContent = `Next: ${formatNumber(target)}`;
       if (currentGoons >= target) {
         $('goonstegie-text').textContent = "PRESTIGE READY!";
         $('prestige').disabled = false;
@@ -479,11 +555,12 @@
 
     function renderUpgrades(){
       $('upgrades').innerHTML = upgrades.map(u => `
-        <div class="upgrade ${u.owned >= u.max ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')" style="${u.id==='paradise'?'border:3px solid gold;':''}">
-          <div class="upgrade-name" style="${u.id==='paradise'?'color:gold;':''}">${u.name}</div>
+        <div class="upgrade ${u.owned >= u.max ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')" style="${u.id==='paradise'?'border:3px solid gold;':u.id==='final'?'border:4px solid #f0f;':''}">
+          <div class="upgrade-name" style="${u.id==='paradise'?'color:gold;':u.id==='final'?'color:#f0f;':''}">${u.name}</div>
           <div class="upgrade-cost">Cost: ${formatNumber(u.cost)}</div>
           <div class="upgrade-effect">
             ${u.type === 'paradise' ? `+60M GPS` :
+             u.type === 'final' ? `×1e18 ALL` :
              u.type === 'gps' ? `+${formatNumber(u.effect)} GPS` :
              u.type === 'click' ? `+${formatNumber(u.effect)} Click` :
              u.type === 'prestige' ? `+${u.effect} Prestige` :
