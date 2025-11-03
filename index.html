@@ -54,7 +54,7 @@
     #goon-dude{width:100%;height:100%;filter:drop-shadow(0 0 30px #fff);transition:.15s;}
     #goon-dude:active{transform:scale(0.94);}
 
-    /* GOONING DUDE ANIMATIONS */
+    /* ANIMATIONS */
     .goon-head{animation:headBob 3s ease-in-out infinite;}
     @keyframes headBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
     .goon-eye{animation:eyeTwitch 4s infinite;}
@@ -62,21 +62,31 @@
     .stroking-arm{transform-origin:62% 38%;animation:idleStroke 1.8s ease-in-out infinite;}
     @keyframes idleStroke{0%,100%{transform:rotate(0deg);}50%{transform:rotate(-18deg);}}
     .stroking-arm.click{animation:strongStroke 0.35s ease-out;}
+    @keyframes strongStroke{0%{transform:rotate(0deg);}50%{transform:rotate(-75deg);}100%{transform:rotate(0deg);}}
 
-    /* COSMETICS */
-    .armor,.crown,.wings,.aura,.neon-eyes,.diamond-helmet,.cosmic-cape,.god-aura{display:none;position:absolute;}
+    /* COSMETICS – EPIC AURAS */
+    .armor,.crown,.wings,.aura,.neon-eyes,.diamond-helmet,.cosmic-cape,.god-aura,.void-emperor,.cosmic-nexus{display:none;position:absolute;}
     .armor{top:180px;left:70px;width:100px;height:120px;}
     .crown{top:30px;left:90px;width:60px;height:60px;}
     .wings{top:160px;left:30px;width:180px;height:140px;}
     .aura{top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;
-      background:radial-gradient(circle at center, rgba(255,100,0,0.6), transparent 70%);opacity:0;}
-    .diamond-helmet{top:35px;left:85px;width:70px;height:70px;}
-    .cosmic-cape{top:170px;left:60px;width:120px;height:140px;}
+      background:radial-gradient(circle at center, rgba(255,100,0,0.7), transparent 70%);opacity:0;
+      animation:pulseAura 2s infinite;}
     .god-aura{top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;
-      background:conic-gradient(from 0deg, #f0f, #0ff, #ff0, #f0f);opacity:0;animation:rainbow 3s linear infinite;}
+      background:conic-gradient(from 0deg, #f0f, #0ff, #ff0, #f0f);opacity:0;
+      animation:rainbow 3s linear infinite;}
+    .void-emperor{top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;
+      background:radial-gradient(circle at center, #000 20%, transparent 70%);
+      filter:blur(20px);opacity:0;animation:voidPulse 4s infinite;}
+    .cosmic-nexus{top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;
+      background:conic-gradient(from 0deg at 50% 50%, #00f, #0ff, #0f0, #ff0, #f0f, #00f);
+      opacity:0;animation:galaxy 6s linear infinite;filter:blur(10px);}
     @keyframes rainbow{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+    @keyframes pulseAura{0%,100%{opacity:0.5;}50%{opacity:0.8;}}
+    @keyframes voidPulse{0%,100%{transform:scale(1);opacity:0.6;}50%{transform:scale(1.3);opacity:0.3;}}
+    @keyframes galaxy{0%{transform:rotate(0deg) scale(1);}100%{transform:rotate(360deg) scale(1.1);}}
 
-    /* 2K-STYLE GOON BADGES */
+    /* BADGES */
     .badges{display:flex;gap:10px;flex-wrap:wrap;}
     .badge{width:52px;height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
       font-weight:900;font-size:0.7rem;color:#000;position:relative;opacity:0;transition:all 0.6s;transform:scale(0);}
@@ -91,6 +101,7 @@
     #gps{font-size:1.1rem;color:#aaa;}
     #current-goons{font-size:1rem;color:#ccc;}
     #total-goons{font-size:1rem;color:#0f0;font-weight:700;}
+    #ascension{font-size:1rem;color:#f0f;font-weight:700;}
 
     /* GOONSTEGIE BAR */
     .goonstegie-container{width:100%;max-width:700px;display:flex;flex-direction:column;gap:6px;}
@@ -109,16 +120,16 @@
     .upgrade-level{position:absolute;top:6px;right:6px;background:#fff;color:#000;padding:2px 6px;
       border-radius:6px;font-size:0.65rem;font-weight:800;}
 
-    .prestige-btn{padding:12px 32px;background:#fff;color:#000;border:none;
-      border-radius:14px;font-weight:800;cursor:pointer;transition:.3s;box-shadow:0 0 30px #fff;font-size:1rem;}
-    .prestige-btn:hover{transform:scale(1.08);box-shadow:0 0 60px #fff;}
-    .prestige-btn:disabled{opacity:0.5;cursor:not-allowed;}
+    .prestige-btn,.ascend-btn{padding:12px 32px;background:#fff;color:#000;border:none;
+      border-radius:14px;font-weight:800;cursor:pointer;transition:.3s;box-shadow:0 0 30px #fff;font-size:1rem;margin:4px;}
+    .prestige-btn:hover,.ascend-btn:hover{transform:scale(1.08);box-shadow:0 0 60px #fff;}
+    .prestige-btn:disabled,.ascend-btn:disabled{opacity:0.5;cursor:not-allowed;}
 
     /* LEADERBOARD */
     .leaderboard-container{width:100%;max-width:600px;margin:20px 0;background:rgba(255,255,255,.05);border-radius:16px;padding:16px;}
     .leaderboard-title{font-size:1.3rem;font-weight:800;margin-bottom:12px;text-align:center;color:#0f0;}
     .leaderboard-list{list-style:none;}
-    .leaderboard-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,.08);border-radius:12px;margin-bottom:8px;}
+    .leaderboard-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background approximations:rgba(255,255,255,.08);border-radius:12px;margin-bottom:8px;}
     .leaderboard-rank{font-weight:900;color:#fff;font-size:1.1rem;width:30px;}
     .leaderboard-name{font-weight:600;color:#fff;flex:1;}
     .leaderboard-score{font-weight:700;color:#0f0;}
@@ -127,18 +138,10 @@
     .splat{position:fixed;pointer-events:none;z-index:9999;opacity:0;
       width:60px;height:60px;background:#fff;border-radius:50%;filter:blur(6px);
       animation:splatAnim 0.7s ease-out forwards;}
-    @keyframes splatAnim{
-      0%{transform:scale(0);opacity:1;}
-      70%{transform:scale(1.6);opacity:0.8;}
-      100%{transform:scale(2);opacity:0;}
-    }
+    @keyframes splatAnim{0%{transform:scale(0);opacity:1;}70%{transform:scale(1.6);opacity:0.8;}100%{transform:scale(2);opacity:0;}}
     .giant-splat{position:fixed;inset:0;background:#fff;z-index:10000;opacity:0;
       animation:giantSplat 1.2s ease-out forwards;}
-    @keyframes giantSplat{
-      0%{transform:scale(0);opacity:1;}
-      60%{transform:scale(1.2);opacity:0.9;}
-      100%{transform:scale(1.4);opacity:0;}
-    }
+    @keyframes giantSplat{0%{transform:scale(0);opacity:1;}60%{transform:scale(1.2);opacity:0.9;}100%{transform:scale(1.4);opacity:0;}}
 
     /* LOADER */
     #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
@@ -149,12 +152,6 @@
     .hidden{display:none!important;}
 
     @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-10px);}75%{transform:translateX(10px);}}
-    @keyframes strongStroke{
-      0%{transform:rotate(0deg);}
-      50%{transform:rotate(-75deg);}
-      100%{transform:rotate(0deg);}
-    }
-    @keyframes pulseAura{0%,100%{opacity:0.4;}50%{opacity:0.7;}}
   </style>
 </head>
 <body>
@@ -192,19 +189,24 @@
           <div id="gps">0 GPS</div>
           <div id="current-goons">Current: 0</div>
           <div id="total-goons">Total: 0</div>
+          <div id="ascension">Ascension: 0</div>
 
           <!-- GOON + COSMETICS + BADGES -->
           <div id="goon-container">
             <div id="goon-dude-container" onclick="clickGoon(event)">
               <svg id="goon-dude" viewBox="0 0 240 300" xmlns="http://www.w3.org/2000/svg">
+                <!-- ASCENSION AURAS -->
+                <rect class="void-emperor" width="240" height="300"/>
+                <rect class="cosmic-nexus" width="240" height="300"/>
+
                 <!-- GOD AURA -->
-                <rect class="god-aura" width="240" height="300" fill="url(#rainbowGrad)"/>
+                <rect class="god-aura" width="240" height="300"/>
 
                 <!-- COSMIC CAPE -->
                 <path class="cosmic-cape" d="M60 170 Q120 290 180 170 L180 300 Q120 280 60 300 Z" fill="#5e35b1" opacity="0.8"/>
 
                 <!-- AURA -->
-                <ellipse class="aura" cx="120" cy="150" rx="100" ry="140" fill="url(#fireGrad)"/>
+                <ellipse class="aura" cx="120" cy="150" rx="100" ry="140"/>
 
                 <!-- WINGS -->
                 <g class="wings">
@@ -266,11 +268,14 @@
           </div>
 
           <div class="upgrades-grid" id="upgrades"></div>
-          <button class="prestige-btn" id="prestige">PRESTIGE</button>
+          <div style="display:flex;gap:10px;justify-content:center;">
+            <button class="prestige-btn" id="prestige">PRESTIGE</button>
+            <button class="ascend-btn" id="ascend">ASCEND</button>
+          </div>
         </div>
       </div>
 
-      <!-- LEADERBOARD PANEL -->
+      <!-- LEADERBOARD -->
       <div id="leaderboard" class="panel">
         <h1>GOON LEADERBOARD</h1>
         <div class="leaderboard-container">
@@ -332,7 +337,7 @@
 
     // === GAME ===
     let points = 0, gps = 0, clickPower = 1, prestige = 1, totalGoons = 0, currentGoons = 0;
-    let prestigeLevel = 0;
+    let prestigeLevel = 0, ascension = 0;
     const arm = document.querySelector('.stroking-arm');
 
     const badges = [
@@ -345,11 +350,13 @@
       {req:600000, type:'goons', elem:'.armor', name:"GOON ARMOR", unlocked:false},
       {req:5000000, type:'goons', elem:'.crown', name:"GOLDEN CROWN", unlocked:false},
       {req:10000000, type:'goons', elem:'.wings', name:"ANGEL WINGS", unlocked:false},
-      {req:50000000, type:'goons', elem:'.aura', name:"FIRE AURA", effect:() => $('.aura').style.animation = 'pulseAura 2s infinite', unlocked:false},
-      {req:5, type:'prestige', elem:'.neon-eyes .goon-eye circle', name:"NEON GLOW EYES", effect:() => document.querySelectorAll('.goon-eye circle').forEach(c=>c.style.fill='#0ff'), unlocked:false},
+      {req:50000000, type:'goons', elem:'.aura', name:"FIRE AURA", effect:() => $('.aura').style.opacity = '0.7', unlocked:false},
+      {req:5, type:'prestige', elem:'.goon-eye circle', name:"NEON GLOW EYES", effect:() => document.querySelectorAll('.goon-eye circle').forEach(c=>c.style.fill='#0ff'), unlocked:false},
       {req:10, type:'prestige', elem:'.diamond-helmet', name:"DIAMOND HELMET", unlocked:false},
       {req:20, type:'prestige', elem:'.cosmic-cape', name:"COSMIC CAPE", unlocked:false},
-      {req:54, type:'prestige', elem:'.god-aura', name:"GOD AURA", effect:() => $('.god-aura').style.opacity = '0.6', unlocked:false}
+      {req:54, type:'prestige', elem:'.god-aura', name:"GOD AURA", effect:() => $('.god-aura').style.opacity = '0.6', unlocked:false},
+      {req:1, type:'ascension', elem:'.void-emperor', name:"VOID EMPEROR", effect:() => $('.void-emperor').style.opacity = '0.8', unlocked:false},
+      {req:2, type:'ascension', elem:'.cosmic-nexus', name:"COSMIC NEXUS", effect:() => $('.cosmic-nexus').style.opacity = '0.7', unlocked:false}
     ];
 
     const upgrades = [
@@ -357,7 +364,7 @@
       {id:'double',name:'Double Click',baseCost:200,cost:200,effect:10,owned:0,type:'click',max:150},
       {id:'neon',name:'Neon Boost',baseCost:1000,cost:1000,effect:100,owned:0,type:'gps',max:100},
       {id:'vault',name:'Vault Pass',baseCost:5000,cost:5000,effect:0.5,owned:0,type:'prestige',max:10},
-      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:120,owned:0,type:'click',max:80}, // FIXED: was 500 → now 120
+      {id:'mega',name:'Mega Click',baseCost:25000,cost:25000,effect:120,owned:0,type:'click',max:80},
       {id:'hyper',name:'Hyper GPS',baseCost:100000,cost:100000,effect:1000,owned:0,type:'gps',max:60},
       {id:'god',name:'God Mode',baseCost:500000,cost:500000,effect:0.2,owned:0,type:'multi',max:25},
       {id:'quantum',name:'Quantum Edge',baseCost:1e6,cost:1e6,effect:0.5,owned:0,type:'clickMulti',max:30},
@@ -370,6 +377,9 @@
       {id:'eternal',name:'Eternal Flame',baseCost:1e12,cost:1e12,effect:0.5,owned:0,type:'multi',max:20},
       {id:'nebula',name:'Nebula Core',baseCost:1e14,cost:1e14,effect:5e6,owned:0,type:'gps',max:8},
       {id:'titan',name:'Titan Click',baseCost:3e14,cost:3e14,effect:300000,owned:0,type:'click',max:5},
+      {id:'nova',name:'Nova Burst',baseCost:1e16,cost:1e16,effect:1e7,owned:0,type:'gps',max:6},
+      {id:'echo',name:'Echo Click',baseCost:5e16,cost:5e16,effect:5e6,owned:0,type:'click',max:4},
+      {id:'flux',name:'Flux Multiplier',baseCost:1e18,cost:1e18,effect:0.8,owned:0,type:'multi',max:10},
       {id:'paradise',name:"UZI'S GOON PARADISE",baseCost:2e18,cost:2e18,effect:5e7,owned:0,type:'paradise',max:1}
     ];
 
@@ -380,6 +390,7 @@
       updateCosmetics();
       updateDisplay();
       updatePrestigeTarget();
+      updateAscension();
       fetchLeaderboard();
       setInterval(fetchLeaderboard, 60000);
       setInterval(autoEarn, 100);
@@ -387,7 +398,6 @@
       setInterval(updateGoonstegieBar, 100);
     }
 
-    // === LEADERBOARD (FIXED) ===
     async function fetchLeaderboard(){
       try {
         const res = await fetch('https://api.allorigins.ml/get?url=' + encodeURIComponent('https://goon-leaderboard.glitch.me/top10'));
@@ -459,18 +469,19 @@
 
       if (u.type === 'gps') gps += u.effect;
       if (u.type === 'click') clickPower += u.effect;
-      if (u.type === 'prestige') prestige = Math.min(54, prestige + u.effect);
+      if (u.type === 'prestige') prestige = Math.min(65, prestige + u.effect);
       if (u.type === 'multi') { clickPower *= (1 + u.effect); gps *= (1 + u.effect); }
       if (u.type === 'clickMulti') clickPower *= (1 + u.effect);
       if (u.type === 'gpsMulti') gps *= (1 + u.effect);
       if (u.type === 'paradise') {
         gps += 5e7;
-        prestige = 54;
+        prestige = 65;
         showAchievement("UZI'S GOON PARADISE UNLOCKED!");
       }
 
       renderUpgrades();
       updateDisplay();
+      updateAscension();
     }
 
     function prestigeReset(){
@@ -478,9 +489,8 @@
       if (currentGoons < target) return showAchievement(`Need ${formatNumber(target)} Current Goons!`);
       prestigeSplat();
       prestigeLevel++;
-      prestige = Math.min(54, prestige + 1);
+      prestige = Math.min(65, prestige + 1);
       points = 0; gps = 0; clickPower = 1; currentGoons = 0;
-      totalGoons = Math.floor(totalGoons * 0.1);
       upgrades.forEach(u => { if (u.id !== 'paradise') { u.owned = 0; u.cost = u.baseCost; } });
       renderUpgrades();
       updateDisplay();
@@ -489,10 +499,28 @@
       showAchievement(`PRESTIGE #${prestigeLevel} UNLOCKED! x${prestige}`);
     }
 
+    function ascend(){
+      if (prestigeLevel < 65) return showAchievement("Need Prestige x65 to Ascend!");
+      prestigeSplat();
+      ascension++;
+      prestigeLevel = 0;
+      prestige = 1;
+      points = 0; gps = 0; clickPower = 1; currentGoons = 0;
+      upgrades.forEach(u => { u.owned = 0; u.cost = u.baseCost; });
+      renderUpgrades();
+      updateDisplay();
+      updateCosmetics();
+      showAchievement(`ASCENSION #${ascension} COMPLETE!`);
+    }
+
     function updatePrestigeTarget(){
       const target = getPrestigeTarget();
       $('goonstegie-text').textContent = currentGoons >= target ? "PRESTIGE READY!" : `Need ${formatNumber(target - currentGoons)}`;
       $('prestige').disabled = currentGoons < target;
+    }
+
+    function updateAscension(){
+      $('ascend').disabled = prestigeLevel < 65;
     }
 
     function updateGoonstegieBar(){
@@ -500,6 +528,7 @@
       const progress = Math.min(currentGoons / target, 1);
       $('goonstegie-fill').style.width = `${progress * 100}%`;
       updatePrestigeTarget();
+      updateAscension();
     }
 
     function formatNumber(n) {
@@ -518,7 +547,7 @@
           <div class="upgrade-name" style="${u.id==='paradise'?'color:gold;':''}">${u.name}</div>
           <div class="upgrade-cost">Cost: ${formatNumber(u.cost)}</div>
           <div class="upgrade-effect">
-            ${u.type === 'paradise' ? `+50M GPS | x54 Prestige` : 
+            ${u.type === 'paradise' ? `+50M GPS | x65 Prestige` : 
              u.type === 'gps' ? `+${formatNumber(u.effect)} GPS` :
              u.type === 'click' ? `+${formatNumber(u.effect)} Click` : ''}
           </div>
@@ -547,7 +576,9 @@
 
     function updateCosmetics(){
       cosmetics.forEach(c => {
-        const met = (c.type === 'goons' && totalGoons >= c.req) || (c.type === 'prestige' && prestigeLevel >= c.req);
+        const met = (c.type === 'goons' && totalGoons >= c.req) || 
+                   (c.type === 'prestige' && prestigeLevel >= c.req) || 
+                   (c.type === 'ascension' && ascension >= c.req);
         if (met && !c.unlocked) {
           c.unlocked = true;
           document.querySelectorAll(c.elem).forEach(el => el.style.display = 'block');
@@ -562,6 +593,7 @@
       $('gps').textContent = `${formatNumber(gps)} GPS`;
       $('current-goons').textContent = `Current: ${formatNumber(Math.floor(currentGoons))}`;
       $('total-goons').textContent = `Total: ${formatNumber(Math.floor(totalGoons))}`;
+      $('ascension').textContent = `Ascension: ${ascension}`;
       $('prestige').textContent = `PRESTIGE #${prestigeLevel + 1}`;
     }
 
@@ -581,7 +613,7 @@
 
     function saveGame(){
       const save = { 
-        points, gps, clickPower, prestige, prestigeLevel, totalGoons, currentGoons, 
+        points, gps, clickPower, prestige, prestigeLevel, totalGoons, currentGoons, ascension,
         upgrades: upgrades.map(u => ({id:u.id,owned:u.owned,cost:u.cost})), 
         badges: badges.map(b=>({name:b.name,unlocked:b.unlocked})),
         cosmetics: cosmetics.map(c=>({req:c.req,type:c.type,unlocked:c.unlocked}))
@@ -599,6 +631,7 @@
         prestigeLevel = save.prestigeLevel || 0;
         totalGoons = save.totalGoons || 0;
         currentGoons = save.currentGoons || 0;
+        ascension = save.ascension || 0;
         save.upgrades?.forEach(su => {
           const u = upgrades.find(x => x.id === su.id);
           if (u) { u.owned = su.owned; u.cost = su.cost; }
@@ -617,6 +650,7 @@
     }
 
     $('prestige').onclick = prestigeReset;
+    $('ascend').onclick = ascend;
   </script>
 </body>
 </html>
