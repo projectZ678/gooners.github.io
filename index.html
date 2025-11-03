@@ -13,16 +13,16 @@
       font-family:'Inter',system-ui,sans-serif;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;outline:none;user-select:none;}
-    html,body{min-height:100vh;background:var(--bg);overflow:hidden;color:var(--text);display:flex;}
+    html,body{min-height:100vh;background:var(--bg);overflow-y:auto;color:var(--text);scroll-behavior:smooth;}
     .stars{position:fixed;inset:0;pointer-events:none;z-index:0;}
     .star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:fall linear infinite;}
     @keyframes fall{0%{transform:translateY(-100px) scale(.2);opacity:0;}10%{opacity:1;}90%{opacity:.3;}100%{transform:translateY(100vh) scale(.8);opacity:0;}}
-    #app{display:flex;height:100vh;width:100vw;position:relative;z-index:1;}
+    #app{display:flex;flex-direction:column;min-height:100vh;position:relative;z-index:1;}
 
     /* SIDEBAR */
     #sidebar{width:280px;background:var(--glass);border-right:1px solid var(--glass-border);
       backdrop-filter:blur(20px);padding:40px 24px;display:flex;flex-direction:column;align-items:center;
-      box-shadow:0 0 60px rgba(255,255,255,.12);flex-shrink:0;}
+      box-shadow:0 0 60px rgba(255,255,255,.12);flex-shrink:0;position:sticky;top:0;height:100vh;}
     #pfp{width:130px;height:130px;border-radius:50%;overflow:hidden;margin-bottom:24px;
       border:3px solid var(--glow);box-shadow:0 0 40px var(--glow),0 0 80px rgba(255,255,255,.3);
       animation:pulsePfp 3s infinite alternate;}
@@ -46,49 +46,49 @@
     .social-icon:hover{transform:scale(1.2);box-shadow:0 0 30px rgba(255,255,255,.4);}
 
     /* MAIN */
-    #main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:rgba(0,0,0,.4);
-      backdrop-filter:blur(12px);padding:40px;}
+    #main{flex:1;display:flex;flex-direction:column;padding:40px 40px 80px 40px;background:rgba(0,0,0,.4);
+      backdrop-filter:blur(12px);min-height:100vh;}
     h1{font-weight:800;font-size:3rem;letter-spacing:5px;color:var(--accent);
       text-shadow:0 0 50px rgba(255,255,255,.6);margin-bottom:28px;text-align:center;
       animation:titleGlow 3s ease-in-out infinite alternate;}
     @keyframes titleGlow{0%{text-shadow:0 0 40px rgba(255,255,255,.6);}
       100%{text-shadow:0 0 80px rgba(255,255,255,.8),0 0 140px rgba(255,255,255,.5);}}
-    .panel{display:none;flex:1;flex-direction:column;}
+    .panel{display:none;flex-direction:column;}
     .panel.active{display:flex;}
 
     /* GOON CLICKER */
-    .clicker-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;}
-    #goon-btn{width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,#fff,#aaa);
-      border:4px solid #fff;box-shadow:0 0 60px #fff,inset 0 0 40px #ddd;
-      cursor:pointer;transition:.2s;animation:pulse 2s infinite;font-size:2rem;color:#000;font-weight:900;
-      display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;}
-    #goon-btn:active{transform:scale(0.9);box-shadow:0 0 100px #fff;}
-    @keyframes pulse{0%,100%{box-shadow:0 0 60px #fff,inset 0 0 40px #ddd;}
-      50%{box-shadow:0 0 100px #fff,inset 0 0 80px #ddd;}}
+    .clicker-panel{display:flex;flex-direction:column;align-items:center;gap:30px;padding:40px 0;}
+    #goon-dude-container{width:320px;height:380px;position:relative;cursor:pointer;}
+    #goon-dude{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 40px #fff);transition:.2s;}
+    #goon-dude:active{transform:scale(0.92);filter:drop-shadow(0 0 80px #0f0);}
+    #goon-label{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);font-size:1.8rem;font-weight:900;
+      color:#fff;text-shadow:0 0 20px #fff;animation:pulseLabel 2s infinite;}
+    @keyframes pulseLabel{0%,100%{opacity:0.8;}50%{opacity:1;}}
+
     #points{font-size:3.5rem;font-weight:800;color:#fff;text-shadow:0 0 30px #fff;}
     #gps{font-size:1.5rem;color:#aaa;margin-top:10px;}
     #total-goons{font-size:1.2rem;color:#ccc;margin-top:8px;}
 
     /* GOONSTEGIE BAR */
-    .goonstegie-container{width:100%;max-width:900px;margin:20px 0;display:flex;flex-direction:column;gap:8px;}
-    .goonstegie-bar{height:24px;background:rgba(255,255,255,.1);border:1px solid var(--glass-border);border-radius:12px;overflow:hidden;position:relative;}
+    .goonstegie-container{width:100%;max-width:900px;margin:30px 0;display:flex;flex-direction:column;gap:8px;}
+    .goonstegie-bar{height:28px;background:rgba(255,255,255,.1);border:1px solid var(--glass-border);border-radius:14px;overflow:hidden;position:relative;}
     .goonstegie-fill{height:100%;background:linear-gradient(90deg,#0f0,#0f8);width:0%;transition:width 0.4s ease;}
-    .goonstegie-text{position:absolute;top:0;left:0;right:0;text-align:center;line-height:24px;font-weight:700;color:#fff;text-shadow:0 0 10px #000;font-size:0.9rem;}
+    .goonstegie-text{position:absolute;top:0;left:0;right:0;text-align:center;line-height:28px;font-weight:700;color:#fff;text-shadow:0 0 10px #000;font-size:1rem;}
 
-    .upgrades-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;width:100%;max-width:1200px;}
+    .upgrades-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;width:100%;max-width:1200px;margin:40px 0;}
     .upgrade{background:rgba(255,255,255,.08);border:1px solid var(--glass-border);border-radius:16px;
-      padding:18px;text-align:center;transition:.3s;cursor:pointer;position:relative;overflow:hidden;}
-    .upgrade:hover{background:rgba(255,255,255,.15);transform:translateY(-4px);box-shadow:0 0 30px #fff;}
+      padding:20px;text-align:center;transition:.3s;cursor:pointer;position:relative;overflow:hidden;}
+    .upgrade:hover{background:rgba(255,255,255,.15);transform:translateY(-6px);box-shadow:0 0 40px #fff;}
     .upgrade.bought{opacity:0.6;pointer-events:none;}
-    .upgrade-name{font-weight:700;color:#fff;font-size:1.1rem;}
-    .upgrade-cost{font-size:0.95rem;color:#ccc;margin-top:6px;}
-    .upgrade-effect{font-size:0.85rem;color:#888;margin-top:8px;}
-    .upgrade-level{position:absolute;top:8px;right:8px;background:#fff;color:#000;padding:2px 8px;
-      border-radius:8px;font-size:0.7rem;font-weight:800;}
+    .upgrade-name{font-weight:700;color:#fff;font-size:1.2rem;}
+    .upgrade-cost{font-size:1rem;color:#ccc;margin-top:8px;}
+    .upgrade-effect{font-size:0.9rem;color:#888;margin-top:10px;}
+    .upgrade-level{position:absolute;top:10px;right:10px;background:#fff;color:#000;padding:4px 10px;
+      border-radius:10px;font-size:0.75rem;font-weight:800;}
 
-    .prestige-btn{margin-top:20px;padding:16px 40px;background:#fff;color:#000;border:none;
-      border-radius:16px;font-weight:800;cursor:pointer;transition:.4s;box-shadow:0 0 40px #fff;}
-    .prestige-btn:hover{transform:scale(1.1);box-shadow:0 0 80px #fff;}
+    .prestige-btn{margin:40px 0;padding:18px 50px;background:#fff;color:#000;border:none;
+      border-radius:18px;font-weight:800;cursor:pointer;transition:.4s;box-shadow:0 0 50px #fff;font-size:1.3rem;}
+    .prestige-btn:hover{transform:scale(1.12);box-shadow:0 0 100px #fff;}
     .prestige-btn:disabled{opacity:0.5;cursor:not-allowed;}
 
     /* LEADERBOARD */
@@ -100,7 +100,7 @@
 
     .table-container{flex:1;width:100%;overflow-y:auto;border-radius:18px;
       border:1px solid var(--glass-border);background:rgba(0,0,0,.35);
-      box-shadow:inset 0 10px 18px rgba(0,0,0,.6);}
+      box-shadow:inset 0 10px 18px rgba(0,0,0,.6);margin-top:20px;}
     table{width:100%;border-collapse:collapse;}
     thead{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,rgba(20,20,20,.98),rgba(15,15,15,.95));
       backdrop-filter:blur(16px);text-transform:uppercase;font-size:.88rem;letter-spacing:2px;color:var(--muted);}
@@ -120,8 +120,8 @@
     .retry-btn:hover{background:#666;transform:scale(1.05);}
 
     /* ACHIEVEMENT */
-    .achievement{position:fixed;top:20px;right:20px;background:#fff;color:#000;padding:16px 24px;
-      border-radius:16px;font-weight:800;box-shadow:0 0 40px #fff;z-index:1000;
+    .achievement{position:fixed;top:20px;right:20px;background:#fff;color:#000;padding:18px 28px;
+      border-radius:16px;font-weight:800;box-shadow:0 0 50px #fff;z-index:1000;
       animation:pop 0.5s ease-out;opacity:0;}
     @keyframes pop{0%{transform:scale(0);opacity:0;}100%{transform:scale(1);opacity:1;}}
 
@@ -133,8 +133,8 @@
     @keyframes glow{from{text-shadow:0 0 30px #fff;}to{text-shadow:0 0 80px #fff,0 0 160px #fff;}}
     .hidden{display:none!important;}
 
-    @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-10px);}75%{transform:translateX(10px);}}
-    @keyframes particle{0%{transform:scale(1) translateY(0);opacity:1;}100%{transform:scale(0) translateY(-100px);opacity:0;}}
+    @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-12px);}75%{transform:translateX(12px);}}
+    @keyframes particle{0%{transform:scale(1) translateY(0);opacity:1;}100%{transform:scale(0) translateY(-120px);opacity:0;}}
   </style>
 </head>
 <body>
@@ -171,7 +171,12 @@
           <div id="points">0</div>
           <div id="gps">0 GPS</div>
           <div id="total-goons">Total Goons: 0</div>
-          <div id="goon-btn">CLICK TO GOON</div>
+
+          <!-- GOONING DUDE -->
+          <div id="goon-dude-container" onclick="clickGoon()">
+            <img id="goon-dude" src="https://i.imgur.com/8pX5q2D.png" alt="Gooning Dude">
+            <div id="goon-label">CLICK HIM!</div>
+          </div>
 
           <!-- GOONSTEGIE BAR -->
           <div class="goonstegie-container">
@@ -182,7 +187,7 @@
           </div>
 
           <div class="upgrades-grid" id="upgrades"></div>
-          <button class="prestige-btn" id="prestige">PRESTIGE (x2 to x8 Max)</button>
+          <button class="prestige-btn" id="prestige">PRESTIGE (x2 to x54 Max)</button>
         </div>
       </div>
 
@@ -286,6 +291,7 @@
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
         $(btn.dataset.panel).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
 
@@ -309,15 +315,15 @@
       {id:'rift',name:'Cosmic Rift',baseCost:1e10,cost:1e10,effect:1e6,owned:0,type:'click',max:10},
       {id:'eternal',name:'Eternal Flame',baseCost:1e12,cost:1e12,effect:0.5,owned:0,type:'multi',max:20},
       {id:'nebula',name:'Nebula Core',baseCost:1e14,cost:1e14,effect:5e6,owned:0,type:'gps',max:8},
-      {id:'titan',name:'Titan Click',baseCost:1e16,cost:1e16,effect:1e8,owned:0,type:'click',max:5},
-      {id:'paradise',name:"UZI'S GOON PARADISE",baseCost:2e18,cost:2e18,effect:1e7,owned:0,type:'paradise',max:1}
+      {id:'titan',name:'Titan Click',baseCost:3e14,cost:3e14,effect:300000,owned:0,type:'click',max:5},
+      {id:'paradise',name:"UZI'S GOON PARADISE",baseCost:2e18,cost:2e18,effect:5e7,owned:0,type:'paradise',max:1}
     ];
 
     function initClicker(){
       loadGame();
       renderUpgrades();
       updateDisplay();
-      setInterval(autoEarn, 100);  // 10x per second!
+      setInterval(autoEarn, 100);  // 10x per second
       setInterval(saveGame, 5000);
       setInterval(updateGoonstegieBar, 100);
     }
@@ -330,14 +336,14 @@
       checkAchievements();
     }
 
-    $('goon-btn').onclick = () => {
+    function clickGoon() {
       gainGoons(clickPower);
       createParticles();
       screenShake();
-    };
+    }
 
     function autoEarn(){
-      if (gps > 0) gainGoons(gps / 10);  // 10 ticks/sec → divide by 10
+      if (gps > 0) gainGoons(gps / 10);
     }
 
     function buyUpgrade(id){
@@ -350,15 +356,14 @@
 
       if (u.type === 'gps') gps += u.effect;
       if (u.type === 'click') clickPower += u.effect;
-      if (u.type === 'prestige') prestige = Math.min(8, prestige + u.effect);
+      if (u.type === 'prestige') prestige = Math.min(54, prestige + u.effect);
       if (u.type === 'multi') { clickPower *= (1 + u.effect); gps *= (1 + u.effect); }
       if (u.type === 'clickMulti') clickPower *= (1 + u.effect);
       if (u.type === 'gpsMulti') gps *= (1 + u.effect);
       if (u.type === 'paradise') {
-        gps += 1e7;
-        clickPower *= 100;
-        prestige = 8;
-        showAchievement("UZI'S GOON PARADISE UNLOCKED!");
+        gps += 5e7;
+        prestige = 54;
+        showAchievement("UZI'S GOON PARADISE UNLOCKED! x54 PRESTIGE!");
       }
 
       renderUpgrades();
@@ -367,7 +372,7 @@
 
     function prestigeReset(){
       if (totalGoons < 100000) return showAchievement("Need 100K Total Goons!");
-      prestige = Math.min(8, prestige + 1);
+      prestige = Math.min(54, prestige + 1);
       points = 0; gps = 0; clickPower = 1;
       totalGoons = Math.floor(totalGoons * 0.1);
       upgrades.forEach(u => { if (u.id !== 'paradise') { u.owned = 0; u.cost = u.baseCost; } });
@@ -380,13 +385,8 @@
       const target = 100000;
       const progress = Math.min(totalGoons / target, 1);
       $('goonstegie-fill').style.width = `${progress * 100}%`;
-      $('goonstegie-text').textContent = `Next Prestige: ${formatNumber(target - totalGoons)} to go`;
-      if (totalGoons >= target) {
-        $('goonstegie-text').textContent = "PRESTIGE READY!";
-        $('prestige').disabled = false;
-      } else {
-        $('prestige').disabled = true;
-      }
+      $('goonstegie-text').textContent = totalGoons >= target ? "PRESTIGE READY!" : `Next Prestige: ${formatNumber(target - totalGoons)} to go`;
+      $('prestige').disabled = totalGoons < target;
     }
 
     function formatNumber(n) {
@@ -401,7 +401,7 @@
 
     function renderUpgrades(){
       $('upgrades').innerHTML = upgrades.map(u => `
-        <div class="upgrade ${u.owned >= u.max ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')" style="${u.id==='paradise'?'border:3px solid gold;':''}">
+        <div class="upgrade ${u.owned >= u.max ? 'bought' : ''}" onclick="buyUpgrade('${u.id}')" style="${u.id==='paradise'?'border:4px solid gold;':''}">
           <div class="upgrade-name" style="${u.id==='paradise'?'color:gold;font-weight:900;':''}">${u.name}</div>
           <div class="upgrade-cost">Cost: ${formatNumber(u.cost)}</div>
           <div class="upgrade-effect">
@@ -411,7 +411,7 @@
              u.type === 'multi' ? `+${(u.effect*100).toFixed(0)}% All` :
              u.type === 'clickMulti' ? `+${(u.effect*100).toFixed(0)}% Click` :
              u.type === 'gpsMulti' ? `+${(u.effect*100).toFixed(0)}% GPS` :
-             u.type === 'paradise' ? `+10M GPS | x100 Click | x8 Prestige` : ''}
+             u.type === 'paradise' ? `+50M GPS | x54 Prestige` : ''}
           </div>
           <div class="upgrade-level">Lv.${u.owned}/${u.max}</div>
         </div>
@@ -422,25 +422,25 @@
       $('points').textContent = formatNumber(Math.floor(points));
       $('gps').textContent = `${formatNumber(gps)} GPS`;
       $('total-goons').textContent = `Total Goons: ${formatNumber(Math.floor(totalGoons))}`;
-      $('prestige').textContent = `PRESTIGE (x${prestige} to x8 Max)`;
+      $('prestige').textContent = `PRESTIGE (x${prestige} to x54 Max)`;
     }
 
     function createParticles(){
-      for(let i=0; i<20; i++){
+      for(let i=0; i<25; i++){
         const p = document.createElement('div');
         p.style.cssText = `
           position:fixed;left:${Math.random()*100}vw;top:${Math.random()*100}vh;
-          width:12px;height:12px;background:#fff;border-radius:50%;pointer-events:none;
-          animation:particle 1.2s ease-out forwards;
+          width:14px;height:14px;background:#0f0;border-radius:50%;pointer-events:none;
+          animation:particle 1.4s ease-out forwards;box-shadow:0 0 20px #0f0;
         `;
         document.body.appendChild(p);
-        setTimeout(() => p.remove(), 1200);
+        setTimeout(() => p.remove(), 1400);
       }
     }
 
     function screenShake(){
-      document.body.style.animation = 'shake 0.4s';
-      setTimeout(() => document.body.style.animation = '', 400);
+      document.body.style.animation = 'shake 0.5s';
+      setTimeout(() => document.body.style.animation = '', 500);
     }
 
     function showAchievement(text){
@@ -449,13 +449,13 @@
       a.textContent = text;
       document.body.appendChild(a);
       setTimeout(() => a.style.opacity = 1, 100);
-      setTimeout(() => { a.style.opacity = 0; setTimeout(() => a.remove(), 500); }, 4000);
+      setTimeout(() => { a.style.opacity = 0; setTimeout(() => a.remove(), 500); }, 5000);
     }
 
     function checkAchievements(){
       if (totalGoons > 1e6 && !localStorage.getItem('ach1')) { showAchievement("1 MILLION GOONS!"); localStorage.setItem('ach1','1'); }
       if (totalGoons > 1e12 && !localStorage.getItem('ach2')) { showAchievement("1 TRILLION GOONS!"); localStorage.setItem('ach2','1'); }
-      if (prestige >= 8 && !localStorage.getItem('ach3')) { showAchievement("MAX PRESTIGE x8!"); localStorage.setItem('ach3','1'); }
+      if (prestige >= 54 && !localStorage.getItem('ach3')) { showAchievement("MAX PRESTIGE x54!"); localStorage.setItem('ach3','1'); }
       if (upgrades.find(u => u.id === 'paradise')?.owned > 0 && !localStorage.getItem('ach4')) {
         showAchievement("UZI'S GOON PARADISE UNLOCKED!");
         localStorage.setItem('ach4','1');
