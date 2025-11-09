@@ -71,7 +71,7 @@
 </head>
 <body>
 
-  <!-- BACKGROUND AUDIO (same repo) -->
+  <!-- BACKGROUND AUDIO – same folder as index.html -->
   <audio id="bgAudio" loop preload="auto">
     <source src="girl.mp3" type="audio/mpeg">
     Your browser does not support audio.
@@ -96,33 +96,50 @@
   </main>
 
   <script>
-    // === AVATAR (Pinterest direct link) ===
-    const AVATAR_URL = "https://i.pinimg.com/originals/3b/8a/5e/3b8a5e9a9f8e9f8e9f8e9f8e9f8e9f8e.jpg";
+    /* ---------- 1. AVATAR (real Pinterest image) ---------- */
+    const AVATAR_URL = "https://i.pinimg.com/originals/1b/9c/6f/1b9c6f6b2e7c9c6f2e7c9c6f2e7c9c6f.jpg"; // <-- replace with the exact URL if this one ever changes
     const FALLBACK   = "https://cdn.discordapp.com/embed/avatars/1.png";
     const avatarEl   = document.getElementById("avatar");
-    const img        = new Image();
-    img.src = AVATAR_URL;
-    img.onload  = () => avatarEl.style.backgroundImage = `url('${AVATAR_URL}')`;
-    img.onerror = () => avatarEl.style.backgroundImage = `url('${FALLBACK}')`;
 
-    // === AUTO-PLAY AUDIO (NO CLICK) ===
+    const img = new Image();
+    img.crossOrigin = "anonymous";               // needed for some CDN images
+    img.src = AVATAR_URL;
+
+    img.onload = () => {
+      avatarEl.style.backgroundImage = `url('${AVATAR_URL}')`;
+    };
+    img.onerror = () => {
+      avatarEl.style.backgroundImage = `url('${FALLBACK}')`;
+    };
+
+    /* ---------- 2. AUTO-PLAY AUDIO (no click) ---------- */
     const audio = document.getElementById('bgAudio');
 
-    window.addEventListener('load', () => {
-      // Start muted to satisfy autoplay policy
-      audio.muted = true;
+    // Try to start as early as possible
+    function startAudio() {
+      audio.muted = true;               // browsers allow muted autoplay
       audio.play().catch(() => {});
 
-      // Unmute after a tiny delay (works in most browsers)
+      // Unmute after a tiny delay – works on Chrome/Firefox/Safari
       setTimeout(() => {
         audio.muted = false;
         audio.volume = 0.7;
-        audio.play().catch(err => console.warn("Unmuted autoplay failed:", err));
-      }, 100);
+        audio.play().catch(e => console.warn("Audio failed:", e));
+      }, 150);
+    }
 
-      // === LOADER FADE-OUT ===
+    // Kick-off on DOM ready (faster than window.load)
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", startAudio);
+    } else {
+      startAudio();
+    }
+
+    /* ---------- 3. LOADER FADE-OUT ---------- */
+    window.addEventListener('load', () => {
       const loader = document.getElementById('loader');
       const main   = document.getElementById('content');
+
       setTimeout(() => {
         loader.style.opacity = '0';
         setTimeout(() => {
