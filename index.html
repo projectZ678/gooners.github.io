@@ -71,12 +71,9 @@
 </head>
 <body>
 
-  <!-- BACKGROUND AUDIO (hosted in this repo) -->
+  <!-- BACKGROUND AUDIO (same repo) -->
   <audio id="bgAudio" loop preload="auto">
-    <!-- Using raw GitHub URL (fast & reliable) -->
-    <source src="https://raw.githubusercontent.com/projectZ678/gooners.github.io/main/girl.mp3" type="audio/mpeg">
-    <!-- Fallback: GitHub Pages URL -->
-    <!-- <source src="https://projectZ678.github.io/gooners.github.io/girl.mp3" type="audio/mpeg"> -->
+    <source src="girl.mp3" type="audio/mpeg">
     Your browser does not support audio.
   </audio>
 
@@ -99,8 +96,8 @@
   </main>
 
   <script>
-    // === DISCORD AVATAR ===
-    const AVATAR_URL = "https://cdn.discordapp.com/avatars/770097816428216371/0a2eed38fd1ca11bb6b8db472132bef7.webp?size=512";
+    // === AVATAR (Pinterest direct link) ===
+    const AVATAR_URL = "https://i.pinimg.com/originals/3b/8a/5e/3b8a5e9a9f8e9f8e9f8e9f8e9f8e9f8e.jpg";
     const FALLBACK   = "https://cdn.discordapp.com/embed/avatars/1.png";
     const avatarEl   = document.getElementById("avatar");
     const img        = new Image();
@@ -108,32 +105,22 @@
     img.onload  = () => avatarEl.style.backgroundImage = `url('${AVATAR_URL}')`;
     img.onerror = () => avatarEl.style.backgroundImage = `url('${FALLBACK}')`;
 
-    // === AUTO-PLAY MUSIC (works everywhere) ===
+    // === AUTO-PLAY AUDIO (NO CLICK) ===
     const audio = document.getElementById('bgAudio');
-    let hasPlayed = false;
 
-    // Start muted (allowed by Chrome, Safari, Firefox)
-    audio.muted = true;
-    audio.play().catch(() => {});
-
-    const unmuteAndPlay = () => {
-      if (hasPlayed) return;
-      hasPlayed = true;
-      audio.muted = false;
-      audio.volume = 0.7;
-      audio.play().catch(err => console.warn("Play failed:", err));
-      // Remove listeners
-      document.removeEventListener('click', unmuteAndPlay);
-      document.removeEventListener('touchstart', unmuteAndPlay);
-      document.removeEventListener('keydown', unmuteAndPlay);
-    };
-
-    document.addEventListener('click', unmuteAndPlay);
-    document.addEventListener('touchstart', unmuteAndPlay);
-    document.addEventListener('keydown', unmuteAndPlay);
-
-    // === LOADER FADE OUT ===
     window.addEventListener('load', () => {
+      // Start muted to satisfy autoplay policy
+      audio.muted = true;
+      audio.play().catch(() => {});
+
+      // Unmute after a tiny delay (works in most browsers)
+      setTimeout(() => {
+        audio.muted = false;
+        audio.volume = 0.7;
+        audio.play().catch(err => console.warn("Unmuted autoplay failed:", err));
+      }, 100);
+
+      // === LOADER FADE-OUT ===
       const loader = document.getElementById('loader');
       const main   = document.getElementById('content');
       setTimeout(() => {
