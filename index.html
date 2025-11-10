@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gooners.wtf</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000000;
+      --card: #0d0d0d;
+      --text: #ffffff;
+      --muted: #888888;
+      --border: #222222;
+      --accent: #ffffff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* LOADING SCREEN */
+    #loader {
+      position: fixed; inset: 0; background: #000; z-index: 9999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      transition: opacity 0.8s ease;
+    }
+    .loader-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem; font-weight: 900; letter-spacing: 6px;
+      color: white; margin-bottom: 2rem;
+    }
+    .loader-bar {
+      width: 400px; height: 4px; background: #222; border-radius: 2px; overflow: hidden;
+    }
+    .loader-fill {
+      height: 100%; width: 0%; background: white; transition: width 0.1s;
+    }
+
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 1.5rem 6%; background: rgba(0,0,0,0.95);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem; font-weight: 900; letter-spacing: 5px;
+      display: flex; align-items: center; gap: 12px;
+      cursor: pointer;
+    }
+    .logo-icon { font-size: 2.6rem; }
+    nav ul {
+      display: flex; gap: 3rem; list-style: none;
+    }
+    nav a {
+      color: var(--muted); text-decoration: none; font-weight: 600;
+      font-size: 1.05rem; position: relative; transition: 0.3s;
+    }
+    nav a::after {
+      content: ''; position: absolute; bottom: -8px; left: 0; width: 0; height: 2px;
+      background: white; transition: 0.3s;
+    }
+    nav a:hover, nav a.active { color: white; }
+    nav a:hover::after, nav a.active::after { width: 100%; }
+
+    .container { max-width: 1300px; margin: 0 auto; padding: 2rem 6%; padding-top: 140px; }
+    .page { display: none; opacity: 0; transition: opacity 0.6s ease; }
+    .page.active { display: block; opacity: 1; }
+
+    .hero { text-align: center; padding: 4rem 0; }
+    .hero h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 5rem; font-weight: 900; letter-spacing: 8px;
+      color: white;
+    }
+    .hero p {
+      font-size: 1.2rem; color: var(--muted); margin: 1.5rem 0;
+    }
+
+    .btn {
+      background: transparent; color: white; border: 2px solid white;
+      padding: 1rem 3rem; font-size: 1.2rem; font-weight: 700;
+      border-radius: 50px; cursor: pointer; transition: 0.4s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .btn:hover {
+      background: white; color: black; transform: translateY(-3px);
+    }
+
+    .generator-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 3rem; margin: 3rem 0;
+      text-align: center;
+    }
+    .status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem; color: #00ff00; margin: 1.5rem 0;
+    }
+    .username {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 4.5rem; font-weight: 700; letter-spacing: 12px;
+      margin: 2rem 0; color: white;
+    }
+    .copy {
+      background: white; color: black; border: none;
+      padding: 0.9rem 2rem; border-radius: 50px; font-weight: 700;
+      cursor: pointer; margin-top: 1rem;
+    }
+
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; margin: 4rem 0;
+      max-width: 1000px; margin-left: auto; margin-right: auto;
+    }
+    .pfp img {
+      width: 100%; max-width: 380px; border-radius: 20px;
+      border: 3px solid white;
+    }
+    .contact-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 2.5rem;
+    }
+    .channel {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.8rem; margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .channel i { font-size: 2rem; margin-bottom: 0.8rem; }
+    .channel.email i { color: #00ffcc; }
+    .channel.discord i { color: #5865F2; }
+    .channel strong { font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; }
+
+    footer {
+      text-align: center; padding: 4rem 0; color: #444;
+      border-top: 1px solid var(--border); margin-top: 6rem;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 3.5rem; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .username { font-size: 3rem; letter-spacing: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADING -->
+  <div id="loader">
+    <div class="loader-text">GOONERS</div>
+    <div class="loader-bar"><div class="loader-fill" id="fill"></div></div>
+  </div>
+
+  <header>
+    <div class="logo" onclick="show('home')">
+      <div class="logo-icon">Cross</div>
+      GOONERS
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#" class="nav-link active" data-page="home">HOME</a></li>
+        <li><a href="#" class="nav-link" data-page="vault">VAULT</a></li>
+        <li><a href="#" class="nav-link" data-page="contact">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <!-- HOME -->
+    <div id="home-page" class="page active">
+      <div class="hero">
+        <h1>GOONERS.WTF</h1>
+        <p>4-Letter Discord Names • Real • One Per Visit</p>
+        <button class="btn" onclick="show('vault')">GENERATE</button>
+      </div>
+    </div>
+
+    <!-- VAULT -->
+    <div id="vault-page" class="page">
+      <div class="hero">
+        <h1>VAULT</h1>
+        <div class="generator-card">
+          <div class="status" id="status">Loading names...</div>
+          <button class="btn" id="gen" onclick="gen()" disabled>GENERATE</button>
+          <div id="result" style="display:none; margin-top: 3rem;">
+            <div class="username" id="name"></div>
+            <button class="copy" onclick="copy()">COPY</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div id="contact-page" class="page">
+      <div class="hero">
+        <h1>CONTACT</h1>
+      </div>
+      <div class="contact-grid">
+        <div class="pfp">
+          <img src="https://i.pinimg.com/736x/87/79/7a/87797acc01a9771858efabf3c7b1fe00.jpg" alt="OPSEC">
+          <p style="text-align:center; margin-top:1rem; color:white; font-weight:800;">Cross OPSEC DIVISION Cross</p>
+        </div>
+        <div class="contact-card">
+          <div class="channel email">
+            <i class="fas fa-envelope"></i>
+            <p>Encrypted Email</p>
+            <strong>opsec@gooners.wtf</strong>
+            <a href="mailto:opsec@gooners.wtf" style="display:inline-block; margin-top:1rem; background:#00ffcc; color:black; padding:0.8rem 2rem; border-radius:50px; text-decoration:none; font-weight:700;">SEND</a>
+          </div>
+          <div class="channel discord">
+            <i class="fab fa-discord"></i>
+            <p>Server</p>
+            <strong>discord.gg/SuBfcfFJnG</strong>
+            <button onclick="window.open('https://discord.gg/SuBfcfFJnG','_blank')" style="margin-top:1rem; background:#5865F2; color:white; border:none; padding:0.9rem 2rem; border-radius:50px; font-weight:700; cursor:pointer;">JOIN</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 gooners.wtf • 07:27 AM CST, November 10</p>
+  </footer>
+
+  <script>
+    let names = [];
+    const proxy = "https://api.allorigins.ml/get?url=";
+
+    // Loading animation
+    let progress = 0;
+    const fill = document.getElementById('fill');
+    const loader = document.getElementById('loader');
+    const interval = setInterval(() => {
+      progress += 2;
+      fill.style.width = progress + '%';
+      if (progress >= 100) {
+        clearInterval(interval);
+        setTimeout(() => loader.style.opacity = '0', 300);
+        setTimeout(() => loader.style.display = 'none', 900);
+      }
+    }, 30);
+
+    async function load() {
+      const files = [
+        "https://raw.githubusercontent.com/projectZ678/gooners.wtf/main/AVAILABLE_1.txt",
+        "https://raw.githubusercontent.com/projectZ678/gooners.wtf/main/AVAILABLE_2.txt"
+      ];
+
+      for (let file of files) {
+        try {
+          const res = await fetch(proxy + encodeURIComponent(file));
+          const data = await res.json();
+          data.contents.split('\n').forEach(line => {
+            const n = line.trim();
+            if (n.length === 4 && /^[a-z0-9]{4}$/.test(n)) names.push(n);
+          });
+        } catch(e) {}
+      }
+
+      names = [...new Set(names)];
+      document.getElementById('status').innerHTML = 
+        `Loaded <strong>${names.length}</strong> names`;
+      document.getElementById('gen').disabled = false;
+    }
+
+    function gen() {
+      if (names.length === 0) {
+        document.getElementById('status').innerHTML = "No names left";
+        return;
+      }
+      const i = Math.floor(Math.random() * names.length);
+      const name = names[i];
+      names.splice(i, 1);
+
+      document.getElementById('name').textContent = name;
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('status').innerHTML = 
+        `<strong>${names.length}</strong> remaining`;
+    }
+
+    function copy() {
+      navigator.clipboard.writeText(document.getElementById('name').textContent);
+      alert("Copied");
+    }
+
+    function show(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      document.getElementById(id + '-page').classList.add('active');
+      document.querySelector(`[data-page="${id}"]`).classList.add('active');
+    }
+
+    document.querySelectorAll('.nav-link').forEach(l => {
+      l.addEventListener('click', e => {
+        e.preventDefault();
+        show(l.dataset.page);
+      });
+    });
+
+    window.onload = () => {
+      setTimeout(load, 800);
+    };
+  </script>
+</body>
+</html>
