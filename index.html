@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gooners.wtf</title>
+
+  <!-- Preload -->
+  <link rel="preload" href="girl.mp3" as="audio" type="audio/mpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    :root {
+      --bg: #000;
+      --card: rgba(20, 20, 25, 0.08);
+      --border: rgba(255, 255, 255, 0.12);
+      --glow: rgba(255, 255, 255, 0.22);
+      --text: #ffffff;
+      --accent: #ffffff;
+      --glow-intense: rgba(255, 255, 255, 0.7);
+      --transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      --noise-opacity: 0.035;
+      --hover-glow: rgba(255, 255, 255, 0.5);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html, body { 
+      height:100%; 
+      overflow:hidden; 
+      background:var(--bg); 
+      font-family:'Orbitron',sans-serif; 
+      cursor:none !important; /* HIDE NATIVE CURSOR */
+    }
+    body { 
+      filter:contrast(1.18) brightness(1.1) saturate(1.15); 
+      image-rendering:crisp-edges; 
+    }
+
+    /* CUSTOM CROSSHAIR CURSOR */
+    .cursor { 
+      position:fixed; 
+      width:28px; 
+      height:28px; 
+      pointer-events:none; 
+      z-index:9999; 
+      transform:translate(-50%,-50%); 
+      transition:transform .06s ease; 
+      mix-blend-mode:difference; 
+      opacity:0.95; 
+    }
+    .cursor::before, .cursor::after { 
+      content:''; 
+      position:absolute; 
+      background:var(--accent); 
+      box-shadow:0 0 14px var(--accent), 0 0 28px var(--accent), 0 0 50px var(--glow-intense); 
+      transition:all .3s ease; 
+    }
+    .cursor::before { 
+      width:100%; 
+      height:2px; 
+      top:50%; 
+      left:0; 
+      transform:translateY(-50%); 
+    }
+    .cursor::after { 
+      width:2px; 
+      height:100%; 
+      left:50%; 
+      top:0; 
+      transform:translateX(-50%); 
+    }
+    .cursor.active::before, .cursor.active::after { 
+      box-shadow:0 0 22px #fff, 0 0 45px #fff, 0 0 70px var(--glow-intense); 
+      transform:scale(1.4); 
+    }
+
+    /* NOISE + SCANLINES */
+    .noise { 
+      position:fixed; 
+      inset:0; 
+      background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAPklEQVQYV2NkYGD4z8DAwMgABXAGBgaG/////38GRiYGP/7/TPD/f4ZGBgYQP/5nYGRgYGBgYGBgYGBgYGBgYGBgAOXpAb4hM7oAAAAASUVORK5CYII=') repeat; 
+      opacity:var(--noise-opacity); 
+      pointer-events:none; 
+      z-index:1; 
+      animation:noise .18s steps(2) infinite; 
+    }
+    @keyframes noise { 0% { transform:translate(0,0); } 100% { transform:translate(1.2px,1.2px); } }
+    .scanlines { 
+      position:fixed; 
+      inset:0; 
+      background:repeating-linear-gradient(0deg,rgba(0,0,0,.025),rgba(0,0,0,.025) 1px,transparent 1px,transparent 2px); 
+      pointer-events:none; 
+      z-index:2; 
+      opacity:.55; 
+      mix-blend-mode:overlay; 
+    }
+
+    /* LOADING - GLOWING TEXT */
+    #loading {
+      position:fixed; 
+      inset:0; 
+      background:var(--bg); 
+      z-index:10000; 
+      display:flex; 
+      flex-direction:column; 
+      justify-content:center; 
+      align-items:center; 
+      opacity:1; 
+      transition:opacity 0.6s ease;
+    }
+    .loading-title {
+      font-size:6.8rem; 
+      font-weight:900; 
+      letter-spacing:.48em;
+      background:linear-gradient(90deg, #fff, #ccc);
+      -webkit-background-clip:text; 
+      -webkit-text-fill-color:transparent;
+      text-shadow:0 0 16px var(--glow), 0 0 8px #fff;
+      position:relative; 
+      display:inline-block;
+      animation:fadeIn 1.2s ease forwards;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+    .loading-bar {
+      width:320px; 
+      height:3px; 
+      background:rgba(255,255,255,.2); 
+      margin-top:2.4rem; 
+      border-radius:2px; 
+      overflow:hidden;
+    }
+    .loading-progress {
+      width:0%; 
+      height:100%; 
+      background:#fff; 
+      border-radius:2px;
+      box-shadow:0 0 20px #fff; 
+      animation:load 2.2s ease forwards;
+    }
+    @keyframes load { to { width:100%; } }
+
+    /* HEADER - GLOWING LOGO */
+    header { 
+      position:fixed; 
+      top:0; 
+      left:0; 
+      right:0; 
+      padding:1.6rem 5%; 
+      display:flex; 
+      justify-content:space-between; 
+      align-items:center; 
+      backdrop-filter:blur(28px); 
+      background:rgba(10,10,15,.45); 
+      border-bottom:1.8px solid var(--border); 
+      z-index:999; 
+      opacity:0; 
+      transform:translateY(-40px); 
+      transition:var(--transition); 
+    }
+    header.in { opacity:1; transform:translateY(0); }
+    .logo {
+      font-size:2.1rem; 
+      font-weight:900; 
+      letter-spacing:.32em;
+      background:linear-gradient(90deg,#fff,#eee);
+      -webkit-background-clip:text; 
+      -webkit-text-fill-color:transparent;
+      text-shadow:0 0 16px var(--glow), 0 0 8px #fff;
+      display:flex; 
+      align-items:center; 
+      gap:10px; 
+      cursor:pointer;
+    }
+    .logo i { 
+      font-size:2.6rem; 
+      background:linear-gradient(90deg,#fff,#eee); 
+      -webkit-background-clip:text; 
+      -webkit-text-fill-color:transparent; 
+    }
+    nav ul { 
+      display:flex; 
+      gap:3.2rem; 
+      list-style:none; 
+    }
+    nav a { 
+      position:relative; 
+      font-size:1.28rem; 
+      font-weight:700; 
+      letter-spacing:.22em; 
+      color:var(--text); 
+      text-decoration:none; 
+      padding:.6rem 0; 
+      transition:var(--transition); 
+    }
+    nav a::after { 
+      content:''; 
+      position:absolute; 
+      left:0; 
+      bottom:-8px; 
+      width:0; 
+      height:2.8px; 
+      background:#fff; 
+      transition:width .4s ease; 
+      border-radius:2px; 
+    }
+    nav a:hover, nav a.active { color:#fff; }
+    nav a:hover::after, nav a.active::after { width:100%; }
+
+    /* FRAMES */
+    .frames-container { 
+      position:fixed; 
+      top:50%; 
+      left:50%; 
+      transform:translate(-50%,-50%); 
+      display:flex; 
+      gap:2.6rem; 
+      z-index:5; 
+      width:95%; 
+      max-width:1100px; 
+      justify-content:center; 
+      align-items:flex-start; 
+      filter:drop-shadow(0 20px 60px rgba(0,0,0,0.6)); 
+      opacity:0; 
+      transition:opacity 0.3s ease; 
+    }
+    .frames-container.in { opacity:1; }
+    .frame { 
+      background:var(--card); 
+      border:1.8px solid var(--border); 
+      border-radius:24px; 
+      padding:2.8rem 2.6rem; 
+      text-align:center; 
+      backdrop-filter:blur(22px); 
+      opacity:0; 
+      pointer-events:none; 
+      transition:var(--transition); 
+      box-shadow:0 14px 45px rgba(0,0,0,.5), 0 0 35px var(--glow), inset 0 0 30px rgba(255,255,255,.06); 
+    }
+    .frame.in { opacity:1; pointer-events:all; }
+    .frame:hover { 
+      transform:scale(1.04) translateY(-12px); 
+      box-shadow:0 0 80px var(--hover-glow), 0 20px 60px rgba(0,0,0,0.7); 
+    }
+    #main-frame { 
+      width:500px; 
+      background:linear-gradient(135deg,rgba(28,28,35,.1),rgba(15,15,20,.05)); 
+    }
+    #side-frame { 
+      width:360px; 
+      background:linear-gradient(135deg,rgba(20,20,28,.09),rgba(12,12,18,.04)); 
+    }
+
+    /* PFP RING */
+    .pfp-ring { 
+      position:relative; 
+      width:148px; 
+      height:148px; 
+      margin:0 auto 2rem; 
+      filter:drop-shadow(0 0 18px #fff) drop-shadow(0 0 35px #fff); 
+    }
+    .pfp { 
+      width:100%; 
+      height:100%; 
+      border-radius:50%; 
+      object-fit:cover; 
+      border:3px solid var(--border); 
+      filter:brightness(1.18) contrast(1.15) saturate(1.1); 
+      animation:spinBorder 10s linear infinite; 
+      box-shadow:inset 0 0 20px rgba(255,255,255,.3); 
+    }
+    @keyframes spinBorder { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+    .ring-glow { 
+      position:absolute; 
+      top:-14px; 
+      left:-14px; 
+      width:176px; 
+      height:176px; 
+      border:2.8px solid var(--border); 
+      border-radius:50%; 
+      opacity:.4; 
+      animation:pulseMono 4s ease-in-out infinite; 
+      box-shadow:0 0 30px #fff, 0 0 60px var(--glow-intense); 
+    }
+    @keyframes pulseMono { 0%,100% { transform:scale(1); opacity:.35; } 50% { transform:scale(1.45); opacity:.12; } }
+
+    /* TEXT - GLOWING */
+    .glow-text {
+      background:linear-gradient(90deg, #fff, #ddd);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-shadow:0 0 16px var(--glow), 0 0 8px #fff;
+    }
+    .name { 
+      font-size:2.6rem; 
+      font-weight:900; 
+      letter-spacing:.22em; 
+      margin-bottom:1rem; /* FIXED: comma → colon */
+    }
+    .bio { 
+      font-size:1.32rem; 
+      color:#f0f0f0; 
+      margin-bottom:2.4rem; 
+      letter-spacing:.18em; 
+      opacity:.96; 
+      font-family:'Share Tech Mono',monospace; 
+      text-shadow:0 0 12px rgba(255,255,255,.7); 
+    }
+
+    /* CIRCLE LINKS */
+    .circle-links { 
+      display:flex; 
+      justify-content:center; 
+      gap:2.1rem; 
+      margin-bottom:2.4rem; 
+    }
+    .circle { 
+      width:68px; 
+      height:68px; 
+      background:rgba(255,255,255,.06); 
+      border:1.8px solid var(--border); 
+      border-radius:50%; 
+      display:flex; 
+      align-items:center; 
+      justify-content:center; 
+      transition:var(--transition); 
+      position:relative; 
+      overflow:hidden; 
+      filter:drop-shadow(0 0 10px rgba(255,255,255,.3)); 
+    }
+    .circle::before { 
+      content:''; 
+      position:absolute; 
+      inset:0; 
+      background:radial-gradient(circle at center,rgba(255,255,255,.35),transparent 60%); 
+      opacity:0; 
+      transition:opacity .6s ease; 
+    }
+    .circle:hover::before { opacity:1; }
+    .circle:hover { 
+      background:rgba(255,255,255,.18); 
+      transform:scale(1.38) translateY(-12px); 
+      border-color:#fff; 
+      box-shadow:0 0 40px rgba(255,255,255,.7), 0 0 20px #fff; 
+    }
+    .circle img { 
+      width:32px; 
+      height:32px; 
+      filter:brightness(0) invert(1); 
+      opacity:.94; 
+    }
+
+    /* 4-LETTER VAULT - PURE WHITE, CENTERED */
+    .side-title {
+      font-size:1.48rem; 
+      font-weight:900; 
+      margin-bottom:1.6rem; 
+      text-align:center; 
+      letter-spacing:.18em;
+      background:linear-gradient(90deg, #fff, #ccc);
+      -webkit-background-clip:text; 
+      -webkit-text-fill-color:transparent;
+      text-shadow:0 0 16px var(--glow), 0 0 8px #fff;
+    }
+    .accounts-list {
+      display:flex; 
+      flex-direction:column; 
+      gap:1.1rem; 
+      max-height:480px; 
+      overflow-y:auto; 
+      padding-right:12px;
+    }
+    .accounts-list::-webkit-scrollbar { width:7px; }
+    .accounts-list::-webkit-scrollbar-track { background:rgba(255,255,255,.06); border-radius:7px; }
+    .accounts-list::-webkit-scrollbar-thumb { background:#fff; border-radius:7px; box-shadow:0 0 18px #fff; }
+    .account-item {
+      padding:1.1rem 1.3rem; 
+      background:rgba(255,255,255,.05); 
+      border:1.5px solid var(--border); 
+      border-radius:14px;
+      transition:var(--transition); 
+      position:relative; 
+      overflow:hidden; 
+      backdrop-filter:blur(5px);
+      display:flex; 
+      align-items:center; 
+      justify-content:center;
+    }
+    .account-item::before {
+      content:''; 
+      position:absolute; 
+      top:0; 
+      left:-100%; 
+      width:100%; 
+      height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+      transition:left .8s ease;
+    }
+    .account-item:hover::before { left:100%; }
+    .account-item:hover {
+      background:rgba(255,255,255,.14); 
+      transform:scale(1.04); 
+      border-color:#fff;
+      box-shadow:0 0 28px rgba(255,255,255,.7);
+    }
+    .account-name {
+      font-size:1.1rem; 
+      letter-spacing:.1em; 
+      font-family:'Share Tech Mono',monospace;
+      background:linear-gradient(90deg, #fff, #ddd);
+      -webkit-background-clip:text; 
+      -webkit-text-fill-color:transparent;
+      text-shadow:0 0 12px var(--glow), 0 0 6px #fff;
+      font-weight:700;
+    }
+
+    /* CONTACT PAGE */
+    #contact-page { 
+      display:none; 
+      position:fixed; 
+      inset:0; 
+      padding:2rem; 
+      overflow-y:auto; 
+      z-index:10; 
+      opacity:0; 
+      transition:opacity 0.3s ease; 
+    }
+    #contact-page.active { display:block; opacity:1; }
+    .contact-container { 
+      position:fixed; 
+      top:50%; 
+      left:50%; 
+      transform:translate(-50%,-50%); 
+      display:flex; 
+      gap:2.6rem; 
+      width:95%; 
+      max-width:1100px; 
+      filter:drop-shadow(0 20px 60px rgba(0,0,0,0.6)); 
+    }
+    .contact-frame { 
+      background:var(--card); 
+      border:1.8px solid var(--border); 
+      border-radius:24px; 
+      padding:2.8rem 2.6rem; 
+      backdrop-filter:blur(22px); 
+      opacity:0; 
+      pointer-events:none; 
+      transition:var(--transition); 
+      box-shadow:0 14px 45px rgba(0,0,0,.5), 0 0 35px var(--glow), inset 0 0 30px rgba(255,255,255,.06); 
+    }
+    .contact-frame.in { opacity:1; pointer-events:all; }
+    .contact-frame:hover { 
+      transform:scale(1.04) translateY(-12px); 
+      box-shadow:0 0 80px var(--hover-glow), 0 20px 60px rgba(0,0,0,0.7); 
+    }
+    #contact-left { width:500px; text-align:center; }
+    #contact-right { width:640px; }
+    .opsec-img { 
+      width:100%; 
+      border-radius:32px; 
+      border:6px solid #fff; 
+      box-shadow:0 0 60px rgba(255,255,255,0.3); 
+      margin-bottom:2rem; 
+    }
+    .opsec-title { 
+      font-size:3.2rem; 
+      font-weight:900; 
+      letter-spacing:.12em; 
+      margin-top:1.2rem; 
+    }
+
+    .contact-card { 
+      background:rgba(255,255,255,.05); 
+      border:1.5px solid var(--border); 
+      border-radius:22px; 
+      padding:2.2rem; 
+      display:flex; 
+      align-items:center; 
+      gap:2rem; 
+      margin-bottom:2rem; 
+      transition:var(--transition); 
+    }
+    .contact-card:hover { 
+      background:rgba(255,255,255,.12); 
+      transform:translateY(-8px); 
+      box-shadow:0 0 40px var(--hover-glow); 
+    }
+    .contact-icon { 
+      width:76px; 
+      height:76px; 
+      background:rgba(255,255,255,.1); 
+      border:2px solid var(--border); 
+      border-radius:50%; 
+      display:flex; 
+      align-items:center; 
+      justify-content:center; 
+      font-size:2.1rem; 
+      color:#fff; 
+    }
+    .contact-details h3 { 
+      font-size:1.68rem; 
+      font-weight:900; 
+      margin-bottom:.5rem; 
+      letter-spacing:.09em; 
+    }
+    .contact-details p { 
+      font-size:1.22rem; 
+      color:#ccc; 
+      font-family:'Share Tech Mono',monospace; 
+    }
+    .contact-details a { 
+      color:#fff; 
+      text-decoration:none; 
+      margin-top:.7rem; 
+      display:inline-block; 
+      font-weight:600; 
+      font-size:1.1rem; 
+      transition:color .3s; 
+    }
+    .contact-details a:hover { 
+      color:#fff; 
+      text-shadow:0 0 12px #fff; 
+    }
+
+    .warning { 
+      margin-top:3.2rem; 
+      background:rgba(255,255,255,.06); 
+      border:2px solid var(--border); 
+      border-radius:26px; 
+      padding:3rem; 
+      text-align:center; 
+      color:#eee; 
+      font-family:'Share Tech Mono',monospace; 
+    }
+    .warning strong { 
+      font-size:2.1rem; 
+      display:block; 
+      margin-bottom:1.2rem; 
+    }
+
+    /* AUDIO PLAYER */
+    #audio-player { 
+      position:fixed; 
+      bottom:2.2rem; 
+      left:50%; 
+      transform:translateX(-50%); 
+      width:92%; 
+      max-width:640px; 
+      background:rgba(6,6,10,.12); 
+      border:1.8px solid var(--border); 
+      border-radius:22px; 
+      padding:1.2rem 1.8rem; 
+      display:flex; 
+      flex-direction:column; 
+      align-items:center; 
+      gap:.9rem; 
+      z-index:100; 
+      opacity:0; 
+      pointer-events:none; 
+      transition:var(--transition); 
+      backdrop-filter:blur(28px); 
+      box-shadow:0 14px 45px rgba(0,0,0,.6),0 0 35px var(--glow); 
+    }
+    #audio-player.show { opacity:1; pointer-events:all; }
+    .song-name { 
+      font-size:1.1rem; 
+      font-weight:600; 
+      letter-spacing:.1em; 
+      opacity:.97; 
+      font-family:'Share Tech Mono',monospace; 
+      text-shadow:0 0 12px #fff; 
+      background:linear-gradient(90deg, #fff, #ccc); 
+      -webkit-background-clip:text; 
+      -webkit-text-fill-color:transparent; 
+    }
+    .player-controls { 
+      display:flex; 
+      align-items:center; 
+      justify-content:center; 
+      gap:1.8rem; 
+      width:100%; 
+    }
+    .play-btn { 
+      background:rgba(255,255,255,.08); 
+      border:1.8px solid var(--border); 
+      color:#fff; 
+      width:50px; 
+      height:50px; 
+      border-radius:50%; 
+      font-size:1.4rem; 
+      cursor:pointer; 
+      display:flex; 
+      align-items:center; 
+      justify-content:center; 
+      transition:var(--transition); 
+      box-shadow:0 0 16px rgba(255,255,255,.6); 
+    }
+    .play-btn:hover { 
+      background:rgba(255,255,255,.28); 
+      transform:scale(1.2); 
+      border-color:#fff; 
+      box-shadow:0 0 40px rgba(255,255,255,.9); 
+    }
+    .progress-container { 
+      flex:1; 
+      height:8px; 
+      background:rgba(255,255,255,.12); 
+      border-radius:5px; 
+      overflow:hidden; 
+      margin:0 1.6rem; 
+      position:relative; 
+    }
+    .progress { 
+      height:100%; 
+      background:#fff; 
+      width:0%; 
+      border-radius:5px; 
+      box-shadow:0 0 20px #fff; 
+      background:linear-gradient(90deg, #fff, #ddd); 
+    }
+    .progress::after { 
+      content:''; 
+      position:absolute; 
+      right:0; 
+      top:50%; 
+      width:13px; 
+      height:13px; 
+      background:#fff; 
+      border-radius:50%; 
+      transform:translateY(-50%); 
+      box-shadow:0 0 22px #fff; 
+    }
+
+    @media (max-width:992px) {
+      .frames-container, .contact-container { 
+        flex-direction:column; 
+        align-items:center; 
+        gap:2.4rem; 
+      }
+      #main-frame, #contact-left, #contact-right { 
+        width:92%; 
+        max-width:480px; 
+      }
+      .loading-title { font-size:5.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CUSTOM CURSOR -->
+  <div class="cursor"></div>
+  <div class="noise"></div>
+  <div class="scanlines"></div>
+
+  <!-- LOADING -->
+  <div id="loading">
+    <div class="loading-title glow-text">GOONERS.WTF</div>
+    <div class="loading-bar"><div class="loading-progress"></div></div>
+  </div>
+
+  <!-- HEADER -->
+  <header id="header">
+    <div class="logo" id="home-link">GOONERS</div>
+    <nav>
+      <ul>
+        <li><a href="#" class="nav-link active" data-page="home">HOME</a></li>
+        <li><a href="#" class="nav-link" data-page="contact">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HOME -->
+  <div class="frames-container" id="home-container">
+    <div id="main-frame" class="frame">
+      <div class="pfp-ring">
+        <div class="ring-glow"></div>
+        <img src="https://i.pinimg.com/originals/f8/c9/70/f8c970cc58337600914e75b661c0752a.jpg" alt="pfp" class="pfp">
+      </div>
+      <div class="name glow-text" id="profile-name"></div>
+      <div class="bio" id="bio"></div>
+      <div class="circle-links">
+        <a href="https://www.tiktok.com/@rdm.sxin" target="_blank" class="circle"><img src="https://cdn.simpleicons.org/tiktok/white" alt="TikTok"></a>
+        <a href="https://github.com/projectZ678" target="_blank" class="circle"><img src="https://cdn.simpleicons.org/github/white" alt="GitHub"></a>
+      </div>
+    </div>
+    <div id="side-frame" class="frame">
+      <div class="side-title glow-text">4-LETTER DISCORD TAGS</div>
+      <div class="accounts-list" id="accounts-list"></div>
+    </div>
+  </div>
+
+  <!-- CONTACT PAGE -->
+  <div id="contact-page">
+    <div class="contact-container">
+      <div id="contact-left" class="contact-frame">
+        <img src="https://i.pinimg.com/736x/87/79/7a/87797acc01a9771858efabf3c7b1fe00.jpg" class="opsec-img" alt="OPSEC">
+        <div class="opsec-title glow-text">OPSEC DIVISION</div>
+      </div>
+      <div id="contact-right" class="contact-frame">
+        <div class="contact-card">
+          <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+          <div class="contact-details">
+            <h3 class="glow-text">EMAIL SUPPORT</h3>
+            <p>Official contact address</p>
+            <a href="mailto:opsec@gooners.wtf">opsec@gooners.wtf</a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon"><i class="fab fa-discord"></i></div>
+          <div class="contact-details">
+            <h3 class="glow-text">DISCORD SERVER</h3>
+            <p>Join our official community</p>
+            <a href="#" id="discord-link2">discord.gg/SuBfcfFJnG</a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon"><i class="fas fa-headset"></i></div>
+          <div class="contact-details">
+            <h3 class="glow-text">NEED HELP?</h3>
+            <p>Direct message for support</p>
+            <a href="#">DM @6ypu • Reply in less than 12h</a>
+          </div>
+        </div>
+        <div class="warning">
+          <strong class="glow-text">BEWARE OF SCAMMERS</strong>
+          We will NEVER ask for passwords • Only use official links above
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="discord-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" id="close-modal">×</span>
+      <i class="fab fa-discord"></i>
+      <h2 class="glow-text">JOIN GOONERS.WTF</h2>
+      <p>You are about to join the official Discord server.</p>
+      <div class="modal-btns">
+        <button id="cancel-modal" class="modal-btn cancel">Cancel</button>
+        <button id="confirm-join" class="modal-btn confirm">JOIN SERVER</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUDIO -->
+  <audio id="hellsong" src="girl.mp3" loop preload="auto"></audio>
+  <div id="audio-player">
+    <div class="song-name">girl.mp3 - gooners.wtf</div>
+    <div class="player-controls">
+      <button class="play-btn" id="play-btn"><i class="fas fa-play"></i></button>
+      <div class="progress-container"><div class="progress" id="progress"></div></div>
+    </div>
+  </div>
+
+  <script>
+    // === ELEMENTS ===
+    const els = {
+      cursor: document.querySelector('.cursor'),
+      audio: document.getElementById('hellsong'),
+      progress: document.getElementById('progress'),
+      playBtn: document.getElementById('play-btn'),
+      loading: document.getElementById('loading'),
+      header: document.getElementById('header'),
+      home: document.getElementById('home-container'),
+      contact: document.getElementById('contact-page'),
+      mainFrame: document.getElementById('main-frame'),
+      sideFrame: document.getElementById('side-frame'),
+      contactLeft: document.getElementById('contact-left'),
+      contactRight: document.getElementById('contact-right'),
+      modal: document.getElementById('discord-modal'),
+      navLinks: document.querySelectorAll('.nav-link'),
+      profileName: document.getElementById('profile-name'),
+      bio: document.getElementById('bio'),
+      accountsList: document.getElementById('accounts-list')
+    };
+
+    // === TYPEWRITER ===
+    const typeWriter = (el, text, speed = 100, pause = 2000) => {
+      let i = 0, deleting = false;
+      const loop = () => {
+        el.textContent = text.substring(0, i);
+        if (!deleting && i === text.length) setTimeout(() => { deleting = true; loop(); }, pause);
+        else if (deleting && i === 0) { deleting = false; setTimeout(loop, speed * 2); }
+        else { i += deleting ? -1 : 1; setTimeout(loop, deleting ? speed / 2 : speed); }
+      };
+      loop();
+    };
+
+    // === INIT ===
+    window.onload = () => {
+      els.audio.volume = 0.5;
+      typeWriter(els.profileName, "GOONERS.WTF", 140, 3400);
+      setTimeout(() => typeWriter(els.bio, "Main Account • Verified Presence", 100, 2700), 1400);
+
+      setTimeout(() => {
+        els.loading.style.opacity = '0';
+        setTimeout(() => {
+          els.loading.remove();
+          els.header.classList.add('in');
+          els.mainFrame.classList.add('in');
+          els.sideFrame.classList.add('in');
+          document.getElementById('audio-player').classList.add('show');
+          els.home.style.opacity = '1';
+        }, 300);
+      }, 2400);
+    };
+
+    // === CUSTOM CURSOR - FIXED & ALWAYS ACTIVE ===
+    document.addEventListener('mousemove', e => {
+      els.cursor.style.left = e.clientX + 'px';
+      els.cursor.style.top = e.clientY + 'px';
+    });
+    document.addEventListener('mousedown', () => els.cursor.classList.add('active'));
+    document.addEventListener('mouseup', () => els.cursor.classList.remove('active'));
+
+    // === NAVIGATION ===
+    const showPage = (page) => {
+      els.contact.classList.remove('active');
+      els.home.style.opacity = '0';
+      els.navLinks.forEach(l => l.classList.remove('active'));
+
+      if (page === 'contact') {
+        els.contact.classList.add('active');
+        els.navLinks[1].classList.add('active');
+        els.home.style.display = 'none';
+        setTimeout(() => { els.contactLeft.classList.add('in'); els.contactRight.classList.add('in'); }, 50);
+      } else {
+        els.home.style.display = 'flex';
+        setTimeout(() => els.home.style.opacity = '1', 50);
+        els.navLinks[0].classList.add('active');
+      }
+    };
+    els.navLinks.forEach(l => l.addEventListener('click', e => { e.preventDefault(); showPage(l.dataset.page); }));
+    document.getElementById('home-link').addEventListener('click', () => showPage('home'));
+
+    // === MODAL ===
+    const openModal = () => els.modal.style.display = 'flex';
+    const closeModal = () => els.modal.style.display = 'none';
+    document.getElementById('discord-link2')?.addEventListener('click', e => { e.preventDefault(); openModal(); });
+    [document.getElementById('close-modal'), document.getElementById('cancel-modal')].forEach(b => b.addEventListener('click', closeModal));
+    document.getElementById('confirm-join').addEventListener('click', () => {
+      window.open('https://discord.gg/SuBfcfFJnG', '_blank');
+      closeModal();
+    });
+    els.modal.addEventListener('click', e => e.target === els.modal && closeModal());
+
+    // === AUDIO ===
+    els.playBtn.addEventListener('click', () => {
+      if (els.audio.paused) {
+        els.audio.play();
+        els.playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      } else {
+        els.audio.pause();
+        els.playBtn.innerHTML = '<i class="fas fa-play"></i>';
+      }
+    });
+    els.audio.ontimeupdate = () => {
+      els.progress.style.width = (els.audio.currentTime / els.audio.duration * 100 || 0) + '%';
+    };
+
+    // === 4-LETTER TAGS ===
+    const tags = ["@6qfc","@9hfg","@9hcx","@9hbz","@4pyr","@6ukt","@1kuf","@6ukf","@3xuf","@6nvd","@3ypf","@cs1p","@1hrm","@1opc","@op5c","@0bch","@g1ua","@1ger","@9ovx","@up6f","@6ymx","@9gyp","@2cfr","@0vfh","@cvu3","@6auth","@9pud","@0gfr","@9cxd","@9fuv","@2kuc","@1lku","@8lku","@0duv","@6ypu"];
+    tags.forEach(tag => {
+      const div = document.createElement('div');
+      div.className = 'account-item';
+      div.innerHTML = `<div class="account-name glow-text">${tag}</div>`;
+      els.accountsList.appendChild(div);
+    });
+  </script>
+</body>
+</html>
