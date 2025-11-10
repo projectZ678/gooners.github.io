@@ -32,7 +32,7 @@
       overflow:hidden; 
       background:var(--bg); 
       font-family:'Orbitron',sans-serif; 
-      cursor:none !important; /* HIDE NATIVE CURSOR */
+      cursor:none !important;
     }
     body { 
       filter:contrast(1.18) brightness(1.1) saturate(1.15); 
@@ -58,20 +58,8 @@
       box-shadow:0 0 14px var(--accent), 0 0 28px var(--accent), 0 0 50px var(--glow-intense); 
       transition:all .3s ease; 
     }
-    .cursor::before { 
-      width:100%; 
-      height:2px; 
-      top:50%; 
-      left:0; 
-      transform:translateY(-50%); 
-    }
-    .cursor::after { 
-      width:2px; 
-      height:100%; 
-      left:50%; 
-      top:0; 
-      transform:translateX(-50%); 
-    }
+    .cursor::before { width:100%; height:2px; top:50%; left:0; transform:translateY(-50%); }
+    .cursor::after { width:2px; height:100%; left:50%; top:0; transform:translateX(-50%); }
     .cursor.active::before, .cursor.active::after { 
       box-shadow:0 0 22px #fff, 0 0 45px #fff, 0 0 70px var(--glow-intense); 
       transform:scale(1.4); 
@@ -98,7 +86,7 @@
       mix-blend-mode:overlay; 
     }
 
-    /* LOADING - GLOWING TEXT */
+    /* LOADING */
     #loading {
       position:fixed; 
       inset:0; 
@@ -142,7 +130,7 @@
     }
     @keyframes load { to { width:100%; } }
 
-    /* HEADER - GLOWING LOGO */
+    /* HEADER */
     header { 
       position:fixed; 
       top:0; 
@@ -244,14 +232,8 @@
       transform:scale(1.04) translateY(-12px); 
       box-shadow:0 0 80px var(--hover-glow), 0 20px 60px rgba(0,0,0,0.7); 
     }
-    #main-frame { 
-      width:500px; 
-      background:linear-gradient(135deg,rgba(28,28,35,.1),rgba(15,15,20,.05)); 
-    }
-    #side-frame { 
-      width:360px; 
-      background:linear-gradient(135deg,rgba(20,20,28,.09),rgba(12,12,18,.04)); 
-    }
+    #main-frame { width:500px; background:linear-gradient(135deg,rgba(28,28,35,.1),rgba(15,15,20,.05)); }
+    #side-frame { width:360px; background:linear-gradient(135deg,rgba(20,20,28,.09),rgba(12,12,18,.04)); }
 
     /* PFP RING */
     .pfp-ring { 
@@ -297,7 +279,7 @@
       font-size:2.6rem; 
       font-weight:900; 
       letter-spacing:.22em; 
-      margin-bottom:1rem; /* FIXED: comma → colon */
+      margin-bottom:1rem; 
     }
     .bio { 
       font-size:1.32rem; 
@@ -352,7 +334,7 @@
       opacity:.94; 
     }
 
-    /* 4-LETTER VAULT - PURE WHITE, CENTERED */
+    /* 4-LETTER VAULT */
     .side-title {
       font-size:1.48rem; 
       font-weight:900; 
@@ -774,7 +756,8 @@
       navLinks: document.querySelectorAll('.nav-link'),
       profileName: document.getElementById('profile-name'),
       bio: document.getElementById('bio'),
-      accountsList: document.getElementById('accounts-list')
+      accountsList: document.getElementById('accounts-list'),
+      audioPlayer: document.getElementById('audio-player')
     };
 
     // === TYPEWRITER ===
@@ -789,12 +772,15 @@
       loop();
     };
 
-    // === INIT ===
+    // === INIT - AUTOPLAY AFTER LOADING ===
     window.onload = () => {
       els.audio.volume = 0.5;
+
+      // Start typing
       typeWriter(els.profileName, "GOONERS.WTF", 140, 3400);
       setTimeout(() => typeWriter(els.bio, "Main Account • Verified Presence", 100, 2700), 1400);
 
+      // After loading screen → play audio
       setTimeout(() => {
         els.loading.style.opacity = '0';
         setTimeout(() => {
@@ -802,13 +788,21 @@
           els.header.classList.add('in');
           els.mainFrame.classList.add('in');
           els.sideFrame.classList.add('in');
-          document.getElementById('audio-player').classList.add('show');
+          els.audioPlayer.classList.add('show');
           els.home.style.opacity = '1';
+
+          // AUTOPLAY AUDIO
+          els.audio.play().catch(() => {
+            // Fallback: Show play button if autoplay blocked
+            els.playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          });
+          els.playBtn.innerHTML = '<i class="fas fa-pause"></i>'; // Show pause
+
         }, 300);
       }, 2400);
     };
 
-    // === CUSTOM CURSOR - FIXED & ALWAYS ACTIVE ===
+    // === CURSOR ===
     document.addEventListener('mousemove', e => {
       els.cursor.style.left = e.clientX + 'px';
       els.cursor.style.top = e.clientY + 'px';
@@ -847,7 +841,7 @@
     });
     els.modal.addEventListener('click', e => e.target === els.modal && closeModal());
 
-    // === AUDIO ===
+    // === AUDIO CONTROL (TOGGLE) ===
     els.playBtn.addEventListener('click', () => {
       if (els.audio.paused) {
         els.audio.play();
@@ -857,6 +851,8 @@
         els.playBtn.innerHTML = '<i class="fas fa-play"></i>';
       }
     });
+
+    // Progress bar
     els.audio.ontimeupdate = () => {
       els.progress.style.width = (els.audio.currentTime / els.audio.duration * 100 || 0) + '%';
     };
