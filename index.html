@@ -5,285 +5,330 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>gooners.wtf</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Roboto+Mono:wght@400;700&display=swap');
-    
     :root {
-      --bg: #000;
-      --card: #0a0a0a;
-      --text: #fff;
-      --glow: rgba(255,255,255,0.8);
-      --border: rgba(255,255,255,0.2);
-      --accent: #00ffcc;
+      --bg: #000000;
+      --card: #0d0d0d;
+      --text: #ffffff;
+      --text-muted: #aaaaaa;
+      --border: #222222;
+      --glow: rgba(255, 255, 255, 0.15);
+      --accent: #ffffff;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Roboto Mono', monospace;
+      font-family: 'Inter', sans-serif;
       min-height: 100vh;
-      overflow-x: hidden;
+      line-height: 1.6;
     }
     header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      padding: 1.5rem 5%; backdrop-filter: blur(20px);
-      background: rgba(0,0,0,0.85); border-bottom: 1px solid var(--border);
+      padding: 1.5rem 6%; background: rgba(0,0,0,0.92);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
       display: flex; justify-content: space-between; align-items: center;
     }
     .logo {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.4rem; font-weight: 900; letter-spacing: 6px;
-      display: flex; align-items: center; gap: 14px;
-      text-shadow: 0 0 30px var(--glow);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem; font-weight: 900; letter-spacing: 4px;
+      display: flex; align-items: center; gap: 12px;
       cursor: pointer;
     }
     .logo-icon {
-      font-size: 3rem; color: white;
-      filter: drop-shadow(0 0 20px white);
-      animation: pulse 3s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+      font-size: 2.4rem; color: white;
+      filter: drop-shadow(0 0 10px white);
     }
     nav ul {
       display: flex; gap: 3rem; list-style: none;
     }
     nav a {
-      color: #aaa; text-decoration: none; font-weight: 700;
-      position: relative; transition: 0.4s;
-      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+      color: var(--text-muted); text-decoration: none; font-weight: 600;
+      font-size: 1.05rem; position: relative; transition: 0.3s;
     }
     nav a::after {
-      content: ''; position: absolute; bottom: -10px; left: 0; width: 0; height: 2px;
-      background: white; box-shadow: 0 0 15px white; transition: 0.4s;
+      content: ''; position: absolute; bottom: -8px; left: 0; width: 0; height: 2px;
+      background: white; transition: 0.3s;
     }
     nav a:hover, nav a.active {
-      color: white; text-shadow: 0 0 20px white;
+      color: white;
     }
     nav a:hover::after, nav a.active::after { width: 100%; }
 
-    .container { max-width: 1400px; margin: 0 auto; padding: 2rem; padding-top: 130px; }
-    .page { display: none; opacity: 0; transition: all 0.6s ease; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 2rem 6%; padding-top: 130px; }
+    .page { display: none; opacity: 0; transition: opacity 0.5s ease; }
     .page.active { display: block; opacity: 1; }
 
-    .hero {
-      text-align: center; padding: 6rem 0;
-    }
+    .hero { text-align: center; padding: 5rem 0; }
     .hero h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 6rem; font-weight: 900; letter-spacing: 8px;
-      background: linear-gradient(90deg, #fff, #00ffcc, #fff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 40px rgba(0,255,255,0.5);
-      margin-bottom: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 5.5rem; font-weight: 900; letter-spacing: 6px;
+      color: white; text-shadow: 0 0 20px rgba(255,255,255,0.3);
     }
     .hero p {
-      font-size: 1.4rem; color: #aaa; margin: 1.5rem 0;
-      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+      font-size: 1.3rem; color: var(--text-muted); margin: 1.5rem 0;
     }
     .avatar {
-      width: 200px; height: 200px; border-radius: 50%; margin: 2rem auto;
-      border: 4px solid white; box-shadow: 0 0 60px rgba(255,255,255,0.6);
+      width: 180px; height: 180px; border-radius: 50%; margin: 2.5rem auto;
+      border: 3px solid white; box-shadow: 0 0 40px rgba(255,255,255,0.25);
       background: url('https://i.pinimg.com/736x/f8/c9/70/f8c970cc58337600914e75b661c0752a.jpg') center/cover;
-      animation: float 6s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
     }
 
-    .generate-btn {
-      background: transparent;
-      color: white;
-      border: 3px solid white;
-      padding: 1.5rem 4rem;
-      font-size: 1.8rem;
-      font-weight: 900;
-      border-radius: 50px;
-      cursor: pointer;
-      margin-top: 3rem;
-      box-shadow: 0 0 40px rgba(255,255,255,0.5);
-      transition: all 0.4s;
-      font-family: 'Orbitron', sans-serif;
-      letter-spacing: 3px;
+    .btn-primary {
+      background: transparent; color: white; border: 2px solid white;
+      padding: 1.2rem 3.5rem; font-size: 1.3rem; font-weight: 700;
+      border-radius: 50px; cursor: pointer; transition: 0.4s;
+      font-family: 'JetBrains Mono', monospace; margin-top: 2rem;
     }
-    .generate-btn:hover {
-      background: white;
-      color: black;
-      transform: scale(1.1);
-      box-shadow: 0 0 80px white;
-    }
-
-    .result {
-      margin-top: 3rem;
-      padding: 2rem;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
-      display: none;
-    }
-    .username {
-      font-size: 4rem;
-      font-family: 'Orbitron', sans-serif;
-      text-align: center;
-      background: linear-gradient(90deg, #fff, #00ffcc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 30px rgba(0,255,255,0.7);
-    }
-    .copy-btn {
-      background: white; color: black; border: none;
-      padding: 1rem 2rem; border-radius: 50px; font-weight: bold;
-      margin-top: 1rem; cursor: pointer;
-      box-shadow: 0 0 30px white;
+    .btn-primary:hover {
+      background: white; color: black; transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(255,255,255,0.2);
     }
 
     .socials a {
-      font-size: 2.5rem; color: white; margin: 0 1.5rem; transition: 0.4s;
-      filter: drop-shadow(0 0 15px white);
+      font-size: 2.2rem; color: white; margin: 0 1.2rem; transition: 0.3s;
     }
-    .socials a:hover { transform: scale(1.5) rotate(10deg); color: #00ffcc; }
+    .socials a:hover { transform: scale(1.3); }
+
+    .generator-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 3rem; margin: 3rem 0;
+      text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .vault-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem; color: #00ff00; margin: 1.5rem 0;
+    }
+    .username-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 4.5rem; font-weight: 700; margin: 2rem 0;
+      color: white; text-shadow: 0 0 30px rgba(255,255,255,0.5);
+      letter-spacing: 10px;
+    }
+    .copy-btn {
+      background: white; color: black; border: none;
+      padding: 1rem 2.5rem; border-radius: 50px; font-weight: 700;
+      cursor: pointer; margin-top: 1rem;
+      transition: 0.3s;
+    }
+    .copy-btn:hover { transform: scale(1.05); }
+
+    .contact-container {
+      max-width: 1000px; margin: 4rem auto;
+      display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem;
+      align-items: start;
+    }
+    .opsec-pfp img {
+      width: 100%; max-width: 380px; border-radius: 24px;
+      border: 3px solid white;
+      box-shadow: 0 0 50px rgba(255,255,255,0.3);
+    }
+    .opsec-badge {
+      margin-top: 1rem; color: white; font-weight: 800;
+      font-size: 1.3rem; letter-spacing: 2px;
+      text-shadow: 0 0 15px white;
+    }
+
+    .contact-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 24px; padding: 2.5rem;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+    }
+    .channel {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.8rem; margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .channel i { font-size: 2.2rem; margin-bottom: 0.8rem; }
+    .channel.email i { color: #00ffcc; }
+    .channel.discord i { color: #5865F2; }
+    .channel strong { color: white; font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; }
+    .email-btn { background: #00ffcc; color: black; padding: 0.9rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 700; }
+    .discord-btn { background: #5865F2; color: white; border: none; padding: 0.9rem 2rem; border-radius: 50px; font-weight: 700; cursor: pointer; }
+
+    .warning {
+      background: rgba(255,0,0,0.15); border: 1px solid rgba(255,0,0,0.4);
+      border-radius: 16px; padding: 2rem; text-align: center;
+      max-width: 700px; margin: 3rem auto; color: #ff6b6b;
+    }
 
     footer {
-      text-align: center; padding: 4rem; color: #666;
-      border-top: 1px solid var(--border); margin-top: 8rem;
+      text-align: center; padding: 4rem 0; color: #555;
+      border-top: 1px solid var(--border); margin-top: 6rem;
       font-size: 0.9rem;
     }
 
-    .loading {
-      text-align: center; color: #00ffcc; font-size: 1.2rem; margin: 2rem 0;
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 3.5rem; }
+      .contact-container { grid-template-columns: 1fr; }
+      .username-display { font-size: 3rem; }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="logo" onclick="showPage('home')">
-      <div class="logo-icon">†</div>
+      <div class="logo-icon">Cross</div>
       GOONERS
     </div>
     <nav>
       <ul>
-        <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
-        <li><a href="#" class="nav-link" data-page="generator">Generator</a></li>
-        <li><a href="#" class="nav-link" data-page="contact">Contact</a></li>
+        <li><a href="#" class="nav-link active" data-page="home">HOME</a></li>
+        <li><a href="#" class="nav-link" data-page="generator">VAULT</a></li>
+        <li><a href="#" class="nav-link" data-page="contact">CONTACT</a></li>
       </ul>
     </nav>
   </header>
 
   <div class="container">
-    <!-- Home -->
+    <!-- HOME -->
     <div id="home-page" class="page active">
       <div class="hero">
         <h1>GOONERS.WTF</h1>
-        <p>Exclusive 4-Letter Discord Usernames • One Per Soul • Gone Forever</p>
+        <p>Exclusive 4-Letter Discord Vault • One Name Per Soul • Gone Forever</p>
         <div class="avatar"></div>
         <div class="socials">
           <a href="https://discord.gg/SuBfcfFJnG" target="_blank"><i class="fab fa-discord"></i></a>
           <a href="https://www.tiktok.com/@rdm.sxin" target="_blank"><i class="fab fa-tiktok"></i></a>
         </div>
-        <button class="generate-btn" onclick="showPage('generator')">
+        <button class="btn-primary" onclick="showPage('generator')">
           CLAIM YOUR NAME
         </button>
       </div>
     </div>
 
-    <!-- Generator -->
+    <!-- VAULT GENERATOR -->
     <div id="generator-page" class="page">
       <div class="hero">
         <h1>USERNAME VAULT</h1>
-        <p>One name. One chance. Never comes back.</p>
-        <div class="loading" id="loading">Loading vault from GitHub...</div>
-        <button class="generate-btn" id="genBtn" onclick="generateUsername()" disabled>
-          GENERATE NAME
-        </button>
+        <p>One name. One chance. Never returns.</p>
+        
+        <div class="generator-card">
+          <div class="vault-status" id="status">Connecting to vault...</div>
+          <button class="btn-primary" id="genBtn" onclick="generate()" disabled>
+            GENERATE NAME
+          </button>
 
-        <div class="result" id="result">
-          <div class="username" id="username"></div>
-          <p style="color:#aaa; margin:1rem 0;">This name is now yours forever.</p>
-          <button class="copy-btn" onclick="copyUsername()">COPY TO CLIPBOARD</button>
+          <div id="result" style="display:none; margin-top: 3rem;">
+            <div class="username-display" id="username"></div>
+            <p style="color:#888; font-size:1.1rem;">This name is now yours forever.</p>
+            <button class="copy-btn" onclick="copyName()">COPY NAME</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Contact (your original restored) -->
+    <!-- CONTACT -->
     <div id="contact-page" class="page">
       <div class="hero">
-        <h1 style="background: linear-gradient(90deg, #fff, #00ffcc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 4.5rem;">
-          CONTACT OPSEC
-        </h1>
-        <p style="color:#aaa; font-size:1.3rem; margin:1.5rem 0;">
-          Official channels • Verified presence
-        </p>
-        <!-- [Your full original contact HTML here - I'll keep it short for space] -->
-        <div style="max-width: 900px; margin: 3rem auto; text-align: center;">
-          <p style="color:#00ffcc; font-size:2rem; text-shadow: 0 0 20px #00ffcc;">
-            opsec@gooners.wtf<br>
-            discord.gg/SuBfcfFJnG
-          </p>
+        <h1>CONTACT OPSEC</h1>
+        <p style="color:#888;">Official channels only</p>
+      </div>
+
+      <div class="contact-container">
+        <div class="opsec-pfp">
+          <img src="https://i.pinimg.com/736x/87/79/7a/87797acc01a9771858efabf3c7b1fe00.jpg" alt="OPSEC">
+          <div class="opsec-badge">Cross OPSEC DIVISION Cross</div>
         </div>
+
+        <div class="contact-card">
+          <h2>SECURE CHANNELS</h2>
+
+          <div class="channel email">
+            <i class="fas fa-envelope"></i>
+            <p>Encrypted Email</p>
+            <strong>opsec@gooners.wtf</strong>
+            <a href="mailto:opsec@gooners.wtf" class="email-btn">SEND MESSAGE</a>
+          </div>
+
+          <div class="channel discord">
+            <i class="fab fa-discord"></i>
+            <p>Official Server</p>
+            <strong>discord.gg/SuBfcfFJnG</strong>
+            <button class="discord-btn" onclick="window.open('https://discord.gg/SuBfcfFJnG','_blank')">
+              JOIN SERVER
+            </button>
+          </div>
+
+          <div class="channel" style="border: 1px dashed #444;">
+            <p style="color:#00ffcc; font-weight:700;">Immediate help?</p>
+            <p style="color:#888; font-size:0.9rem;">DM @6ypu • Response in 12h</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="warning">
+        <i class="fas fa-exclamation-triangle" style="font-size:2rem;"></i><br><br>
+        <strong>BEWARE OF IMPERSONATORS</strong><br>
+        Only use channels above • We will NEVER ask for passwords
       </div>
     </div>
   </div>
 
   <footer>
-    <p>© 2025 gooners.wtf • All names claimed are final • No refunds</p>
+    <p>© 2025 gooners.wtf • 07:22 AM CST, November 10 • All names final</p>
   </footer>
 
   <script>
-    let availableNames = [];
-    let usedNames = new Set();
+    let names = [];
+    const CORS_PROXY = "https://api.allorigins.ml/get?url=";
 
-    // Load from your GitHub
-    async function loadNames() {
+    async function loadVault() {
       const files = [
         "https://raw.githubusercontent.com/projectZ678/gooners.wtf/main/AVAILABLE_1.txt",
         "https://raw.githubusercontent.com/projectZ678/gooners.wtf/main/AVAILABLE_2.txt"
       ];
-      
-      for (let url of files) {
+
+      for (let file of files) {
         try {
-          const res = await fetch(url + "?t=" + Date.now());
-          if (res.ok) {
-            const text = await res.text();
-            text.split('\n').forEach(line => {
-              const name = line.trim();
-              if (name.length === 4 && /^[a-z0-9]{4}$/.test(name)) {
-                availableNames.push(name);
-              }
-            });
-          }
-        } catch(e) {}
+          const proxyUrl = CORS_PROXY + encodeURIComponent(file);
+          const res = await fetch(proxyUrl);
+          const data = await res.json();
+          const text = data.contents;
+          
+          text.split('\n').forEach(line => {
+            const n = line.trim();
+            if (n.length === 4 && /^[a-z0-9]{4}$/.test(n)) {
+              names.push(n);
+            }
+          });
+        } catch(e) {
+          console.log("Failed to load:", file);
+        }
       }
 
-      // Remove duplicates
-      availableNames = [...new Set(availableNames)];
-      document.getElementById('loading').innerHTML = 
-        `Vault loaded: <strong>${availableNames.length}</strong> names ready`;
-      document.getElementById('genBtn').disabled = false;
+      names = [...new Set(names)];
+      
+      if (names.length > 0) {
+        document.getElementById('status').innerHTML = 
+          `VAULT SECURE • <strong style="color:#0f0;">${names.length}</strong> names ready`;
+        document.getElementById('genBtn').disabled = false;
+      } else {
+        document.getElementById('status').innerHTML = 
+          `<span style="color:#f00;">NO NAMES FOUND — Check your GitHub files</span>`;
+      }
     }
 
-    function generateUsername() {
-      if (availableNames.length === 0) {
-        alert("All names have been claimed.");
+    function generate() {
+      if (names.length === 0) {
+        alert("Vault empty. All names have been claimed.");
         return;
       }
-
-      const index = Math.floor(Math.random() * availableNames.length);
-      const name = availableNames[index];
-
-      // Remove from pool forever
-      availableNames.splice(index, 1);
-      usedNames.add(name);
+      
+      const i = Math.floor(Math.random() * names.length);
+      const name = names[i];
+      names.splice(i, 1);
 
       document.getElementById('username').textContent = name;
       document.getElementById('result').style.display = 'block';
       document.getElementById('genBtn').textContent = 'GENERATE ANOTHER';
+      document.getElementById('status').innerHTML = 
+        `VAULT: <strong style="color:#0f0;">${names.length}</strong> remaining`;
     }
 
-    function copyUsername() {
+    function copyName() {
       const name = document.getElementById('username').textContent;
       navigator.clipboard.writeText(name);
       alert("Copied: " + name);
@@ -293,7 +338,7 @@
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
       document.getElementById(id + '-page').classList.add('active');
-      document.querySelector(`.nav-link[data-page="${id}"]`)?.classList.add('active');
+      document.querySelector(`.nav-link[data-page="${id}"]`).classList.add('active');
     }
 
     document.querySelectorAll('.nav-link').forEach(l => {
@@ -303,9 +348,9 @@
       });
     });
 
-    // Init
+    // LOAD ON START
     window.onload = () => {
-      loadNames();
+      loadVault();
     };
   </script>
 </body>
