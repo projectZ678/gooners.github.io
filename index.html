@@ -538,7 +538,7 @@
       flex-direction:column; 
       align-items:center; 
       gap:.9rem; 
-      z-index:100; 
+        z-index:100; 
       opacity:0; 
       pointer-events:none; 
       transition:var(--transition); 
@@ -635,6 +635,9 @@
   <div class="cursor"></div>
   <div class="noise"></div>
   <div class="scanlines"></div>
+
+  <!-- CLICK TO UNLOCK AUDIO -->
+  <div id="audio-unlock" style="position:fixed; inset:0; z-index:9998; cursor:pointer; display:none;"></div>
 
   <!-- LOADING -->
   <div id="loading">
@@ -757,8 +760,11 @@
       profileName: document.getElementById('profile-name'),
       bio: document.getElementById('bio'),
       accountsList: document.getElementById('accounts-list'),
-      audioPlayer: document.getElementById('audio-player')
+      audioPlayer: document.getElementById('audio-player'),
+      unlockOverlay: document.getElementById('audio-unlock')
     };
+
+    let audioUnlocked = false;
 
     // === TYPEWRITER ===
     const typeWriter = (el, text, speed = 100, pause = 2000) => {
@@ -772,7 +778,18 @@
       loop();
     };
 
-    // === INIT - AUTOPLAY AFTER LOADING ===
+    // === UNLOCK AUDIO ON FIRST CLICK ===
+    const unlockAudio = () => {
+      if (audioUnlocked) return;
+      audioUnlocked = true;
+      els.audio.play().catch(() => {});
+      els.unlockOverlay.style.display = 'none';
+      els.playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    };
+    document.addEventListener('click', unlockAudio, { once: true });
+    document.addEventListener('touchstart', unlockAudio, { once: true });
+
+    // === INIT ===
     window.onload = () => {
       els.audio.volume = 0.5;
 
@@ -780,7 +797,7 @@
       typeWriter(els.profileName, "GOONERS.WTF", 140, 3400);
       setTimeout(() => typeWriter(els.bio, "Main Account • Verified Presence", 100, 2700), 1400);
 
-      // After loading screen → play audio
+      // After loading → show UI + try autoplay
       setTimeout(() => {
         els.loading.style.opacity = '0';
         setTimeout(() => {
@@ -791,12 +808,13 @@
           els.audioPlayer.classList.add('show');
           els.home.style.opacity = '1';
 
-          // AUTOPLAY AUDIO
-          els.audio.play().catch(() => {
-            // Fallback: Show play button if autoplay blocked
-            els.playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          // Try autoplay
+          els.audio.play().then(() => {
+            els.playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          }).catch(() => {
+            // Show unlock overlay if blocked
+            els.unlockOverlay.style.display = 'block';
           });
-          els.playBtn.innerHTML = '<i class="fas fa-pause"></i>'; // Show pause
 
         }, 300);
       }, 2400);
@@ -841,7 +859,7 @@
     });
     els.modal.addEventListener('click', e => e.target === els.modal && closeModal());
 
-    // === AUDIO CONTROL (TOGGLE) ===
+    // === AUDIO CONTROL ===
     els.playBtn.addEventListener('click', () => {
       if (els.audio.paused) {
         els.audio.play();
@@ -852,7 +870,6 @@
       }
     });
 
-    // Progress bar
     els.audio.ontimeupdate = () => {
       els.progress.style.width = (els.audio.currentTime / els.audio.duration * 100 || 0) + '%';
     };
