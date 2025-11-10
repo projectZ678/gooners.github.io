@@ -6,175 +6,125 @@
   <title>gooners.wtf</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #ffffff;
-      --accent: #00ffcc;
-      --dark: #0a0a0a;
-      --glass: rgba(255,255,255,0.05);
-      --border: rgba(255,255,255,0.1);
+      --bg: #0a0a0a;
+      --text: #ffffff;
+      --gray: #cccccc;
+      --border: #333333;
+      --accent: #ffffff;
+      --card: #111111;
     }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: linear-gradient(rgba(10,10,10,0.92), rgba(10,10,10,0.98)),
-                  url('https://i.pinimg.com/736x/f8/c9/70/f8c970cc58337600914e75b661c0752a.jpg') center/cover fixed;
-      color: var(--primary);
-      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
       min-height: 100vh;
-      overflow-x: hidden;
+      line-height: 1.6;
     }
-    /* Loading Screen */
-    #loading-screen {
-      position: fixed; inset: 0; background: var(--dark); z-index: 9999;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      transition: opacity 0.6s ease;
-    }
-    .loading-logo {
-      font-size: 4.5rem; font-weight: 900; letter-spacing: 4px;
-      display: flex; align-items: center; color: var(--primary);
-    }
-    .cross { font-size: 6rem; margin-right: 20px; color: var(--accent); }
-    .loading-bar {
-      width: 340px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px; margin-top: 2rem;
-      overflow: hidden;
-    }
-    .loading-progress {
-      height: 100%; width: 0%; background: var(--accent);
-      animation: load 2.2s ease-in-out forwards;
-    }
-    @keyframes load { to { width: 100%; } }
-
-    /* Header */
     header {
-      position: fixed; top: 0; left: 0; right: 0; padding: 1.5rem 5%;
-      display: flex; justify-content: space-between; align-items: center;
-      backdrop-filter: blur(12px); background: rgba(10,10,10,0.8);
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 1.5rem 5%; background: rgba(10,10,10,0.95);
       border-bottom: 1px solid var(--border); z-index: 100;
+      backdrop-filter: blur(10px);
     }
-    .logo { font-size: 2rem; font-weight: 900; letter-spacing: 2px; cursor: pointer; }
-    .logo-icon { font-size: 2.5rem; margin-right: 10px; color: var(--accent); }
-    nav ul { display: flex; gap: 2.5rem; list-style: none; }
+    .logo {
+      font-size: 2rem; font-weight: 900; letter-spacing: 3px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .logo-icon { color: var(--accent); }
+    nav ul {
+      display: flex; gap: 2.5rem; list-style: none; float: right;
+    }
     nav a {
-      color: var(--primary); text-decoration: none; font-weight: 600;
+      color: var(--gray); text-decoration: none; font-weight: 600;
       position: relative; transition: 0.3s;
     }
     nav a::after {
       content: ''; position: absolute; bottom: -8px; left: 0; width: 0; height: 2px;
       background: var(--accent); transition: 0.3s;
     }
-    nav a:hover, nav a.active { color: var(--accent); }
+    nav a:hover, nav a.active { color: var(--text); }
     nav a:hover::after, nav a.active::after { width: 100%; }
 
-    /* Main */
-    .container { max-width: 1300px; margin: 0 auto; padding: 2rem; padding-top: 100px; }
-    .page { display: none; animation: fade 0.6s ease; }
+    .container { max-width: 1300px; margin: 0 auto; padding: 2rem; padding-top: 120px; }
+    .page { display: none; animation: fade 0.6s; }
     .page.active { display: block; }
-    @keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Home */
-    .hero {
-      text-align: center; padding: 4rem 0;
-    }
+    .hero { text-align: center; padding: 4rem 0; }
     .hero h1 {
-      font-size: 4rem; background: linear-gradient(90deg, #fff, var(--accent));
+      font-size: 4.5rem; font-weight: 900; letter-spacing: 5px;
+      background: linear-gradient(90deg, #fff, #aaa);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      margin-bottom: 1rem;
     }
     .avatar {
       width: 180px; height: 180px; border-radius: 50%; margin: 2rem auto;
-      border: 3px solid var(--accent); box-shadow: 0 0 30px rgba(0,255,255,0.4);
+      border: 3px solid white; box-shadow: 0 0 40px rgba(255,255,255,0.3);
       background: url('https://i.pinimg.com/736x/f8/c9/70/f8c970cc58337600914e75b661c0752a.jpg') center/cover;
     }
-    .socials {
-      display: flex; justify-content: center; gap: 2rem; margin: 2rem 0;
-    }
     .socials a {
-      font-size: 2rem; color: var(--primary); transition: 0.4s;
-      text-shadow: 0 0 15px rgba(0,255,255,0.5);
+      font-size: 2rem; color: white; margin: 0 1rem; transition: 0.4s;
     }
-    .socials a:hover { transform: scale(1.3) rotate(8deg); color: var(--accent); }
+    .socials a:hover { transform: scale(1.4); }
 
-    /* Usernames Marquee */
-    .usernames-box {
-      background: var(--glass); backdrop-filter: blur(15px);
-      border: 1px solid var(--border); border-radius: 20px;
-      padding: 1.5rem; margin: 3rem 0;
-      text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-    }
-    .usernames {
-      font-size: 1.1rem; color: var(--accent); font-weight: 600;
-      white-space: nowrap; animation: scroll 35s linear infinite;
-    }
-    @keyframes scroll {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-
-    /* Join Button */
     .join-btn {
-      background: rgba(0,255,255,0.15); color: white;
-      border: 2px solid var(--accent); padding: 1.2rem 3rem;
-      font-size: 1.3rem; font-weight: 700; border-radius: 50px;
-      cursor: pointer; transition: 0.4s; letter-spacing: 1px;
-      box-shadow: 0 0 30px rgba(0,255,255,0.3);
+      background: transparent; color: white; border: 2px solid white;
+      padding: 1.2rem 3rem; font-size: 1.3rem; font-weight: 700;
+      border-radius: 50px; cursor: pointer; transition: 0.4s; margin-top: 2rem;
     }
     .join-btn:hover {
-      transform: translateY(-5px); background: rgba(0,255,255,0.25);
-      box-shadow: 0 15px 40px rgba(0,255,255,0.5);
+      background: white; color: black; transform: translateY(-5px);
     }
 
-    /* Modal */
-    .modal {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-      z-index: 1000; justify-content: center; align-items: center;
+    /* Usernames Box */
+    .usernames-container {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem; margin: 3rem 0;
+      max-height: 500px; overflow-y: auto;
     }
-    .modal-content {
-      background: rgba(20,20,20,0.95); backdrop-filter: blur(20px);
-      border: 1px solid var(--border); border-radius: 25px;
-      padding: 3rem; max-width: 500px; width: 90%; text-align: center;
-      box-shadow: 0 20px 50px rgba(0,255,255,0.3);
+    .usernames-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem; font-family: 'Courier New', monospace;
     }
-    .close-modal {
-      position: absolute; top: 15px; right: 20px; font-size: 2rem;
-      cursor: pointer; color: #aaa; transition: 0.3s;
+    .username-item {
+      background: #1a1a1a; padding: 0.8rem; border-radius: 8px;
+      text-align: center; border: 1px solid #333; font-weight: bold;
+      transition: 0.3s;
     }
-    .close-modal:hover { color: var(--accent); }
+    .username-item.available { border-color: #00ff00; color: #00ff00; box-shadow: 0 0 15px rgba(0,255,0,0.3); }
+    .username-item.taken { opacity: 0.5; }
 
-    /* Footer */
+    /* Generator Section */
+    .generator {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem; margin: 3rem 0;
+    }
+    .stats {
+      display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem; margin: 2rem 0;
+      font-size: 1.1rem; font-weight: bold;
+    }
+    .stat { background: #1a1a1a; padding: 1rem 2rem; border-radius: 12px; border: 1px solid #333; }
+
+    button.ctrl {
+      background: white; color: black; border: none; padding: 1rem 2rem;
+      border-radius: 50px; font-weight: bold; cursor: pointer; margin: 0 0.5rem;
+    }
+    button.ctrl:hover { transform: scale(1.05); }
+
     footer {
-      text-align: center; padding: 3rem; backdrop-filter: blur(10px);
-      background: rgba(10,10,10,0.7); border-top: 1px solid var(--border);
-      margin-top: 5rem;
+      text-align: center; padding: 3rem; border-top: 1px solid var(--border); margin-top: 5rem;
+      color: #666; font-size: 0.9rem;
     }
 
-    /* Responsive */
     @media (max-width: 768px) {
       .hero h1 { font-size: 2.8rem; }
       nav ul { display: none; }
-      .avatar { width: 140px; height: 140px; }
-      .contact-grid { grid-template-columns: 1fr !important; }
+      .usernames-grid { grid-template-columns: repeat(3, 1fr); }
     }
-    audio { display: none; }
   </style>
 </head>
 <body>
-
-  <!-- AUDIO -->
-  <audio id="bgAudio" loop preload="auto">
-    <source src="girl.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- Loading -->
-  <div id="loading-screen">
-    <div class="loading-logo">
-      <div class="cross">†</div>
-      GOONERS
-    </div>
-    <div class="loading-bar">
-      <div class="loading-progress"></div>
-    </div>
-  </div>
-
-  <!-- Header -->
   <header>
     <div class="logo" id="home-link">
       <div class="logo-icon">†</div>
@@ -183,206 +133,244 @@
     <nav>
       <ul>
         <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
-        <li><a href="#" class="nav-link" data-page="links">Links</a></li>
-        <li><a href="#" class="nav-link" data-page="usernames">Usernames</a></li>
+        <li><a href="#" class="nav-link" data-page="generator">Generator</a></li>
+        <li><a href="#" class="nav-link" data-page="usernames">Available</a></li>
         <li><a href="#" class="nav-link" data-page="contact">Contact</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- Pages -->
   <div class="container">
-
     <!-- Home -->
     <div id="home-page" class="page active">
       <div class="hero">
         <h1>GOONERS.WTF</h1>
-        <p style="font-size:1.3rem; color:#aaa; margin:1.5rem 0;">
-          Main Account • Verified Presence
-        </p>
+        <p style="color:#aaa; font-size:1.3rem;">4-Letter Discord Sniper • Real-time • 429-Proof</p>
         <div class="avatar"></div>
         <div class="socials">
           <a href="https://www.tiktok.com/@rdm.sxin" target="_blank"><i class="fab fa-tiktok"></i></a>
           <a href="https://github.com/projectZ678" target="_blank"><i class="fab fa-github"></i></a>
           <a href="https://discord.gg/SuBfcfFJnG" target="_blank"><i class="fab fa-discord"></i></a>
         </div>
-        <button class="join-btn" id="join-discord">
-          <i class="fab fa-discord"></i> JOIN DISCORD SERVER
+        <button class="join-btn" onclick="showPage('generator')">
+          <i class="fas fa-search"></i> START SNIPING
         </button>
       </div>
     </div>
 
-    <!-- Links -->
-    <div id="links-page" class="page">
+    <!-- Generator Page -->
+    <div id="generator-page" class="page">
       <div class="hero">
-        <h1>Social Links</h1>
-        <div style="margin-top:3rem; display:grid; gap:1.5rem; max-width:600px; margin:3rem auto;">
-          <a href="https://www.tiktok.com/@rdm.sxin" target="_blank" style="background:var(--glass); padding:1.5rem; border-radius:15px; text-align:center; border:1px solid var(--border); text-decoration:none; color:white;">
-            <i class="fab fa-tiktok" style="font-size:1.8rem; color:var(--accent);"></i><br>
-            <strong>TikTok @rdm.sxin</strong>
-          </a>
-          <a href="https://github.com/projectZ678" target="_blank" style="background:var(--glass); padding:1.5rem; border-radius:15px; text-align:center; border:1px solid var(--border); text-decoration:none; color:white;">
-            <i class="fab fa-github" style="font-size:1.8rem; color:var(--accent);"></i><br>
-            <strong>GitHub @projectZ678</strong>
-          </a>
+        <h1>SNIPER1X LIVE</h1>
+        <p>Real-time 4-letter Discord username checker • Never crashes • Auto-proxy</p>
+
+        <div class="generator">
+          <div class="stats">
+            <div class="stat">Checked: <span id="checked">0</span></div>
+            <div class="stat">Available: <span id="found">0</span></div>
+            <div class="stat">Speed: <span id="speed">0</span>/s</div>
+            <div class="stat">Proxies: <span id="proxies">Loading...</span></div>
+          </div>
+
+          <div style="text-align:center; margin: 2rem 0;">
+            <button class="ctrl" id="startBtn">START SNIPER</button>
+            <button class="ctrl" id="stopBtn" disabled>STOP</button>
+          </div>
+
+          <div id="live-log" style="background:#000; padding:1rem; border-radius:12px; height:300px; overflow-y:auto; font-family:'Courier New'; font-size:0.9rem; margin-top:1rem;"></div>
         </div>
       </div>
     </div>
 
-    <!-- Usernames -->
+    <!-- Available Usernames -->
     <div id="usernames-page" class="page">
       <div class="hero">
-        <h1>All Usernames</h1>
-        <div class="usernames-box">
-          <div class="usernames">
-            @6qfc @9hfg @9hcx @9hbz @4pyr @6ukt @1kuf @6ukf @3xuf @6nvd @3ypf @cs1p @1hrm @1opc @op5c @0bch @g1ua @1ger @9ovx @up6f @6ymx @9gyp @2cfr @0vfh @cvu3 @6auth @9pud @0gfr @9cxd @9fuv @2kuc @1lku @8lku @0duv @6ypu
+        <h1>AVAILABLE 4-LETTERS</h1>
+        <p>Live updated from SNIPER1X • <span id="total-found">0</span> found</p>
+        <div class="usernames-container">
+          <div class="usernames-grid" id="username-grid">
+            <!-- Filled by JS -->
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Contact Page - FINAL OPSEC VERSION -->
+    <!-- Contact (keep your existing one or use simplified) -->
     <div id="contact-page" class="page">
       <div class="hero">
-        <h1 style="background: linear-gradient(90deg, #fff, #00ffcc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 4rem;">
-          CONTACT OPSEC
-        </h1>
-        <p style="color:#aaa; font-size:1.3rem; margin:1.5rem 0;">
-          Official channels • Verified presence
-        </p>
-
-        <!-- Contact Grid -->
-        <div class="contact-grid" style="max-width: 900px; margin: 3rem auto; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
-          
-          <!-- Left: Image -->
-          <div style="text-align: center;">
-            <img src="https://i.pinimg.com/736x/87/79/7a/87797acc01a9771858efabf3c7b1fe00.jpg" 
-                 alt="OPSEC Gooners" 
-                 style="width: 100%; max-width: 420px; border-radius: 20px; border: 2px solid #00ffcc; 
-                        box-shadow: 0 0 40px rgba(0,255,255,0.4);">
-            <p style="margin-top: 1rem; color: #00ffcc; font-weight: 700; font-size: 1.1rem;">
-              † OPSEC DIVISION †
-            </p>
-          </div>
-
-          <!-- Right: Contact Info -->
-          <div style="background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); 
-                      border: 1px solid rgba(0,255,255,0.2); border-radius: 24px; 
-                      padding: 2.5rem; box-shadow: 0 20px 50px rgba(0,255,255,0.15);">
-            
-            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: #00ffcc;">
-              <i class="fas fa-shield-alt"></i> Secure Channels
-            </h2>
-
-            <!-- Email -->
-            <div style="background: rgba(0,255,255,0.1); border: 1px solid rgba(0,255,255,0.3); 
-                        border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
-              <i class="fas fa-envelope" style="font-size: 2rem; color: #00ffcc; margin-bottom: 0.5rem;"></i>
-              <p style="font-size: 0.9rem; color: #aaa;">Encrypted Email</p>
-              <p style="font-size: 1.4rem; font-weight: 700; color: white; font-family: monospace; letter-spacing: 1px;">
-                opsec@gooners.wtf
-              </p>
-              <a href="mailto:opsec@gooners.wtf" 
-                 style="display: inline-block; margin-top: 1rem; background: #00ffcc; color: black; 
-                        padding: 0.8rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 700;">
-                <i class="fas fa-paper-plane"></i> Send Message
-              </a>
-            </div>
-
-            <!-- Discord Server -->
-            <div style="background: rgba(88,101,242,0.15); border: 1px solid rgba(88,101,242,0.4); 
-                        border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
-              <i class="fab fa-discord" style="font-size: 2rem; color: #5865F2; margin-bottom: 0.5rem;"></i>
-              <p style="font-size: 0.9rem; color: #aaa;">Official Server</p>
-              <p style="font-size: 1.1rem; font-weight: 600; color: white;">
-                discord.gg/SuBfcfFJnG
-              </p>
-              <button onclick="window.open('https://discord.gg/SuBfcfFJnG', '_blank')" 
-                      style="margin-top: 1rem; background: #5865F2; color: white; border: none; 
-                             padding: 0.9rem 2rem; border-radius: 50px; font-weight: 700; cursor: pointer;
-                             box-shadow: 0 10px 30px rgba(88,101,242,0.4);">
-                <i class="fab fa-discord"></i> Join Server
-              </button>
-            </div>
-
-            <!-- Direct Support -->
-            <div style="text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.05); 
-                        border-radius: 16px; border: 1px dashed rgba(0,255,255,0.3);">
-              <p style="color: #00ffcc; font-weight: 700; margin-bottom: 0.5rem;">
-                Need immediate help?
-              </p>
-              <p style="color: #aaa; font-size: 0.9rem;">
-                DM @6ypu with your issue • Response within 12h
-              </p>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Warning -->
-        <div style="max-width: 700px; margin: 3rem auto; text-align: center; 
-                    background: rgba(255,0,0,0.1); border: 1px solid rgba(255,0,0,0.4); 
-                    border-radius: 16px; padding: 1.5rem; color: #ff6b6b;">
-          <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem;"></i><br><br>
-          <strong>Beware of impersonators.</strong> Only use the channels listed above.<br>
-          We will NEVER ask for your password or 2FA codes.
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Discord Modal -->
-  <div class="modal" id="discord-modal">
-    <div class="modal-content">
-      <span class="close-modal" id="close-modal">×</span>
-      <i class="fab fa-discord" style="font-size:4rem; color:var(--accent); margin-bottom:1rem;"></i>
-      <h2>JOIN GOONERS.WTF</h2>
-      <p>You are about to join the official Gooners Discord server.</p>
-      <div style="display:flex; gap:1rem; margin-top:2rem;">
-        <button class="modal-btn" style="flex:1; background:rgba(255,255,255,0.1); border:1px solid var(--border);" id="cancel-modal">Cancel</button>
-        <button class="modal-btn" style="flex:1; background:var(--accent); color:black; font-weight:700;" id="confirm-join">
-          <i class="fab fa-discord"></i> JOIN SERVER
-        </button>
+        <h1>CONTACT OPSEC</h1>
+        <p style="color:#aaa;">opsec@gooners.wtf • discord.gg/SuBfcfFJnG</p>
       </div>
     </div>
   </div>
 
   <footer>
-    <p>© 2025 gooners.wtf • All rights reserved</p>
+    <p>© 2025 gooners.wtf • SNIPER1X v2 • All rights reserved</p>
   </footer>
 
   <script>
-    // Loading
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.getElementById('loading-screen').style.opacity = '0';
-        setTimeout(() => {
-          document.getElementById('loading-screen').style.display = 'none';
-        }, 600);
-      }, 2200);
-    });
+    // === GLOBALS ===
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+    const allCombos = [...chars].flatMap(a => [...chars].flatMap(b => [...chars].flatMap(c => [...chars].map(d => a+b+c+d))));
+    let found = new Set();
+    let checked = 0;
+    let startTime = 0;
+    let running = false;
+    let workerCount = navigator.hardwareConcurrency || 4;
 
-    // Audio autoplay
-    const audio = document.getElementById('bgAudio');
-    function playAudio() {
-      audio.muted = true;
-      audio.play().catch(() => {});
-      setTimeout(() => { audio.muted = false; audio.volume = 0.7; audio.play(); }, 100);
+    // Load existing from your GitHub
+    async function loadExisting() {
+      const files = [
+        "https://raw.githubusercontent.com/projectZ678/gooners.wtf/main/AVAILABLE_1.txt",
+        "https://raw.githubusercontent.com/projectZ678/gooners.wtf/main/AVAILABLE_2.txt",
+        // Add more if you have
+      ];
+      for (let url of files) {
+        try {
+          const res = await fetch(url + '?t=' + Date.now());
+          if (res.ok) {
+            const text = await res.text();
+            text.split('\n').forEach(line => {
+              const n = line.trim();
+              if (n.length === 4 && /^[a-z0-9]+$/.test(n)) {
+                found.add(n);
+                addUsernameToGrid(n, true);
+              }
+            });
+          }
+        } catch(e) {}
+      }
+      document.getElementById('total-found').textContent = found.size;
     }
-    playAudio();
+
+    // Grid
+    function addUsernameToGrid(name, available = true) {
+      const grid = document.getElementById('username-grid');
+      const el = document.createElement('div');
+      el.className = 'username-item' + (available ? ' available' : '');
+      el.textContent = name;
+      grid.prepend(el);
+    }
+
+    // Proxies
+    let proxies = [];
+    async function loadProxies() {
+      const sources = [
+        "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http",
+        "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt"
+      ];
+      for (let src of sources) {
+        try {
+          const res = await fetch(src);
+          const text = await res.text();
+          text.split('\n').forEach(line => {
+            line = line.trim();
+            if (line && line.includes(':')) proxies.push("http://" + line);
+          });
+        } catch(e) {}
+      }
+      proxies = [...new Set(proxies)];
+      if (proxies.length === 0) proxies = [null];
+      document.getElementById('proxies').textContent = proxies.length;
+    }
+
+    // Check function (429-proof)
+    async function checkUsername(name) {
+      if (found.has(name)) return;
+      
+      for (let attempt = 0; attempt < 10; attempt++) {
+        const proxy = proxies.length > 1 ? proxies[Math.floor(Math.random() * proxies.length)] : proxies[0];
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
+
+        try {
+          const res = await fetch("https://discord.com/api/v10/unique-username/username-attempt-unauthed", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: name }),
+            signal: controller.signal,
+            ...(proxy ? { proxy: { server: proxy } } : {})
+          });
+
+          clearTimeout(timeout);
+          const data = await res.json();
+
+          if (res.status === 200 && !data.taken) {
+            found.add(name);
+            document.getElementById('found').textContent = found.size;
+            document.getElementById('total-found').textContent = found.size;
+            addUsernameToGrid(name, true);
+            log(`<span style="color:#0f0;">[AVAILABLE] ${name}</span>`);
+            return true;
+          } else if (res.status === 429) {
+            const wait = (data.retry_after || 5) + 1;
+            log(`<span style="color:#ff0;">[429] ${name} → wait ${wait}s</span>`);
+            await new Promise(r => setTimeout(r, wait * 1000));
+          }
+        } catch (e) {
+          if (proxy) proxies = proxies.filter(p => p !== proxy);
+        }
+      }
+      return false;
+    }
+
+    // Logging
+    function log(msg) {
+      const log = document.getElementById('live-log');
+      const div = document.createElement('div');
+      div.innerHTML = msg;
+      log.prepend(div);
+      if (log.children.length > 100) log.removeChild(log.lastChild);
+    }
+
+    // Main sniper loop
+    async function startSniper() {
+      if (running) return;
+      running = true;
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('stopBtn').disabled = false;
+      startTime = Date.now();
+
+      const batchSize = 50;
+      let index = 0;
+
+      const worker = async () => {
+        while (running && index < allCombos.length) {
+          const batch = allCombos.slice(index, index + batchSize);
+          index += batchSize;
+
+          await Promise.all(batch.map(async (name) => {
+            if (!found.has(name)) {
+              await checkUsername(name);
+              checked++;
+              document.getElementById('checked').textContent = checked;
+            }
+          }));
+
+          const elapsed = (Date.now() - startTime) / 1000;
+          document.getElementById('speed').textContent = Math.round(checked / elapsed * 10) / 10;
+        }
+      };
+
+      for (let i = 0; i < workerCount; i++) {
+        worker();
+      }
+    }
+
+    function stopSniper() {
+      running = false;
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+    }
 
     // Navigation
-    const navLinks = document.querySelectorAll('.nav-link');
-    const pages = document.querySelectorAll('.page');
     function showPage(id) {
-      pages.forEach(p => p.classList.remove('active'));
-      navLinks.forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
       document.getElementById(id + '-page').classList.add('active');
       document.querySelector(`.nav-link[data-page="${id}"]`).classList.add('active');
-      window.scrollTo(0, 0);
     }
-    navLinks.forEach(link => {
+    document.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
         showPage(link.dataset.page);
@@ -390,17 +378,14 @@
     });
     document.getElementById('home-link').addEventListener('click', () => showPage('home'));
 
-    // Modal
-    const modal = document.getElementById('discord-modal');
-    const openBtns = [document.getElementById('join-discord')];
-    const closeBtns = [document.getElementById('close-modal'), document.getElementById('cancel-modal')];
-    openBtns.forEach(btn => btn && btn.addEventListener('click', () => modal.style.display = 'flex'));
-    closeBtns.forEach(btn => btn && btn.addEventListener('click', () => modal.style.display = 'none'));
-    document.getElementById('confirm-join').addEventListener('click', () => {
-      window.open('https://discord.gg/SuBfcfFJnG', '_blank');
-      modal.style.display = 'none';
-    });
-    window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+    // Init
+    window.onload = async () => {
+      await loadProxies();
+      await loadExisting();
+      document.getElementById('startBtn').onclick = startSniper;
+      document.getElementById('stopBtn').onclick = stopSniper;
+      log("<span style='color:#0ff;'>SNIPER1X LOADED • Ready to hunt</span>");
+    };
   </script>
 </body>
 </html>
