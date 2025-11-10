@@ -10,17 +10,22 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root {
-      --bg: #000; --card: rgba(20,20,25,0.08); --border: rgba(255,255,255,0.12);
-      --glow: rgba(255,255,255,0.22); --text: #ffffff; --accent: #ffffff;
-      --glow-intense: rgba(255,255,255,0.7); --transition: all 0.7s cubic-bezier(0.22,1,0.36,1);
+      --bg: #000;
+      --card: rgba(20,20,25,0.08);
+      --border: rgba(255,255,255,0.12);
+      --glow: rgba(255,255,255,0.22);
+      --text: #ffffff;
+      --accent: #ffffff;
+      --glow-intense: rgba(255,255,255,0.7);
+      --transition: all 0.7s cubic-bezier(0.22,1,0.36,1);
     }
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     html,body{height:100%;background:var(--bg);font-family:'Orbitron',sans-serif;overflow:hidden;cursor:none;}
     body{filter:contrast(1.18) brightness(1.1) saturate(1.15);}
 
-    /* 4K SHARP BACKGROUND */
-    .bg-gif{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;
-             filter:brightness(0.92) contrast(1.32) saturate(1.4);image-rendering:-webkit-optimize-contrast;}
+    /* ULTRA BLURRED BLACK VOID */
+    body::before{content:'';position:fixed;inset:0;background:#000;backdrop-filter:blur(80px);-webkit-backdrop-filter:blur(80px);z-index:-2;}
+    body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle at center,rgba(255,255,255,0.03),transparent 70%);z-index:-1;}
 
     /* NOISE + SCANLINES */
     .noise{position:fixed;inset:0;background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAPklEQVQYV2NkYGD4z8DAwMgABXAGBgaG/////38GRiYGP/7/TPD/f4ZGBgYQP/5nYGRgYGBgYGBgYGBgYGBgYGBgAOXpAb4hM7oAAAAASUVORK5CYII=') repeat;opacity:0.035;pointer-events:none;z-index:1;animation:noise .18s steps(2) infinite;}
@@ -34,177 +39,148 @@
     .cursor::after{width:2px;height:100%;left:50%;top:0;transform:translateX(-50%);}
     .cursor.active::before,.cursor.active::after{box-shadow:0 0 22px #fff,0 0 45px #fff,0 0 70px #fff;transform:scale(1.4);}
 
-    /* LEFT SIDEBAR */
-    .sidebar{position:fixed;top:0;left:0;height:100%;width:320px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-right:1.8px solid var(--border);z-index:100;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:1.8rem;box-shadow:0 0 60px rgba(0,0,0,0.8);}
-    .logo{font-size:2.8rem;font-weight:900;color:#fff;letter-spacing:.2em;text-shadow:0 0 30px #fff;background:linear-gradient(90deg,#fff,#ccc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .nav-item{padding:1rem 1.4rem;background:rgba(255,255,255,0.05);border:1.4px solid var(--border);border-radius:16px;cursor:pointer;transition:var(--transition);text-align:center;font-size:1.1rem;font-weight:600;letter-spacing:.1em;}
-    .nav-item:hover,.nav-item.active{background:rgba(255,255,255,0.18);border-color:#fff;transform:translateX(8px);box-shadow:0 0 30px rgba(255,255,255,0.4);}
-    .nav-item i{margin-right:10px;}
+    /* LEFT SIDEBAR - ONLY 2 TABS */
+    .sidebar{position:fixed;top:0;left:0;height:100%;width:300px;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);border-right:2px solid var(--border);z-index:100;padding:2.5rem 1.5rem;display:flex;flex-direction:column;gap:2rem;box-shadow:0 0 60px rgba(0,0,0,0.8);}
+    .logo{font-size:2.8rem;font-weight:900;color:#fff;letter-spacing:.22em;text-shadow:0 0 30px #fff;background:linear-gradient(90deg,#fff,#ccc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .nav-item{padding:1.3rem 1.8rem;background:var(--card);border:1.8px solid var(--border);border-radius:18px;cursor:pointer;transition:var(--transition);text-align:center;font-size:1.1rem;font-weight:600;letter-spacing:.1em;}
+    .nav-item:hover,.nav-item.active{background:rgba(255,255,255,0.18);border-color:#fff;transform:translateX(10px);box-shadow:0 0 35px rgba(255,255,255,0.4);}
+    .nav-item i{margin-right:12px;}
 
-    /* MAIN CONTENT AREA */
-    .main-content{position:fixed;top:0;left:320px;right:0;bottom:0;overflow-y:auto;padding:3rem;z-index:10;}
-    .page{display:none;opacity:0;transition:opacity 0.6s ease;}
+    /* MAIN CONTENT */
+    .main-content{position:fixed;top:0;left:300px;right:0;bottom:0;overflow-y:auto;padding:3rem;z-index:10;}
+    .page{display:none;opacity:0;transition:opacity .6s ease;}
     .page.active{display:block;opacity:1;}
 
-    /* HOME PAGE */
+    /* MAIN TAB - PFP + SOCIALS + 4-LETTER VAULT */
     .hero{text-align:center;padding:4rem 2rem;}
-    .hero h1{font-size:4.5rem;font-weight:900;background:linear-gradient(90deg,#fff,#ddd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px #fff;}
-    .pfp-ring{margin:2rem auto;width:160px;height:160px;position:relative;}
-    .pfp{width:100%;height:100%;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 0 50px #fff;filter:brightness(1.2) contrast(1.15);}
-    .ring-glow{position:absolute;top:-16px;left:-16px;width:192px;height:192px;border:3px solid #fff;border-radius:50%;box-shadow:0 0 60px #fff;animation:pulse 4s infinite;}
+    .hero h1{font-size:5rem;font-weight:900;background:linear-gradient(90deg,#fff,#ddd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px #fff;margin-bottom:1rem;}
+    .subtitle{color:#ccc;font-size:1.4rem;margin:1.5rem 0;}
+
+    .pfp-ring{position:relative;width:180px;height:180px;margin:2rem auto;}
+    .pfp{width:100%;height:100%;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 0 50px #fff;}
+    .ring-glow{position:absolute;top:-16px;left:-16px;width:212px;height:212px;border:3px solid #fff;border-radius:50%;box-shadow:0 0 60px #fff;animation:pulse 4s infinite;}
     @keyframes pulse{0%,100%{transform:scale(1);opacity:0.4}50%{transform:scale(1.4);opacity:0.2}}
-    .circle-links{display:flex;justify-content:center;gap:2rem;margin:3rem 0;}
-    .circle{width:70px;height:70px;background:rgba(255,255,255,0.08);border:2px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;transition:var(--transition);box-shadow:0 0 20px rgba(255,255,255,0.3);}
-    .circle:hover{transform:scale(1.4) translateY(-12px);background:rgba(255,255,255,0.25);border-color:#fff;box-shadow:0 0 50px #fff;}
 
-    /* 4-LETTER VAULT */
-    .vault{background:var(--card);border:1.8px solid var(--border);border-radius:24px;padding:2.5rem;backdrop-filter:blur(22px);box-shadow:0 0 40px rgba(255,255,255,0.3);}
-    .vault-title{font-size:1.6rem;font-weight:900;text-align:center;margin-bottom:1.5rem;background:linear-gradient(90deg,#fff,#ccc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .accounts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem;}
-    .tag{background:rgba(255,255,255,0.06);border:1.4px solid var(--border);border-radius:12px;padding:1rem;text-align:center;font-family:'Share Tech Mono',monospace;font-size:1rem;transition:var(--transition);}
-    .tag:hover{background:rgba(255,255,255,0.18);transform:scale(1.08);box-shadow:0 0 25px rgba(255,255,255,0.5);border-color:#fff;}
+    .socials{display:flex;justify-content:center;gap:2.5rem;margin:3rem 0;}
+    .socials a{font-size:2.4rem;color:#fff;transition:.4s;text-shadow:0 0 20px #fff;}
+    .socials a:hover{transform:scale(1.4) translateY(-10px);color:#fff;text-shadow:0 0 40px #fff;}
 
-    /* CONTACT PAGE - YOUR EXACT CYAN VERSION BUT WHITE GLOW */
+    .vault{margin-top:4rem;background:var(--card);border:2px solid var(--border);border-radius:24px;padding:2.5rem;backdrop-filter:blur(22px);box-shadow:0 0 50px rgba(255,255,255,0.3);}
+    .vault-title{font-size:1.8rem;font-weight:900;text-align:center;margin-bottom:2rem;background:linear-gradient(90deg,#fff,#ccc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .tags-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:1.2rem;}
+    .tag{background:rgba(255,255,255,0.06);border:1.5px solid var(--border);border-radius:14px;padding:1rem;text-align:center;font-family:'Share Tech Mono',monospace;font-size:1rem;transition:.4s;}
+    .tag:hover{background:rgba(255,255,255,0.2);transform:scale(1.1);box-shadow:0 0 30px rgba(255,255,255,0.5);border-color:#fff;}
+
+    /* CONTACT TAB - BLACK & WHITE OPSEC */
     .contact-grid{max-width:1000px;margin:3rem auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
     .opsec-img{max-width:100%;border-radius:20px;border:3px solid #fff;box-shadow:0 0 60px rgba(255,255,255,0.5);}
-    .info-card{background:rgba(255,255,255,0.06);border:1.8px solid var(--border);border-radius:24px;padding:2.8rem;backdrop-filter:blur(24px);box-shadow:0 0 50px rgba(255,255,255,0.25);}
-    .channel{background:rgba(255,255,255,0.1);border:1.4px solid rgba(255,255,255,0.3);border-radius:16px;padding:1.8rem;margin-bottom:1.8rem;text-align:center;transition:var(--transition);}
-    .channel:hover{transform:translateY(-8px);box-shadow:0 0 40px rgba(255,255,255,0.4);}
-    .btn-primary{display:inline-block;margin-top:1rem;background:#fff;color:#000;padding:1rem 2.5rem;border-radius:50px;text-decoration:none;font-weight:800;font-size:1.1rem;}
-    .btn-discord{background:#5865F2;color:#fff;border:none;padding:1rem 2.5rem;border-radius:50px;cursor:pointer;font-weight:800;}
+    .info-card{background:var(--card);border:2px solid var(--border);border-radius:24px;padding:3rem;backdrop-filter:blur(24px);box-shadow:0 0 60px rgba(255,255,255,0.25);}
+    .channel{background:rgba(255,255,255,0.1);border:1.8px solid rgba(255,255,255,0.3);border-radius:18px;padding:2rem;margin-bottom:2rem;text-align:center;transition:.4s;}
+    .channel:hover{transform:translateY(-10px);box-shadow:0 0 50px rgba(255,255,255,0.4);}
+    .btn{background:#fff;color:#000;padding:1rem 3rem;border-radius:50px;text-decoration:none;font-weight:800;display:inline-block;margin-top:1rem;}
+    .btn-discord{background:#fff;color:#000;}
 
     /* AUDIO PLAYER */
-    #audio-player{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);width:90%;max-width:600px;background:rgba(10,10,15,0.9);border:1.8px solid var(--border);border-radius:20px;padding:1.2rem 2rem;display:flex;align-items:center;gap:1.5rem;z-index:200;backdrop-filter:blur(26px);box-shadow:0 0 40px rgba(255,255,255,0.3);}
+    #audio-player{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);width:90%;max-width:600px;background:rgba(10,10,15,0.95);border:2px solid var(--border);border-radius:20px;padding:1.2rem 2rem;display:flex;align-items:center;gap:1.5rem;z-index:200;backdrop-filter:blur(26px);box-shadow:0 0 50px rgba(255,255,255,0.3);}
     .song-name{font-family:'Share Tech Mono',monospace;color:#fff;font-size:1rem;flex:1;}
-    .play-btn{background:rgba(255,255,255,0.1);border:1.8px solid var(--border);width:50px;height:50px;border-radius:50%;color:#fff;font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);}
-    .play-btn:hover{background:rgba(255,255,255,0.3);transform:scale(1.15);box-shadow:0 0 30px #fff;}
+    .play-btn{background:rgba(255,255,255,0.1);border:2px solid #fff;width:52px;height:52px;border-radius:50%;color:#fff;font-size:1.5rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.4s;}
+    .play-btn:hover{background:#fff;color:#000;transform:scale(1.15);}
     .progress-container{flex:1;height:8px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden;}
     .progress{height:100%;background:#fff;width:0%;box-shadow:0 0 20px #fff;}
 
     /* MOBILE */
     @media (max-width:968px){
-      .sidebar{width:100%;height:auto;position:relative;border-right:none;border-bottom:1.8px solid var(--border);padding:1.5rem;flex-direction:row;flex-wrap:wrap;justify-content:center;}
+      .sidebar{width:100%;height:auto;position:relative;border-right:none;border-bottom:2px solid var(--border);padding:1.5rem;flex-direction:row;gap:1.5rem;}
       .main-content{left:0;top:140px;padding:2rem;}
       .contact-grid{grid-template-columns:1fr;}
-      .nav-item{font-size:1rem;padding:0.8rem 1.2rem;}
+      .hero h1{font-size:3.5rem;}
     }
     audio{display:none;}
   </style>
 </head>
 <body>
 
-  <!-- 4K BACKGROUND -->
-  <img src="https://i.pinimg.com/originals/f8/c9/70/f8c970cc58337600914e75b661c0752a.jpg" class="bg-gif" alt="bg">
-
+  <div class="cursor"></div>
   <div class="noise"></div>
   <div class="scanlines"></div>
-  <div class="cursor"></div>
 
-  <!-- LEFT SIDEBAR -->
+  <!-- LEFT SIDEBAR - ONLY 2 TABS -->
   <div class="sidebar">
-    <div class="logo">† GOONERS</div>
-    <div class="nav-item active" data-page="home"><i class="fas fa-home"></i> HOME</div>
-    <div class="nav-item" data-page="links"><i class="fas fa-link"></i> LINKS</div>
-    <div class="nav-item" data-page="usernames"><i class="fas fa-user-tag"></i> USERNAMES</div>
-    <div class="nav-item" data-page="contact"><i class="fas fa-shield-alt"></i> CONTACT</div>
+    <div class="logo">GOONERS.WTF</div>
+    <div class="nav-item active" data-page="main">MAIN</div>
+    <div class="nav-item" data-page="contact">CONTACT</div>
   </div>
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
-    <!-- HOME -->
-    <div id="home" class="page active">
+
+    <!-- MAIN TAB -->
+    <div id="main" class="page active">
       <div class="hero">
         <h1>GOONERS.WTF</h1>
-        <p style="color:#ccc;font-size:1.4rem;margin:1.5rem 0;">Main Account • Verified Presence</p>
+        <p class="subtitle">Main Account • Verified Presence</p>
+        
         <div class="pfp-ring">
           <div class="ring-glow"></div>
           <img src="https://i.pinimg.com/originals/f8/c9/70/f8c970cc58337600914e75b661c0752a.jpg" class="pfp" alt="pfp">
         </div>
-        <div class="circle-links">
-          <a href="https://www.tiktok.com/@rdm.sxin" target="_blank" class="circle"><i class="fab fa-tiktok"></i></a>
-          <a href="https://github.com/projectZ678" target="_blank" class="circle"><i class="fab fa-github"></i></a>
-          <a href="https://discord.gg/SuBfcfFJnG" target="_blank" class="circle"><i class="fab fa-discord"></i></a>
-        </div>
-      </div>
-    </div>
 
-    <!-- LINKS -->
-    <div id="links" class="page">
-      <div class="hero">
-        <h1 style="font-size:3.5rem;">SOCIAL LINKS</h1>
-        <div style="max-width:600px;margin:3rem auto;display:grid;gap:2rem;">
-          <a href="https://www.tiktok.com/@rdm.sxin" target="_blank" style="background:rgba(255,255,255,0.08);padding:2rem;border-radius:20px;text-align:center;border:1.8px solid var(--border);text-decoration:none;color:#fff;">
-            <i class="fab fa-tiktok" style="font-size:3rem;margin-bottom:1rem;"></i><br>
-            <strong style="font-size:1.5rem;">TikTok @rdm.sxin</strong>
-          </a>
-          <a href="https://github.com/projectZ678" target="_blank" style="background:rgba(255,255,255,0.08);padding:2rem;border-radius:20px;text-align:center;border:1.8px solid var(--border);text-decoration:none;color:#fff;">
-            <i class="fab fa-github" style="font-size:3rem;margin-bottom:1rem;"></i><br>
-            <strong style="font-size:1.5rem;">GitHub @projectZ678</strong>
-          </a>
+        <div class="socials">
+          <a href="https://www.tiktok.com/@rdm.sxin" target="_blank"><i class="fab fa-tiktok"></i></a>
+          <a href="https://github.com/projectZ678" target="_blank"><i class="fab fa-github"></i></a>
+          <a href="https://discord.gg/SuBfcfFJnG" target="_blank"><i class="fab fa-discord"></i></a>
         </div>
-      </div>
-    </div>
 
-    <!-- USERNAMES -->
-    <div id="usernames" class="page">
-      <div class="hero">
-        <h1 style="font-size:3.5rem;">4-LETTER DISCORD TAGS</h1>
         <div class="vault">
-          <div class="vault-title">† VAULT DIVISION †</div>
-          <div class="accounts-grid" id="tag-list"></div>
+          <div class="vault-title">4-LETTER DISCORD TAGS</div>
+          <div class="tags-grid" id="tag-list"></div>
         </div>
       </div>
     </div>
 
-    <!-- CONTACT - YOUR EXACT DESIGN BUT WHITE -->
+    <!-- CONTACT TAB -->
     <div id="contact" class="page">
       <div class="hero">
-        <h1 style="background:linear-gradient(90deg,#fff,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:4rem;">
+        <h1 style="background:linear-gradient(90deg,#fff,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
           CONTACT OPSEC
         </h1>
-        <p style="color:#aaa;font-size:1.4rem;margin:1.5rem 0;">Official channels • Verified presence</p>
+        <p class="subtitle">Official channels • Verified presence</p>
 
         <div class="contact-grid">
           <div style="text-align:center;">
             <img src="https://i.pinimg.com/736x/87/79/7a/87797acc01a9771858efabf3c7b1fe00.jpg" class="opsec-img" alt="OPSEC">
-            <p style="margin-top:1.5rem;color:#fff;font-weight:900;font-size:1.3rem;">† OPSEC DIVISION †</p>
+            <p style="margin-top:1.5rem;color:#fff;font-weight:900;font-size:1.4rem;">OPSEC DIVISION</p>
           </div>
 
           <div class="info-card">
-            <h2 style="font-size:2.2rem;margin-bottom:2rem;text-align:center;color:#fff;">
+            <h2 style="font-size:2.4rem;margin-bottom:2rem;text-align:center;color:#fff;">
               SECURE CHANNELS
             </h2>
 
             <div class="channel">
-              <i class="fas fa-envelope" style="font-size:2.5rem;color:#fff;margin-bottom:0.8rem;"></i>
-              <p style="color:#ccc;font-size:1rem;">Encrypted Email</p>
-              <p style="font-size:1.6rem;font-weight:900;color:#fff;font-family:monospace;letter-spacing:2px;margin:1rem 0;">
+              <p style="font-size:1.7rem;font-weight:900;color:#fff;font-family:monospace;letter-spacing:2px;">
                 opsec@gooners.wtf
               </p>
-              <a href="mailto:opsec@gooners.wtf" class="btn-primary">
-                SEND MESSAGE
-              </a>
+              <a href="mailto:opsec@gooners.wtf" class="btn">SEND MESSAGE</a>
             </div>
 
-            <div class="channel" style="background:rgba(88,101,242,0.2);border-color:#5865F2;">
-              <i class="fab fa-discord" style="font-size:2.5rem;color:#5865F2;margin-bottom:0.8rem;"></i>
-              <p style="color:#ccc;font-size:1rem;">Official Server</p>
-              <p style="font-size:1.3rem;font-weight:700;color:#fff;">
+            <div class="channel">
+              <p style="font-size:1.4rem;font-weight:700;color:#fff;">
                 discord.gg/SuBfcfFJnG
               </p>
-              <button onclick="window.open('https://discord.gg/SuBfcfFJnG','_blank')" class="btn-discord">
+              <button onclick="window.open('https://discord.gg/SuBfcfFJnG','_blank')" class="btn btn-discord">
                 JOIN SERVER
               </button>
             </div>
 
-            <div style="text-align:center;padding:2rem;background:rgba(255,255,255,0.06);border:1.4px dashed rgba(255,255,255,0.4);border-radius:16px;">
-              <p style="color:#fff;font-weight:900;margin-bottom:0.5rem;">Need immediate help?</p>
-              <p style="color:#aaa;font-size:1rem;">DM @6ypu • Response within 12h</p>
+            <div style="text-align:center;padding:2rem;background:rgba(255,255,255,0.06);border:2px dashed rgba(255,255,255,0.4);border-radius:18px;">
+              <p style="color:#fff;font-weight:900;">Need immediate help?</p>
+              <p style="color:#ccc;font-size:1rem;">DM @6ypu • Response within 12h</p>
             </div>
           </div>
         </div>
 
-        <div style="max-width:700px;margin:3rem auto;text-align:center;background:rgba(255,0,0,0.15);border:1.8px solid rgba(255,0,0,0.4);border-radius:16px;padding:2rem;color:#ff6b6b;">
+        <div style="max-width:700px;margin:4rem auto;text-align:center;background:rgba(255,0,0,0.15);border:2px solid rgba(255,0,0,0.4);border-radius:18px;padding:2rem;color:#ff6b6b;">
           <strong>BEWARE OF IMPERSONATORS</strong><br><br>
           Only use channels above • We will NEVER ask for passwords
         </div>
@@ -224,13 +200,12 @@
 
   <script>
     // CURSOR
-    const cursor = document.querySelector('.cursor');
     document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
+      document.querySelector('.cursor').style.left = e.clientX + 'px';
+      document.querySelector('.cursor').style.top = e.clientY + 'px';
     });
-    document.addEventListener('mousedown', () => cursor.classList.add('active'));
-    document.addEventListener('mouseup', () => cursor.classList.remove('active'));
+    document.addEventListener('mousedown', () => document.querySelector('.cursor').classList.add('active'));
+    document.addEventListener('mouseup', () => document.querySelector('.cursor').classList.remove('active'));
 
     // TABS
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -242,21 +217,19 @@
       });
     });
 
-    // TAGS
+    // 4-LETTER TAGS
     const tags = ["@6qfc","@9hfg","@9hcx","@9hbz","@4pyr","@6ukt","@1kuf","@6ukf","@3xuf","@6nvd","@3ypf","@cs1p","@1hrm","@1opc","@op5c","@0bch","@g1ua","@1ger","@9ovx","@up6f","@6ymx","@9gyp","@2cfr","@0vfh","@cvu3","@6auth","@9pud","@0gfr","@9cxd","@9fuv","@2kuc","@1lku","@8lku","@0duv","@6ypu"];
-    const tagList = document.getElementById('tag-list');
     tags.forEach(tag => {
       const div = document.createElement('div');
       div.className = 'tag';
       div.textContent = tag;
-      tagList.appendChild(div);
+      document.getElementById('tag-list').appendChild(div);
     });
 
     // AUDIO
     const audio = document.getElementById('bgAudio');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const progress = document.getElementById('progress');
-    
     playPauseBtn.addEventListener('click', () => {
       if (audio.paused) {
         audio.play();
@@ -266,13 +239,8 @@
         playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
       }
     });
-
-    audio.ontimeupdate = () => {
-      progress.style.width = (audio.currentTime / audio.duration * 100 || 0) + '%';
-    };
-
-    // Auto-play with mute trick
-    audio.volume = 0.5;
+    audio.ontimeupdate = () => progress.style.width = (audio.currentTime / audio.duration * 100 || 0) + '%';
+    audio.volume = 0.7;
     audio.play().catch(() => {
       document.addEventListener('click', () => audio.play(), {once:true});
     });
