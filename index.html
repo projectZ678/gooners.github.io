@@ -3,147 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Safe Space • You're Not Alone</title>
+  <title>helping others for good</title>
 
-  <!-- Discord / Social Media Rich Preview -->
-  <meta property="og:title" content="Safe Space • Mental Health Support Community" />
-  <meta property="og:description" content="A gentle, judgment-free place to talk, vent, and heal. Helpers are here 24/7. You're never alone." />
+  <!-- Rich Link Preview (Discord, Twitter, etc.) -->
+  <meta property="og:title" content="helping others for good" />
+  <meta property="og:description" content="A quiet, judgment-free Discord server dedicated to mental health support, crisis prevention, and being there for each other — 24/7." />
   <meta property="og:image" content="https://i.pinimg.com/736x/fd/b3/14/fdb314d3e729377210ffb17a9c038eec.jpg" />
   <meta property="og:image:width" content="736" />
   <meta property="og:image:height" content="736" />
   <meta property="og:url" content="https://yourdomain.com" />
   <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#e2c9ff" />
-  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#000000" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600&family=Quicksand:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap');
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, #d4bbff 0%, #c9e4ff 50%, #ffd4f5 100%);
-      font-family: 'Quicksand', sans-serif;
-      color: #5d4a80;
+      background: #0f0f0f;
+      color: #f0f0f0;
+      font-family: 'Inter', sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
-
-    /* Floating soft particles */
-    .particle {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 50%;
-      pointer-events: none;
-      animation: float 15s infinite linear;
-    }
-    @keyframes float {
-      0% { transform: translateY(100vh) scale(0.3); opacity: 0; }
-      10% { opacity: 0.6; }
-      90% { opacity: 0.3; }
-      100% { transform: translateY(-100px) scale(1); opacity: 0; }
+      text-align: center;
+      padding: 20px;
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 28px;
-      padding: 50px 40px;
-      text-align: center;
-      max-width: 480px;
-      width: 90%;
-      box-shadow: 0 20px 50px rgba(140, 100, 200, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      animation: fadeIn 1.5s ease-out;
+      max-width: 420px;
+      padding: 50px 30px;
+      background: rgba(20, 20, 20, 0.7);
+      border-radius: 20px;
+      border: 1px solid #333;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+    .pfp {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 24px;
+      border: 4px solid #333;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+    .pfp img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     h1 {
-      font-family: 'Comfortaa', cursive;
-      font-size: 3.2em;
-      background: linear-gradient(90deg, #b19cd9, #cba6f7, #e0c3fc);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 10px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4em;
+      font-weight: 400;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      color: #ffffff;
     }
 
-    .subtitle {
-      font-size: 1.3em;
-      opacity: 0.9;
-      margin-bottom: 30px;
-      line-height: 1.6;
+    .subscript {
+      font-size: 0.7em;
+      opacity: 0.7;
+      letter-spacing: 2px;
+      margin-top: -8px;
+    }
+
+    .description {
+      font-size: 1.1em;
+      line-height: 1.7;
+      opacity: 0.85;
+      margin: 28px 0;
+      color: #cccccc;
     }
 
     .join-btn {
       display: inline-block;
-      background: linear-gradient(135deg, #b19cd9, #cba6f7);
-      color: white;
-      font-size: 1.4em;
-      font-weight: 600;
-      padding: 16px 48px;
+      background: transparent;
+      color: #ffffff;
+      border: 2px solid #ffffff;
+      padding: 14px 40px;
+      font-size: 1.1em;
+      font-weight: 500;
       border-radius: 50px;
       text-decoration: none;
-      box-shadow: 0 10px 30px rgba(177, 156, 217, 0.4);
       transition: all 0.4s ease;
-      margin-top: 20px;
+      margin-top: 10px;
     }
-
     .join-btn:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 40px rgba(177, 156, 217, 0.6);
-    }
-
-    .heart {
-      font-size: 2em;
-      margin: 20px 0;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.15); }
+      background: #ffffff;
+      color: #000000;
     }
 
     footer {
       margin-top: 40px;
       font-size: 0.9em;
-      opacity: 0.7;
+      opacity: 0.6;
     }
   </style>
 </head>
 <body>
 
-  <!-- Floating particles -->
-  <script>
-    for(let i = 0; i < 20; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.style.width = p.style.height = Math.random() * 80 + 20 + 'px';
-      p.style.left = Math.random() * 100 + '%';
-      p.style.animationDelay = Math.random() * 15 + 's';
-      p.style.animationDuration = 10 + Math.random() * 20 + 's';
-      document.body.appendChild(p);
-    }
-  </script>
-
   <div class="container">
-    <h1>Safe Space</h1>
-    <p class="subtitle">
-      A gentle, judgment-free community where you can talk, vent, and heal.<br>
-      Helpers are here for you 24/7 — day or night.
+    <div class="pfp">
+      <img src="https://i.pinimg.com/736x/fd/b3/14/fdb314d3e729377210ffb17a9c038eec.jpg" alt="helping others for good">
+    </div>
+
+    <h1>helping others for good</h1>
+    <div class="subscript">
+      ˡᵉᵗ’ˢ ˢᵃᵛᵉ ˡⁱᵛᵉˢ ᵗᵒᵍᵉᵗʰᵉʳ
+    </div>
+
+    <p class="description">
+      A quiet, non-judgmental Discord community dedicated to mental health support and suicide prevention.<br>
+      We listen. We care. We stay — 24/7.
     </p>
-    <div class="heart">Soft heart</div>
-    <a href="https://discord.gg/8jdm6sN98C" class="join-btn">Join the Safe Space</a>
-    <footer>You are loved. You matter. You're not alone.</footer>
+
+    <a href="https://discord.gg/8jdm6sN98C" class="join-btn">Join the Server</a>
+
+    <footer>
+      You are not alone.<br>
+      Someone is here for you right now.
+    </footer>
   </div>
 
 </body>
