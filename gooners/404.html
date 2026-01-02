@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 | gooners.wtf</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/particles.css">
+</head>
+<body>
+
+<!-- BACKGROUND -->
+<canvas id="particlesCanvas"></canvas>
+
+<div class="main-container" style="opacity: 1; transform: none;">
+    <div class="form-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1 class="form-title">404</h1>
+                <p class="form-subtitle">Profile not found</p>
+            </div>
+            
+            <div style="text-align: center; margin: var(--spacing-xl) 0;">
+                <p style="opacity: 0.8; margin-bottom: var(--spacing-lg);">
+                    The profile you're looking for doesn't exist or has been deleted.
+                </p>
+                <div style="font-size: 5rem; opacity: 0.5; margin: var(--spacing-xl) 0;">🔍</div>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                <a href="index.html" class="form-btn">Go to Homepage</a>
+                <a href="signup.html" class="form-btn secondary">Create your own profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/particles.js"></script>
+<script>
+initParticles();
+</script>
+</body>
+</html>
