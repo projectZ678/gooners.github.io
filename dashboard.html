@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | gooners.wtf</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/particles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<!-- CLICK TO ENTER -->
+<div id="enterScreen">
+    <div id="enterText">CLICK TO ENTER</div>
+</div>
+
+<!-- BACKGROUND -->
+<canvas id="particlesCanvas"></canvas>
+
+<!-- MAIN DASHBOARD -->
+<div class="main-container" id="mainContent">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-text">gooners.wtf</span>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" onclick="openModal('customizeModal')">
+                <i class="fas fa-user-cog"></i>
+                <span>Customize</span>
+            </a>
+            <a href="#" class="nav-item" onclick="openModal('musicModal')">
+                <i class="fas fa-music"></i>
+                <span>Music</span>
+            </a>
+            <a href="#" class="nav-item" onclick="openModal('bannerModal')">
+                <i class="fas fa-image"></i>
+                <span>Banner</span>
+            </a>
+            <a href="#" class="nav-item" onclick="openModal('analyticsModal')">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="#" class="nav-item" onclick="previewProfile()">
+                <i class="fas fa-eye"></i>
+                <span>Preview</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatar">
+                    <img src="" alt="Profile">
+                </div>
+                <div class="user-info">
+                    <h4 id="sidebarUsername"></h4>
+                    <p id="sidebarProfileLink"></p>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+        <!-- PROFILE BANNER PREVIEW -->
+        <div class="dashboard-banner" id="dashboardBanner">
+            <div class="banner-overlay"></div>
+        </div>
+
+        <!-- DASHBOARD HEADER -->
+        <div class="dashboard-header">
+            <div class="profile-info">
+                <div class="profile-picture" id="dashboardPfp">
+                    <img src="" alt="Profile">
+                </div>
+                <div class="profile-details">
+                    <h1 id="dashboardUsername"></h1>
+                    <div class="profile-link" id="dashboardLink"></div>
+                    <div class="profile-actions">
+                        <button class="action-btn" onclick="copyProfileLink()">
+                            <i class="fas fa-copy"></i> Copy Link
+                        </button>
+                        <button class="action-btn" onclick="shareProfile()">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD CONTENT -->
+        <div class="dashboard-content">
+            <!-- QUICK STATS -->
+            <div class="dashboard-section">
+                <h2 class="section-title">Profile Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="statViews">0</div>
+                            <div class="stat-label">Profile Views</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="statVisitors">0</div>
+                            <div class="stat-label">Unique Visitors</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="statDays">0</div>
+                            <div class="stat-label">Days Active</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUICK ACTIONS -->
+            <div class="dashboard-section">
+                <h2 class="section-title">Quick Actions</h2>
+                <div class="actions-grid">
+                    <div class="action-card" onclick="openModal('bannerModal')">
+                        <div class="action-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <h3>Change Banner</h3>
+                        <p>Upload a custom banner image</p>
+                    </div>
+                    <div class="action-card" onclick="openModal('pfpModal')">
+                        <div class="action-icon">
+                            <i class="fas fa-portrait"></i>
+                        </div>
+                        <h3>Profile Picture</h3>
+                        <p>Update your profile photo</p>
+                    </div>
+                    <div class="action-card" onclick="openModal('musicModal')">
+                        <div class="action-icon">
+                            <i class="fas fa-music"></i>
+                        </div>
+                        <h3>Add Music</h3>
+                        <p>Set background music</p>
+                    </div>
+                    <div class="action-card" onclick="openModal('bioModal')">
+                        <div class="action-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3>Edit Bio</h3>
+                        <p>Update your profile bio</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROFILE LINK -->
+            <div class="dashboard-section">
+                <h2 class="section-title">Your Profile Link</h2>
+                <div class="link-card">
+                    <input type="text" id="profileLinkInput" class="link-input" readonly>
+                    <div class="link-actions">
+                        <button class="action-btn" onclick="copyProfileLink()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <button class="action-btn secondary" onclick="testProfileLink()">
+                            <i class="fas fa-external-link-alt"></i> Test
+                        </button>
+                    </div>
+                </div>
+                <p class="link-hint">Share this link with friends to show them your profile</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- MODALS -->
+<div id="pfpModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Profile Picture</h2>
+            <button class="modal-close" onclick="closeModal('pfpModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="preview-container">
+                <div class="preview-box">
+                    <img id="pfpPreview" src="" alt="Current PFP">
+                </div>
+                <p>Current profile picture</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Image URL</label>
+                <input type="text" id="pfpUrl" class="form-input" placeholder="https://example.com/image.jpg">
+            </div>
+            <button class="form-btn" onclick="updatePfp()">Update Profile Picture</button>
+        </div>
+    </div>
+</div>
+
+<div id="bannerModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Custom Banner</h2>
+            <button class="modal-close" onclick="closeModal('bannerModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="preview-container">
+                <div class="banner-preview" id="bannerPreview"></div>
+                <p>Current banner preview</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Banner Image URL</label>
+                <input type="text" id="bannerUrl" class="form-input" placeholder="https://example.com/banner.jpg">
+                <p class="form-hint">Recommended: 1200x400px or larger. Supports JPG, PNG, GIF</p>
+            </div>
+            <button class="form-btn" onclick="updateBanner()">Update Banner</button>
+        </div>
+    </div>
+</div>
+
+<div id="musicModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Background Music</h2>
+            <button class="modal-close" onclick="closeModal('musicModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="music-preview" id="musicPreview">
+                <p>No music set</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Music URL</label>
+                <input type="text" id="musicUrl" class="form-input" placeholder="https://example.com/music.mp3">
+                <p class="form-hint">Direct link to MP3, WAV, or OGG file</p>
+            </div>
+            <div class="modal-actions">
+                <button class="action-btn secondary" onclick="testMusic()">Test</button>
+                <button class="action-btn" onclick="updateMusic()">Save Music</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<audio id="audioPlayer" style="display: none;"></audio>
+
+<script src="js/particles.js"></script>
+<script src="js/main.js"></script>
+<script src="js/dashboard.js"></script>
+<script>
+// Initialize
+initParticles();
+initPage();
+
+// Check if user is logged in
+let currentUser = getCurrentUser();
+if (!currentUser) {
+    window.location.href = 'index.html';
+} else {
+    loadDashboardData();
+}
+
+// Load dashboard data
+function loadDashboardData() {
+    // Set user info
+    document.getElementById('sidebarUsername').textContent = `@${currentUser.username}`;
+    document.getElementById('sidebarProfileLink').textContent = `gooners.wtf/${currentUser.profileLink}`;
+    document.getElementById('dashboardUsername').textContent = `@${currentUser.username}`;
+    document.getElementById('dashboardLink').textContent = `gooners.wtf/${currentUser.profileLink}`;
+    document.getElementById('profileLinkInput').value = `gooners.wtf/${currentUser.profileLink}`;
+    
+    // Set profile picture
+    const pfpImg = document.querySelector('#userAvatar img');
+    const dashboardPfp = document.querySelector('#dashboardPfp img');
+    const pfpPreview = document.getElementById('pfpPreview');
+    
+    if (currentUser.customizations && currentUser.customizations.pfp) {
+        const pfpUrl = currentUser.customizations.pfp;
+        pfpImg.src = pfpUrl;
+        dashboardPfp.src = pfpUrl;
+        pfpPreview.src = pfpUrl;
+    }
+    
+    // Set banner
+    const bannerPreview = document.getElementById('bannerPreview');
+    const dashboardBanner = document.getElementById('dashboardBanner');
+    
+    if (currentUser.customizations && currentUser.customizations.banner) {
+        const bannerUrl = currentUser.customizations.banner;
+        bannerPreview.style.backgroundImage = `url(${bannerUrl})`;
+        dashboardBanner.style.backgroundImage = `url(${bannerUrl})`;
+    } else {
+        bannerPreview.style.background = 'linear-gradient(45deg, #333, #666)';
+        dashboardBanner.style.background = 'linear-gradient(45deg, #333, #666)';
+    }
+    
+    // Set stats
+    const createdDate = new Date(currentUser.createdAt);
+    const daysActive = Math.floor((Date.now() - createdDate) / (1000 * 60 * 60 * 24));
+    
+    document.getElementById('statViews').textContent = currentUser.stats.views || Math.floor(Math.random() * 1000);
+    document.getElementById('statVisitors').textContent = currentUser.stats.visitors || Math.floor(Math.random() * 500);
+    document.getElementById('statDays').textContent = daysActive || 1;
+}
+</script>
+</body>
+</html>

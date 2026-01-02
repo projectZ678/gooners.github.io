@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gooners.wtf | Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/particles.css">
+</head>
+<body>
+
+<!-- CLICK TO ENTER -->
+<div id="enterScreen">
+    <div id="enterText">CLICK TO ENTER</div>
+</div>
+
+<!-- BACKGROUND -->
+<canvas id="particlesCanvas"></canvas>
+
+<!-- MAIN CONTENT -->
+<div class="main-container" id="mainContent">
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-text">gooners.wtf</span>
+        </div>
+        <div class="nav-links">
+            <a href="signup.html" class="nav-btn">Sign Up</a>
+            <a href="login.html" class="nav-btn secondary">Log In</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">CREATE YOUR <span class="gradient-text">DARK PROFILE</span></h1>
+            <p class="hero-subtitle">Custom banner • Background music • Unique link • gooners.wtf/yourname</p>
+            
+            <div class="hero-features">
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-text">Customize everything</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎵</div>
+                    <div class="feature-text">Add your music</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔗</div>
+                    <div class="feature-text">Share your link</div>
+                </div>
+            </div>
+
+            <div class="hero-actions">
+                <a href="signup.html" class="cta-btn">Get Started Free</a>
+                <a href="login.html" class="cta-btn secondary">Already have account?</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXAMPLE PROFILE PREVIEW -->
+    <div class="preview-section">
+        <h2 class="section-title">EXAMPLE PROFILE</h2>
+        <div class="profile-preview">
+            <div class="preview-banner" id="previewBanner"></div>
+            <div class="preview-content">
+                <div class="preview-pfp">
+                    <img src="assets/default-pfp.jpg" alt="Profile">
+                </div>
+                <div class="preview-info">
+                    <div class="preview-username">@username</div>
+                    <div class="preview-link">gooners.wtf/username</div>
+                    <div class="preview-bio">This is what your profile will look like</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/particles.js"></script>
+<script src="js/main.js"></script>
+<script>
+// Initialize particles
+initParticles();
+
+// Handle click to enter
+document.getElementById('enterScreen').addEventListener('click', function() {
+    this.style.opacity = '0';
+    setTimeout(() => {
+        this.style.display = 'none';
+        document.getElementById('mainContent').style.opacity = '1';
+        document.getElementById('mainContent').style.transform = 'translateY(0)';
+    }, 1200);
+});
+
+// Example banner preview
+const bannerImages = [
+    'https://images.unsplash.com/photo-1614850523060-8da1d56ae167?w=1200&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1505506874110-6a7a69069a08?w=1200&h=400&fit=crop'
+];
+
+let currentBanner = 0;
+const previewBanner = document.getElementById('previewBanner');
+previewBanner.style.backgroundImage = `url(${bannerImages[currentBanner]})`;
+
+// Rotate banner images every 5 seconds
+setInterval(() => {
+    currentBanner = (currentBanner + 1) % bannerImages.length;
+    previewBanner.style.backgroundImage = `url(${bannerImages[currentBanner]})`;
+    previewBanner.style.opacity = '0';
+    setTimeout(() => {
+        previewBanner.style.opacity = '1';
+    }, 100);
+}, 5000);
+</script>
+</body>
+</html>
