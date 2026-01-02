@@ -158,7 +158,7 @@
             50% { opacity: 0.4; }
         }
 
-        /* Music player - Clean unified design */
+        /* Music player */
         .music-player {
             width: 100%;
             background: rgba(20, 20, 20, 0.7);
@@ -195,6 +195,7 @@
             align-items: center;
             justify-content: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
         }
 
         .album-art svg {
@@ -205,6 +206,7 @@
 
         .song-details {
             flex: 1;
+            min-width: 0;
         }
 
         .song-title {
@@ -212,11 +214,24 @@
             font-weight: 500;
             color: #fff;
             margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .song-artist {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .song-title.highlight {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         /* Controls */
@@ -370,7 +385,7 @@
             50% { opacity: 0.8; transform: scaleY(1.2); }
         }
 
-        /* Social links (optional) */
+        /* Social links */
         .social-links {
             display: flex;
             gap: 15px;
@@ -444,7 +459,7 @@
             <div class="tagline">trapped in my mind</div>
             <div class="status">
                 <span class="status-dot"></span>
-                <span id="statusText">Listening now</span>
+                <span id="statusText">Loading...</span>
             </div>
         </div>
         
@@ -459,8 +474,8 @@
                         </svg>
                     </div>
                     <div class="song-details">
-                        <div class="song-title" id="songTitle">Now Playing</div>
-                        <div class="song-artist" id="songArtist">Started at 0:19</div>
+                        <div class="song-title highlight" id="songTitle">Color Stripped</div>
+                        <div class="song-artist" id="songArtist">• Starting at 0:19</div>
                     </div>
                 </div>
             </div>
@@ -493,7 +508,7 @@
                         <div class="progress-fill" id="progressFill"></div>
                     </div>
                     <div class="progress-time">
-                        <span id="currentTime">0:00</span>
+                        <span id="currentTime">0:19</span>
                         <span id="totalTime">0:00</span>
                     </div>
                 </div>
@@ -596,7 +611,31 @@
         const statusText = document.getElementById('statusText');
         const visualizer = document.getElementById('visualizer');
 
+        // Initialize YouTube player
+        function initializePlayer() {
+            // Load YouTube API if not loaded
+            if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
+                // Create script tag for YouTube API
+                const tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+                const firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                
+                // Set global callback
+                window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+                statusText.textContent = 'Loading player...';
+            } else {
+                // API already loaded, create player directly
+                onYouTubeIframeAPIReady();
+            }
+        }
+
         function onYouTubeIframeAPIReady() {
+            // Check if player already exists
+            if (window.playerInstance) {
+                window.playerInstance.destroy();
+            }
+            
             player = new YT.Player('player', {
                 height: '0',
                 width: '0',
@@ -610,7 +649,9 @@
                     'modestbranding': 1,
                     'playsinline': 1,
                     'rel': 0,
-                    'start': START_TIME
+                    'start': START_TIME,
+                    'enablejsapi': 1,
+                    'origin': window.location.origin
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -618,14 +659,31 @@
                     'onError': onPlayerError
                 }
             });
+            
+            // Store reference globally
+            window.playerInstance = player;
+            
+            statusText.textContent = 'Connecting...';
         }
 
         function onPlayerReady(event) {
+            console.log('Player ready');
             event.target.setVolume(volume);
             updateVolumeDisplay();
             updateSongInfo();
             startProgressUpdates();
             toggleVisualizer(true);
+            statusText.textContent = 'Playing';
+            
+            // Force start at 19 seconds if not already there
+            setTimeout(() => {
+                if (player && player.getCurrentTime) {
+                    const currentTime = player.getCurrentTime();
+                    if (currentTime < START_TIME) {
+                        player.seekTo(START_TIME, true);
+                    }
+                }
+            }, 500);
         }
 
         function onPlayerStateChange(event) {
@@ -635,6 +693,13 @@
                     playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
                     statusText.textContent = 'Playing';
                     toggleVisualizer(true);
+                    // Ensure we start at 19 seconds
+                    if (player && player.getCurrentTime) {
+                        const currentTime = player.getCurrentTime();
+                        if (currentTime < START_TIME) {
+                            player.seekTo(START_TIME, true);
+                        }
+                    }
                     break;
                     
                 case YT.PlayerState.PAUSED:
@@ -647,24 +712,53 @@
                 case YT.PlayerState.ENDED:
                     isPlaying = false;
                     playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-                    statusText.textContent = 'Stopped';
+                    statusText.textContent = 'Ended';
                     toggleVisualizer(false);
+                    // Restart from 19 seconds
+                    setTimeout(() => {
+                        if (player) {
+                            player.seekTo(START_TIME, true);
+                            player.playVideo();
+                        }
+                    }, 1000);
+                    break;
+                    
+                case YT.PlayerState.BUFFERING:
+                    statusText.textContent = 'Buffering...';
+                    break;
+                    
+                case YT.PlayerState.CUED:
+                    statusText.textContent = 'Ready';
                     break;
             }
         }
 
         function onPlayerError(event) {
             console.error('YouTube player error:', event.data);
-            songArtist.textContent = 'Error loading';
-            statusText.textContent = 'Click to retry';
+            songArtist.textContent = 'Error loading - click play';
+            statusText.textContent = 'Error';
+            
+            // Try to recover by reloading player
+            setTimeout(() => {
+                if (player) {
+                    player.destroy();
+                    initializePlayer();
+                }
+            }, 2000);
         }
 
         function updateSongInfo() {
-            songArtist.textContent = `Started at 0:${START_TIME.toString().padStart(2, '0')}`;
+            // Show the song name with gradient
+            songTitle.textContent = 'Color Stripped';
+            songTitle.classList.add('highlight');
+            songArtist.textContent = '• Starting at 0:19';
         }
 
         function togglePlay() {
-            if (!player) return;
+            if (!player) {
+                initializePlayer();
+                return;
+            }
             
             if (isPlaying) {
                 player.pauseVideo();
@@ -724,7 +818,7 @@
         }
 
         function formatTime(seconds) {
-            if (isNaN(seconds)) return "0:00";
+            if (isNaN(seconds)) return "0:19";
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
@@ -743,7 +837,7 @@
         prevBtn.addEventListener('click', () => {
             if (!player) return;
             const current = player.getCurrentTime();
-            seekTo(Math.max(0, current - 10));
+            seekTo(Math.max(START_TIME, current - 10));
         });
         
         nextBtn.addEventListener('click', () => {
@@ -763,11 +857,11 @@
             const rect = progressBar.getBoundingClientRect();
             const duration = player.getDuration();
             const percentage = (e.clientX - rect.left) / rect.width;
-            const newTime = percentage * duration;
+            const newTime = Math.max(START_TIME, percentage * duration);
             seekTo(newTime);
         });
 
-        // Drag support
+        // Drag support for progress bar
         progressBar.addEventListener('mousedown', (e) => {
             isDragging = true;
             const handleMouseMove = (e) => {
@@ -775,18 +869,18 @@
                 const rect = progressBar.getBoundingClientRect();
                 const duration = player.getDuration();
                 const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-                const newTime = percentage * duration;
+                const newTime = Math.max(START_TIME, percentage * duration);
                 progressFill.style.width = `${percentage * 100}%`;
                 updateTimeDisplay(newTime, duration);
             };
             
-            const handleMouseUp = () => {
+            const handleMouseUp = (e) => {
                 isDragging = false;
                 if (!player) return;
                 const rect = progressBar.getBoundingClientRect();
                 const duration = player.getDuration();
-                const percentage = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-                const newTime = percentage * duration;
+                const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                const newTime = Math.max(START_TIME, percentage * duration);
                 seekTo(newTime);
                 document.removeEventListener('mousemove', handleMouseMove);
                 document.removeEventListener('mouseup', handleMouseUp);
@@ -794,6 +888,25 @@
             
             document.addEventListener('mousemove', handleMouseMove);
             document.addEventListener('mouseup', handleMouseUp);
+            handleMouseMove(e);
+        });
+
+        // Drag support for volume
+        volumeSlider.addEventListener('mousedown', (e) => {
+            const handleMouseMove = (e) => {
+                const rect = volumeSlider.getBoundingClientRect();
+                const newVolume = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+                setVolume(newVolume);
+            };
+            
+            const handleMouseUp = () => {
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+            };
+            
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+            handleMouseMove(e);
         });
 
         // Keyboard controls
@@ -815,7 +928,7 @@
                     break;
                 case 'ArrowLeft':
                     e.preventDefault();
-                    if (player) seekTo(player.getCurrentTime() - 5);
+                    if (player) seekTo(Math.max(START_TIME, player.getCurrentTime() - 5));
                     break;
                 case 'ArrowRight':
                     e.preventDefault();
@@ -827,10 +940,10 @@
         // Initialize
         window.addEventListener('load', () => {
             fetchDiscordProfile();
+            initializePlayer();
             
-            if (typeof YT === 'undefined') {
-                songArtist.textContent = 'Loading...';
-            }
+            // Set initial time display
+            currentTime.textContent = '0:19';
         });
     </script>
     
