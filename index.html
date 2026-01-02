@@ -23,6 +23,54 @@
             padding: 20px;
             position: relative;
             overflow-x: hidden;
+            cursor: pointer; /* Indicate it's clickable */
+        }
+
+        /* Click to start overlay */
+        .start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transition: opacity 0.5s ease;
+        }
+
+        .start-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .start-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .start-instruction {
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            text-align: center;
         }
 
         /* Subtle animated background */
@@ -448,9 +496,27 @@
     </style>
 </head>
 <body>
+    <!-- Click to start overlay -->
+    <div class="start-overlay" id="startOverlay">
+        <div class="profile">
+            <div class="avatar">
+                <img src="https://i.pinimg.com/736x/68/84/ae/6884ae1b6c656e0601ae4e762c9427e3.jpg" alt="Profile">
+            </div>
+            <div class="username">@opsec</div>
+            <div class="tagline">trapped in my mind</div>
+        </div>
+        <button class="start-button" id="startButton">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 10px;">
+                <path d="M8 5v14l11-7z"/>
+            </svg>
+            Start Music
+        </button>
+        <div class="start-instruction">Click anywhere to start playing</div>
+    </div>
+    
     <div class="bg-effect"></div>
     
-    <div class="container">
+    <div class="container" id="mainContent" style="opacity: 0;">
         <div class="profile">
             <div class="avatar">
                 <img id="pfpImg" src="https://i.pinimg.com/736x/68/84/ae/6884ae1b6c656e0601ae4e762c9427e3.jpg" alt="Profile">
@@ -459,7 +525,7 @@
             <div class="tagline">trapped in my mind</div>
             <div class="status">
                 <span class="status-dot"></span>
-                <span id="statusText">Loading...</span>
+                <span id="statusText">Click to start</span>
             </div>
         </div>
         
@@ -475,7 +541,7 @@
                     </div>
                     <div class="song-details">
                         <div class="song-title highlight" id="songTitle">Color Stripped</div>
-                        <div class="song-artist" id="songArtist">• Starting at 0:19</div>
+                        <div class="song-artist" id="songArtist">• Starts at 0:19 • Click to play</div>
                     </div>
                 </div>
             </div>
@@ -593,8 +659,12 @@
         let volume = 50;
         let updateInterval;
         let isDragging = false;
+        let hasUserInteracted = false;
 
         // DOM Elements
+        const startOverlay = document.getElementById('startOverlay');
+        const startButton = document.getElementById('startButton');
+        const mainContent = document.getElementById('mainContent');
         const playBtn = document.getElementById('playBtn');
         const playIcon = document.getElementById('playIcon');
         const prevBtn = document.getElementById('prevBtn');
@@ -615,23 +685,19 @@
         function initializePlayer() {
             // Load YouTube API if not loaded
             if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
-                // Create script tag for YouTube API
                 const tag = document.createElement('script');
                 tag.src = "https://www.youtube.com/iframe_api";
                 const firstScriptTag = document.getElementsByTagName('script')[0];
                 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
                 
-                // Set global callback
                 window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
                 statusText.textContent = 'Loading player...';
             } else {
-                // API already loaded, create player directly
                 onYouTubeIframeAPIReady();
             }
         }
 
         function onYouTubeIframeAPIReady() {
-            // Check if player already exists
             if (window.playerInstance) {
                 window.playerInstance.destroy();
             }
@@ -641,9 +707,9 @@
                 width: '0',
                 videoId: YOUTUBE_VIDEO_ID,
                 playerVars: {
-                    'autoplay': 1,
+                    'autoplay': 0, // Start with autoplay disabled
                     'controls': 0,
-                    'disablekb': 1,
+                    'disablekb': 0, // Enable keyboard controls
                     'fs': 0,
                     'iv_load_policy': 3,
                     'modestbranding': 1,
@@ -660,39 +726,36 @@
                 }
             });
             
-            // Store reference globally
             window.playerInstance = player;
-            
-            statusText.textContent = 'Connecting...';
+            statusText.textContent = 'Ready to play';
         }
 
         function onPlayerReady(event) {
-            console.log('Player ready');
+            console.log('Player ready and loaded');
             event.target.setVolume(volume);
             updateVolumeDisplay();
             updateSongInfo();
-            startProgressUpdates();
-            toggleVisualizer(true);
-            statusText.textContent = 'Playing';
+            updateProgress(); // Initial update
             
-            // Force start at 19 seconds if not already there
-            setTimeout(() => {
-                if (player && player.getCurrentTime) {
-                    const currentTime = player.getCurrentTime();
-                    if (currentTime < START_TIME) {
-                        player.seekTo(START_TIME, true);
-                    }
-                }
-            }, 500);
+            // Show that player is ready
+            statusText.textContent = 'Click play to start';
+            songArtist.textContent = '• Starts at 0:19 • Ready';
+            
+            // Update initial time display
+            currentTime.textContent = '0:19';
         }
 
         function onPlayerStateChange(event) {
+            console.log('Player state changed:', event.data);
+            
             switch (event.data) {
                 case YT.PlayerState.PLAYING:
                     isPlaying = true;
                     playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
                     statusText.textContent = 'Playing';
                     toggleVisualizer(true);
+                    startProgressUpdates();
+                    
                     // Ensure we start at 19 seconds
                     if (player && player.getCurrentTime) {
                         const currentTime = player.getCurrentTime();
@@ -707,6 +770,7 @@
                     playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
                     statusText.textContent = 'Paused';
                     toggleVisualizer(false);
+                    stopProgressUpdates();
                     break;
                     
                 case YT.PlayerState.ENDED:
@@ -714,6 +778,8 @@
                     playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
                     statusText.textContent = 'Ended';
                     toggleVisualizer(false);
+                    stopProgressUpdates();
+                    
                     // Restart from 19 seconds
                     setTimeout(() => {
                         if (player) {
@@ -730,6 +796,10 @@
                 case YT.PlayerState.CUED:
                     statusText.textContent = 'Ready';
                     break;
+                    
+                case -1: // UNSTARTED
+                    statusText.textContent = 'Click play to start';
+                    break;
             }
         }
 
@@ -738,25 +808,51 @@
             songArtist.textContent = 'Error loading - click play';
             statusText.textContent = 'Error';
             
-            // Try to recover by reloading player
+            // Provide alternative
             setTimeout(() => {
-                if (player) {
-                    player.destroy();
-                    initializePlayer();
-                }
+                statusText.textContent = 'Try clicking play again';
             }, 2000);
         }
 
+        function startMusic() {
+            if (!hasUserInteracted) {
+                hasUserInteracted = true;
+                
+                // Hide overlay and show main content
+                startOverlay.classList.add('hidden');
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                }, 300);
+                
+                // Initialize player if not already
+                if (!player) {
+                    initializePlayer();
+                }
+                
+                // Wait a bit then play
+                setTimeout(() => {
+                    if (player && player.playVideo) {
+                        player.playVideo();
+                        statusText.textContent = 'Starting...';
+                    }
+                }, 500);
+            }
+        }
+
         function updateSongInfo() {
-            // Show the song name with gradient
             songTitle.textContent = 'Color Stripped';
             songTitle.classList.add('highlight');
-            songArtist.textContent = '• Starting at 0:19';
         }
 
         function togglePlay() {
+            if (!hasUserInteracted) {
+                startMusic();
+                return;
+            }
+            
             if (!player) {
                 initializePlayer();
+                setTimeout(() => togglePlay(), 1000);
                 return;
             }
             
@@ -802,12 +898,18 @@
             
             if (isDragging) return;
             
-            const current = player.getCurrentTime();
-            const duration = player.getDuration();
-            const progress = (current / duration) * 100;
-            
-            progressFill.style.width = `${progress}%`;
-            updateTimeDisplay(current, duration);
+            try {
+                const current = player.getCurrentTime();
+                const duration = player.getDuration();
+                
+                if (duration && duration > 0) {
+                    const progress = (current / duration) * 100;
+                    progressFill.style.width = `${progress}%`;
+                    updateTimeDisplay(current, duration);
+                }
+            } catch (e) {
+                console.log('Progress update error:', e);
+            }
         }
 
         function updateTimeDisplay(current, duration) {
@@ -832,28 +934,41 @@
         }
 
         // Event Listeners
-        playBtn.addEventListener('click', togglePlay');
+        startButton.addEventListener('click', startMusic);
+        
+        // Allow clicking anywhere on the overlay
+        startOverlay.addEventListener('click', startMusic);
+        
+        // Also allow clicking anywhere on the page to start
+        document.addEventListener('click', (e) => {
+            if (!hasUserInteracted && e.target !== startButton) {
+                startMusic();
+            }
+        });
+
+        playBtn.addEventListener('click', togglePlay);
         
         prevBtn.addEventListener('click', () => {
-            if (!player) return;
+            if (!player || !hasUserInteracted) return;
             const current = player.getCurrentTime();
             seekTo(Math.max(START_TIME, current - 10));
         });
         
         nextBtn.addEventListener('click', () => {
-            if (!player) return;
+            if (!player || !hasUserInteracted) return;
             const current = player.getCurrentTime();
             seekTo(current + 10);
         });
 
         volumeSlider.addEventListener('click', (e) => {
+            if (!hasUserInteracted) return;
             const rect = volumeSlider.getBoundingClientRect();
             const newVolume = ((e.clientX - rect.left) / rect.width) * 100;
             setVolume(newVolume);
         });
 
         progressBar.addEventListener('click', (e) => {
-            if (!player) return;
+            if (!player || !hasUserInteracted) return;
             const rect = progressBar.getBoundingClientRect();
             const duration = player.getDuration();
             const percentage = (e.clientX - rect.left) / rect.width;
@@ -863,6 +978,7 @@
 
         // Drag support for progress bar
         progressBar.addEventListener('mousedown', (e) => {
+            if (!hasUserInteracted) return;
             isDragging = true;
             const handleMouseMove = (e) => {
                 if (!player) return;
@@ -893,6 +1009,7 @@
 
         // Drag support for volume
         volumeSlider.addEventListener('mousedown', (e) => {
+            if (!hasUserInteracted) return;
             const handleMouseMove = (e) => {
                 const rect = volumeSlider.getBoundingClientRect();
                 const newVolume = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
@@ -912,6 +1029,14 @@
         // Keyboard controls
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            if (!hasUserInteracted && e.code === 'Space') {
+                e.preventDefault();
+                startMusic();
+                return;
+            }
+            
+            if (!hasUserInteracted) return;
             
             switch(e.code) {
                 case 'Space':
@@ -944,6 +1069,9 @@
             
             // Set initial time display
             currentTime.textContent = '0:19';
+            
+            // Try to preload the player
+            setTimeout(initializePlayer, 1000);
         });
     </script>
     
