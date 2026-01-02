@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gooners.wtf | Dark Profile Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === ALL STYLES IN ONE PLACE === */
+        :root {
+            --bg-dark: #000000;
+            --bg-darker: #0a0a0a;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent-color: rgba(255, 255, 255, 0.15);
+            --success-color: #4cd964;
+            --error-color: #ff6b6b;
+            --card-bg: rgba(20, 20, 20, 0.85);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --gradient: linear-gradient(45deg, #fff, #aaa);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Particles Canvas */
+        #particlesCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            filter: grayscale(100%);
+        }
+
+        /* Click to Enter */
+        #enterScreen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+            transition: opacity 1.2s ease;
+        }
+
+        #enterText {
+            font-size: 26px;
+            letter-spacing: 6px;
+            opacity: 0.85;
+            animation: breathe 2.5s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.85; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.4s ease, transform 1.4s ease;
+        }
+
+        /* App Container - For SPA */
+        #app {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            padding: 10px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .nav-btn.secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Home Page */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 40px 40px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.7;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 18px 36px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .cta-btn.primary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+        }
+
+        .cta-btn.secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .cta-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Form Pages */
+        .form-container {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .form-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-subtitle {
+            font-size: 14px;
+            opacity: 0.6;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            opacity: 0.7;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .form-error {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .form-btn {
+            width: 100%;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            border: none;
+            font-family: inherit;
+        }
+
+        .form-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .form-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 2px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .form-link:hover {
+            opacity: 1;
+            border-bottom-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-message {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .form-success {
+            color: var(--success-color);
+            background: rgba(76, 217, 100, 0.1);
+        }
+
+        .form-error-message {
+            color: var(--error-color);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        /* Dashboard */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 15, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            margin-top: 40px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .nav-item i {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            margin-top: auto;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 12px;
+            border: 2px solid var(--border-color);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .user-info p {
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        /* Dashboard Main */
+        .dashboard-main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .dashboard-banner {
+            height: 250px;
+            background: linear-gradient(45deg, #333, #666);
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+            border-radius: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .profile-picture {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid var(--bg-dark);
+            overflow: hidden;
+            margin-top: -70px;
+            background: var(--bg-dark);
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-details h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .profile-link {
+            font-size: 1.2rem;
+            opacity: 0.7;
+            margin-bottom: 20px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            font-family: inherit;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Dashboard Content */
+        .dashboard-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+            letter-spacing: 2px;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 300;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.7;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 28px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        /* Profile Page */
+        .profile-banner {
+            height: 200px;
+            background: linear-gradient(45deg, #333, #666);
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+        }
+
+        .music-player {
+            text-align: center;
+            padding: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+
+        .music-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+            border: none;
+        }
+
+        .music-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .navbar {
+                padding: 16px;
+            }
+            
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                order: 2;
+            }
+            
+            .dashboard-main {
+                padding: 20px;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .profile-picture {
+                margin-top: -100px;
+            }
+            
+            .profile-actions {
+                justify-content: center;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- CLICK TO ENTER -->
+<div id="enterScreen">
+    <div id="enterText">CLICK TO ENTER</div>
+</div>
+
+<!-- PARTICLES BACKGROUND -->
+<canvas id="particlesCanvas"></canvas>
+
+<!-- MAIN APP CONTAINER -->
+<div id="app">
+    <!-- Navigation will be inserted here -->
+</div>
+
+<!-- MODAL CONTAINER -->
+<div id="modalContainer"></div>
+
+<!-- AUDIO PLAYER -->
+<audio id="audioPlayer" style="display: none;"></audio>
+
+<script>
+// === GLOBAL CONFIG ===
+const CONFIG = {
+    SITE_URL: window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://gooners.wtf',
+    STORAGE_KEY: 'gooners_user',
+    DEFAULT_PFP: 'https://i.pinimg.com/736x/70/35/7d/70357d016a70c4be051145972893c04e.jpg',
+    DEFAULT_BANNER: 'https://images.unsplash.com/photo-1614850523060-8da1d56ae167?w=1200&h=400&fit=crop'
+};
+
+// === STATE MANAGEMENT ===
+let currentUser = null;
+let currentPage = 'home';
+let particles = [];
+
+// === INITIALIZE APP ===
+function initApp() {
+    // Load user from localStorage
+    currentUser = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY));
+    
+    // Initialize particles
+    initParticles();
+    
+    // Handle click to enter
+    const enterScreen = document.getElementById('enterScreen');
+    if (enterScreen) {
+        enterScreen.addEventListener('click', () => {
+            enterScreen.style.opacity = '0';
+            setTimeout(() => {
+                enterScreen.style.display = 'none';
+                renderApp();
+            }, 1200);
+        });
+    } else {
+        renderApp();
+    }
+    
+    // Handle browser back/forward
+    window.addEventListener('popstate', () => {
+        const page = window.location.hash.replace('#', '') || 'home';
+        navigateTo(page);
+    });
+}
+
+// === RENDER APP ===
+function renderApp() {
+    const app = document.getElementById('app');
+    
+    // Get current page from URL hash
+    const hash = window.location.hash.replace('#', '');
+    currentPage = hash || 'home';
+    
+    // Render navigation
+    app.innerHTML = `
+        ${renderNavbar()}
+        ${renderPage(currentPage)}
+    `;
+    
+    // Initialize page-specific functionality
+    initPage(currentPage);
+}
+
+// === RENDER NAVBAR ===
+function renderNavbar() {
+    const isLoggedIn = !!currentUser;
+    
+    return `
+        <nav class="navbar">
+            <div class="logo">
+                <span>gooners.wtf</span>
+            </div>
+            <div class="nav-links">
+                ${isLoggedIn ? `
+                    <button onclick="navigateTo('dashboard')" class="nav-btn">Dashboard</button>
+                    <button onclick="logout()" class="nav-btn secondary">Logout</button>
+                ` : `
+                    <button onclick="navigateTo('signup')" class="nav-btn">Sign Up</button>
+                    <button onclick="navigateTo('login')" class="nav-btn secondary">Log In</button>
+                `}
+            </div>
+        </nav>
+    `;
+}
+
+// === RENDER PAGES ===
+function renderPage(page) {
+    switch(page) {
+        case 'home':
+            return renderHomePage();
+        case 'signup':
+            return renderSignupPage();
+        case 'login':
+            return renderLoginPage();
+        case 'dashboard':
+            return renderDashboardPage();
+        case 'profile':
+            return renderProfilePage();
+        default:
+            return renderHomePage();
+    }
+}
+
+function renderHomePage() {
+    return `
+        <div class="page active" id="homePage">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">CREATE YOUR <span class="gradient-text">DARK PROFILE</span></h1>
+                    <p class="hero-subtitle">Custom banner • Background music • Unique link • gooners.wtf/yourname</p>
+                    
+                    <div class="cta-buttons">
+                        <button onclick="navigateTo('signup')" class="cta-btn primary">Get Started Free</button>
+                        ${currentUser ? `
+                            <button onclick="navigateTo('dashboard')" class="cta-btn secondary">Go to Dashboard</button>
+                        ` : `
+                            <button onclick="navigateTo('login')" class="cta-btn secondary">Already have account?</button>
+                        `}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderSignupPage() {
+    return `
+        <div class="page active" id="signupPage">
+            <div class="form-container">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h1 class="form-title">CREATE PROFILE</h1>
+                        <p class="form-subtitle">Claim your unique link</p>
+                    </div>
+
+                    <form id="signupForm">
+                        <div class="form-group">
+                            <label for="username" class="form-label">USERNAME</label>
+                            <input type="text" id="username" class="form-input" placeholder="choose username" required>
+                            <div class="form-error" id="usernameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">EMAIL</label>
+                            <input type="email" id="email" class="form-input" placeholder="email@example.com" required>
+                            <div class="form-error" id="emailError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" class="form-label">PASSWORD</label>
+                            <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                            <div class="form-error" id="passwordError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label">CONFIRM PASSWORD</label>
+                            <input type="password" id="confirmPassword" class="form-input" placeholder="••••••••" required>
+                            <div class="form-error" id="confirmPasswordError"></div>
+                        </div>
+
+                        <button type="submit" class="form-btn" id="signupBtn">CREATE ACCOUNT</button>
+                        <div class="form-message" id="signupMessage"></div>
+                    </form>
+
+                    <div class="form-links">
+                        <a onclick="navigateTo('login')" class="form-link">Already have an account?</a>
+                        <a onclick="navigateTo('home')" class="form-link">Back to home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderLoginPage() {
+    return `
+        <div class="page active" id="loginPage">
+            <div class="form-container">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h1 class="form-title">LOG IN</h1>
+                        <p class="form-subtitle">Access your profile</p>
+                    </div>
+
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="loginUsername" class="form-label">USERNAME OR EMAIL</label>
+                            <input type="text" id="loginUsername" class="form-input" placeholder="username or email" required>
+                            <div class="form-error" id="loginUsernameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loginPassword" class="form-label">PASSWORD</label>
+                            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+                            <div class="form-error" id="loginPasswordError"></div>
+                        </div>
+
+                        <button type="submit" class="form-btn" id="loginBtn">LOG IN</button>
+                        <div class="form-message" id="loginMessage"></div>
+                    </form>
+
+                    <div class="form-links">
+                        <a onclick="navigateTo('signup')" class="form-link">Create account</a>
+                        <a onclick="showForgotPassword()" class="form-link">Forgot password?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderDashboardPage() {
+    if (!currentUser) {
+        navigateTo('login');
+        return '';
+    }
+    
+    return `
+        <div class="page active" id="dashboardPage">
+            <div class="dashboard-container">
+                <aside class="sidebar">
+                    <div class="sidebar-nav">
+                        <div class="nav-item active" onclick="navigateTo('dashboard')">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </div>
+                        <div class="nav-item" onclick="openModal('customize')">
+                            <i class="fas fa-user-cog"></i>
+                            <span>Customize</span>
+                        </div>
+                        <div class="nav-item" onclick="openModal('music')">
+                            <i class="fas fa-music"></i>
+                            <span>Music</span>
+                        </div>
+                        <div class="nav-item" onclick="openModal('banner')">
+                            <i class="fas fa-image"></i>
+                            <span>Banner</span>
+                        </div>
+                        <div class="nav-item" onclick="openProfile()">
+                            <i class="fas fa-eye"></i>
+                            <span>View Profile</span>
+                        </div>
+                    </div>
+                    
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            <img id="sidebarAvatar" src="${currentUser.customizations?.pfp || CONFIG.DEFAULT_PFP}" alt="Profile">
+                        </div>
+                        <div class="user-info">
+                            <h4>@${currentUser.username}</h4>
+                            <p>gooners.wtf/${currentUser.profileLink}</p>
+                        </div>
+                    </div>
+                </aside>
+
+                <main class="dashboard-main">
+                    <!-- Banner -->
+                    <div class="dashboard-banner" id="dashboardBanner" style="background-image: url('${currentUser.customizations?.banner || CONFIG.DEFAULT_BANNER}')">
+                        <div class="banner-overlay"></div>
+                    </div>
+
+                    <!-- Profile Header -->
+                    <div class="profile-header">
+                        <div class="profile-picture">
+                            <img id="dashboardAvatar" src="${currentUser.customizations?.pfp || CONFIG.DEFAULT_PFP}" alt="Profile">
+                        </div>
+                        <div class="profile-details">
+                            <h1>@${currentUser.username}</h1>
+                            <div class="profile-link">gooners.wtf/${currentUser.profileLink}</div>
+                            <div class="profile-actions">
+                                <button class="action-btn" onclick="copyProfileLink()">
+                                    <i class="fas fa-copy"></i> Copy Link
+                                </button>
+                                <button class="action-btn" onclick="shareProfile()">
+                                    <i class="fas fa-share-alt"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="dashboard-section">
+                        <h2 class="section-title">Profile Statistics</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-number">${currentUser.stats?.views || 0}</div>
+                                    <div class="stat-label">Profile Views</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-number">${currentUser.stats?.visitors || 0}</div>
+                                    <div class="stat-label">Unique Visitors</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-calendar"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-number">${Math.floor((Date.now() - new Date(currentUser.createdAt).getTime()) / (1000 * 60 * 60 * 24))}</div>
+                                    <div class="stat-label">Days Active</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="dashboard-section">
+                        <h2 class="section-title">Quick Actions</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card" onclick="openModal('banner')" style="cursor: pointer;">
+                                <div class="stat-icon">
+                                    <i class="fas fa-image"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>Change Banner</h3>
+                                    <p>Upload a custom banner image</p>
+                                </div>
+                            </div>
+                            <div class="stat-card" onclick="openModal('customize')" style="cursor: pointer;">
+                                <div class="stat-icon">
+                                    <i class="fas fa-portrait"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>Profile Picture</h3>
+                                    <p>Update your profile photo</p>
+                                </div>
+                            </div>
+                            <div class="stat-card" onclick="openModal('music')" style="cursor: pointer;">
+                                <div class="stat-icon">
+                                    <i class="fas fa-music"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>Add Music</h3>
+                                    <p>Set background music</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    `;
+}
+
+function renderProfilePage() {
+    const username = getUrlParam('user') || currentUser?.profileLink;
+    if (!username) {
+        navigateTo('home');
+        return '';
+    }
+    
+    // For demo, create mock profile data
+    const profileData = currentUser && currentUser.profileLink === username ? currentUser : {
+        username: username,
+        profileLink: username,
+        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        customizations: {
+            pfp: CONFIG.DEFAULT_PFP,
+            banner: CONFIG.DEFAULT_BANNER,
+            music: '',
+            bio: 'Just another gooner on the web.'
+        },
+        stats: {
+            views: Math.floor(Math.random() * 1000),
+            visitors: Math.floor(Math.random() * 500)
+        }
+    };
+    
+    const daysActive = Math.floor((Date.now() - new Date(profileData.createdAt).getTime()) / (1000 * 60 * 60 * 24));
+    
+    return `
+        <div class="page active" id="profilePage">
+            <div class="profile-container">
+                <!-- Banner -->
+                <div class="profile-banner" style="background-image: url('${profileData.customizations.banner || CONFIG.DEFAULT_BANNER}')">
+                    <div class="banner-overlay"></div>
+                </div>
+
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <div class="profile-picture">
+                        <img src="${profileData.customizations.pfp || CONFIG.DEFAULT_PFP}" alt="Profile">
+                    </div>
+                    <div class="profile-details">
+                        <h1>@${profileData.username}</h1>
+                        <div class="profile-link">gooners.wtf/${profileData.profileLink}</div>
+                        <p>${profileData.customizations.bio || 'No bio yet.'}</p>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">${profileData.stats.views}</div>
+                        <div class="stat-label">Profile Views</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${profileData.stats.visitors}</div>
+                        <div class="stat-label">Visitors</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${daysActive}</div>
+                        <div class="stat-label">Days Active</div>
+                    </div>
+                </div>
+
+                <!-- Back Button -->
+                <div style="text-align: center; margin-top: 40px;">
+                    <button onclick="navigateTo('home')" class="action-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// === PAGE INITIALIZATION ===
+function initPage(page) {
+    switch(page) {
+        case 'signup':
+            initSignupPage();
+            break;
+        case 'login':
+            initLoginPage();
+            break;
+        case 'dashboard':
+            initDashboardPage();
+            break;
+        case 'profile':
+            initProfilePage();
+            break;
+    }
+}
+
+function initSignupPage() {
+    const form = document.getElementById('signupForm');
+    if (!form) return;
+    
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        // Validate
+        if (username.length < 3) {
+            showError('usernameError', 'Username must be at least 3 characters');
+            return;
+        }
+        
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            showError('usernameError', 'Only letters, numbers, and underscores');
+            return;
+        }
+        
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showError('emailError', 'Please enter a valid email');
+            return;
+        }
+        
+        if (password.length < 6) {
+            showError('passwordError', 'Password must be at least 6 characters');
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            showError('confirmPasswordError', 'Passwords do not match');
+            return;
+        }
+        
+        // Create user
+        const user = {
+            id: Date.now().toString(),
+            username: username,
+            email: email,
+            profileLink: username.toLowerCase(),
+            createdAt: new Date().toISOString(),
+            customizations: {
+                pfp: CONFIG.DEFAULT_PFP,
+                banner: CONFIG.DEFAULT_BANNER,
+                music: '',
+                bio: '',
+                theme: 'dark'
+            },
+            stats: {
+                visitors: 0,
+                views: 0,
+                lastActive: new Date().toISOString()
+            }
+        };
+        
+        // Save user
+        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(user));
+        currentUser = user;
+        
+        // Show success
+        const message = document.getElementById('signupMessage');
+        message.textContent = `Profile created! Redirecting...`;
+        message.className = 'form-message form-success';
+        message.style.display = 'block';
+        
+        // Redirect to dashboard
+        setTimeout(() => {
+            navigateTo('dashboard');
+        }, 1500);
+    });
+}
+
+function initLoginPage() {
+    const form = document.getElementById('loginForm');
+    if (!form) return;
+    
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const identifier = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        
+        // For demo, just check if user exists
+        const savedUser = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY));
+        
+        if (savedUser && (savedUser.username === identifier || savedUser.email === identifier)) {
+            // Simulate login success
+            currentUser = savedUser;
+            
+            const message = document.getElementById('loginMessage');
+            message.textContent = 'Login successful! Redirecting...';
+            message.className = 'form-message form-success';
+            message.style.display = 'block';
+            
+            setTimeout(() => {
+                navigateTo('dashboard');
+            }, 1000);
+        } else {
+            // Demo login - create temp user
+            currentUser = {
+                id: Date.now().toString(),
+                username: identifier.includes('@') ? 'demo' : identifier,
+                email: identifier.includes('@') ? identifier : 'demo@gooners.wtf',
+                profileLink: identifier.includes('@') ? 'demo' : identifier.toLowerCase(),
+                createdAt: new Date().toISOString(),
+                customizations: {
+                    pfp: CONFIG.DEFAULT_PFP,
+                    banner: CONFIG.DEFAULT_BANNER,
+                    music: '',
+                    bio: '',
+                    theme: 'dark'
+                },
+                stats: {
+                    visitors: 0,
+                    views: 0,
+                    lastActive: new Date().toISOString()
+                }
+            };
+            
+            localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(currentUser));
+            
+            const message = document.getElementById('loginMessage');
+            message.textContent = 'Login successful! Redirecting...';
+            message.className = 'form-message form-success';
+            message.style.display = 'block';
+            
+            setTimeout(() => {
+                navigateTo('dashboard');
+            }, 1000);
+        }
+    });
+}
+
+function initDashboardPage() {
+    // Nothing to initialize for now
+}
+
+function initProfilePage() {
+    // Nothing to initialize for now
+}
+
+// === MODAL SYSTEM ===
+function openModal(type) {
+    const modalContainer = document.getElementById('modalContainer');
+    
+    switch(type) {
+        case 'customize':
+            modalContainer.innerHTML = `
+                <div class="modal" id="customizeModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Customize Profile</h2>
+                            <button class="modal-close" onclick="closeModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="form-label">Profile Picture URL</label>
+                                <input type="text" id="customizePfpUrl" class="form-input" value="${currentUser.customizations?.pfp || CONFIG.DEFAULT_PFP}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Bio</label>
+                                <textarea id="customizeBio" class="form-input" rows="3">${currentUser.customizations?.bio || ''}</textarea>
+                            </div>
+                            <button class="form-btn" onclick="saveCustomizations()">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            break;
+            
+        case 'banner':
+            modalContainer.innerHTML = `
+                <div class="modal" id="bannerModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Change Banner</h2>
+                            <button class="modal-close" onclick="closeModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div style="margin-bottom: 20px; text-align: center;">
+                                <div style="width: 100%; height: 150px; background: linear-gradient(45deg, #333, #666); border-radius: 12px; margin-bottom: 10px;" id="bannerPreview"></div>
+                                <p style="opacity: 0.7; font-size: 14px;">Current banner preview</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Banner Image URL</label>
+                                <input type="text" id="bannerUrl" class="form-input" placeholder="https://example.com/banner.jpg" value="${currentUser.customizations?.banner || ''}">
+                            </div>
+                            <button class="form-btn" onclick="saveBanner()">Update Banner</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            // Update preview
+            setTimeout(() => {
+                const bannerUrl = currentUser.customizations?.banner || CONFIG.DEFAULT_BANNER;
+                document.getElementById('bannerPreview').style.backgroundImage = `url(${bannerUrl})`;
+                document.getElementById('bannerPreview').style.backgroundSize = 'cover';
+                document.getElementById('bannerPreview').style.backgroundPosition = 'center';
+            }, 10);
+            break;
+            
+        case 'music':
+            modalContainer.innerHTML = `
+                <div class="modal" id="musicModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Background Music</h2>
+                            <button class="modal-close" onclick="closeModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div style="margin-bottom: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; text-align: center;">
+                                <p id="musicStatus">${currentUser.customizations?.music ? 'Music is set' : 'No music set'}</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Music URL (MP3, WAV, etc.)</label>
+                                <input type="text" id="musicUrl" class="form-input" placeholder="https://example.com/music.mp3" value="${currentUser.customizations?.music || ''}">
+                            </div>
+                            <div style="display: flex; gap: 12px;">
+                                <button class="action-btn secondary" onclick="testMusic()">Test</button>
+                                <button class="action-btn" onclick="saveMusic()">Save Music</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            break;
+    }
+    
+    document.querySelector('.modal').style.display = 'flex';
+}
+
+function closeModal() {
+    const modal = document.querySelector('.modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.getElementById('modalContainer').innerHTML = '';
+    }
+}
+
+// === CUSTOMIZATION FUNCTIONS ===
+function saveCustomizations() {
+    const pfpUrl = document.getElementById('customizePfpUrl').value.trim();
+    const bio = document.getElementById('customizeBio').value.trim();
+    
+    if (currentUser) {
+        currentUser.customizations.pfp = pfpUrl || CONFIG.DEFAULT_PFP;
+        currentUser.customizations.bio = bio;
+        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(currentUser));
+        
+        // Update UI
+        document.querySelectorAll('#sidebarAvatar, #dashboardAvatar').forEach(img => {
+            img.src = currentUser.customizations.pfp;
+        });
+        
+        showNotification('Profile updated!');
+        closeModal();
+    }
+}
+
+function saveBanner() {
+    const bannerUrl = document.getElementById('bannerUrl').value.trim();
+    
+    if (currentUser) {
+        currentUser.customizations.banner = bannerUrl || CONFIG.DEFAULT_BANNER;
+        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(currentUser));
+        
+        // Update UI
+        document.getElementById('dashboardBanner').style.backgroundImage = `url(${currentUser.customizations.banner})`;
+        
+        showNotification('Banner updated!');
+        closeModal();
+    }
+}
+
+function saveMusic() {
+    const musicUrl = document.getElementById('musicUrl').value.trim();
+    
+    if (currentUser) {
+        currentUser.customizations.music = musicUrl;
+        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(currentUser));
+        
+        showNotification('Music saved!');
+        closeModal();
+    }
+}
+
+function testMusic() {
+    const musicUrl = document.getElementById('musicUrl').value.trim();
+    if (musicUrl) {
+        const audio = document.getElementById('audioPlayer');
+        audio.src = musicUrl;
+        audio.volume = 0.3;
+        audio.play();
+        showNotification('Playing music preview...');
+    }
+}
+
+// === PROFILE FUNCTIONS ===
+function copyProfileLink() {
+    if (!currentUser) return;
+    
+    const link = `${CONFIG.SITE_URL}/#profile?user=${currentUser.profileLink}`;
+    navigator.clipboard.writeText(link)
+        .then(() => showNotification('Profile link copied!'))
+        .catch(err => console.error('Failed to copy:', err));
+}
+
+function shareProfile() {
+    if (!currentUser) return;
+    
+    const link = `${CONFIG.SITE_URL}/#profile?user=${currentUser.profileLink}`;
+    if (navigator.share) {
+        navigator.share({
+            title: `Check out @${currentUser.username}'s profile!`,
+            text: 'Check out my profile on gooners.wtf',
+            url: link
+        });
+    } else {
+        copyProfileLink();
+    }
+}
+
+function openProfile() {
+    if (!currentUser) return;
+    navigateTo(`profile?user=${currentUser.profileLink}`);
+}
+
+// === NAVIGATION ===
+function navigateTo(page) {
+    window.location.hash = page;
+    currentPage = page.replace(/\?.*$/, '');
+    renderApp();
+}
+
+// === UTILITY FUNCTIONS ===
+function showError(elementId, message) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.textContent = message;
+        element.style.display = 'block';
+    }
+}
+
+function showNotification(message, type = 'success') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? 'rgba(76, 217, 100, 0.9)' : 'rgba(255, 107, 107, 0.9)'};
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        font-size: 14px;
+        letter-spacing: 1px;
+    `;
+    
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Add notification animation styles
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
+
+function getUrlParam(param) {
+    const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
+    return urlParams.get(param);
+}
+
+function logout() {
+    localStorage.removeItem(CONFIG.STORAGE_KEY);
+    currentUser = null;
+    navigateTo('home');
+}
+
+function showForgotPassword() {
+    const email = prompt('Enter your email to reset password:');
+    if (email) {
+        showNotification(`Password reset link sent to ${email} (demo)`);
+    }
+}
+
+// === PARTICLES SYSTEM ===
+function initParticles() {
+    const canvas = document.getElementById('particlesCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 1.8 + 0.4;
+            this.vx = Math.random() * 0.4 - 0.2;
+            this.vy = Math.random() * 0.4 - 0.2;
+            this.o = Math.random() * 0.4 + 0.15;
+            this.color = Math.random() > 0.8 ? 
+                `rgba(180, 180, 255, ${this.o})` : 
+                `rgba(255, 255, 255, ${this.o})`;
+        }
+        
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+        
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+    
+    // Create particles
+    for (let i = 0; i < 100; i++) {
+        particles.push(new Particle());
+    }
+    
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        particles.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+        
+        requestAnimationFrame(animate);
+    }
+    
+    animate();
+}
+
+// === START APP ===
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>
